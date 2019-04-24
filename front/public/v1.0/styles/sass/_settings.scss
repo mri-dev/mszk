@@ -1,24 +1,17 @@
 /* VÁLTOZÓK */
-$size-sidebar: 280px;
 $imgroot: "//www.cp.mszk.web-pro.hu/src/images/";
+$logo-width: 250px;
+$page-width: 1150px;
+$header-height: 60px;
+$header-after-height: 450px;
 
 /* COLORS */
+$color-blue: #2c62c7;
+$color-blue-light: #0aa3f5;
+$color-blue-dark: #1f4da3;
+$color-cian: #66c0b7;
+$color-grey: #c5c6c6;
 
-$color-red: #cd2a30;
-$color-orange: #f05f42;
-$color-yellow: #ffcc00;
-$color-grey: #d9d9d9;
-$color-grey-dark: #333333;
-$color-green: #6b995a;
-$color-blue: #43b6ef;
-$color-pr: $color-grey;
-$color-sec: $color-grey-dark;
-
-/* FONTS */
-$font-cond: 'Roboto', sans-serif;
-$font-sans-narrow: 'Roboto', sans-serif;
-
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700&subset=latin-ext');
 
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;

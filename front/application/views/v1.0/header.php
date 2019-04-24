@@ -24,5 +24,31 @@
 </script>
 <? endif; ?>
 <header>
-
+  <div class="top">
+    <div class="wrapper">
+      <div class="top-left">
+        <div class="navigator">
+          <ul>
+            <li><a href="/" class="active"><?=__('Vállalkozásoknak')?></a></li>
+            <li><a href="#"><?=__('Cégeknek')?></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="top-center">
+        <div class="logo">
+          <a href="/"><img src="<?=IMG?>logo.svg" alt="<?=$this->settings['page_title']?>"></a>
+        </div>
+      </div>
+      <div class="top-right">
+        <div class="navigator">
+          <ul>
+            <li><a href="#"><?=__('Információ')?></a></li>
+            <li><a href="#"><?=__('Segítség')?></a></li>
+            <li class="login"><a href="#"><?=__('Belépés')?></a></li>
+            <li class="reg"><a href="#"><?=__('Regisztráció')?></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>

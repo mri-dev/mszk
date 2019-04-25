@@ -14,6 +14,17 @@ header{
   background: white;
 }
 
+body:not(.homepage){
+  header{
+    border-bottom: 60px solid $color-blue-dark;
+  }
+}
+body.singlepage{
+  header{
+    border-bottom: 85px solid $color-blue-dark;
+  }
+}
+
 header{
   & > .top > .wrapper{
     display: -webkit-box;
@@ -52,7 +63,8 @@ header{
       flex-basis: calc((100% - 250px) / 2);
     }
 
-    .top-left{
+    .top-left,
+    .top-right{
       ul {
         float: left;
       }
@@ -126,6 +138,27 @@ header{
 }
 .inside-content{
   min-height: 600px;
+}
+
+body.singlepage{
+  .page-reader{
+    padding: 0 0 40px 0;
+    font-size: 1rem;
+    line-height: 1.45;
+    .header {
+      margin-top: -45px;
+      margin-bottom: 10px;
+      h1 {
+        margin: 0;
+        background: #ffffff;
+        padding: 15px 25px;
+        float: left;
+        color: black;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      }
+    }
+  }
 }
 
 .home-after-header{

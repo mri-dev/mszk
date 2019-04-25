@@ -9,6 +9,8 @@ class home extends Controller {
 				Helper::reload('/');
 			}
 
+			$this->out( 'bodyclass', 'homepage' );
+
 			// SEO Információk
 			$SEO = null;
 			// Site info

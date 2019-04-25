@@ -26,7 +26,6 @@ class Controller {
         $this->gets = Helper::GET();
 
         //$this->memory_usage();
-
         // CORE
         $this->view = new View();
         $this->db = new Database();

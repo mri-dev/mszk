@@ -6,14 +6,14 @@
 				</div>
 				<div class="navigator">
 					<ul>
-						<li class="impresszum"><a href="#"><?=__('Impresszum')?></a></li>
-						<li class="aszf"><a href="#"><?=__('Általános Szerződési Feltételek')?></a></li>
-						<li class="adatv"><a href="#"><?=__('Adatvédelmi Tájékoztató')?></a></li>
+						<li class="impresszum"><a href="/impresszum"><?=__('Impresszum')?></a></li>
+						<li class="aszf"><a href="/aszf"><?=__('Általános Szerződési Feltételek')?></a></li>
+						<li class="adatv"><a href="/adatvedelem"><?=__('Adatvédelmi Tájékoztató')?></a></li>
 					</ul>
 					<ul>
-						<li class="kapcsolat"><a href="#"><?=__('Kapcsolat')?></a></li>
-						<li class="ceginfo"><a href="#"><?=__('Céginfo')?></a></li>
-						<li class="rolunk"><a href="#"><?=__('Rólunk')?></a></li>
+						<li class="kapcsolat"><a href="/kapcsolat"><?=__('Kapcsolat')?></a></li>
+						<li class="ceginfo"><a href="/ceginfo"><?=__('Céginfo')?></a></li>
+						<li class="rolunk"><a href="/rolunk"><?=__('Rólunk')?></a></li>
 					</ul>
 				</div>
 			</div>

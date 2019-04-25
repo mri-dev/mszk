@@ -29,8 +29,8 @@
       <div class="top-left">
         <div class="navigator">
           <ul>
-            <li><a href="/" class="active"><?=__('Vállalkozásoknak')?></a></li>
-            <li><a href="#"><?=__('Cégeknek')?></a></li>
+            <li><a href="/" class="<?=(!isset($_GET['tag']) || $_GET['ajanlatkeres'] == '1')?'active':''?>"><?=__('Vállalkozásoknak')?></a></li>
+            <li><a href="/cegeknek" class="<?=($_GET['tag'] == 'page/cegeknek')?'active':''?>"><?=__('Cégeknek')?></a></li>
           </ul>
         </div>
       </div>
@@ -42,8 +42,8 @@
       <div class="top-right">
         <div class="navigator">
           <ul>
-            <li><a href="#"><?=__('Információ')?></a></li>
-            <li><a href="#"><?=__('Segítség')?></a></li>
+            <li><a href="/informaciok" class="<?=($_GET['tag'] == 'page/informaciok')?'active':''?>"><?=__('Információ')?></a></li>
+            <li><a href="/segitseg" class="<?=($_GET['tag'] == 'page/segitseg')?'active':''?>"><?=__('Segítség')?></a></li>
             <li class="login"><a href="#"><?=__('Belépés')?></a></li>
             <li class="reg"><a href="#"><?=__('Regisztráció')?></a></li>
           </ul>

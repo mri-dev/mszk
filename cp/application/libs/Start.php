@@ -1,25 +1,23 @@
-<? class Start{
-
-		function __construct(){
-
+<? class Start
+{
+		function __construct()
+		{
 			$url = Helper::GET();
-
 			$openControl = null;
 
-			if(count($url) == 0){
-
+			if(count($url) == 0)
+			{
 				$openControl = 'home';
-
-			}else if(count($url) != 0){
-
+			}
+			else if(count($url) != 0)
+			{
 				$openControl = $url[0];
-
 			}
 
-			if(!file_exists(CONTROL . $openControl . '.php')){
+			if(!file_exists(CONTROL . $openControl . '.php'))
+			{
 				$openControl = "PageNotFound";
 			}
-
 			require CONTROL . $openControl . '.php';
 
 			$control = new $openControl();
@@ -30,9 +28,6 @@
 					$control->{$ctrl}();
 				}
 			}
-
 		}
-
 	}
-
 ?>

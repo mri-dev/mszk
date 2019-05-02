@@ -44,8 +44,8 @@
           <ul>
             <li><a href="/informaciok" class="<?=($_GET['tag'] == 'page/informaciok')?'active':''?>"><?=__('Információ')?></a></li>
             <li><a href="/segitseg" class="<?=($_GET['tag'] == 'page/segitseg')?'active':''?>"><?=__('Segítség')?></a></li>
-            <li class="login"><a href="<?=ADMROOT?>"><?=__('Belépés')?></a></li>
-            <li class="reg"><a href="<?=ADMROOT?>regisztracio"><?=__('Regisztráció')?></a></li>
+            <li class="login"><a href="#"><?=__('Belépés')?></a></li>
+            <li class="reg"><a href="<?=''?>"><?=__('Regisztráció')?></a></li>
           </ul>
         </div>
       </div>

@@ -102,7 +102,7 @@
 		}
     </script>
 </head>
-<body class="<? if(!$this->adm->logged): ?>blured-bg<? endif; ?>" ng-app="App" ng-init="init()">
+<body class="<? if($this->adm->logged): ?>logged-in<? endif; ?>" ng-app="App" ng-init="init()">
 <? if($this->adm->logged): ?>
 <div id="top" class="container-fluid">
 	<div class="row" style="margin: 0 -15px;">
@@ -135,8 +135,8 @@
     </div>
 </div>
 <? endif; ?>
+<? if(!$this->adm->logged && $this->gets[0] != 'regisztracio'): ?>
 <!-- Login module -->
-<? if(!$this->adm->logged): ?>
 <div id="login">
   <div class="row justify-content-md-center">
     <div class="logo col-md-12 center">

@@ -87,9 +87,7 @@ input, textarea{
 .form-control{
   border: 1px solid #e5e5e5;
 }
-#login {
-  margin: 15% auto 0 auto;
-}
+
 #login .input-group-text{
   background-color: transparent;
   border: 1px solid #e5e5e5;

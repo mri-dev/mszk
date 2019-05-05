@@ -1,53 +1,24 @@
-/* MyriadPro-Regular */
-@font-face {
-  font-family: 'myriadpro';
-  src: url('../../../src/font/myriadpro/MyriadPro-Regular.eot');
-  src: url('../../../src/font/myriadpro/MyriadPro-Regular.eot?#iefix') format('embedded-opentype'),
-       url('../../../src/font/myriadpro/MyriadPro-Regular.woff') format('woff'),
-       url('../../../src/font/myriadpro/MyriadPro-Regular.ttf') format('truetype'),
-       url('../../../src/font/myriadpro/MyriadPro-Regular.svg#myriadpro') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-/* MyriadPro-Bold */
-@font-face {
-  font-family: 'myriadpro';
-  src: url('../../../src/font/myriadpro/MyriadPro-Bold.eot');
-  src: url('../../../src/font/myriadpro/MyriadPro-Bold.eot?#iefix') format('embedded-opentype'),
-       url('../../../src/font/myriadpro/MyriadPro-Bold.woff') format('woff'),
-       url('../../../src/font/myriadpro/MyriadPro-Bold.ttf') format('truetype'),
-       url('../../../src/font/myriadpro/MyriadPro-Bold.svg#myriadpro') format('svg');
-  font-weight: bold;
-  font-style: normal;
-}
-/* MyriadPro-It */
-@font-face {
-  font-family: 'myriadpro';
-  src: url('../../../src/font/myriadpro/MyriadPro-It.eot');
-  src: url('../../../src/font/myriadpro/MyriadPro-It.eot?#iefix') format('embedded-opentype'),
-       url('../../../src/font/myriadpro/MyriadPro-It.woff') format('woff'),
-       url('../../../src/font/myriadpro/MyriadPro-It.ttf') format('truetype'),
-       url('../../../src/font/myriadpro/MyriadPro-It.svg#myriadpr') format('svg');
-  font-style: italic;
-  font-weight: normal;
-}
-@import url(http://fonts.googleapis.com/css?family=PT+Sans);
+@import url(//fonts.googleapis.com/css?family=PT+Sans);
 input[type=checkbox]{
 	margin:0;
 }
 body{
 	background: #f4f4f4;
-	font-family:'myriadpro', 'PT Sans', sans-serif;
-	font-size:1.43em;
+	font-family: 'PT Sans', sans-serif;
+	font-size:1.43rem;
 	height: 100%;
+  position: relative;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#41b7f2+14,41b7f2+14,2a78dd+66 */
+background: #41b7f2; /* Old browsers */
+background: -moz-linear-gradient(45deg, #41b7f2 14%, #41b7f2 14%, #2a78dd 66%); /* FF3.6-15 */
+background: -webkit-linear-gradient(45deg, #41b7f2 14%,#41b7f2 14%,#2a78dd 66%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(45deg, #41b7f2 14%,#41b7f2 14%,#2a78dd 66%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#41b7f2', endColorstr='#2a78dd',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
 body, html {
 	position: relative;
   font-size: 1rem;
-}
-body.blured-bg {
-  background: #edebeb;
 }
 body.blured > *  {
  	-webkit-filter: blur(3px);
@@ -87,7 +58,22 @@ input, textarea{
 .form-control{
   border: 1px solid #e5e5e5;
 }
-
+#login {
+  position: absolute;
+  width: 500px;
+  max-width: 500px;
+  left: 50%;
+  top: 50%;
+  -moz-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+#login .login-box-holder{
+  background: black;
+}
+#login .logo img {
+  width: 50%;
+  max-width: 50%;
+}
 #login .input-group-text{
   background-color: transparent;
   border: 1px solid #e5e5e5;
@@ -98,6 +84,31 @@ input, textarea{
 #login input[type=password]{
   padding: 0 15px;
   line-height: 45px;
+  background: #f3f3f3;
+  color: black;
+  font-weight: bold;
+}
+#login input[type=password]::placeholder,
+#login input[type=text]::placeholder{
+  color: #7c7c7c;
+  font-size:0.75rem;
+  font-weight: 400;
+  opacity: 1;
+}
+
+#login input[type=password]:-ms-input-placeholder,
+#login input[type=text]:-ms-input-placeholder{
+  color: #7c7c7c;
+  font-size:0.75rem;
+  font-weight: 400;
+}
+
+#login input[type=password]::-ms-input-placeholder,
+#login input[type=text]::-ms-input-placeholder
+{
+  color: #7c7c7c;
+  font-size:0.75rem;
+  font-weight: 400;
 }
 a, a:visited {
 	color: #F05F42;
@@ -249,7 +260,10 @@ body.blured-bg #top {
 	margin-bottom:25px;
 	text-align: center;
 	text-transform: uppercase;
-	color: #f05f42;
+	color: #ffffff;
+  font-size: 2.5vw;
+  font-weight: 300;
+  margin: 15px 0;
 }
 #login .bg{
   background-color: #ffffff !important;
@@ -257,8 +271,28 @@ body.blured-bg #top {
   border-radius: 10px;
   box-shadow: 0 5px 30px -10px #828282;
 }
+#login .login-box-holder{
+  border-radius: 10px;
+  background: #4fb3ff;
+  box-shadow: 0 5px 24px -15px black;
+}
+#login .copyright{
+  color: white;
+  font-size: 0.68rem;
+  margin: 25px 0 0 0;
+}
+#login .copyright a{
+  color: white;
+}
+#login .copyright .devby{
+  margin-left:20px;
+}
 #login .bg i{
 	width:15px !important;
+}
+#login .reset-password a{
+  font-size: 0.9rem;
+  color: #acacac;
 }
 #content{
 	position:relative;
@@ -387,7 +421,7 @@ body.blured-bg #content .container-fluid{
 	color:#f05f42;
 }
 #content .ct h1{
-	font-family:'myriadprobold', sans-serif;
+	font-family:'PT Sans', sans-serif;
 	margin:0;
 	color:#827e7e;
 	font-weight:300;
@@ -400,7 +434,7 @@ body.blured-bg #content .container-fluid{
 #content .ct h1 span,
 #content .ct h1 small{
 	font-size:12px;
-	font-family:'myriadpro', sans-serif;
+	font-family:'PT Sans', sans-serif;
 	letter-spacing:normal;
 	color:#acacac;
 }

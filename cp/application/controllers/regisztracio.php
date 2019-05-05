@@ -8,6 +8,8 @@ class regisztracio extends Controller{
 
 			$portal = new Portal( array( 'db' => $this->db ) );
 
+			$this->out( 'bodyclass', 'register');
+
 			// SEO Információk
 			$SEO = null;
 			// Site info

@@ -102,7 +102,7 @@
 		}
     </script>
 </head>
-<body class="<? if($this->adm->logged): ?>logged-in<? endif; ?>" ng-app="App" ng-init="init()">
+<body class="<?=$this->bodyclass?> <? if($this->adm->logged): ?>logged-in<? endif; ?>" ng-app="App" ng-init="init()">
 <? if($this->adm->logged): ?>
 <div id="top" class="container-fluid">
 	<div class="row" style="margin: 0 -15px;">

@@ -1,20 +1,12 @@
 <?php
 
-class regisztracio extends Controller{
+class activate extends Controller{
 		function __construct(){
 			parent::__construct();
-			parent::$pageTitle = 'Regisztráció';
+			parent::$pageTitle = 'Fiók aktiválás';
 
-			$this->out( 'bodyclass', 'register');
+			$this->out( 'bodyclass', 'activate');
 
-			// Bejelentkezés ellenőrzése
-			$this->view->adm = $this->AdminUser;
-			$this->view->adm->logged = $this->AdminUser->isLogged();
-
-			// Ha be van belépve, akkor átirányítja
-			if ($this->view->adm->logged === true) {
-				Helper::reload('/');
-			}
 
 			if ($_GET['success'] == 1) {
 				$this->view->err    = true;

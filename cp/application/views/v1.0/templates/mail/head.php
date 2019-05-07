@@ -13,21 +13,18 @@
             padding: 0;
             font-family: 'Arial', sans-serif;
         }
+
         body {
-            background: #f3f3f3;
+          background: #f4f8ff;
         }
 
         header{
           padding: 10px 0;
-        }
-
-        header, footer {
-          background:#fafafa;
-          color: white;
+          background: white;
         }
 
         footer{
-          background: #333333;
+          background: #2c62c7;
         }
 
         a:link, a:visited {
@@ -36,31 +33,6 @@
         .width {
             width: 800px;
              margin: 0 auto;
-        }
-        .pad {
-            padding: 10px 0;
-        }
-        .bar {
-            background: #02a0e3;
-        }
-        .bar td {
-            text-align: center;
-        }
-        .bar td a {
-           font-size: 10px !important;
-        }
-
-        .bar table {
-            margin: 0 auto;
-        }
-
-        .bar a {
-            color: white;
-            font-weight: bold;
-            text-decoration: none;
-            line-height: 1;
-            padding: 10px 0;
-            display: block;
         }
         .cdiv {
             height: 10px;
@@ -114,9 +86,13 @@
             font-size: 11px;
             color: #8c8c8c;
         }
+        .pad{
+          padding: 12px;
+        }
         .relax {
-            color: #000000;;
-            font-size: 18px;
+            color: #000000;
+            font-size: 1.2rem;
+            margin: 10px 0 5px 0;
         }
          table.if {
             font-size: 12px;
@@ -140,6 +116,15 @@
             border: 1px solid #d7d7d7;
             border-collapse: collapse;
         }
+        .contacts{
+          font-size: 0.7rem !important;
+        }
+        .contacts,
+        .contacts a,
+        .contacts a:hover,
+        .contacts a:visited{
+          color: white !important;
+        }
 
         table.if tbody td a {
             font-weight: bold;
@@ -161,10 +146,8 @@
           <tr>
               <tbody>
                   <tr>
-                      <td  width="125" style="text-align:left; vertical-align:middle;">
-                          <img src="<?=IMGDOMAIN?>src/images/mobildatabt_logo.svg" alt="<?=$settings['page_title']?>" style="width:auto !important; height:40px;">
-                      </td>
-                      <td style="text-align:right; vertical-align:middle; font-size:14px; color:#00;" >
+                      <td style="text-align:center;">
+                          <img src="<?=DOMAIN?><?=$settings['logo']?>" alt="<?=$settings['page_title']?>" style="width: 33%;">
                           <div class="relax"><?=$settings['page_description']?></div>
                       </td>
                   </tr>
@@ -173,23 +156,6 @@
       </table>
   </div>
 </header>
-
-<div class="bar">
-    <div class="width">
-        <table border="0" style="border:none; width: 100%;">
-            <tr>
-                <tbody>
-                    <tr>
-                        <td style="width: 25%;"><a href="<?=$settings['page_url']?>/p/aszf">Általános Szerződési Feltételek</a></td>
-                        <td style="width: 20%;"><a href="<?=$settings['page_url']?>/termekek">Termékeink</a></td>
-                        <td style="width: 20%;"><a href="<?=$settings['page_url']?>/p/adatvedelmi-tajekoztato">Adatvédelmi tájékoztató</a></td>
-                        <td style="width: 20%;"><a href="<?=$settings['blog_url']?>/p/kapcsolat">Kapcsolat</a></td>
-                    </tr>
-                </tbody>
-            </tr>
-        </table>
-    </div>
-</div>
 
 <div class="width">
 <div class="in-content">

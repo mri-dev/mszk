@@ -1,36 +1,28 @@
 <?php
 
-class regisztracio extends Controller{
+class belepes extends Controller{
 		function __construct(){
 			parent::__construct();
-			parent::$pageTitle = 'Regisztráció';
+			parent::$pageTitle = 'Belépés';
 
-			$this->out( 'bodyclass', 'register');
+			$this->out( 'bodyclass', 'login');
 
 			// Bejelentkezés ellenőrzése
 			$this->view->adm = $this->AdminUser;
 			$this->view->adm->logged = $this->AdminUser->isLogged();
-
+			
 			// Ha be van belépve, akkor átirányítja
 			if ($this->view->adm->logged === true) {
 				Helper::reload('/');
 			}
 
-			if ($_GET['success'] == 1) {
-				$this->view->err    = true;
-				$this->view->bmsg   = Helper::makeAlertMsg('pSuccess', __('Sikeresen regisztrálta fiókját. Hamarosan kap egy aktiváló e-mailt az Ön által megadott e-mail címére!') );
-			}
-
-			// Regisztráció
-			if(isset($_POST['register'])){
+			if(isset($_POST['login'])){
 				try{
-						$ret = (isset($_GET['return'])) ? $_GET['return'] : '/regisztracio/?success=1';
-						$this->Users->add($_POST);
-						Helper::reload( $ret );
+						$this->AdminUser->login($_POST);
+						Helper::reload($_GET['return']);
 				}catch(Exception $e){
 						$this->view->err    = true;
 						$this->view->bmsg   = Helper::makeAlertMsg('pError', $e->getMessage());
-						$this->view->code 	= $e->getCode();
 				}
 			}
 

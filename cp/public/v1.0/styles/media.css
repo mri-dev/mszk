@@ -44,21 +44,19 @@ input, textarea{
   text-align: center;
 }
 .form-control:focus{
-  border: 1px solid #fec9bf !important;
-  box-shadow: 0 0 0 0.2rem rgba(248, 122, 97, 0.27) !important;
+	border: 1px solid #a2c2ff !important;
+  box-shadow: 0 0 0 0.2rem rgba(9, 127, 189, 0.28) !important;
 }
 .form-control{
   border: 1px solid #e5e5e5;
 }
 #login {
   z-index: 10;
-  position: absolute;
+  position: relative;
   width: 500px;
   max-width: 500px;
-  left: 50%;
-  top: 50%;
-  -moz-transform: translate(-50%,-50%);
-  transform: translate(-50%,-50%);
+	margin: 0 auto;
+	padding: 20% 0;
 }
 #login .login-box-holder{
   background: black;
@@ -138,47 +136,21 @@ input, textarea{
 #login .bg i{
 	width:15px !important;
 }
+#login .reset-password a,
+#login .login-box-holder a{
+  color: #5c5c5c;
+}
 #login .reset-password a{
   font-size: 0.9rem;
   color: #acacac;
 }
+#login .aszf a{
+	color: #3e8ff7;
+}
+#login .aszf label{
+	cursor: pointer;
+}
 #content{
 	position:relative;
 	height:100%;
-}
-body.register .innerContent{
-  padding: 25px;
-}
-body.register .inside-content-holder{
-  background: white;
-  border-radius: 10px;
-  margin: 15px 0;
-  padding: 25px;
-}
-body.register .inside-content-holder h2{
-  text-transform: uppercase;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 0 0 20px 0;
-}
-body.register .inside-content-holder .inp{
-  margin: 0 0 10px 0;
-}
-body.register .inside-content-holder .inp label{
-  font-size: 0.9rem;
-}
-body.register .register-header .logo img{
-  height: 75px;
-}
-body.register .register-header h1{
-  color: #c7d3e2;
-  font-size: 2.3rem;
-}
-body.register .register-header .backurl a{
-  background: #7aaff3;
-  border-radius: 25px;
-  padding: 6px 8px;
-  font-size: 0.7rem;
-  color: white;
-  text-decoration: none;
 }

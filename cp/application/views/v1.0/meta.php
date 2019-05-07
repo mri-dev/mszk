@@ -6,7 +6,7 @@
 <?=$this->addStyle('master.min', false, true)?>
 <?=$this->addStyle('media', 'media="screen"', false)?>
 <?=$this->addStyle('bootstrap4/bootstrap.min', false, true)?>
-<link rel="stylesheet" type="text/css" href="<?=DOMAIN?>public/base/base.css" />
+<link rel="stylesheet" type="text/css" href="<?=HOMEDOMAIN?>public/base/base.css" />
 
 <!-- JS's -->
 <?=$this->addJS('jquery/jquery-n-ui.pack.min', false, true)?>

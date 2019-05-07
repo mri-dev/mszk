@@ -2,6 +2,7 @@
 use DatabaseManager\Database;
 use PortalManager\Template;
 use PortalManager\AdminUser;
+use PortalManager\Users;
 use PortalManager\Installer;
 
 class Controller {
@@ -38,6 +39,7 @@ class Controller {
         $this->out( 'db', $this->db );
 
         $this->AdminUser = new AdminUser( array( 'db' => $this->db, 'view' => $this->view, 'settings' => $this->view->settings )  );
+        $this->Users = new Users( array( 'db' => $this->db ) );
 
         // Ha nem ajax requestről van szó
         if ($this->gets[0] != 'ajax')

@@ -1,26 +1,22 @@
 <?php
-use PortalManager\Portal;
+use MailManager\MailTemplates;
+use PortalManager\Template;
 
-class home extends Controller{
+class test extends Controller{
 		function __construct(){
 			parent::__construct();
 			parent::$pageTitle = 'Adminisztráció';
 
-			// Bejelentkezés ellenőrzése
-    	$this->view->adm = $this->AdminUser;
-			$this->view->adm->logged = $this->AdminUser->isLogged();
+      $arg = array(
+  			'user_nev' 		=> trim($data['nev']),
+  			'user_jelszo' 	=> trim($origin_pw),
+  			'user_email' 	=> $email,
+  			'settings' 		=> $this->db->settings,
+  			'activateKey' 	=> $activateKey
+  		);
+      $arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('register_user_group_user', $arg);
 
-			// Ha nincs belépve, akkor átirányít a bejelentkezésre
-			if ($this->view->adm->logged === false && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio') {
-				Helper::reload('/belepes');
-			}
-
-			// Kijelentkeztető
-			if($this->gets[1] == 'exit'){
-				$this->AdminUser->logout();
-			}
-
-			$portal = new Portal( array( 'db' => $this->db ) );
+      echo '<div style="background: #f4f8ff;">'.(new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ).'</div>';
 
 			// SEO Információk
 			$SEO = null;

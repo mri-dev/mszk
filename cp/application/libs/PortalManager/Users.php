@@ -92,7 +92,6 @@ class Users
 		$ret 			= array();
 		$kedvezmenyek 	= array();
 		$kedvezmeny 	= 0;
-		$torzsvasarloi_kedvezmeny = 0;
 		$referer_allow 	= false;
 		$getby 			= 'email';
 
@@ -125,64 +124,6 @@ class Users
 				\Helper::reload( '/user/beallitasok?safe=1&missed_details='.$miss );
 			}
 		}
-
-		// Kedvezmény - Viszonteladóknál
-		if( $ret['data']['user_group'] == self::USERGROUP_RESELLER )
-		{
-			$kedv = $this->getKedvezmeny($ret[data][ID]);
-			$torzsvasarloi_kedvezmeny = $kedv[szazalek];
-
-			$kedvezmenyek[] = array(
-				'nev' 			=> 'Viszonteladói kedvezmény',
-				'kedvezmeny' 	=> $torzsvasarloi_kedvezmeny,
-				'link' 			=> '/p/viszonteladoi_kedvezmeny'
-			);
-		}
-
-
-		/**
-		 * Casada shop adatok
-		 * */
-		$casadashop 		= false;
-		$totalOrderPrice 	= 0;
-
-		if ( $this->db->query("SELECT ID FROM ".\PortalManager\CasadaShop::DB_XREF." WHERE 1=1 and user_id = ".$ret['data']['ID'])->rowCount() != 0 ) {
-			$shop = new CasadaShop(false,array(
-				'db' => $this->db
-			));
-
-			$casadashop = $shop->getUserShopData( $ret['data']['ID'] );
-
-			unset($shop);
-		}
-
-		// Korábban rendelt, lezárt termékek össz. értéke
-		$q = "
-		SELECT 				SUM((o.me * o.egysegAr)) as ar,
-		 					(SELECT kedvezmeny FROM orders WHERE ID = o.orderKey)  as kedv
-		FROM 				`order_termekek` as o
-		WHERE 				o.userID = ".$ret[data][ID]." and (SELECT allapot FROM orders WHERE ID = o.orderKey) = ".$this->settings['flagkey_orderstatus_done'];
-
-		$ordpc = $this->db->query($q)->fetch(\PDO::FETCH_ASSOC);
-
-		if ( (float)$ordpc['ar'] > 0 )
-		{
-			$totalOrderPrice = (float)$ordpc['ar'] - (float)$ordpc['kedv'];
-		}
-
-		if( $totalOrderPrice > $this->settings['referer_min_price'] || $casadashop )
-		{
-			$referer_allow = true;
-		}
-
-		$ret['referer_allow'] 	= $referer_allow;
-		$ret['casadashop'] 		= $casadashop;
-		$ret['kedvezmenyek'] 	= $kedvezmenyek;
-		$ret['torzsvasarloi_kedvezmeny'] = $torzsvasarloi_kedvezmeny;
-		$ret['torzsvasarloi_kedvezmeny_next_price_step'] = $kedv[next_price_step];
-		$ret['torzsvasarloi_kedvezmeny_price_steps'] = $kedv[price_steps];
-
-		$ret['kedvezmeny'] 	= $torzsvasarloi_kedvezmeny + $arena_water_card;
 
 		$this->user_data 	= $ret;
 
@@ -378,54 +319,6 @@ class Users
 	{
 		$has_alerts 	= 0;
 		$alerts 		= array();
-		$is_reseller 	= ( $user_group == self::USERGROUP_RESELLER ) ? true : false;
-		$is_sales 		= ( $user_group == self::USERGROUP_SALES) ? true : false;
-
-		// Csak viszonteladók
-		if( $is_reseller )
-		{
-
-		}
-
-		// Csak értékesítők
-		if( $is_sales )
-		{
-
-		}
-
-		// Mindenki
-
-		$has_unseen_doc = false;
-
-		if( !$acc_id )
-		{
-			// has_unseen_doc
-			$q 		= "SELECT d.ID FROM shop_documents as d WHERE d.lathato = 1 ";
-			$q .= " and d.user_group_in LIKE '%".$user_group."%' ";
-			$q .= " and (SELECT count(id) FROM shop_documents_viewed WHERE doc_id = d.ID) = 0;";
-
-			$docs 	= $this->db->query($q)->fetchAll(\PDO::FETCH_ASSOC);
-
-			if( count($docs) > 0 ) {
-				$has_unseen_doc = count($docs);
-			}
-
-		} else
-		{
-
-		}
-
-		if( $has_unseen_doc ) {
-			$has_alerts++;
-			$alerts[] 		= array(
-				'priority' 	=> 10,
-				'type' 		=> 'info',
-				'mode' 		=> 'static',
-				'text' 		=> $has_unseen_doc. ' db új dokumentum érhető el az Ön részére.',
-				'url' 		=> '/user/dokumentumok',
-				'value' 	=> $has_unseen_doc
-			);
-		}
 
 
 		$this->alerts['alerts'] 	= $alerts;
@@ -802,7 +695,7 @@ class Users
 
 	function getData($what, $by = 'email'){
 		if($what == '') return false;
-		$q = "SELECT *, refererID(ID) as refererID FROM ".self::TABLE_NAME." WHERE `".$by."` = '$what'";
+		$q = "SELECT * FROM ".self::TABLE_NAME." WHERE `".$by."` = '$what'";
 
 		extract($this->db->q($q));
 
@@ -1382,6 +1275,12 @@ class Users
 			$re = $mail->sendMail();
 		}
 
+	}
+
+	function logout()
+	{
+		unset($_SESSION['user_email']);
+		header('Location: /'); exit;
 	}
 
 	public function __destruct()

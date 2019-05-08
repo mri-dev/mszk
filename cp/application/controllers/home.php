@@ -1,26 +1,27 @@
 <?php
-use PortalManager\Portal;
 
 class home extends Controller{
 		function __construct(){
 			parent::__construct();
-			parent::$pageTitle = 'Adminisztráció';
-
-			// Bejelentkezés ellenőrzése
-    	$this->view->adm = $this->AdminUser;
-			$this->view->adm->logged = $this->AdminUser->isLogged();
+			parent::$pageTitle = __('Gépház');
+		/*	$this->addPagePagination(array(
+				'link' => '/',
+				'title' => parent::$pageTitle
+			));*/
+			$this->addPagePagination(array(
+				'link' => '/',
+				'title' => parent::$pageTitle
+			));
 
 			// Ha nincs belépve, akkor átirányít a bejelentkezésre
-			if ($this->view->adm->logged === false && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio') {
+			if ( !$this->Users->user && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio') {
 				Helper::reload('/belepes');
 			}
 
 			// Kijelentkeztető
 			if($this->gets[1] == 'exit'){
-				$this->AdminUser->logout();
+				$this->Users->logout();
 			}
-
-			$portal = new Portal( array( 'db' => $this->db ) );
 
 			// SEO Információk
 			$SEO = null;

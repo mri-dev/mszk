@@ -8,22 +8,15 @@ class activate extends Controller{
 			$this->out( 'bodyclass', 'activate');
 
 
-			if ($_GET['success'] == 1) {
-				$this->view->err    = true;
-				$this->view->bmsg   = Helper::makeAlertMsg('pSuccess', __('Sikeresen regisztrálta fiókját. Hamarosan kap egy aktiváló e-mailt az Ön által megadott e-mail címére!') );
-			}
+			$key = base64_decode($this->view->gets[1]);
+			$key = explode('=',$key);
 
-			// Regisztráció
-			if(isset($_POST['register'])){
-				try{
-						$ret = (isset($_GET['return'])) ? $_GET['return'] : '/regisztracio/?success=1';
-						$this->Users->add($_POST);
-						Helper::reload( $ret );
-				}catch(Exception $e){
-						$this->view->err    = true;
-						$this->view->bmsg   = Helper::makeAlertMsg('pError', $e->getMessage());
-						$this->view->code 	= $e->getCode();
-				}
+			try{
+				$this->Users->activate($key);
+			}catch(Exception $e){
+				$this->out( 'msg', $e->getMessage() );
+				$this->out( 'err', true );
+				//Helper::reload('/');
 			}
 
 			// SEO Információk

@@ -13,7 +13,20 @@
       <h3><?=__('Fiók aktiválás')?></h3>
     </div>
     <div class="bg col-md-12">
-      asdsa
+      <div class="activation-status">
+        <? if ($this->err): ?>
+          <i class="fas fa-check-circle fa-5x"></i>
+          <h2><?=$this->msg?></h2>
+          <br>
+          <a href="/belepes" class="btn btn-danger btn-md"><?=__('Tovább a bejelentkezéshez')?></a>
+        <? else: ?>
+          <i class="far fa-check-circle fa-5x"></i>
+          <h2><?=__('Sikeresen aktiválta regisztrációját!')?></h2>
+          <div class="sub"><?=__('Most már bejelentkezhet fiójába az alábbi gombra kattintva.')?></div>
+          <br>
+          <a href="/belepes" class="btn btn-danger btn-md"><?=__('Tovább a bejelentkezéshez')?></a>
+        <? endif; ?>
+      </div>
     </div>
   </div>
   <div class="copyright row justify-content-md-center ">

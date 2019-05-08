@@ -7,12 +7,8 @@ class regisztracio extends Controller{
 
 			$this->out( 'bodyclass', 'register');
 
-			// Bejelentkezés ellenőrzése
-			$this->view->adm = $this->AdminUser;
-			$this->view->adm->logged = $this->AdminUser->isLogged();
-
 			// Ha be van belépve, akkor átirányítja
-			if ($this->view->adm->logged === true) {
+			if ( $this->Users->user ) {
 				Helper::reload('/');
 			}
 

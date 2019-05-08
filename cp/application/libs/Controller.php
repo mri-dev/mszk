@@ -13,6 +13,7 @@ class Controller {
     private $start_time     = 0;
     private $finish_time    = 0;
     private $is_admin       = false;
+    public $page_pagination = array( );
 
     public static $pageTitle;
     public $fnTemp = array();
@@ -40,6 +41,12 @@ class Controller {
 
         $this->AdminUser = new AdminUser( array( 'db' => $this->db, 'view' => $this->view, 'settings' => $this->view->settings )  );
         $this->Users = new Users( array( 'db' => $this->db ) );
+
+        /* Belépett felhasználó adatok*/
+        // E-mail cím
+        $this->out('_USER', $this->Users->user);
+        // Felh. adatok
+        $this->out('_USERDATA', $this->Users->get());
 
         // Ha nem ajax requestről van szó
         if ($this->gets[0] != 'ajax')
@@ -82,10 +89,14 @@ class Controller {
 
         # Oldal címe
         if(self::$pageTitle != null){
-            $this->view->title = self::$pageTitle . ' | ' . $this->view->settings['page_title'];
+          $this->view->title = self::$pageTitle . ' | ' . $this->view->settings['page_title'];
+          $this->view->_PAGETITLE = self::$pageTitle;
         } else {
-            $this->view->title = $this->view->settings['page_title'] . " &mdash; ".$this->view->settings['page_description'];
+          $this->view->title = $this->view->settings['page_title'] . " &mdash; ".$this->view->settings['page_description'];
         }
+
+        # Oldal léptetés
+        $this->view->_PAGEPAGINATION = $this->getPagePagination();
 
         # Render HEADER
         if(!$this->hidePatern){
@@ -94,6 +105,52 @@ class Controller {
 
         # Aloldal átadása a VIEW-nek
         $this->view->called = $this->fnTemp;
+    }
+
+    public function addPagePagination( $link = array() )
+    {
+      if (is_array($link[0])) {
+        // Multiple
+        foreach ((array)$link as $l) {
+          $this->page_pagination[] = $l;
+        }
+      } else {
+        // Simple
+        $this->page_pagination[] = $link;
+      }
+
+    }
+
+    public function getPagePagination( $html_format = true )
+    {
+      $html = '';
+
+      if ($html_format) {
+        $html .= '<div class="page-pagination">';
+      }
+
+      // Home
+      $pg = $this->page_pagination;
+      $this->page_pagination = array();
+      $this->page_pagination[] = array(
+        'title' => '<i class="fa fa-home"></i>',
+        'link' => '/'
+      );
+      $this->page_pagination = array_merge($this->page_pagination, $pg);
+
+      foreach ( $this->page_pagination as $p ) {
+        $html .= '<a href="'.$p['link'].'">'.$p['title'].'</a> / ';
+      }
+
+      if ($html_format) {
+        $html = rtrim($html, ' / ');
+        $html .= '</div>';
+      }
+      if ($html_format) {
+        return $html;
+      } else {
+        return $this->page_pagination;
+      }
     }
 
     function setTitle($title){

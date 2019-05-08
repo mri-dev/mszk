@@ -7,24 +7,22 @@ class belepes extends Controller{
 
 			$this->out( 'bodyclass', 'login');
 
-			// Bejelentkezés ellenőrzése
-			$this->view->adm = $this->AdminUser;
-			$this->view->adm->logged = $this->AdminUser->isLogged();
-			
 			// Ha be van belépve, akkor átirányítja
-			if ($this->view->adm->logged === true) {
+			if ( $this->Users->user ) {
 				Helper::reload('/');
 			}
 
 			if(isset($_POST['login'])){
 				try{
-						$this->AdminUser->login($_POST);
+						$this->Users->login($_POST);
 						Helper::reload($_GET['return']);
 				}catch(Exception $e){
 						$this->view->err    = true;
 						$this->view->bmsg   = Helper::makeAlertMsg('pError', $e->getMessage());
 				}
 			}
+
+			print_r($this->Users->user);
 
 			// SEO Információk
 			$SEO = null;

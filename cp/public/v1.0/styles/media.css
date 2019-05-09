@@ -240,6 +240,11 @@ input, textarea {
 }
 
 /* line 176, sass/media.scss */
+.badge {
+  border-radius: 1rem;
+}
+
+/* line 179, sass/media.scss */
 .slideMenu {
   position: fixed;
   left: 0;
@@ -248,14 +253,35 @@ input, textarea {
   background: white;
   z-index: 1000;
   width: 280px;
+  box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0.72);
 }
-/* line 184, sass/media.scss */
+/* line 189, sass/media.scss */
 .slideMenu .headerlogo {
   background: #1f4da3;
   height: 105px;
   position: relative;
 }
-/* line 189, sass/media.scss */
+/* line 195, sass/media.scss */
+.slideMenu .headerlogo .slideMenuToggle {
+  position: absolute;
+  right: 28px;
+  bottom: 10px;
+  z-index: 10;
+  cursor: pointer;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+/* line 204, sass/media.scss */
+.slideMenu .headerlogo .slideMenuToggle:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+/* line 209, sass/media.scss */
+.slideMenu .headerlogo .slideMenuToggle i {
+  color: white;
+  font-size: 1.4rem;
+}
+/* line 215, sass/media.scss */
 .slideMenu .headerlogo img {
   position: absolute;
   width: auto;
@@ -267,7 +293,7 @@ input, textarea {
   transform: translate(-50%, -50%);
 }
 
-/* line 201, sass/media.scss */
+/* line 227, sass/media.scss */
 #top {
   position: fixed;
   left: 0;
@@ -279,28 +305,28 @@ input, textarea {
   color: white;
   font-size: 1rem;
 }
-/* line 212, sass/media.scss */
+/* line 238, sass/media.scss */
 #top .control-bar {
   background: black;
   height: 60px;
   font-size: 0.85rem;
   padding: 0 25px;
 }
-/* line 217, sass/media.scss */
+/* line 243, sass/media.scss */
 #top .control-bar a, #top .control-bar a:hover, #top .control-bar a:visited {
   color: white;
   text-decoration: none;
 }
-/* line 222, sass/media.scss */
+/* line 248, sass/media.scss */
 #top .control-bar > div.d-flex {
   height: 60px;
 }
-/* line 226, sass/media.scss */
+/* line 252, sass/media.scss */
 #top .control-bar .message-alerts .ico {
   padding-right: 20px;
   position: relative;
 }
-/* line 229, sass/media.scss */
+/* line 255, sass/media.scss */
 #top .control-bar .message-alerts .ico .has-msg {
   position: absolute;
   right: 11px;
@@ -308,16 +334,16 @@ input, textarea {
   color: #ff4444;
   pointer-events: none;
 }
-/* line 236, sass/media.scss */
+/* line 262, sass/media.scss */
 #top .control-bar .message-alerts .ico a, #top .control-bar .message-alerts .ico a:hover, #top .control-bar .message-alerts .ico a:visited {
   color: white;
 }
-/* line 239, sass/media.scss */
+/* line 265, sass/media.scss */
 #top .control-bar .message-alerts .ico i {
   font-size: 20px;
   vertical-align: middle;
 }
-/* line 244, sass/media.scss */
+/* line 270, sass/media.scss */
 #top .control-bar .message-alerts .alert-message {
   background: #f7f6d1;
   color: #4a4a4a;
@@ -325,7 +351,7 @@ input, textarea {
   border-radius: 5px;
   padding: 5px;
 }
-/* line 251, sass/media.scss */
+/* line 277, sass/media.scss */
 #top .control-bar .message-alerts .alert-message a {
   background: #656565;
   color: white;
@@ -336,18 +362,18 @@ input, textarea {
   font-size: 0.6rem;
   vertical-align: text-top;
 }
-/* line 263, sass/media.scss */
+/* line 289, sass/media.scss */
 #top .control-bar .user-block {
   font-size: 1rem;
   font-weight: 300;
 }
-/* line 266, sass/media.scss */
+/* line 292, sass/media.scss */
 #top .control-bar .user-block i.fa-user-circle {
   font-size: 1.54rem;
   margin-right: 5px;
   vertical-align: sub;
 }
-/* line 273, sass/media.scss */
+/* line 299, sass/media.scss */
 #top .title-bar {
   background: white;
   height: 45px;
@@ -355,69 +381,132 @@ input, textarea {
   font-size: 1.1rem;
   padding: 0 25px;
 }
-/* line 279, sass/media.scss */
+/* line 305, sass/media.scss */
 #top .title-bar .page-title {
   text-transform: uppercase;
 }
-/* line 282, sass/media.scss */
+/* line 308, sass/media.scss */
 #top .title-bar > div.d-flex {
   height: 45px;
 }
 
-/* line 287, sass/media.scss */
+/* line 313, sass/media.scss */
 .ct {
-  margin-top: 105px;
+  padding-top: 105px;
+  padding-bottom: 40px;
 }
 
-/* line 290, sass/media.scss */
+/* line 317, sass/media.scss */
 .innerContent {
   padding: 25px;
 }
 
-/* line 293, sass/media.scss */
+/* line 320, sass/media.scss */
 .page-pagination {
   font-size: 0.8rem;
   margin-right: 15px;
   color: #d7d7d7;
 }
-/* line 297, sass/media.scss */
+/* line 324, sass/media.scss */
 .page-pagination a {
   margin: 0 3px;
 }
-/* line 300, sass/media.scss */
+/* line 327, sass/media.scss */
 .page-pagination a, .page-pagination a:visited {
   color: #818e9d;
 }
-/* line 304, sass/media.scss */
+/* line 331, sass/media.scss */
 .page-pagination a:last-child {
   color: #3d98e2;
 }
 
-/* line 309, sass/media.scss */
+/* line 336, sass/media.scss */
 .menu ul, .menu li {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-/* line 315, sass/media.scss */
+/* line 343, sass/media.scss */
 .menu > ul > li > a {
   color: #818e9d;
   text-decoration: none;
   display: block;
   line-height: 1.4;
-  padding: 15px 30px;
+  padding: 20px 15px;
+  position: relative;
 }
-/* line 323, sass/media.scss */
+/* line 351, sass/media.scss */
+.menu > ul > li > a i {
+  width: 25px;
+  margin-right: 15px;
+  text-align: center;
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+/* line 359, sass/media.scss */
+.menu > ul > li > a .badge {
+  border-radius: .8rem;
+  padding: 4px 7px;
+  position: absolute;
+  right: 35px;
+  top: 50%;
+  background: #3d98e2;
+  -moz-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+/* line 371, sass/media.scss */
+.menu > ul > li:hover a {
+  background: #f5f5f5;
+  color: #484848;
+}
+/* line 376, sass/media.scss */
+.menu > ul > li.has-more a:after {
+  content: "\f105";
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  right: 15px;
+  font-weight: bold;
+  top: 50%;
+  pointer-events: none;
+  -moz-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+/* line 387, sass/media.scss */
+.menu > ul > li.has-more.on a:after {
+  content: "\f107";
+  color: white;
+}
+/* line 392, sass/media.scss */
+.menu > ul > li.on a {
+  background: #3d98e2;
+  color: white;
+  font-weight: bold;
+}
+/* line 396, sass/media.scss */
+.menu > ul > li.on a .badge {
+  background: #444444;
+}
+/* line 401, sass/media.scss */
+.menu li.head {
+  background: #eff2f5;
+  padding: 8px 15px;
+  color: #4d4d4d;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.6rem;
+}
+/* line 411, sass/media.scss */
 .menu li.div {
   background: #edeff0;
   height: 1px;
 }
-/* line 327, sass/media.scss */
+/* line 415, sass/media.scss */
 .menu .ni {
   display: none;
 }
 
-/* line 333, sass/media.scss */
+/* line 421, sass/media.scss */
 .logout a,
 .logout a:visited,
 .logout a:hover {
@@ -429,7 +518,178 @@ input, textarea {
   border-radius: 5px;
 }
 
-/* line 344, sass/media.scss */
+/* line 431, sass/media.scss */
+.wblock {
+  background: white;
+  border-radius: 2px;
+  margin-bottom: 25px;
+}
+/* line 436, sass/media.scss */
+.wblock .data-footer {
+  padding: 25px;
+}
+/* line 438, sass/media.scss */
+.wblock .data-footer .title {
+  line-height: 1;
+  flex: 1;
+}
+/* line 441, sass/media.scss */
+.wblock .data-footer .title h3 {
+  color: black;
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin: 0 0 4px 0;
+}
+/* line 447, sass/media.scss */
+.wblock .data-footer .title a {
+  color: #818e9d;
+  font-size: 0.8rem;
+}
+/* line 452, sass/media.scss */
+.wblock .data-footer .count {
+  flex-basis: 65px;
+}
+/* line 454, sass/media.scss */
+.wblock .data-footer .count .count-wrapper {
+  background: #4c4c4c;
+  width: 65px;
+  height: 65px;
+  border-radius: 65px;
+  position: relative;
+}
+/* line 460, sass/media.scss */
+.wblock .data-footer .count .count-wrapper .num {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-size: 1.8rem;
+  color: white;
+}
+
+/* line 473, sass/media.scss */
+.wblock.overview-services {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}
+
+/* line 478, sass/media.scss */
+.ct-info {
+  font-size: 1rem;
+  line-height: 1;
+}
+/* line 481, sass/media.scss */
+.ct-info > div > div {
+  padding: 0 10px;
+}
+/* line 485, sass/media.scss */
+.ct-info .ico .ico-wrapper {
+  background: #4c4c4c;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  position: relative;
+}
+/* line 491, sass/media.scss */
+.ct-info .ico .ico-wrapper i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: white;
+}
+/* line 502, sass/media.scss */
+.ct-info .title {
+  white-space: nowrap;
+}
+/* line 504, sass/media.scss */
+.ct-info .title .line {
+  height: 4px;
+  background: #4c4c4c;
+  margin-top: 10px;
+}
+/* line 510, sass/media.scss */
+.ct-info .count {
+  font-size: 2rem;
+  color: black;
+}
+/* line 517, sass/media.scss */
+.ct-info.color-blue .ico .ico-wrapper {
+  background: #1f4da3;
+}
+/* line 522, sass/media.scss */
+.ct-info.color-blue .title .line {
+  background: #1f4da3;
+}
+/* line 529, sass/media.scss */
+.ct-info.color-blue-light .ico .ico-wrapper {
+  background: #3d98e2;
+}
+/* line 534, sass/media.scss */
+.ct-info.color-blue-light .title .line {
+  background: #3d98e2;
+}
+/* line 541, sass/media.scss */
+.ct-info.color-red .ico .ico-wrapper {
+  background: #ff7676;
+}
+/* line 546, sass/media.scss */
+.ct-info.color-red .title .line {
+  background: #ff7676;
+}
+/* line 553, sass/media.scss */
+.ct-info.color-green .ico .ico-wrapper {
+  background: #53e69d;
+}
+/* line 558, sass/media.scss */
+.ct-info.color-green .title .line {
+  background: #53e69d;
+}
+
+/* line 565, sass/media.scss */
+.page404-content {
+  text-align: center;
+}
+/* line 568, sass/media.scss */
+.page404-content h1 {
+  color: black;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+/* line 572, sass/media.scss */
+.page404-content h1 i {
+  font-size: 8vw;
+  margin: 0 0 30px 0;
+  color: #ff7676;
+}
+/* line 579, sass/media.scss */
+.page404-content table {
+  margin: 0 auto;
+}
+
+/* line 584, sass/media.scss */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  color: #4a5f79;
+  padding-left: 280px;
+  font-size: 0.7rem;
+  line-height: 40px;
+  height: 40px;
+  background: #d6dbe0;
+}
+/* line 597, sass/media.scss */
+footer a, footer a:visited, footer a:hover {
+  color: #4a5f79;
+}
+
+/* line 603, sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;

@@ -46,7 +46,7 @@
   				slideMenu.css({
   					'left' : '0px'
   				});
-  				$('.ct').css({
+  				$('.ct, footer').css({
   					'paddingLeft' : '280px'
   				});
           $('#top').css({
@@ -56,7 +56,7 @@
   				slideMenu.css({
   					'left' : '-'+closeNum+'px'
   				});
-  				$('.ct').css({
+  				$('.ct, footer').css({
   					'paddingLeft' : '75px'
   				});
           $('#top').css({
@@ -70,7 +70,7 @@
   					slideMenu.animate({
   						'left' : '-'+closeNum+'px'
   					},200);
-  					$('.ct').animate({
+  					$('.ct, footer').animate({
   						'paddingLeft' : '75px'
   					},200);
             $('#top').animate({
@@ -82,7 +82,7 @@
   					slideMenu.animate({
   						'left' : '0px'
   					},200);
-  					$('.ct').animate({
+  					$('.ct, footer').animate({
   						'paddingLeft' : '280px'
   					},200);
             $('#top').animate({
@@ -157,18 +157,17 @@
 <? if($this->_USER): ?>
   <div class="slideMenu">
     <div class="headerlogo">
+  	  <div class="slideMenuToggle" title="Kinyit/Becsuk"><i class="fas fa-bars"></i></div>
       <img src="<?=IMG?>logo-white.svg" alt="<?=$this->settings['page_title']?>">
     </div>
-  	<div class="slideMenuToggle" title="Kinyit/Becsuk"><i class="fa fa-arrows-h"></i></div>
     <div class="clr"></div>
  		<div class="menu">
       	<ul>
           	<li class="<?=($this->gets[0] == 'home')?'on':''?>"><a href="/" title="Dashboard"><span class="ni">1</span><i class="fas fa-tachometer-alt"></i> <?=__('Gépház')?></a></li>
-            <li class="<?=($this->gets[0] == 'ajanlatkeresek')?'on':''?>"><a href="/ajanlatkeresek" title="Ajánlatkérések"><span class="ni">2</span><i class="fa fa-edit"></i> Ajánlatkérések</a></li>
             <?php if (false): ?>
-              <li class="<?=($this->gets[0] == 'emails')?'on':''?>"><a href="/emails" title="Email sablonok"><span class="ni">8</span><i class="fa fa-envelope"></i> Email sablonok</a></li>
+              <li class="<?=($this->gets[0] == 'emails')?'on':''?>"><a href="/emails" title="<?=__('E-mail sablonok')?>"><span class="ni">8</span><i class="fa fa-envelope"></i> <?=__('E-mail sablonok')?></a></li>
             <?php endif; ?>
-            <li class="<?=($this->gets[0] == 'beallitasok')?'on':''?>"><a href="/beallitasok" title="Beállítások"><span class="ni">8</span><i class="fa fa-gear"></i> Beállítások</a></li>
+
             <li class="div"></li>
             <!-- MODULS-->
             <?php if ( !empty($this->modules) ): ?>
@@ -178,10 +177,14 @@
             <?php endforeach; ?>
             <?php endif; ?>
             <!-- End of MODULS-->
-            <li class="<?=($this->gets[0] == 'kategoriak')?'on':''?>"><a href="/kategoriak" title="Kategóriák"><span class="ni">6</span><i class="fa fa-bars"></i> Kategóriák</a></li>
-            <li class="<?=($this->gets[0] == 'szinek')?'on':''?>"><a href="/szinek" title="Színek"><span class="ni">8</span><i class="fa fa-th"></i> Színek</a></li>
-            <li class="<?=($this->gets[0] == 'motivumjaim')?'on':''?>"><a href="/motivumjaim" title="Motívumok"><span class="ni">8</span><i class="fa fa-stop"></i> Motívumok</a></li>
-            <li class="<?=($this->gets[0] == "motivumconfig")?'on':''?>"><a href="/motivumconfig" title="Saját motívum beállítások"><span class="ni">8</span><i class="fa fa-stop"></i> Saját minták</a></li>
+            <li class="has-more <?=($this->gets[0] == 'projektek')?'on':''?>"><a href="/projektek" title="<?=__('Projektek')?>"><span class="ni">8</span><i class="far fa-lightbulb"></i> <?=__('Projektek')?> <span class="badge badge-primary">10</span></a></li>
+            <li class="head"><?=__('Adminisztráció')?></li>
+            <?php if (true): ?>
+              <li class="<?=($this->gets[0] == 'beallitasok')?'on':''?>"><a href="/beallitasok" title="<?=__('Beállítások')?>"><span class="ni">8</span><i class="fas fa-cogs"></i> <?=__('Beállítások')?></a></li>
+            <?php endif; ?>
+            <?php if (true): ?>
+              <li class="<?=($this->gets[0] == 'admin' && $this->gets[1] == 'felhasznalok')?'on':''?>"><a href="/admin/felhasznalok" title="<?=__('Felhasználók')?>"><span class="ni">8</span><i class="fas fa-users"></i> <?=__('Felhasználók')?></a></li>
+            <?php endif; ?>
       	</ul>
       </div>
   </div>

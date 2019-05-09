@@ -173,6 +173,9 @@ input, textarea{
 	margin: 5px 0;
 	color: #5c5c5c;
 }
+.badge{
+	border-radius: 1rem;
+}
 .slideMenu{
 	position: fixed;
 	left: 0;
@@ -181,10 +184,33 @@ input, textarea{
 	background: white;
 	z-index: 1000;
 	width: $sidebar-width;
+	box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0.72);
+
   .headerlogo{
     background: $color-blue;
     height: $top-control-height+$top-title-height;
     position: relative;
+
+
+		.slideMenuToggle{
+			position: absolute;
+			right: 28px;
+	    bottom: 10px;
+	    z-index: 10;
+			cursor: pointer;
+			opacity: 0.5;
+			filter:alpha(opacity=50);
+
+			&:hover{
+				opacity: 1;
+				filter:alpha(opacity=100);
+			}
+
+			i{
+				color: white;
+    		font-size: 1.4rem;
+			}
+		}
 
     img {
       position: absolute;
@@ -285,7 +311,8 @@ input, textarea{
   }
 }
 .ct{
-  margin-top: $top-control-height+$top-title-height;
+  padding-top: $top-control-height+$top-title-height;
+	padding-bottom: 40px;
 }
 .innerContent{
   padding: 25px;
@@ -312,13 +339,74 @@ input, textarea{
     margin: 0;
   }
 
+
   & > ul > li > a {
     color: #818e9d;
     text-decoration: none;
     display: block;
     line-height: 1.4;
-    padding: 15px 30px;
+    padding: 20px 15px;
+		position: relative;
+
+		i{
+			width: 25px;
+			margin-right: 15px;
+			text-align: center;
+			font-size: 1.1rem;
+			vertical-align: middle;
+		}
+
+		.badge{
+			border-radius: .8rem;
+    	padding: 4px 7px;
+			position: absolute;
+			right: 35px;
+	    top: 50%;
+			background: $color-blue-light;
+	    -moz-transform: translateY(-50%);
+	    transform: translateY(-50%);
+		}
   }
+
+	& > ul > li:hover a{
+		background: #f5f5f5;
+		color: #484848;
+	}
+
+	& > ul > li.has-more a:after{
+		content:"\f105";
+		font-family: "Font Awesome 5 Free";
+		position: absolute;
+		right: 15px;
+		font-weight: bold;
+		top: 50%;
+		pointer-events: none;
+		-moz-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+	& > ul > li.has-more.on a:after{
+		content:"\f107";
+		color: white;
+	}
+
+	& > ul > li.on a{
+		background: $color-blue-light;
+		color: white;
+		font-weight: bold;
+		.badge{
+			background: #444444;
+		}
+	}
+
+	li.head{
+		background: #eff2f5;
+		padding: 8px 15px;
+		color: #4d4d4d;
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		font-size: 0.6rem;
+	}
 
   li.div{
     background: #edeff0;
@@ -338,6 +426,177 @@ input, textarea{
   padding: 6px 10px;
   border-radius: 5px;
 
+}
+
+.wblock{
+	background: white;
+	border-radius: 2px;
+	margin-bottom: 25px;
+
+	.data-footer{
+		padding: 25px;
+		.title{
+			line-height: 1;
+			flex: 1;
+			h3{
+				color: black;
+				font-weight: bold;
+				font-size: 1.3rem;
+				margin: 0 0 4px 0;
+			}
+			a{
+				color: #818e9d;
+				font-size: 0.8rem;
+			}
+		}
+		.count {
+			flex-basis: 65px;
+			.count-wrapper{
+				background: #4c4c4c;
+				width: 65px;
+		    height: 65px;
+		    border-radius: 65px;
+		    position: relative;
+				.num{
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					-webkit-transform: translate(-50%,-50%);
+					transform: translate(-50%,-50%);
+					font-size: 1.8rem;
+					color: white;
+				}
+			}
+		}
+	}
+}
+.wblock.overview-services{
+	padding-top: 15px !important;
+	padding-bottom: 15px !important;
+}
+
+.ct-info{
+	font-size: 1rem;
+	line-height: 1;
+	& > div > div {
+		padding: 0 10px;
+	}
+	.ico {
+		.ico-wrapper{
+			background: #4c4c4c;
+			width: 50px;
+	    height: 50px;
+	    border-radius: 50px;
+	    position: relative;
+			i{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translate(-50%,-50%);
+				transform: translate(-50%,-50%);
+				font-size: 2rem;
+				color: white;
+			}
+		}
+	}
+	.title{
+    white-space: nowrap;
+		.line{
+			height: 4px;
+			background: #4c4c4c;
+			margin-top: 10px;
+		}
+	}
+	.count{
+		font-size: 2rem;
+		color: black;
+	}
+
+	&.color-blue{
+		.ico {
+			.ico-wrapper{
+				background: $color-blue;
+			}
+		}
+		.title{
+			.line{
+				background:$color-blue;
+			}
+		}
+	}
+	&.color-blue-light{
+		.ico {
+			.ico-wrapper{
+				background: $color-blue-light;
+			}
+		}
+		.title{
+			.line{
+				background:$color-blue-light;
+			}
+		}
+	}
+	&.color-red{
+		.ico {
+			.ico-wrapper{
+				background: $color-red-light;
+			}
+		}
+		.title{
+			.line{
+				background:$color-red-light;
+			}
+		}
+	}
+	&.color-green{
+		.ico {
+			.ico-wrapper{
+				background: $color-green-light;
+			}
+		}
+		.title{
+			.line{
+				background:$color-green-light;
+			}
+		}
+	}
+}
+
+.page404-content{
+	text-align: center;
+
+	h1{
+		color: black;
+		text-transform: uppercase;
+		font-weight: bold;
+		i{
+			font-size: 8vw;
+			margin: 0 0 30px 0;
+			color: $color-red-light;
+		}
+	}
+
+	table {
+		margin: 0 auto;
+	}
+}
+
+footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 90;
+	color: #4a5f79;
+	padding-left: $sidebar-width;
+	font-size: 0.7rem;
+	line-height: 40px;
+	height: 40px;
+	background: #d6dbe0;
+
+	a, a:visited, a:hover{
+		color: #4a5f79;
+	}
 }
 
 body.user-group-user{

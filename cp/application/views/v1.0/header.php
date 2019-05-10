@@ -120,15 +120,18 @@
 <? if($this->_USER): ?>
 <div id="top">
 	<div class="control-bar">
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex __justify-content-between align-items-center">
       <div class="message-alerts">
         <div class="d-flex align-items-center">
           <div class="ico">
             <div class="has-msg"><i class="far fa-dot-circle"></i></div>
-            <a href="/uzenetek"><i class="far fa-envelope"></i></a>
+            <a href="/ertesitesek"><i class="far fa-bell"></i></a>
           </div>
-          <div class="alert-message"><?=end(explode(" ", $this->_USERDATA['data']['nev']))?>, <?=sprintf(__('%d db olvasatlan üzenete van!'), 0)?> <a href="/uzenetek"><?=__('Megnézem')?></a>  </div>
+          <div class="alert-message"><?=end(explode(" ", $this->_USERDATA['data']['nev']))?>, <?=sprintf(__('%d db olvasatlan értesítése van!'), 0)?> <a href="/ertesitesek"><?=__('Megnézem')?></a>  </div>
         </div>
+      </div>
+      <div class="user-group">
+        <span><?=$this->_USERDATA['data']['user_group_name']?></span>
       </div>
       <div class="user-block">
         <a href="/profil"><i class="far fa-user-circle"></i> <?=$this->_USERDATA['data']['nev']?> <i class="fas fa-angle-down"></i></a>
@@ -177,13 +180,52 @@
             <?php endforeach; ?>
             <?php endif; ?>
             <!-- End of MODULS-->
-            <li class="has-more <?=($this->gets[0] == 'projektek')?'on':''?>"><a href="/projektek" title="<?=__('Projektek')?>"><span class="ni">8</span><i class="far fa-lightbulb"></i> <?=__('Projektek')?> <span class="badge badge-primary">10</span></a></li>
-            <li class="head"><?=__('Adminisztráció')?></li>
-            <?php if (true): ?>
-              <li class="<?=($this->gets[0] == 'beallitasok')?'on':''?>"><a href="/beallitasok" title="<?=__('Beállítások')?>"><span class="ni">8</span><i class="fas fa-cogs"></i> <?=__('Beállítások')?></a></li>
+            <li class="has-more <?=($this->gets[0] == 'ajanlatkeresek')?'on':''?>"><a href="/ajanlatkeresek" title="<?=__('Árajánlat kérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Árajánlat kérések')?> <span class="badge badge-primary">7</span></a></li>
+            <?php if ($this->gets[0] == 'ajanlatkeresek'): ?>
+              <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'elfogadott')?'on':''?>"><a href="/ajanlatkeresek/elfogadott" title="<?=__('Elfogadott')?>"><span class="ni">8</span><i class="fas fa-check"></i> <?=__('Elfogadott')?></a></li>
+              <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'fuggoben')?'on':''?>"><a href="/ajanlatkeresek/fuggoben" title="<?=__('Függőben')?>"><span class="ni">8</span><i class="fas fa-question"></i> <?=__('Függőben')?></a></li>
             <?php endif; ?>
-            <?php if (true): ?>
-              <li class="<?=($this->gets[0] == 'admin' && $this->gets[1] == 'felhasznalok')?'on':''?>"><a href="/admin/felhasznalok" title="<?=__('Felhasználók')?>"><span class="ni">8</span><i class="fas fa-users"></i> <?=__('Felhasználók')?></a></li>
+            <li class="has-more <?=($this->gets[0] == 'projektek')?'on':''?>"><a href="/projektek" title="<?=__('Projektek')?>"><span class="ni">8</span><i class="far fa-lightbulb"></i> <?=__('Projektek')?> <span class="badge badge-primary">10</span></a></li>
+            <?php if ($this->gets[0] == 'projektek'): ?>
+              <li class="sub <?=($this->gets[0] == 'projektek' && $this->gets[1] == 'aktualis')?'on':''?>"><a href="/projektek/aktualis" title="<?=__('Aktív projektek')?>"><span class="ni">8</span><i class="far fa-folder-open"></i> <?=__('Aktív projektek')?> <span class="badge badge-primary">10</span></a></li>
+              <li class="sub <?=($this->gets[0] == 'projektek' && $this->gets[1] == 'lezart')?'on':''?>"><a href="/projektek/lezart" title="<?=__('Lezárt projektek')?>"><span class="ni">8</span><i class="fas fa-folder"></i> <?=__('Lezárt projektek')?> <span class="badge badge-primary">8</span></a></li>
+            <?php endif; ?>
+
+            <?php if (in_array($this->_USERDATA['data']['user_group'], array('user', 'szolgaltato'))): ?>
+            <li class="has-more <?=($this->gets[0] == 'uzenetek')?'on':''?>"><a href="/uzenetek" title="<?=__('Üzenetek')?>"><span class="ni">8</span><i class="fas fa-envelope"></i> <?=__('Üzenetek')?> <span class="badge badge-primary">2</span></a></li>
+            <?php endif; ?>
+
+            <li class="has-more <?=($this->gets[0] == 'dokumentumok')?'on':''?>"><a href="/dokumentumok" title="<?=__('Dokumentumok')?>"><span class="ni">8</span><i class="far fa-file-alt"></i> <?=__('Dokumentumok')?></a></li>
+            <?php if ($this->gets[0] == 'dokumentumok'): ?>
+              <li class="sub"><a href="/dokumentumok/dijbekero" title="<?=__('Díjbekérők')?>"><span class="ni">8</span><i class="fas fa-ellipsis-h"></i> <?=__('Díjbekérők')?></a></li>
+              <li class="sub"><a href="/dokumentumok/szamla" title="<?=__('Számlák')?>"><span class="ni">8</span><i class="fas fa-ellipsis-h"></i> <?=__('Számlák')?></a></li>
+            <?php endif; ?>
+            <li class="div"></li>
+
+            <?php if (in_array($this->_USERDATA['data']['user_group'], array('user', 'szolgaltato'))): ?>
+              <li class="shortcut"><a href="/dokumentumok/dijbekero" title="<?=__('Díjbekérők')?>"><span class="ni">8</span><i class="fas fa-external-link-alt"></i> <?=__('Díjbekérők')?></a></li>
+              <li class="shortcut"><a href="/dokumentumok/szamla" title="<?=__('Számlák')?>"><span class="ni">8</span><i class="fas fa-external-link-alt"></i> <?=__('Számlák')?></a></li>
+            <?php endif; ?>
+
+
+            <?php if ($this->_USERDATA['data']['user_group'] == 'szolgaltato'): ?>
+              <li class="head"><?=__('Adminisztráció')?></li>
+              <li class="<?=($this->gets[0] == 'cegem')?'on':''?>"><a href="/cegem" title="<?=__('Szolgáltatásaim')?>"><span class="ni">8</span><i class="far fa-building"></i> <?=__('Szolgáltatásaim')?></a></li>
+            <?php endif; ?>
+
+            <?php
+            // Admin és Super admin menük
+            if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
+              <li class="head"><?=__('Adminisztráció')?></li>
+              <?php if (true): ?>
+                <li class="<?=($this->gets[0] == 'adminconsole' && $this->gets[1] == 'felhasznalok')?'on':''?>"><a href="/adminconsole/felhasznalok" title="<?=__('Felhasználók')?>"><span class="ni">8</span><i class="fas fa-users"></i> <?=__('Felhasználók')?></a></li>
+              <?php endif; ?>
+              <?php if (true): ?>
+                <li class="<?=($this->gets[0] == 'adminconsole' && $this->gets[1] == 'lists')?'on':''?>"><a href="/adminconsole/lists" title="<?=__('Listák')?>"><span class="ni">8</span><i class="fas fa-stream"></i> <?=__('Listák')?></a></li>
+              <?php endif; ?>
+              <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin'): ?>
+                <li class="<?=($this->gets[0] == 'beallitasok')?'on':''?>"><a href="/beallitasok" title="<?=__('Beállítások')?>"><span class="ni">8</span><i class="fas fa-cogs"></i> <?=__('Beállítások')?></a></li>
+              <?php endif; ?>
             <?php endif; ?>
       	</ul>
       </div>

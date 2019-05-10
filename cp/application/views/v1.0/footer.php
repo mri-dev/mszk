@@ -1,6 +1,7 @@
 </div>
 </div>
 </div>
+<?php if ($this->_USER): ?>
 <footer>
   <div class="copyright row justify-content-md-center ">
     <div class="col-md-12 center">
@@ -8,5 +9,6 @@
     </div>
   </div>
 </footer>
+<?php endif; ?>
 </body>
 </html>

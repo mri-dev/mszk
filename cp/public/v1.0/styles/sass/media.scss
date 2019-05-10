@@ -62,7 +62,7 @@ input, textarea{
   width: 500px;
   max-width: 500px;
 	margin: 0 auto;
-	padding: 15% 0 0 0;
+	padding: 5rem 0 0 0;
 }
 #login .login-box-holder{
   background: black;
@@ -239,7 +239,7 @@ input, textarea{
     background: black;
     height: $top-control-height;
     font-size: 0.85rem;
-    padding: 0 25px;
+    padding: 0 20px;
     a, a:hover, a:visited{
       color: white;
       text-decoration: none;
@@ -247,24 +247,32 @@ input, textarea{
 
     & > div.d-flex{
       height: $top-control-height;
+			& > div {
+				padding: 0 5px;
+			}
     }
     .message-alerts{
+			flex: 1;
       .ico{
         padding-right:20px;
         position: relative;
+
+        i{
+          font-size: 20px;
+          vertical-align: middle;
+        }
         .has-msg{
           position: absolute;
           right: 11px;
           top: -6px;
           color: #ff4444;
           pointer-events: none;
+					i {
+						font-size: 16px;
+					}
         }
         a, a:hover, a:visited{
           color: white;
-        }
-        i{
-          font-size: 20px;
-          vertical-align: middle;
         }
       }
       .alert-message{
@@ -273,6 +281,7 @@ input, textarea{
          font-size: 0.7rem;
          border-radius: 5px;
          padding: 5px;
+				 position: relative;
 
          a{
           background: #656565;
@@ -284,17 +293,45 @@ input, textarea{
           font-size: 0.6rem;
           vertical-align: text-top;
          }
+
+				 &:before{
+					 content:"";
+					 border-style: solid;
+					 border-width: 5px;
+					 border-color: transparent #f7f6d1 transparent transparent;
+					 position: absolute;
+					 left: -10px;
+					 top: 50%;
+					 -moz-transform:translateY(-50%);
+					 transform:translateY(-50%);
+				 }
       }
     }
     .user-block{
+			flex-basis: 150px;
       font-size: 1rem;
       font-weight: 300;
+			text-align: right;
       i.fa-user-circle{
         font-size: 1.54rem;
         margin-right: 5px;
         vertical-align: sub;
       }
+
+			a{
+				white-space: nowrap;
+			}
     }
+		.user-group{
+			flex-basis: 150px;
+			text-align: right;
+			span {
+				background: #2f2f2f;
+		    padding: 5px 8px;
+		    border-radius: 10px;
+		    font-size: 0.7rem;
+			}
+		}
   }
   .title-bar{
     background: white;
@@ -367,6 +404,12 @@ input, textarea{
 	    transform: translateY(-50%);
 		}
   }
+	& > ul > li.shortcut > a {
+    padding: 15px 15px;
+		i{
+			font-size:1rem;
+		}
+	}
 
 	& > ul > li:hover a{
 		background: #f5f5f5;
@@ -396,6 +439,21 @@ input, textarea{
 		.badge{
 			background: #444444;
 		}
+	}
+
+	li.sub > a{
+		font-size: 0.84rem;
+		background: #f1f1f1;
+		padding: 15px 15px;
+
+		& > i {
+			font-size: 1rem;
+			margin-right: 5px;
+    	margin-left: 10px;
+		}
+	}
+	li.sub.on > a{
+		background: #768188;
 	}
 
 	li.head{
@@ -435,6 +493,7 @@ input, textarea{
 
 	.data-footer{
 		padding: 25px;
+		border-top: 0.5px solid #e0e9f3;
 		.title{
 			line-height: 1;
 			flex: 1;
@@ -465,6 +524,50 @@ input, textarea{
 					transform: translate(-50%,-50%);
 					font-size: 1.8rem;
 					color: white;
+				}
+			}
+		}
+	}
+
+	.no-data-view{
+		text-align: center;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: #989899;
+    padding: 2rem 1rem;
+    background: #fafcfe;
+
+		i{
+			font-size: 2rem;
+    	color: #a1aeba;
+		}
+	}
+
+	&.color-green{
+		.data-footer{
+			.count {
+				.count-wrapper{
+					background: $color-green-light;
+				}
+			}
+		}
+	}
+
+	&.color-red{
+		.data-footer{
+			.count {
+				.count-wrapper{
+					background: $color-red-light;
+				}
+			}
+		}
+	}
+
+	&.color-blue{
+		.data-footer{
+			.count {
+				.count-wrapper{
+					background: $color-blue-light;
 				}
 			}
 		}
@@ -607,5 +710,25 @@ body.user-group-user{
     background: -webkit-linear-gradient(45deg, #3d98e2 15%,#2a78dd 66%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(45deg, #3d98e2 15%,#2a78dd 66%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3d98e2', endColorstr='#2a78dd',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  }
+}
+body.user-group-superadmin{
+  #top .control-bar{
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
+		background: #8d6093; /* Old browsers */
+		background: -moz-linear-gradient(45deg, #8d6093 15%, #6b3d73 66%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(45deg, #8d6093 15%,#6b3d73 66%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(45deg, #8d6093 15%,#6b3d73 66%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8d6093', endColorstr='#6b3d73',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  }
+}
+body.user-group-szolgaltato{
+  #top .control-bar{
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
+		background: #76c1b8; /* Old browsers */
+		background: -moz-linear-gradient(45deg, #76c1b8 15%, #53ab9f 66%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(45deg, #76c1b8 15%,#53ab9f 66%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(45deg, #76c1b8 15%,#53ab9f 66%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#76c1b8', endColorstr='#53ab9f',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
   }
 }

@@ -104,6 +104,7 @@ class Users
 
 		$ret[data] 	= ($user) ? $this->getData($user, $getby) : false;
 		$ret[email] = $ret[data][email];
+		$ret['data']['user_group_name'] = $this->getUserGroupes( $ret['data']['user_group'] );
 
 
 		if( !$ret[data] ) {
@@ -733,7 +734,7 @@ class Users
 		}
 
 		if(!$this->isEnabled($data[email])){
-			throw new \Exception('A fiók felfüggesztésre került!',1001);
+			throw new \Exception('Az Ön fiókja nem jogosult a weboldal használatára!',1001);
 		}
 
 		// Refresh

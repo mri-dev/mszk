@@ -139,7 +139,12 @@ class Controller {
       $this->page_pagination = array_merge($this->page_pagination, $pg);
 
       foreach ( $this->page_pagination as $p ) {
-        $html .= '<a href="'.$p['link'].'">'.$p['title'].'</a> / ';
+        if ($p['link']) {
+          $html .= '<a href="'.$p['link'].'">'.$p['title'].'</a> / ';
+        } else {
+          $html .= '<span class="no-link">'.$p['title'].'</span> / ';
+        }
+
       }
 
       if ($html_format) {

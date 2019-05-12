@@ -486,10 +486,67 @@ input, textarea{
 
 }
 
+table.table{
+	font-size: 0.82rem;
+}
+
+i.info {
+	font-size: 10px;
+	cursor: help;
+	color: $color-blue-light;
+}
+
+.row + .row{
+	margin-top: 15px;
+}
+
+.actions{
+	a > i{
+		font-size: 0.65rem;
+	}
+	a > i.fa-pencil-alt{
+		color: $color-green;
+	}
+	a > i.fa-trash-alt{
+		color: $color-red;
+	}
+}
+
 .wblock{
 	background: white;
 	border-radius: 2px;
 	margin-bottom: 25px;
+
+	.data-header{
+		padding: 15px 0;
+    background: #e3e8ec;
+    border-bottom: 0.5px solid #a6aaad;
+
+		.closer {
+			a, a:visited, a:hover{ color: white; }
+		}
+
+		.title{
+	    font-size: 1.1rem;
+	    text-transform: uppercase;
+	    color: #333333;
+	    font-weight: bold;
+		}
+
+		.btn {
+			text-transform: none;
+		}
+
+		i.ico {
+			margin-right: 8px;
+		}
+	}
+
+	.data-container{
+		.dc-padding{
+			padding: 15px;
+		}
+	}
 
 	.data-footer{
 		padding: 25px;
@@ -544,6 +601,12 @@ input, textarea{
 	}
 
 	&.color-green{
+		.data-header{
+			background: $color-green-light;
+			.title{
+				color:white;
+			}
+		}
 		.data-footer{
 			.count {
 				.count-wrapper{
@@ -554,6 +617,12 @@ input, textarea{
 	}
 
 	&.color-red{
+		.data-header{
+			background: $color-red-light;
+			.title{
+				color:white;
+			}
+		}
 		.data-footer{
 			.count {
 				.count-wrapper{
@@ -564,6 +633,12 @@ input, textarea{
 	}
 
 	&.color-blue{
+		.data-header{
+			background: $color-blue-light;
+			.title{
+				color:white;
+			}
+		}
 		.data-footer{
 			.count {
 				.count-wrapper{

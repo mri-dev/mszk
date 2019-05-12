@@ -37,3 +37,30 @@ a.controller("ctrl", ['$scope', '$http', '$mdToast', function($scope, $http, $md
 		}
 	}
 }]);
+
+$(function(){
+	$('*[data-list-searcher]').keyup(function(ev){
+		ev.preventDefault();
+		var src = $(this).val();
+		var list = $(this).data('list-searcher');
+		var target_table = $('table#'+list);
+		var lines = target_table.find('tbody > tr[data-itemsrc]');
+
+		jQuery.each(lines, function(i,e){
+			var t = $(e);
+			var ts = t.data('itemsrc');
+			var finded = -1;
+
+			if (src != '') {
+				finded = ts.indexOf(src);
+				if (finded == -1) {
+					t.hide();
+				} else {
+					t.show();
+				}
+			} else {
+				t.show();
+			}
+		});
+	})
+});

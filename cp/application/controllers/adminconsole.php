@@ -1,11 +1,14 @@
 <?php
+use PortalManager\Categories;
+use PortalManager\Category;
+
 class adminconsole extends Controller{
 		function __construct(){
 			parent::__construct();
 			parent::$pageTitle = __('Adminisztráció');
 
 			$this->addPagePagination(array(
-				'link' => '/'.__CLASS__,
+				'link' => false,
 				'title' => parent::$pageTitle
 			));
 
@@ -52,6 +55,70 @@ class adminconsole extends Controller{
 				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
 				'title' => parent::$pageTitle
 			));
+
+			// Listák
+			$lists = new Categories( array( 'db' => $this->db ) );
+			$lists_groups = $lists->getGroups();
+
+
+			// Új lista
+			if( isset($_POST['addCategory']) )
+			{
+				try {
+					$lists->add( $_POST );
+					Helper::reload();
+				} catch ( Exception $e ) {
+					$this->view->err	= true;
+					$this->view->bmsg 	= Helper::makeAlertMsg('pError', $e->getMessage());
+				}
+			}
+
+			// Szerkesztés
+			if ( $_GET['creator'] == 'edit') {
+				// Kategória adatok
+				$list_data = new Category( $_GET['id'],  array( 'db' => $this->db )  );
+				$this->out( 'list', $list_data );
+
+				// Változások mentése
+				if(isset($_POST['saveCategory']) )
+				{
+					try {
+						$lists->edit( $list_data, $_POST );
+						Helper::reload();
+					} catch ( Exception $e ) {
+						$this->view->err	= true;
+						$this->view->bmsg 	= Helper::makeAlertMsg('pError', $e->getMessage());
+					}
+				}
+			}
+
+			// Törlés
+			if ( $_GET['creator'] == 'delete') {
+				// Lista adatok
+				$list_data = new Category( $_GET['id'], array( 'db' => $this->db )  );
+				$this->out( 'list_d', $list_data );
+
+				// Kategória törlése
+				if( isset($_POST['deleteCategory']) )
+				{
+					try {
+						$lists->delete( $list_data );
+						Helper::reload( '/adminconsole/lists/' );
+					} catch ( Exception $e ) {
+						$this->view->err	= true;
+						$this->view->bmsg 	= Helper::makeAlertMsg('pError', $e->getMessage());
+					}
+				}
+			}
+
+
+			// LOAD
+			////////////////////////////////////////////////////////////////////////////////////////
+			$list_tree 	= $lists->getTree();
+			// Lista elemek
+			$this->out( 'lists', $list_tree );
+			// Lista csoportok
+			$this->out( 'groups', $lists_groups );
 
     }
 

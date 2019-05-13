@@ -622,65 +622,76 @@ i.info {
 /* line 519, sass/media.scss */
 .wblock {
   background: white;
-  border-radius: 2px;
+  border-radius: 3px;
   margin-bottom: 25px;
+  border: 0.5px solid #d8e2ec;
+  overflow: hidden;
 }
-/* line 524, sass/media.scss */
+/* line 526, sass/media.scss */
 .wblock .data-header {
   padding: 15px 0;
   background: #e3e8ec;
   border-bottom: 0.5px solid #a6aaad;
 }
-/* line 530, sass/media.scss */
+/* line 531, sass/media.scss */
+.wblock .data-header .list-info {
+  color: black;
+  font-size: 0.8rem;
+}
+/* line 537, sass/media.scss */
 .wblock .data-header .closer a, .wblock .data-header .closer a:visited, .wblock .data-header .closer a:hover {
   color: white;
 }
-/* line 533, sass/media.scss */
+/* line 540, sass/media.scss */
 .wblock .data-header .title {
   font-size: 1.1rem;
   text-transform: uppercase;
   color: #333333;
   font-weight: bold;
 }
-/* line 540, sass/media.scss */
+/* line 547, sass/media.scss */
 .wblock .data-header .btn {
   text-transform: none;
 }
-/* line 544, sass/media.scss */
+/* line 551, sass/media.scss */
 .wblock .data-header i.ico {
   margin-right: 8px;
 }
-/* line 550, sass/media.scss */
+/* line 557, sass/media.scss */
 .wblock .data-container .dc-padding {
   padding: 15px;
 }
-/* line 555, sass/media.scss */
+/* line 560, sass/media.scss */
+.wblock .data-container table.table {
+  margin: 0;
+}
+/* line 565, sass/media.scss */
 .wblock .data-footer {
   padding: 25px;
   border-top: 0.5px solid #e0e9f3;
 }
-/* line 558, sass/media.scss */
+/* line 568, sass/media.scss */
 .wblock .data-footer .title {
   line-height: 1;
   flex: 1;
 }
-/* line 561, sass/media.scss */
+/* line 571, sass/media.scss */
 .wblock .data-footer .title h3 {
   color: black;
   font-weight: bold;
   font-size: 1.3rem;
   margin: 0 0 4px 0;
 }
-/* line 567, sass/media.scss */
+/* line 577, sass/media.scss */
 .wblock .data-footer .title a {
   color: #818e9d;
   font-size: 0.8rem;
 }
-/* line 572, sass/media.scss */
+/* line 582, sass/media.scss */
 .wblock .data-footer .count {
   flex-basis: 65px;
 }
-/* line 574, sass/media.scss */
+/* line 584, sass/media.scss */
 .wblock .data-footer .count .count-wrapper {
   background: #4c4c4c;
   width: 65px;
@@ -688,7 +699,7 @@ i.info {
   border-radius: 65px;
   position: relative;
 }
-/* line 580, sass/media.scss */
+/* line 590, sass/media.scss */
 .wblock .data-footer .count .count-wrapper .num {
   position: absolute;
   top: 50%;
@@ -698,7 +709,7 @@ i.info {
   font-size: 1.8rem;
   color: white;
 }
-/* line 593, sass/media.scss */
+/* line 603, sass/media.scss */
 .wblock .no-data-view {
   text-align: center;
   font-size: 1.1rem;
@@ -707,64 +718,64 @@ i.info {
   padding: 2rem 1rem;
   background: #fafcfe;
 }
-/* line 601, sass/media.scss */
+/* line 611, sass/media.scss */
 .wblock .no-data-view i {
   font-size: 2rem;
   color: #a1aeba;
 }
-/* line 608, sass/media.scss */
+/* line 618, sass/media.scss */
 .wblock.color-green .data-header {
   background: #53e69d;
 }
-/* line 610, sass/media.scss */
+/* line 620, sass/media.scss */
 .wblock.color-green .data-header .title {
   color: white;
 }
-/* line 616, sass/media.scss */
+/* line 626, sass/media.scss */
 .wblock.color-green .data-footer .count .count-wrapper {
   background: #53e69d;
 }
-/* line 624, sass/media.scss */
+/* line 634, sass/media.scss */
 .wblock.color-red .data-header {
   background: #ff7676;
 }
-/* line 626, sass/media.scss */
+/* line 636, sass/media.scss */
 .wblock.color-red .data-header .title {
   color: white;
 }
-/* line 632, sass/media.scss */
+/* line 642, sass/media.scss */
 .wblock.color-red .data-footer .count .count-wrapper {
   background: #ff7676;
 }
-/* line 640, sass/media.scss */
+/* line 650, sass/media.scss */
 .wblock.color-blue .data-header {
   background: #3d98e2;
 }
-/* line 642, sass/media.scss */
+/* line 652, sass/media.scss */
 .wblock.color-blue .data-header .title {
   color: white;
 }
-/* line 648, sass/media.scss */
+/* line 658, sass/media.scss */
 .wblock.color-blue .data-footer .count .count-wrapper {
   background: #3d98e2;
 }
 
-/* line 655, sass/media.scss */
+/* line 665, sass/media.scss */
 .wblock.overview-services {
   padding-top: 15px !important;
   padding-bottom: 15px !important;
 }
 
-/* line 660, sass/media.scss */
+/* line 670, sass/media.scss */
 .ct-info {
   font-size: 1rem;
   line-height: 1;
 }
-/* line 663, sass/media.scss */
+/* line 673, sass/media.scss */
 .ct-info > div > div {
   padding: 0 10px;
 }
-/* line 667, sass/media.scss */
+/* line 677, sass/media.scss */
 .ct-info .ico .ico-wrapper {
   background: #4c4c4c;
   width: 50px;
@@ -772,7 +783,7 @@ i.info {
   border-radius: 50px;
   position: relative;
 }
-/* line 673, sass/media.scss */
+/* line 683, sass/media.scss */
 .ct-info .ico .ico-wrapper i {
   position: absolute;
   top: 50%;
@@ -782,76 +793,76 @@ i.info {
   font-size: 2rem;
   color: white;
 }
-/* line 684, sass/media.scss */
+/* line 694, sass/media.scss */
 .ct-info .title {
   white-space: nowrap;
 }
-/* line 686, sass/media.scss */
+/* line 696, sass/media.scss */
 .ct-info .title .line {
   height: 4px;
   background: #4c4c4c;
   margin-top: 10px;
 }
-/* line 692, sass/media.scss */
+/* line 702, sass/media.scss */
 .ct-info .count {
   font-size: 2rem;
   color: black;
 }
-/* line 699, sass/media.scss */
+/* line 709, sass/media.scss */
 .ct-info.color-blue .ico .ico-wrapper {
   background: #1f4da3;
 }
-/* line 704, sass/media.scss */
+/* line 714, sass/media.scss */
 .ct-info.color-blue .title .line {
   background: #1f4da3;
 }
-/* line 711, sass/media.scss */
+/* line 721, sass/media.scss */
 .ct-info.color-blue-light .ico .ico-wrapper {
   background: #3d98e2;
 }
-/* line 716, sass/media.scss */
+/* line 726, sass/media.scss */
 .ct-info.color-blue-light .title .line {
   background: #3d98e2;
 }
-/* line 723, sass/media.scss */
+/* line 733, sass/media.scss */
 .ct-info.color-red .ico .ico-wrapper {
   background: #ff7676;
 }
-/* line 728, sass/media.scss */
+/* line 738, sass/media.scss */
 .ct-info.color-red .title .line {
   background: #ff7676;
 }
-/* line 735, sass/media.scss */
+/* line 745, sass/media.scss */
 .ct-info.color-green .ico .ico-wrapper {
   background: #53e69d;
 }
-/* line 740, sass/media.scss */
+/* line 750, sass/media.scss */
 .ct-info.color-green .title .line {
   background: #53e69d;
 }
 
-/* line 747, sass/media.scss */
+/* line 757, sass/media.scss */
 .page404-content {
   text-align: center;
 }
-/* line 750, sass/media.scss */
+/* line 760, sass/media.scss */
 .page404-content h1 {
   color: black;
   text-transform: uppercase;
   font-weight: bold;
 }
-/* line 754, sass/media.scss */
+/* line 764, sass/media.scss */
 .page404-content h1 i {
   font-size: 8vw;
   margin: 0 0 30px 0;
   color: #ff7676;
 }
-/* line 761, sass/media.scss */
+/* line 771, sass/media.scss */
 .page404-content table {
   margin: 0 auto;
 }
 
-/* line 766, sass/media.scss */
+/* line 776, sass/media.scss */
 footer {
   position: fixed;
   bottom: 0;
@@ -865,12 +876,12 @@ footer {
   height: 40px;
   background: #d6dbe0;
 }
-/* line 779, sass/media.scss */
+/* line 789, sass/media.scss */
 footer a, footer a:visited, footer a:hover {
   color: #4a5f79;
 }
 
-/* line 785, sass/media.scss */
+/* line 795, sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -885,7 +896,7 @@ body.user-group-user #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 795, sass/media.scss */
+/* line 805, sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -900,7 +911,7 @@ body.user-group-superadmin #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 805, sass/media.scss */
+/* line 815, sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;

@@ -1,6 +1,7 @@
 <?php
 use PortalManager\Categories;
 use PortalManager\Category;
+use PortalManager\Pagination;
 
 class adminconsole extends Controller{
 		function __construct(){
@@ -47,11 +48,33 @@ class adminconsole extends Controller{
     public function felhasznalok()
     {
       parent::$pageTitle = __('Felhasználók');
+
+			$users = $this->Users->getUserList();
+
+
       $this->addPagePagination(array(
 				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
 				'title' => parent::$pageTitle
 			));
 
+			/* Pagination */
+			$get = $_GET;
+			$root = '/'.__CLASS__;
+			$root .= '/'.$this->gets[1];
+			unset($get['tag']);
+			$get = http_build_query($get);
+			$this->out( 'navigator', (new Pagination(array(
+				'class' => 'pagination pagination-sm justify-content-center',
+				'current' => $users['info']['pages']['current'],
+				'max' => $users['info']['pages']['max'],
+				'root' => $root,
+				'after' => ( $get ) ? '?'.$get : '',
+				'item_limit' => 12
+			)))->render() );
+
+			////////////////////////////////////////////////////////////////////////////////////////
+			// Felhasználó lista
+			$this->out( 'users', $users );
     }
     /**
     * /adminconsole/list - Dinamikus listák Controller
@@ -171,7 +194,6 @@ class adminconsole extends Controller{
 				}
 			}
 
-			// LOAD
 			////////////////////////////////////////////////////////////////////////////////////////
 			$arg = array();
 			$filtergroup = (isset($_COOKIE['filtergroup'])) ? (int)$_COOKIE['filtergroup'] : false;

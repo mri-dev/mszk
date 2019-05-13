@@ -315,7 +315,6 @@ class Users
 		return $data;
 	}
 
-
 	public function getAlerts( $acc_id = false, $user_group = false )
 	{
 		$has_alerts 	= 0;
@@ -326,23 +325,6 @@ class Users
 		$this->alerts['has_alert'] 	= ( $has_alerts === 0 ) ? false : $has_alerts;
 
 		return $this->alerts;
-	}
-
-	public function checkWaterCardDiscount( $user_id )
-	{
-		if( !$user_id ) return false;
-
-		$qry = $this->db->query("SELECT arena_water_card FROM felhasznalok WHERE ID = $user_id;");
-
-		if( $qry->rowCount() == 0 ) {
-			return false;
-		}
-
-		$data = $qry->fetch(\PDO::FETCH_ASSOC);
-
-		if( $data['arena_water_card'] == 0 ) return false;
-
-		return true;
 	}
 
 	function resetPassword( $data ){
@@ -371,158 +353,6 @@ class Users
 		$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'user_password_reset', $arg ) );
 		$re = $mail->sendMail();
 	}
-
-	function getAllKedvezmeny(){
-		// Kedvezmény sávok
-		$sv = "SELECT * FROM torzsvasarloi_kedvezmeny ORDER BY ar_from ASC;";
-
-		extract($this->db->q($sv,array('multi' => '1')));
-
-		return $data;
-	}
-
-	function getAllElorendelesiKedvezmeny(){
-		// Kedvezmény sávok
-		$sv = "SELECT * FROM elorendelesi_kedvezmeny ORDER BY ar_from ASC;";
-
-		extract($this->db->q($sv,array('multi' => '1')));
-
-		return $data;
-	}
-
-	private function getKedvezmeny($userID){
-		$back = array(
-			'szazalek' => 0,
-			'next_price_step' => 999999999,
-			'price_steps' => array()
-		);
-		$kedv = 0;
-		$next_step_price = 999999999;
-		$price_steps = array();
-
-		if($userID == '') return $back;
-		$doneOrderID = $this->db->query("SELECT ID FROM order_allapot WHERE nev = 'Teljesítve';")->fetch(\PDO::FETCH_COLUMN);
-
-		// Korábban rendelt
-		$totalOrderPrice = (float) $this->db->query("
-			SELECT 				sum((o.me * o.egysegAr)) as ar
-			FROM 				`order_termekek` as o
-			WHERE 				o.userID = $userID and
-								datediff(now(),o.hozzaadva) <= 365  and
-								(SELECT allapot FROM orders WHERE ID = o.orderKey) = 4
-		")->fetch(\PDO::FETCH_COLUMN);
-
-		// Hozzáadott érték növelés
-		$prev_total = $this->db->query("
-				SELECT 				min_ertek
-				FROM 				torzsvasarlo_ertekek
-				WHERE 				email = (SELECT email FROM felhasznalok WHERE ID = {$userID}) and
-									UNIX_TIMESTAMP() < ervenyes
-		;")->fetch(\PDO::FETCH_COLUMN);
-
-		if( $prev_total && $prev_total > 0 ) {
-			$totalOrderPrice += $prev_total ;
-		}
-
-		// Kosár tartalma
-		/* * /
-		$cartPrice = $this->db->query( $iqq = "
-			SELECT 			sum(IF(t.egyedi_ar IS NOT NULL, t.egyedi_ar, getTermekAr(t.marka,IF(t.akcios,t.akcios_brutto_ar,t.brutto_ar))) * c.me) as cartPrice
-			FROM 			`shop_kosar` as c
-			LEFT OUTER JOIN shop_termekek as t ON t.ID = c.termekID
-			WHERE 			c.gepID = ".\Helper::getMachineID().";")->fetch(\PDO::FETCH_COLUMN);
-
-		if($cartPrice > 0){
-			$totalOrderPrice += $cartPrice;
-		}
-		/* */
-
-		// Kedvezmény sávok
-		$sv = "SELECT ar_from, ar_to, kedvezmeny FROM torzsvasarloi_kedvezmeny ORDER BY ar_from ASC;";
-
-		extract($this->db->q($sv,array('multi' => '1')));
-
-		foreach($data as $d){
-
-			$from 	= (int)$d[ar_from];
-			$to 	= (int)$d[ar_to];
-			$k 		= (float)$d[kedvezmeny];
-
-			if($to === 0) $to = 999999999;
-
-			if($totalOrderPrice >= $from && $totalOrderPrice <= $to){
-				$kedv = $k;
-			}
-
-			$price_steps[] = $from;
-		}
-		$price_steps[] = 999999999;
-
-		$step = -1;
-		foreach ($price_steps as $min ) {
-			if( $step === -1 && $totalOrderPrice < $min ) {
-				$step = 0;
-				break;
-			} else if( $totalOrderPrice < $min ) {
-				$step = $step + 1;
-				break;
-			}
-			$step++;
-		}
-
-		$next_step_price = $price_steps[$step];
-
-		$back[szazalek] = $kedv;
-		$back[next_price_step] = $next_step_price;
-		$back[price_steps] = $price_steps;
-
-		return $back;
-	}
-
-	private function getPreorderKedvezmeny($userID){
-		$kedv = 0;
-		if($userID == '') return $kedv;
-		$doneOrderID = $this->db->query("SELECT ID FROM order_allapot WHERE nev = 'Teljesítve'")->fetch(\PDO::FETCH_COLUMN);
-
-		// Korábban rendelt
-		$totalOrderPrice = (float) $this->db->query("SELECT sum((o.me * o.egysegAr)) as ar FROM `order_termekek` as o WHERE o.userID = $userID and o.szuper_akcios = 0 and datediff(now(),o.hozzaadva) <= 365  and (SELECT allapot FROM orders WHERE ID = o.orderKey) = 4")->fetch(\PDO::FETCH_COLUMN);
-
-
-		// Kosár tartalma
-		$cartPrice = $this->db->query( $iqq = "SELECT
-				sum(IF(t.egyedi_ar IS NOT NULL, t.egyedi_ar, getTermekAr(t.marka,IF(t.akcios,t.akcios_brutto_ar,t.brutto_ar))) * c.me) as cartPrice
-			FROM `shop_kosar` as c
-			LEFT OUTER JOIN shop_termekek as t ON t.ID = c.termekID
-			WHERE
-				t.szuper_akcios = 0 and
-				c.gepID = ".\Helper::getMachineID().";")->fetch(\PDO::FETCH_COLUMN);
-
-		if($cartPrice > 0){
-			$totalOrderPrice += $cartPrice;
-		}
-
-		// Kedvezmény sávok
-		$sv = "SELECT * FROM elorendelesi_kedvezmeny ORDER BY ar_from ASC;";
-
-		extract($this->db->q($sv,array('multi' => '1')));
-
-		foreach($data as $d){
-			$from 	= (int)$d[ar_from];
-			$to 	= (int)$d[ar_to];
-			$k 		= (float)$d[kedvezmeny];
-
-			if($to === 0) $to = 999999999;
-
-			if($totalOrderPrice >= $from && $totalOrderPrice <= $to){
-				$kedv = $k;
-				break;
-			}
-
-		}
-
-		return $kedv;
-	}
-
 	private function addAccountDetail( $accountID, $key, $value )
 	{
 		$this->db->insert(
@@ -632,45 +462,6 @@ class Users
 		return "Változásokat elmentettük. <a href=''>Frissítés</a>";
 	}
 
-	function getOrders($userID, $arg = array()){
-		if($userID == '') return false;
-		$back = array(
-			'done' => array(),
-			'progress' => array()
-		);
-
-		$q = "SELECT
-		o.*,
-		oa.nev as allapotNev,
-		oa.szin as allapotSzin,
-		(SELECT sum(me) FROM `order_termekek` where orderKey = o.ID) as itemNums,
-		(SELECT sum(me*egysegAr) FROM `order_termekek` where orderKey = o.ID) as totalPrice
-		FROM orders as o
-		LEFT OUTER JOIN order_allapot as oa ON oa.ID = o.allapot
-		WHERE o.userID = $userID ";
-
-		$q .= " ORDER BY o.allapot ASC, o.idopont ASC ";
-
-		$arg[multi] = '1';
-		extract($this->db->q($q,$arg));
-
-		foreach($data as $d){
-			if( $d[kedvezmeny_szazalek] > 0) {
-				$d[totalPrice] = $d[totalPrice] / ( $d[kedvezmeny_szazalek] / 100 + 1 ) ;
-				\PortalManager\Formater::discountPrice( $d[totalPrice], $d[kedvezmeny_szazalek] );
-			}
-
-			if($d[allapotNev] == 'Teljesítve'){
-				$back[done][] = $d;
-			}else{
-				$back[progress][] = $d;
-			}
-		}
-
-
-		return $back;
-	}
-
 	function changePassword($userID, $post){
 		extract($post);
 
@@ -775,34 +566,6 @@ class Users
 			),
 			"ID = $userID"
 		);
-	}
-
-	public function getResellerFaceList()
-	{
-		$re = array();
-
-		$q = "SELECT
-			f.ID,
-			f.nev,
-			(SELECT ertek FROM ".self::TABLE_DETAILS_NAME." WHERE fiok_id = f.ID and nev = 'casadapont_tanacsado_profil') as profil,
-			(SELECT ertek FROM ".self::TABLE_DETAILS_NAME." WHERE fiok_id = f.ID and nev = 'casadapont_tanacsado_titulus') as titulus,
-			(SELECT ertek FROM ".self::TABLE_DETAILS_NAME." WHERE fiok_id = f.ID and nev = 'szallitas_phone') as telefon
-		FROM ".self::TABLE_NAME." as f
-		WHERE 1=1 and
-		f.user_group != '".self::USERGROUP_USER."' and
-		(SELECT ertek FROM ".self::TABLE_DETAILS_NAME." WHERE fiok_id = f.ID and nev = 'show_on_facelist') = 1
-		ORDER BY f.nev ASC
-		";
-
-		$q = $this->db->query($q);
-
-		if($q->rowCount() == 0) return $re;
-
-		$d = $q->fetchAll(\PDO::FETCH_ASSOC);
-
-		$re = $d;
-
-		return $re;
 	}
 
 	public function saveByAdmin( $uid, $data )
@@ -1071,29 +834,9 @@ class Users
 
 	public function getUserList( $arg = array() )
 	{
-		$referertimefilter = '';
-
-		if (isset($arg[referertime]))
-		{
-			$time = $arg[referertime];
-
-			if(isset($time['from']) && !empty($time['from']))
-			{
-				$referertimefilter .= " and o.idopont >= '".$time['from']."' ";
-			}
-
-			if(isset($time['to']) && !empty($time['to']))
-			{
-				$referertimefilter .= " and o.idopont <= '".$time['to']."' ";
-			}
-		}
-
-		$q = "
-		SELECT 			f.*,
-						(SELECT sum(me*egysegAr+o.szallitasi_koltseg-o.kedvezmeny) FROM `order_termekek`as t LEFT OUTER JOIN orders as o ON o.ID = t.orderKey WHERE o.allapot = ".$this->settings['flagkey_orderstatus_done']." and t.userID = f.ID) as totalOrderPrices,
-						(SELECT sum(me*egysegAr+o.szallitasi_koltseg-o.kedvezmeny) FROM `order_termekek`as t LEFT OUTER JOIN orders as o ON o.ID = t.orderKey WHERE o.allapot = ".$this->settings['flagkey_orderstatus_done']." and o.referer_code = refererID(f.ID) ".$referertimefilter.") as totalReferredOrderPrices,
-						(SELECT count(o.ID) FROM orders as o WHERE o.allapot = ".$this->settings['flagkey_orderstatus_done']." and o.referer_code = refererID(f.ID) ".$referertimefilter.") as totalRefererOrderNum
-		FROM 			felhasznalok as f";
+		$q = "SELECT
+			f.*
+		FROM felhasznalok as f ";
 		// WHERE
 		$q .= " WHERE 1=1 ";
 
@@ -1116,15 +859,10 @@ class Users
 						{
 							$q .= " and ".$key." = '".$v."' ";
 						}
-
 					break;
 				}
 
 			}
-		}
-
-		if (isset($arg['onlyreferersale'])) {
-			$q .= " HAVING totalReferredOrderPrices > 0 ";
 		}
 
 		if (isset($arg['order']))
@@ -1136,7 +874,6 @@ class Users
 			$q .= " ORDER BY f.regisztralt DESC";
 		}
 
-
 		//echo $q;
 
 		$arg[multi] = "1";
@@ -1144,8 +881,6 @@ class Users
 
 		$B = array();
 		foreach($data as $d){
-			$d['user_group_name'] = $this->getUserGroupes( $d['user_group'] );
-			$d['price_group'] = $this->getPriceGroupes( $d['price_group'] );
 			$d[total_data] = $this->get(array( 'user' => $d['email'] ));
 			$B[] = $d;
 		}
@@ -1153,129 +888,6 @@ class Users
 		$ret[data] = $B;
 
 		return $ret;
-	}
-
-	/**
-	 * Casada pont regisztrálása
-	 * */
-	public function registerAsCasadaPont($uid, $post)
-	{
-		extract($post);
-		$cp_prefix 		= 'casadapont_';
-
-
-		$miss_something = false;
-		$miss_opens 	= false;
-		$allow_create 	= true;
-
-		// Hiányzó mezők ellenőrzése
-		if (
-			empty($place['name']) ||
-			empty($place['irsz']) ||
-			empty($place['city_address']) ||
-			empty($place['address_number']) ||
-			empty($place['phone']) ||
-			empty($place['email']) ||
-			empty($place['gps']['lat']) ||
-			empty($place['gps']['lng']) ||
-			empty($tanacsado['name']) ||
-			empty($tanacsado['titulus'])
-		) {
-			$miss_something = true;
-		}
-
-		// Nyitvatartás ellenőrzése
-		foreach ($this->days as $day) {
-			if (!$miss_opens)
-			{
-				if($opens[$day]['from'] == '--:--') $miss_opens = true;
-				if($opens[$day]['to'] 	== '--:--') $miss_opens = true;
-			}
-		}
-
-		/* * /
-			echo '<pre>';
-			print_r($_POST);
-			echo '</pre>';
-		/* */
-
-		if ($miss_something) {
-			throw new \Exception("Kérjük, hogy a jelölt mezőket töltse / adja meg!");
-		}
-
-		if ($miss_opens) {
-			throw new \Exception("Kérjük, hogy határozza meg az összes hét napjának nyitvatartási idejét!");
-		}
-
-		if( $allow_create )
-		{
-			$shop = new CasadaShop( false, array(
-				'db' => $this->db
-			));
-
-			// Casada pont adatok mentése
-			$shop_created = $shop->create( $uid, $post );
-
-			// Casada pont és üzletkötő kapcsolat regelése
-			$shop->registerCreator( $uid, $shop_created );
-
-			/**
-			* Értékesítő egyéb adatainak mentése
-			****************************************** */
-			// Tanácsadó adatok
-			if( !empty($tanacsado) )
-			{
-				foreach ( $tanacsado as $key => $value )
-				{
-					if($key == 'name') continue;
-					$this->addAccountDetail( $uid, $cp_prefix.'tanacsado_'.$key, $value);
-				}
-			}
-
-			// Profilkép feltöltése
-			$profil = \Images::upload(array(
-				'src' 		=> 'profil',
-				'upDir' 	=> 'admin/src/profil',
-				'noRoot' 	=> true,
-				'fileName' 	=> \Helper::makeSafeUrl($tanacsado['name']).'-profil',
-				'noThumbImg' => true,
-				'noWaterMark' => true
-			));
-			$this->addAccountDetail( $uid, $cp_prefix.'tanacsado_profil', str_replace('admin/','',$profil['file']));
-
-			// Üzlet kép feltöltése
-			$logo = \Images::upload(array(
-				'src' 		=> 'company',
-				'upDir' 	=> 'admin/src/profil',
-				'noRoot' 	=> true,
-				'fileName' 	=> \Helper::makeSafeUrl($shop_created['data']['place']['name']).'-logo',
-				'noThumbImg' => true,
-				'noWaterMark' => true
-			));
-
-			$this->db->update(
-				\PortalManager\CasadaShop::DB_TABLE,
-				array(
-					'logo' => str_replace('admin/','',$logo['file'])
-				),
-				"ID = ".$shop_created['id']
-			);
-
-			// E-mail értesítés az adminnak
-			$mail = new Mailer( $this->settings['page_title'], SMTP_USER, $this->settings['mail_sender_mode'] );
-			$mail->add( $this->settings['alert_email'] );
-			$arg = array(
-				'settings' 		=> $this->settings,
-				'place' 		=> $place,
-				'tanacsado'		=> $tanacsado,
-				'uid' 			=> $uid,
-				'infoMsg' 		=> 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
-			);
-			$mail->setSubject( 'Új Casada Pont regisztráció' );
-			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'alert_admin_newcasadapontreg', $arg ) );
-			$re = $mail->sendMail();
-		}
-
 	}
 
 	function logout()

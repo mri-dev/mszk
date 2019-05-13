@@ -518,13 +518,20 @@ i.info {
 
 .wblock{
 	background: white;
-	border-radius: 2px;
+	border-radius: 3px;
 	margin-bottom: 25px;
+  border: 0.5px solid #d8e2ec;
+	overflow: hidden;
 
 	.data-header{
 		padding: 15px 0;
     background: #e3e8ec;
     border-bottom: 0.5px solid #a6aaad;
+
+		.list-info{
+			color: black;
+			font-size: 0.8rem;
+		}
 
 		.closer {
 			a, a:visited, a:hover{ color: white; }
@@ -549,6 +556,9 @@ i.info {
 	.data-container{
 		.dc-padding{
 			padding: 15px;
+		}
+		table.table{
+			margin: 0;
 		}
 	}
 

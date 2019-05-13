@@ -49,6 +49,22 @@ class Categories
 		return $back;
 	}
 
+	public function getGroup( $id = 0)
+	{
+		$qry = "
+			SELECT
+				lg.*
+			FROM lists_group as lg
+			WHERE 1=1 and lg.ID = :id";
+
+		$qry .= " ORDER BY lg.neve ASC;";
+		$qry 	= $this->db->squery($qry, array('id' => $id));
+
+		if( $qry->rowCount() == 0 ) return array();
+		$data = $qry->fetch(\PDO::FETCH_ASSOC);
+		return $data;
+	}
+
 	/**
 	 * Kategória létrehzás
 	 * @param array $data új kategória létrehozásához szükséges adatok
@@ -141,9 +157,68 @@ class Categories
 		));
 	}
 
+	public function addGroup( $data = array() )
+	{
+		$name = ($data['neve']) ?: false;
+		$slug = ($data['slug']) ?: NULL;
+		$desc = ($data['leiras']) ?: NULL;
+
+		if ( !$name ) {
+			throw new \Exception( __("Kérjük, hogy adja meg a csoport elnevezését!") );
+		}
+
+		if (!$slug) {
+			$slug = $this->checkEleres( 'lists_group', $name );
+		} else {
+			$slug = Formater::makeSafeUrl($slug,'');
+		}
+
+		$this->db->insert(
+			"lists_group",
+			array(
+				'neve' => addslashes($name),
+				'slug' => $slug,
+				'description'	=> addslashes($desc),
+			)
+		);
+	}
+
+	public function editGroup( $group, $new_data = array() )
+	{
+
+		$name = ($new_data['neve']) ?: false;
+		$slug = ($new_data['slug']) ?: NULL;
+		$desc = ($new_data['leiras']) ?: NULL;
+
+		if ( !$name ) {
+			throw new \Exception( __("Kérjük, hogy adja meg a csoport elnevezését!") );
+		}
+
+		if (!$slug) {
+			$slug = $this->checkEleres( 'lists_group', $name );
+		} else {
+			$slug = Formater::makeSafeUrl($slug,'');
+		}
+
+		$this->db->update(
+			'lists_group',
+			array(
+				'neve' => addslashes($name),
+				'slug' => $slug,
+				'description'	=> addslashes($desc),
+			),
+			sprintf("ID = %d", $group['ID'])
+		);
+	}
+
 	public function delete( Category $category )
 	{
 		$category->delete();
+	}
+
+	public function deleteGroup( $group = 0 )
+	{
+		$this->db->squery("DELETE FROM lists_group WHERE ID = :id", array('id' => $group['ID']));
 	}
 
 	/**
@@ -175,6 +250,13 @@ class Categories
 		} else {
 			$qry .= " and l.szulo_id = ".$top_category_id;
 		}
+
+		// ID SET
+		if( isset($arg['group_id']) )
+		{
+			$qry .= " and l.group_id IN (".implode(",",(array)$arg['group_id']).") ";
+		}
+
 
 		// ID SET
 		if( isset($arg['id_set']) && count($arg['id_set']) )
@@ -330,7 +412,35 @@ class Categories
 		return $row;
 	}
 
+	private function checkEleres( $where, $text )
+	{
+		$text = Formater::makeSafeUrl($text,'');
 
+		$qry = $this->db->query(sprintf("
+			SELECT 		slug
+			FROM 		".$where."
+			WHERE 		slug = '%s' or
+						slug like '%s-_' or
+						slug like '%s-__'
+			ORDER BY 	slug DESC
+			LIMIT 		0,1", trim($text), trim($text), trim($text) ));
+		$last_text = $qry->fetch(\PDO::FETCH_COLUMN);
+
+		if( $qry->rowCount() > 0 ) {
+
+			$last_int = (int)end(explode("-",$last_text));
+
+			if( $last_int != 0 ){
+				$last_text = str_replace('-'.$last_int, '-'.($last_int+1) , $last_text);
+			} else {
+				$last_text .= '-1';
+			}
+		} else {
+			$last_text = $text;
+		}
+
+		return $last_text;
+	}
 
 	public function killDB()
 	{

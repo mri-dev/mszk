@@ -1,11 +1,109 @@
 <?php echo $this->bmsg; ?>
 <div class="row">
   <div class="col-md-3">
+    <?php
+    /**
+    * Group Creator
+    **/
+    if (isset($_GET['groupcreator']) && $_GET['groupcreator'] == 'delete'): ?>
+    <a name="groupcreator"></a>
+    <div class="wblock color-red">
+      <div class="data-header">
+        <div class="d-flex">
+          <div class="col title">
+            <i class="ico fas fa-trash-alt"></i> <?=__('elem törlése')?>
+          </div>
+          <div class="col right closer">
+            <a href="/adminconsole/lists/"><i class="fas fa-times"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="data-container">
+        <div class="dc-padding">
+          <form class="" action="" method="post">
+            <div class="row">
+              <div class="col-md-12">
+                <?=sprintf(__('Biztos benne, hogy a(z) <strong>%s</strong> csoportot véglegesen törli?'), $this->group['neve'])?>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 right">
+                <button type="submit" class="btn btn-danger" name="deleteGroup"><?=__('Csoport végleges törlése')?> <i class="fas fa-trash-alt"></i></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+    <?php if (isset($_GET['groupcreator']) && $_GET['groupcreator'] != 'delete'): ?>
+    <?php
+      switch ($_GET['groupcreator']) {
+        case 'add':
+          $mode = __('hozzáadás');
+          $ico = 'fas fa-plus';
+          $color = 'blue';
+        break;
+        case 'edit':
+          $mode = __('szerkesztés');
+          $ico = 'fas fa-edit';
+          $color = 'green';
+        break;
+      }
+
+    ?>
+    <a name="groupcreator"></a>
+    <div class="wblock color-<?=$color?>">
+      <div class="data-header">
+        <div class="d-flex">
+          <div class="col-md-8 title">
+            <i class="ico <?=$ico?>"></i> <?=__('Csoport').' '.$mode?>
+          </div>
+          <div class="col right closer">
+            <a href="/adminconsole/lists/"><i class="fas fa-times"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="data-container">
+        <div class="dc-padding">
+          <form class="" action="" method="post">
+            <div class="row">
+              <div class="col-md-12">
+                <label for="groupcreator_neve"><?=__('Csoport elnevezése')?> *</label>
+                <input id="groupcreator_neve" type="text" class="form-control" name="neve" value="<?=(isset($_POST['neve']))?$_POST['neve']:(($this->group)?$this->group['neve']:'')?>">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <label for="groupcreator_slug"><?=__('Csoport slug')?> <i class="fas info fa-info-circle" title="<?=__('Ékezetek és szóközök nélküli egyedi SEO azonosító kulcs. Pl.: marketing_eszkozok.')?>"></i></label>
+                <input id="groupcreator_slug" type="text" class="form-control" name="slug" value="<?=(isset($_POST['slug']))?$_POST['slug']:(($this->group)?$this->group['slug']:'')?>">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <label for="groupcreator_leiras"><?=__('Csoport megjegyzés')?> <i class="fas info fa-info-circle" title="<?=__('Adminisztrációs célra használt megjegyzés a csoport magyarázatához.')?>'"></i> </label>
+                <textarea id="groupcreator_leiras" class="form-control" name="leiras"><?=(isset($_POST['leiras']))?$_POST['leiras']:(($this->group)?$this->group['description']:'')?></textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 right">
+                <button type="submit" class="btn btn-<?=($_GET['groupcreator']=='add')?'primary':'success'?>" name="<?=($_GET['groupcreator']=='add')?'addGroup':'saveGroup'?>"><?=($_GET['groupcreator']=='add')?__('Csoport hozzádása').' <i class="fas fa-plus-circle"></i>':__('Változások mentése').' <i class="fas fa-save"></i>'?></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <?php endif; /* END: Group Creator */ ?>
+
     <div class="wblock">
       <div class="data-header">
         <div class="d-flex">
           <div class="col title">
             <i class="ico fas fa-ellipsis-v"></i> <?=__('Csoportok')?>
+          </div>
+          <div class="col-md-4 right">
+            <a href="/adminconsole/lists/?groupcreator=add#groupcreator" class="btn btn-block btn-sm btn-primary"><?=__('Új')?> <i class="fas fa-plus"></i></a>
           </div>
         </div>
       </div>
@@ -21,10 +119,10 @@
             <tbody>
               <?php foreach( $this->groups as $item ): ?>
               <tr>
-                <td><?php echo $item['neve']; ?></td>
+                <td><a style="<?=($_COOKIE['filtergroup'] == $item['ID'])?'font-weight: bold;':''?>" href="/adminconsole/lists/?filtergroup=<?php echo $item['ID']; ?>"><?php echo $item['neve']; ?></a> <?=($item['description'] != '')?'<i class="fas info fa-info-circle" title="'.$item['description'].'"></i>':''?></td>
                 <td class="center actions">
-                  <a href="#"><i class="fas fa-pencil-alt"></i></a>&nbsp;
-                  <a href="#"><i class="fas fa-trash-alt"></i></a>
+                  <a href="/adminconsole/lists/?groupcreator=edit&id=<?=$item['ID']?>#groupcreator"><i class="fas fa-pencil-alt"></i></a>&nbsp;
+                  <a href="/adminconsole/lists/?groupcreator=delete&id=<?=$item['ID']?>#groupcreator"><i class="fas fa-trash-alt"></i></a>
                 </td>
               </tr>
               <?php endforeach; ?>
@@ -35,7 +133,11 @@
     </div>
   </div>
   <div class="col">
-    <?php if (isset($_GET['creator']) && $_GET['creator'] == 'delete'): ?>
+    <?php
+    /**
+    * Creator
+    **/
+    if (isset($_GET['creator']) && $_GET['creator'] == 'delete'): ?>
     <a name="creator"></a>
     <div class="wblock color-red">
       <div class="data-header">
@@ -155,12 +257,12 @@
         </div>
       </div>
     </div>
-    <?php endif; ?>
+    <?php endif; /* END: CREATOR */ ?>
     <div class="wblock">
       <div class="data-header">
         <div class="d-flex align-items-center">
           <div class="col title">
-            <i class="ico fas fa-ellipsis-h"></i> <?=__('Lista elemek')?>
+            <i class="ico fas fa-ellipsis-h"></i> <?php if ($this->selected_group): ?><u><?=$this->selected_group['neve']?></u><?php endif; ?> <?=__('Lista elemek')?>
           </div>
           <div class="col-md-5 right">
             <div class="d-flex align-items-center">

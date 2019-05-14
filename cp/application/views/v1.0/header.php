@@ -3,7 +3,7 @@
       xmlns:og="http://ogp.me/ns#"
       xmlns:fb="http://www.facebook.com/2008/fbml" lang="hu-HU">
 <head>
-	<title><?=$this->title?></title>
+	<title><?=strip_tags($this->title)?></title>
     <?=$this->addMeta('robots','index,folow')?>
     <?=$this->SEOSERVICE?>
    	<? $this->render('meta'); ?>

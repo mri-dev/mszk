@@ -48,14 +48,85 @@ class adminconsole extends Controller{
     public function felhasznalok()
     {
       parent::$pageTitle = __('Felhasználók');
-
-			$users = $this->Users->getUserList();
-
+			$arg = array();
+			$filters = Helper::getCookieFilter('filter',array('filtered'));
+			$arg['filters'] = $filters;
+			$arg['limit'] = 30;
+			$arg['page'] = Helper::currentPageNum();
+			$users = $this->Users->getUserList( $arg );
 
       $this->addPagePagination(array(
 				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
 				'title' => parent::$pageTitle
 			));
+
+			// Clear filters
+			if (isset($_POST['clearfilters'])) {
+				setcookie('filter_ID','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				setcookie('filter_nev','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				setcookie('filter_company_name','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				setcookie('filter_company_adoszam','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				setcookie('filter_email','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				setcookie('filter_user_group','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				setcookie('filtered','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				Helper::reload('/adminconsole/felhasznalok');
+			}
+
+			// Filter register
+			if(isset($_POST['filterList']))
+			{
+				$filtered = false;
+
+				if($_POST['ID'] != ''){
+					setcookie('filter_ID', $_POST['ID'],time()+60*24,'/'.__CLASS__.'/'.__FUNCTION__);
+					$filtered = true;
+				}else{
+					setcookie('filter_ID','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				}
+
+				if($_POST['nev'] != ''){
+					setcookie('filter_nev', $_POST['nev'],time()+60*24,'/'.__CLASS__.'/'.__FUNCTION__);
+					$filtered = true;
+				}else{
+					setcookie('filter_nev','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				}
+
+				if($_POST['company_name'] != ''){
+					setcookie('filter_company_name', $_POST['company_name'],time()+60*24,'/'.__CLASS__.'/'.__FUNCTION__);
+					$filtered = true;
+				}else{
+					setcookie('filter_company_name','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				}
+
+				if($_POST['company_adoszam'] != ''){
+					setcookie('filter_company_adoszam', $_POST['company_adoszam'],time()+60*24,'/'.__CLASS__.'/'.__FUNCTION__);
+					$filtered = true;
+				}else{
+					setcookie('filter_company_adoszam','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				}
+
+				if($_POST['user_group'] != ''){
+					setcookie('filter_user_group', $_POST['user_group'],time()+60*24,'/'.__CLASS__.'/'.__FUNCTION__);
+					$filtered = true;
+				}else{
+					setcookie('filter_user_group','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				}
+
+				if($_POST['email'] != ''){
+					setcookie('filter_email', $_POST['email'],time()+60*24,'/'.__CLASS__.'/'.__FUNCTION__);
+					$filtered = true;
+				}else{
+					setcookie('filter_email','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				}
+
+				if($filtered){
+					setcookie('filtered','1',time()+60*24*7,'/'.__CLASS__.'/'.__FUNCTION__);
+				}else{
+					setcookie('filtered','',time()-100,'/'.__CLASS__.'/'.__FUNCTION__);
+				}
+				Helper::reload('/adminconsole/felhasznalok');
+			}
+
 
 			/* Pagination */
 			$get = $_GET;
@@ -73,6 +144,8 @@ class adminconsole extends Controller{
 			)))->render() );
 
 			////////////////////////////////////////////////////////////////////////////////////////
+			// Fiók csoportok
+			$this->out( 'user_groupes', $this->Users->getUserGroupes());
 			// Felhasználó lista
 			$this->out( 'users', $users );
     }

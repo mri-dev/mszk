@@ -515,7 +515,30 @@ i.info {
 		color: $color-red;
 	}
 }
+.filter-block{
+	margin: 0 0 15px 0;
+	fieldset{
+		background: white;
+		border-radius: 3px;
+	  border: 0.5px solid #d8e2ec;
 
+		& > legend{
+			font-size: 0.6rem;
+	    color: black;
+	    font-weight: bold;
+	    letter-spacing: 2px;
+	    background: white;
+	    text-transform: uppercase;
+	    width: 155px;
+	    text-align: left;
+	    padding: 3px 10px;
+		}
+
+		& > .wrapper{
+			font-size: 0.8rem;
+		}
+	}
+}
 .wblock{
 	background: white;
 	border-radius: 3px;
@@ -666,7 +689,24 @@ i.info {
 	padding-top: 15px !important;
 	padding-bottom: 15px !important;
 }
-
+.table thead th.filtered{
+	position: relative;
+	border-bottom: 2px solid #45b35e;
+	background: #eef6f1;
+	&:after{
+		position: absolute;
+		right: 10px;
+		content:"\f0b0";
+		font-family: "Font Awesome 5 Free";
+	}
+}
+.table tbody td.filtered{
+	background: #eef6f1;
+	color: #558766;
+}
+.table-striped tbody tr:nth-of-type(odd) td.filtered{
+	background: #e3efe7;
+}
 .ct-info{
 	font-size: 1rem;
 	line-height: 1;

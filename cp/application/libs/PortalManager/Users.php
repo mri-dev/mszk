@@ -836,7 +836,11 @@ class Users
 	{
 		$q = "SELECT
 			f.*
-		FROM felhasznalok as f ";
+		FROM felhasznalok as f
+		LEFT OUTER JOIN felhasznalo_adatok as fh1 ON fh1.fiok_id = f.ID and fh1.nev = 'company_name'
+		LEFT OUTER JOIN felhasznalo_adatok as fh2 ON fh2.fiok_id = f.ID and fh2.nev = 'company_adoszam'
+
+		";
 		// WHERE
 		$q .= " WHERE 1=1 ";
 
@@ -848,16 +852,23 @@ class Users
 						$q .= " and f.".$key." = ".$v." ";
 					break;
 					case 'nev':
-						$q .= " and ".$key." LIKE '".$v."%' ";
+					case 'email':
+						$q .= " and f.".$key." LIKE '%".$v."%' ";
+					break;
+					case 'company_name':
+						$q .= " and fh1.ertek LIKE '%".$v."%' ";
+					break;
+					case 'company_adoszam':
+						$q .= " and fh2.ertek LIKE '".$v."%' ";
 					break;
 					default:
 						if (is_array($v))
 						{
-							$q .= " and ".$key." IN ('".implode("','",$v)."') ";
+							$q .= " and f.".$key." IN ('".implode("','",$v)."') ";
 						}
 						else
 						{
-							$q .= " and ".$key." = '".$v."' ";
+							$q .= " and f.".$key." = '".$v."' ";
 						}
 					break;
 				}

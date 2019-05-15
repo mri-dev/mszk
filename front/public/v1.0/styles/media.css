@@ -202,34 +202,193 @@ body.singlepage .page-reader .header h1 {
   width: 100%;
 }
 
-/* line 201, sass/media.scss */
+/* line 204, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .titles {
+  flex-basis: 45%;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  padding-right: 25px;
+}
+/* line 209, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .titles > div {
+  padding: 4px 0;
+}
+/* line 212, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .titles .main {
+  border-bottom: 0.5px solid #d0d0d0;
+}
+/* line 215, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .titles .sub {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #66c0b7;
+}
+/* line 221, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps {
+  flex-basis: 55%;
+  position: relative;
+}
+/* line 224, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-progress {
+  height: 5px;
+  background: #d1d1d1;
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  right: 5px;
+  z-index: 1;
+  border-radius: .25rem;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+/* line 235, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-progress .progress {
+  width: 50%;
+  background: #2c62c7 !important;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 5px;
+}
+/* line 244, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder {
+  position: relative;
+  z-index: 20;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  padding: 24px 0 0 0;
+}
+/* line 255, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder .step {
+  cursor: pointer;
+  outline: none;
+}
+/* line 258, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder .step .index {
+  background: #d1d1d1;
+  margin: 0 auto;
+  color: white;
+  text-align: center;
+  line-height: 40px;
+  height: 40px;
+  width: 40px;
+  border-radius: 40px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  border: 4px solid white;
+  box-shadow: 0 0 0 4px #d1d1d1;
+  box-sizing: content-box;
+  position: relative;
+}
+/* line 273, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder .step .index span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+/* line 281, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder .step .text {
+  text-align: center;
+  text-transform: uppercase;
+  color: #686868;
+  font-size: 0.7rem;
+  margin: 10px 0 0 0;
+}
+/* line 290, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder .step.active .index {
+  background: #2c62c7;
+  box-shadow: 0 0 0 4px #2c62c7;
+}
+/* line 296, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder .step.now .index {
+  background: #66c0b7;
+  box-shadow: 0 0 0 4px #66c0b7;
+}
+/* line 307, sass/media.scss */
+.ajanlat-requester .step-containers {
+  margin: 25px 0;
+}
+/* line 310, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form {
+  background: #f5f4f4;
+  border-radius: 5px;
+  border: 0.5px solid #dbdbdb;
+}
+/* line 314, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form > .wrapper {
+  padding: 25px;
+}
+/* line 317, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form > .wrapper .row + .row {
+  margin-top: 15px;
+}
+/* line 321, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form > .wrapper input[type=text], .ajanlat-requester .step-containers .requester-form > .wrapper textarea {
+  font-weight: bold;
+  color: black;
+  border-radius: 20px;
+  border: 0.5px solid #d2d2d2;
+}
+/* line 326, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]::placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #acacac;
+  font-weight: 300;
+  opacity: 1;
+  /* Firefox */
+}
+/* line 332, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]:-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #acacac;
+  font-weight: 300;
+}
+/* line 337, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]::-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #acacac;
+  font-weight: 300;
+}
+/* line 343, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form > .wrapper textarea {
+  width: 100%;
+  padding: 10px;
+}
+
+/* line 352, sass/media.scss */
 footer {
   background: #2c62c7;
   color: white;
 }
-/* line 205, sass/media.scss */
+/* line 356, sass/media.scss */
 footer .footer-inner {
   padding: 25px 0;
 }
-/* line 208, sass/media.scss */
+/* line 359, sass/media.scss */
 footer .footer-inner .logo {
   text-align: center;
   margin: 0 0 20px 0;
 }
-/* line 211, sass/media.scss */
+/* line 362, sass/media.scss */
 footer .footer-inner .logo img {
   max-height: 80px;
   height: 80px;
   width: auto;
   max-width: initial;
 }
-/* line 220, sass/media.scss */
+/* line 371, sass/media.scss */
 footer .footer-inner .navigator ul, footer .footer-inner .navigator li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/* line 226, sass/media.scss */
+/* line 377, sass/media.scss */
 footer .footer-inner .navigator ul {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -238,33 +397,33 @@ footer .footer-inner .navigator ul {
   align-items: center;
   justify-content: center;
 }
-/* line 234, sass/media.scss */
+/* line 385, sass/media.scss */
 footer .footer-inner .navigator ul li a {
   padding: 10px;
   display: block;
   text-align: center;
 }
-/* line 244, sass/media.scss */
+/* line 395, sass/media.scss */
 footer a, footer a:link, footer a:visited {
   color: #ffffff;
   text-decoration: none;
 }
-/* line 249, sass/media.scss */
+/* line 400, sass/media.scss */
 footer a:hover {
   color: #66c0b7;
 }
-/* line 253, sass/media.scss */
+/* line 404, sass/media.scss */
 footer .copyright {
   background: #1f4da3;
   color: #a2d9f7;
   text-align: center;
   padding: 20px 0;
 }
-/* line 259, sass/media.scss */
+/* line 410, sass/media.scss */
 footer .copyright a, footer .copyright a:link, footer .copyright a:visited {
   color: #a2d9f7;
 }
-/* line 263, sass/media.scss */
+/* line 414, sass/media.scss */
 footer .copyright .poweredby {
   margin-left: 25px;
 }

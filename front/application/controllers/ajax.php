@@ -1,4 +1,6 @@
 <?php
+use PortalManager\Categories;
+
 class ajax extends Controller{
 		function __construct()
 		{
@@ -11,10 +13,21 @@ class ajax extends Controller{
 			extract($_POST);
 			$ret = array(
 				'success' => 0,
-				'msg' => false
+				'msg' => false,
+				'passed' => $_POST,
+				'data' => false
 			);
 			switch($type)
 			{
+				case 'Ajanlatkeres':
+					// Marketing eszközök
+					$categories = new Categories( array( 'db' => $this->db ) );
+					$arg = array();
+					$arg['group_slug'] = 'szolgaltatasok';
+					$eszkozok	= $categories->getTree( false, $arg );
+					$ret['data']['szolgaltatasok'] = $eszkozok->tree;
+					$ret['success'] = 1;
+				break;
 				default: break;
 			}
 			echo json_encode($ret);

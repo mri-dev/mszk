@@ -2,8 +2,11 @@ var app = angular.module('Software', ['ngMaterial', 'ngMessages', 'ngCookies']);
 
 app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$location','$cookies', '$cookieStore', '$timeout', function($scope, $sce, $http, $mdToast, $mdDialog, $location, $cookies, $cookieStore, $timeout)
 {
-  $scope.step = 4;
+  $scope.formready = false;
+  $scope.step = 1;
+  $scope.walkedstep = 1;
   $scope.max_step = 4;
+  $scope.resources = {};
   $scope.title = [
     {
       main: 'Szolgáltatásaink',
@@ -19,7 +22,7 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
     },
     {
       main: 'Küldés',
-      sub: 'Küldje el egyedi ajánlatkérését'
+      sub: 'Küldje el egyedileg öszzeállított ajánlatkérését'
     }
   ];
   $scope.steps = [
@@ -32,6 +35,34 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
   $scope.init = function()
   {
 
+  }
+
+  $scope.prepareAjanlatkeres = function()
+  {
+    $scope.loadAjanlatkeresResources(function(){
+      console.log('Prepared');
+    });
+  }
+
+  $scope.loadAjanlatkeresResources = function( callback )
+  {
+    $http({
+      method: 'POST',
+      url: '/ajax/post',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data: $.param({
+        type: "Ajanlatkeres",
+        mode: 'getResources'
+      })
+    }).success(function(r){
+      console.log(r);
+      if (r.success == 1) {
+        $scope.resources = r.data;
+      }
+      if (typeof callback !== 'undefined') {
+        callback();
+      }
+    });
   }
 
   $scope.getProgressPercent = function() {

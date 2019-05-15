@@ -251,12 +251,17 @@ class Categories
 			$qry .= " and l.szulo_id = ".$top_category_id;
 		}
 
-		// ID SET
+		// Group ID
 		if( isset($arg['group_id']) )
 		{
 			$qry .= " and l.group_id IN (".implode(",",(array)$arg['group_id']).") ";
 		}
 
+		// Group slug
+		if( isset($arg['group_slug']) )
+		{
+			$qry .= " and lg.slug = '".$arg['group_slug']."' ";
+		}
 
 		// ID SET
 		if( isset($arg['id_set']) && count($arg['id_set']) )
@@ -265,6 +270,7 @@ class Categories
 		}
 
 		$qry .= " ORDER BY l.sorrend ASC, l.ID ASC;";
+		error_log($qry);
 
 		$top_cat_qry 	= $this->db->query($qry);
 		$top_cat_data 	= $top_cat_qry->fetchAll(\PDO::FETCH_ASSOC);

@@ -1,6 +1,6 @@
 <div class="home inside-content">
   <?php echo $this->render('templates/home'); ?>
-  <div class="ajanlat-requester" >
+  <div class="ajanlat-requester" ng-init="prepareAjanlatkeres()">
     <div class="pw">
       <div class="header">
         <div class="d-flex align-items-center">
@@ -25,7 +25,23 @@
       </div>
       <div class="step-containers">
         <div class="step-layout step1" ng-show="(step == 1)">
-          Step 1
+          <div class="services">
+            <div class="service" ng-repeat="service in resources.szolgaltatasok">
+              <div class="wrapper">
+                <div class="title">
+                  {{service.neve}}
+                </div>
+                <div class="image">
+
+                </div>
+                <div class="desc">
+                  {{service.leiras}}
+                </div>
+                <div class="more-info"><i class="fas fa-info-circle"></i> <?=__('Bővebb információ')?></div>
+                <div class="sel-item"><input id="service_s{{service.ID}}" type="checkbox" name="" class="ccb" value=""> <label for="service_s{{service.ID}}"><?=__('Kiválasztom')?></label></div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="step-layout step2" ng-show="(step == 2)">
           Step 2
@@ -62,10 +78,24 @@
                         <input type="text" ng-model="requester.email" value="" class="form-control"  placeholder="* <?=__('E-mail cím')?>" required="required">
                       </div>
                     </div>
-
                     <div class="row">
                       <div class="col-md-12">
                         <textarea ng-model="requester.message" placeholder="<?=__('Üzenet')?>"></textarea>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="">
+                          <input type="checkbox" id="check1" ng-model="requester.aszf" required class="ccb"><label for="check1"><?=sprintf(__('Elolvastam és elfogadom az <a target="_blank" href="%s">Általános Szerződési Feltételeket</a>.'),'/aszf')?></label>
+                        </div>
+                        <div class="">
+                          <input type="checkbox" id="check2" ng-model="requester.adatvedelem" required class="ccb"><label for="check2"><?=sprintf(__('Elolvastam és elfogadom az <a target="_blank" href="%s">Adatvédelmi Tájékoztatót</a> és hozzájárulok az adataim kezeléséhez.'),'/adatvedelem')?></label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 right">
+                        <input type="submit"class="btn btn-danger" value="<?=__('Ajánlatkérés elküldése')?>">
                       </div>
                     </div>
                   </div>

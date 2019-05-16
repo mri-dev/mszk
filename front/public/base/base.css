@@ -216,3 +216,9 @@ input[type=checkbox].ccb:checked + label:before {
   opacity: 1;
   filter: alpha(opacity=100);
 }
+
+/* line 36, sass/base.scss */
+.btn-default {
+  background: #efefef;
+  color: #828282;
+}

@@ -283,8 +283,10 @@ body.singlepage .page-reader .header h1 {
   box-shadow: 0 0 0 4px #d1d1d1;
   box-sizing: content-box;
   position: relative;
+  -webkit-transition: all .5s;
+  transition: all .5s;
 }
-/* line 273, sass/media.scss */
+/* line 275, sass/media.scss */
 .ajanlat-requester .header > .d-flex > .steps .step-holder .step .index span {
   position: absolute;
   top: 50%;
@@ -292,7 +294,7 @@ body.singlepage .page-reader .header h1 {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 281, sass/media.scss */
+/* line 283, sass/media.scss */
 .ajanlat-requester .header > .d-flex > .steps .step-holder .step .text {
   text-align: center;
   text-transform: uppercase;
@@ -300,35 +302,43 @@ body.singlepage .page-reader .header h1 {
   font-size: 0.7rem;
   margin: 10px 0 0 0;
 }
-/* line 290, sass/media.scss */
+/* line 292, sass/media.scss */
 .ajanlat-requester .header > .d-flex > .steps .step-holder .step.active .index {
   background: #2c62c7;
   box-shadow: 0 0 0 4px #2c62c7;
 }
-/* line 296, sass/media.scss */
+/* line 298, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder .step.current .text {
+  font-weight: bold;
+  color: black;
+}
+/* line 304, sass/media.scss */
 .ajanlat-requester .header > .d-flex > .steps .step-holder .step.now .index {
   background: #66c0b7;
   box-shadow: 0 0 0 4px #66c0b7;
 }
-/* line 307, sass/media.scss */
+/* line 310, sass/media.scss */
+.ajanlat-requester .header > .d-flex > .steps .step-holder .step:hover .index {
+  transform: scale(1.1);
+}
+/* line 320, sass/media.scss */
 .ajanlat-requester .step-containers {
   margin: 25px 0;
 }
-/* line 310, sass/media.scss */
+/* line 323, sass/media.scss */
 .ajanlat-requester .step-containers .services {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   flex-wrap: wrap;
   margin: -15px;
-  padding-bottom: 50px;
 }
-/* line 318, sass/media.scss */
+/* line 330, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service {
   flex-basis: calc(100% / 5);
   padding: 15px;
 }
-/* line 321, sass/media.scss */
+/* line 333, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper {
   background: white;
   border-radius: 10px;
@@ -339,8 +349,9 @@ body.singlepage .page-reader .header h1 {
   transition: all .5s;
   -webkit-transform-origin: center;
   transform-origin: center;
+  padding: 0 0 5px 0;
 }
-/* line 332, sass/media.scss */
+/* line 345, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .title {
   padding: 10px;
   text-transform: uppercase;
@@ -349,20 +360,33 @@ body.singlepage .page-reader .header h1 {
   padding-right: 25px;
   line-height: 1.2;
   height: 60px;
+  position: relative;
 }
-/* line 342, sass/media.scss */
+/* line 355, sass/media.scss */
+.ajanlat-requester .step-containers .services > .service > .wrapper .title:after {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  content: "\f0c8";
+  color: #dbdbdb;
+}
+/* line 366, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .image {
   height: 8vw;
   background: #f3f3f3;
 }
-/* line 347, sass/media.scss */
+/* line 371, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .desc {
   font-size: 0.8rem;
   font-weight: 300;
   line-height: 1.3;
   padding: 10px;
+  height: 110px;
+  overflow: hidden;
 }
-/* line 353, sass/media.scss */
+/* line 379, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .more-info {
   display: none;
   background: #2c62c7;
@@ -370,12 +394,12 @@ body.singlepage .page-reader .header h1 {
   padding: 5px 15px;
   font-size: 0.8rem;
 }
-/* line 360, sass/media.scss */
+/* line 386, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .sel-item {
   display: none;
   font-size: 0.8rem;
 }
-/* line 363, sass/media.scss */
+/* line 389, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .sel-item label {
   padding: 5px 15px;
   margin: 0;
@@ -383,38 +407,184 @@ body.singlepage .page-reader .header h1 {
   display: block;
   width: 100%;
 }
-/* line 374, sass/media.scss */
+/* line 400, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service:hover > .wrapper {
   box-shadow: 0 0 20px -10px #717171;
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
-/* line 379, sass/media.scss */
+/* line 405, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service:hover .sel-item,
 .ajanlat-requester .step-containers .services > .service:hover .more-info {
   display: block;
 }
-/* line 386, sass/media.scss */
+/* line 411, sass/media.scss */
+.ajanlat-requester .step-containers .services > .service.picked > .wrapper {
+  box-shadow: 0 0 20px -5px #2c62c7;
+}
+/* line 413, sass/media.scss */
+.ajanlat-requester .step-containers .services > .service.picked > .wrapper .title {
+  color: #0aa3f5;
+}
+/* line 418, sass/media.scss */
+.ajanlat-requester .step-containers .services > .service.picked .title:after {
+  content: "\f14a";
+  color: #ff7979;
+}
+/* line 430, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service > .head {
+  text-transform: uppercase;
+  color: #0aa3f5;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 10px 0;
+}
+/* line 439, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper {
+  border: 0.5px solid #d5d5d5;
+  padding: 15px;
+  border-radius: 20px;
+}
+/* line 444, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title {
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #6a6a6a;
+  position: relative;
+}
+/* line 451, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .subserv-item-text {
+  font-weight: 300;
+  color: #8c8c8c;
+  text-transform: none;
+  font-size: 0.9rem;
+}
+/* line 458, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .adder {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  outline: none;
+  cursor: pointer;
+}
+/* line 466, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .adder:before {
+  font-weight: 400;
+  font-family: "Font Awesome 5 Free";
+  content: "\f0c8";
+  font-size: 1.4rem;
+  color: #bababa;
+}
+/* line 476, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment {
+  padding: 5px;
+}
+/* line 478, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment .head {
+  margin: 10px 0 5px 0;
+  font-weight: bold;
+  color: black;
+}
+/* line 483, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment textarea {
+  border-radius: 10px;
+  padding: 15px;
+  min-height: 55px;
+}
+/* line 491, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item {
+  padding: 5px;
+}
+/* line 493, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item > .wrapper {
+  border: 0.5px solid #cbcbcb;
+  background: #f5f5f5;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  color: #151515;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+}
+/* line 505, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item > .wrapper:hover {
+  background: #2c62c7;
+  color: white;
+}
+/* line 512, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item.selected > .wrapper {
+  background: #2c62c7;
+  color: white;
+}
+/* line 516, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item.selected > .wrapper:after {
+  pointer-events: none;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  font-family: "Font Awesome 5 Free";
+  content: "\f560";
+  font-size: 1rem;
+  color: #66c0b7;
+}
+/* line 533, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service.selected > .wrapper > .title > .adder:before {
+  content: "\f14a";
+  color: #ff7979;
+}
+/* line 537, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service.selected > .wrapper {
+  border: 3px solid #66c0b7;
+}
+/* line 542, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service + .sub-service {
+  margin: 10px 0 0 0;
+}
+/* line 547, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service + .service {
+  margin: 15px 0 0 0;
+}
+/* line 553, sass/media.scss */
+.ajanlat-requester .step-containers .next-btn {
+  margin: 30px 0 20px 0;
+}
+/* line 555, sass/media.scss */
+.ajanlat-requester .step-containers .next-btn button[class*=btn-default] {
+  border-radius: 25px;
+}
+/* line 558, sass/media.scss */
+.ajanlat-requester .step-containers .next-btn button[class*=btn-primary] {
+  text-transform: uppercase;
+  border-radius: 25px;
+}
+/* line 564, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form {
   background: #f5f4f4;
   border-radius: 5px;
   border: 0.5px solid #dbdbdb;
 }
-/* line 390, sass/media.scss */
+/* line 568, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper {
   padding: 25px;
 }
-/* line 393, sass/media.scss */
+/* line 571, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper .row + .row {
   margin-top: 15px;
 }
-/* line 397, sass/media.scss */
+/* line 575, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text], .ajanlat-requester .step-containers .requester-form > .wrapper textarea {
   font-weight: bold;
   color: black;
   border-radius: 20px;
   border: 0.5px solid #d2d2d2;
 }
-/* line 402, sass/media.scss */
+/* line 580, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]::placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #acacac;
@@ -422,52 +592,52 @@ body.singlepage .page-reader .header h1 {
   opacity: 1;
   /* Firefox */
 }
-/* line 408, sass/media.scss */
+/* line 586, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]:-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea:-ms-input-placeholder {
   /* Internet Explorer 10-11 */
   color: #acacac;
   font-weight: 300;
 }
-/* line 413, sass/media.scss */
+/* line 591, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]::-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea::-ms-input-placeholder {
   /* Microsoft Edge */
   color: #acacac;
   font-weight: 300;
 }
-/* line 419, sass/media.scss */
+/* line 597, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper textarea {
   width: 100%;
   padding: 10px;
 }
 
-/* line 428, sass/media.scss */
+/* line 606, sass/media.scss */
 footer {
   background: #2c62c7;
   color: white;
 }
-/* line 432, sass/media.scss */
+/* line 610, sass/media.scss */
 footer .footer-inner {
   padding: 25px 0;
 }
-/* line 435, sass/media.scss */
+/* line 613, sass/media.scss */
 footer .footer-inner .logo {
   text-align: center;
   margin: 0 0 20px 0;
 }
-/* line 438, sass/media.scss */
+/* line 616, sass/media.scss */
 footer .footer-inner .logo img {
   max-height: 80px;
   height: 80px;
   width: auto;
   max-width: initial;
 }
-/* line 447, sass/media.scss */
+/* line 625, sass/media.scss */
 footer .footer-inner .navigator ul, footer .footer-inner .navigator li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/* line 453, sass/media.scss */
+/* line 631, sass/media.scss */
 footer .footer-inner .navigator ul {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -476,33 +646,33 @@ footer .footer-inner .navigator ul {
   align-items: center;
   justify-content: center;
 }
-/* line 461, sass/media.scss */
+/* line 639, sass/media.scss */
 footer .footer-inner .navigator ul li a {
   padding: 10px;
   display: block;
   text-align: center;
 }
-/* line 471, sass/media.scss */
+/* line 649, sass/media.scss */
 footer a, footer a:link, footer a:visited {
   color: #ffffff;
   text-decoration: none;
 }
-/* line 476, sass/media.scss */
+/* line 654, sass/media.scss */
 footer a:hover {
   color: #66c0b7;
 }
-/* line 480, sass/media.scss */
+/* line 658, sass/media.scss */
 footer .copyright {
   background: #1f4da3;
   color: #a2d9f7;
   text-align: center;
   padding: 20px 0;
 }
-/* line 486, sass/media.scss */
+/* line 664, sass/media.scss */
 footer .copyright a, footer .copyright a:link, footer .copyright a:visited {
   color: #a2d9f7;
 }
-/* line 490, sass/media.scss */
+/* line 668, sass/media.scss */
 footer .copyright .poweredby {
   margin-left: 25px;
 }

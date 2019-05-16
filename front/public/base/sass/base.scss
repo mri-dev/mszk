@@ -33,3 +33,7 @@ input[type=checkbox].ccb:checked + label:before{
   opacity: 1;
   filter:alpha(opacity=100);
 }
+.btn-default{
+  background: #efefef;
+  color: #828282;
+}

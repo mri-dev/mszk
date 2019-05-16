@@ -3,6 +3,10 @@ var app = angular.module('Software', ['ngMaterial', 'ngMessages', 'ngCookies']);
 app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$location','$cookies', '$cookieStore', '$timeout', function($scope, $sce, $http, $mdToast, $mdDialog, $location, $cookies, $cookieStore, $timeout)
 {
   $scope.formready = false;
+  $scope.selected_services = [];
+  $scope.selected_subservices = [];
+  $scope.selected_subservices_items = [];
+  $scope.service_desc = [];
   $scope.step = 1;
   $scope.walkedstep = 1;
   $scope.max_step = 4;
@@ -37,6 +41,54 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
 
   }
 
+  $scope.pickServiceSub = function( id ) {
+    if ($scope.selected_subservices.indexOf(id) === -1) {
+      $scope.selected_subservices.push(id);
+    } else {
+      $scope.selected_subservices.splice($scope.selected_subservices.indexOf(id), 1);
+    }
+  }
+
+  $scope.pickServiceSubItem = function( id ) {
+    if ($scope.selected_subservices_items.indexOf(id) === -1) {
+      $scope.selected_subservices_items.push(id);
+    } else {
+      $scope.selected_subservices_items.splice($scope.selected_subservices_items.indexOf(id), 1);
+    }
+  }
+
+  $scope.pickService = function( id ) {
+    if ($scope.selected_services.indexOf(id) === -1) {
+      $scope.selected_services.push(id);
+    } else {
+      $scope.selected_services.splice($scope.selected_services.indexOf(id), 1);
+    }
+  }
+
+  $scope.isPickedService = function( id ) {
+    if ($scope.selected_services.indexOf(id) !== -1) {
+      return true
+    } else {
+      return false;
+    }
+  }
+
+  $scope.isPickedSubServiceItem = function( id ) {
+    if ($scope.selected_subservices_items.indexOf(id) !== -1) {
+      return true
+    } else {
+      return false;
+    }
+  }
+
+  $scope.isPickedSubService = function( id ) {
+    if ($scope.selected_subservices.indexOf(id) !== -1) {
+      return true
+    } else {
+      return false;
+    }
+  }
+
   $scope.prepareAjanlatkeres = function()
   {
     $scope.loadAjanlatkeresResources(function(){
@@ -68,15 +120,53 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
   $scope.getProgressPercent = function() {
     var p = 0;
 
-    p = 100 / 3 * ($scope.step-1);
+    p = 100 / 3 * ($scope.walkedstep-1);
 
     return p;
+  }
+
+  $scope.prevStep = function() {
+    step = $scope.step;
+    if (step <= 1) {
+      step = 1;
+    } else {
+      step = step -  1;
+    }
+
+    $scope.step = step;
+  }
+
+  $scope.nextStep = function() {
+    switch ( $scope.step ) {
+      case 1:
+        console.log('step 1');
+      break;
+      case 2:
+
+      break;
+      case 3:
+
+      break;
+      case 4:
+
+      break;
+    }
+
+    $scope.step = $scope.step + 1;
+    if ($scope.walkedstep < $scope.step) {
+      $scope.walkedstep = $scope.walkedstep + 1;
+    }
   }
 
   $scope.goToStep = function( step ) {
     if (step >= $scope.max_step) {
       step = $scope.max_step;
     }
+
+    if (step > $scope.walkedstep) {
+      step = $scope.walkedstep;
+    }
+
     $scope.step  = step;
   }
 

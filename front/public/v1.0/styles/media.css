@@ -443,33 +443,35 @@ body.singlepage .page-reader .header h1 {
   border: 0.5px solid #d5d5d5;
   padding: 15px;
   border-radius: 20px;
+  -webkit-transition: all .5s;
+  transition: all .5s;
 }
-/* line 444, sass/media.scss */
+/* line 446, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title {
   text-transform: uppercase;
   font-size: 1.1rem;
   font-weight: bold;
   color: #6a6a6a;
   position: relative;
+  outline: none;
+  cursor: pointer;
 }
-/* line 451, sass/media.scss */
+/* line 455, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .subserv-item-text {
   font-weight: 300;
   color: #8c8c8c;
   text-transform: none;
   font-size: 0.9rem;
 }
-/* line 458, sass/media.scss */
+/* line 462, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .adder {
   position: absolute;
-  right: 5px;
+  right: 13px;
   top: 50%;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
-  outline: none;
-  cursor: pointer;
 }
-/* line 466, sass/media.scss */
+/* line 468, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .adder:before {
   font-weight: 400;
   font-family: "Font Awesome 5 Free";
@@ -477,27 +479,28 @@ body.singlepage .page-reader .header h1 {
   font-size: 1.4rem;
   color: #bababa;
 }
-/* line 476, sass/media.scss */
+/* line 478, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment {
   padding: 5px;
 }
-/* line 478, sass/media.scss */
+/* line 480, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment .head {
   margin: 10px 0 5px 0;
   font-weight: bold;
   color: black;
 }
-/* line 483, sass/media.scss */
+/* line 485, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment textarea {
   border-radius: 10px;
   padding: 15px;
   min-height: 55px;
+  border: 0.5px solid #d5d5d5;
 }
-/* line 491, sass/media.scss */
+/* line 494, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item {
   padding: 5px;
 }
-/* line 493, sass/media.scss */
+/* line 496, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item > .wrapper {
   border: 0.5px solid #cbcbcb;
   background: #f5f5f5;
@@ -510,17 +513,17 @@ body.singlepage .page-reader .header h1 {
   outline: none;
   position: relative;
 }
-/* line 505, sass/media.scss */
+/* line 508, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item > .wrapper:hover {
   background: #2c62c7;
   color: white;
 }
-/* line 512, sass/media.scss */
+/* line 515, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item.selected > .wrapper {
   background: #2c62c7;
   color: white;
 }
-/* line 516, sass/media.scss */
+/* line 519, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item.selected > .wrapper:after {
   pointer-events: none;
   position: absolute;
@@ -533,58 +536,58 @@ body.singlepage .page-reader .header h1 {
   font-size: 1rem;
   color: #66c0b7;
 }
-/* line 533, sass/media.scss */
+/* line 536, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service.selected > .wrapper > .title > .adder:before {
   content: "\f14a";
   color: #ff7979;
 }
-/* line 537, sass/media.scss */
+/* line 540, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service.selected > .wrapper {
   border: 3px solid #66c0b7;
 }
-/* line 542, sass/media.scss */
+/* line 545, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service + .sub-service {
   margin: 10px 0 0 0;
 }
-/* line 547, sass/media.scss */
+/* line 550, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service + .service {
   margin: 15px 0 0 0;
 }
-/* line 553, sass/media.scss */
+/* line 556, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn {
   margin: 30px 0 20px 0;
 }
-/* line 555, sass/media.scss */
+/* line 558, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn button[class*=btn-default] {
   border-radius: 25px;
 }
-/* line 558, sass/media.scss */
+/* line 561, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn button[class*=btn-primary] {
   text-transform: uppercase;
   border-radius: 25px;
 }
-/* line 564, sass/media.scss */
+/* line 567, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form {
   background: #f5f4f4;
   border-radius: 5px;
   border: 0.5px solid #dbdbdb;
 }
-/* line 568, sass/media.scss */
+/* line 571, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper {
   padding: 25px;
 }
-/* line 571, sass/media.scss */
+/* line 574, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper .row + .row {
   margin-top: 15px;
 }
-/* line 575, sass/media.scss */
+/* line 578, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text], .ajanlat-requester .step-containers .requester-form > .wrapper textarea {
   font-weight: bold;
   color: black;
   border-radius: 20px;
   border: 0.5px solid #d2d2d2;
 }
-/* line 580, sass/media.scss */
+/* line 583, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]::placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #acacac;
@@ -592,52 +595,52 @@ body.singlepage .page-reader .header h1 {
   opacity: 1;
   /* Firefox */
 }
-/* line 586, sass/media.scss */
+/* line 589, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]:-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea:-ms-input-placeholder {
   /* Internet Explorer 10-11 */
   color: #acacac;
   font-weight: 300;
 }
-/* line 591, sass/media.scss */
+/* line 594, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]::-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea::-ms-input-placeholder {
   /* Microsoft Edge */
   color: #acacac;
   font-weight: 300;
 }
-/* line 597, sass/media.scss */
+/* line 600, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper textarea {
   width: 100%;
   padding: 10px;
 }
 
-/* line 606, sass/media.scss */
+/* line 609, sass/media.scss */
 footer {
   background: #2c62c7;
   color: white;
 }
-/* line 610, sass/media.scss */
+/* line 613, sass/media.scss */
 footer .footer-inner {
   padding: 25px 0;
 }
-/* line 613, sass/media.scss */
+/* line 616, sass/media.scss */
 footer .footer-inner .logo {
   text-align: center;
   margin: 0 0 20px 0;
 }
-/* line 616, sass/media.scss */
+/* line 619, sass/media.scss */
 footer .footer-inner .logo img {
   max-height: 80px;
   height: 80px;
   width: auto;
   max-width: initial;
 }
-/* line 625, sass/media.scss */
+/* line 628, sass/media.scss */
 footer .footer-inner .navigator ul, footer .footer-inner .navigator li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/* line 631, sass/media.scss */
+/* line 634, sass/media.scss */
 footer .footer-inner .navigator ul {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -646,33 +649,33 @@ footer .footer-inner .navigator ul {
   align-items: center;
   justify-content: center;
 }
-/* line 639, sass/media.scss */
+/* line 642, sass/media.scss */
 footer .footer-inner .navigator ul li a {
   padding: 10px;
   display: block;
   text-align: center;
 }
-/* line 649, sass/media.scss */
+/* line 652, sass/media.scss */
 footer a, footer a:link, footer a:visited {
   color: #ffffff;
   text-decoration: none;
 }
-/* line 654, sass/media.scss */
+/* line 657, sass/media.scss */
 footer a:hover {
   color: #66c0b7;
 }
-/* line 658, sass/media.scss */
+/* line 661, sass/media.scss */
 footer .copyright {
   background: #1f4da3;
   color: #a2d9f7;
   text-align: center;
   padding: 20px 0;
 }
-/* line 664, sass/media.scss */
+/* line 667, sass/media.scss */
 footer .copyright a, footer .copyright a:link, footer .copyright a:visited {
   color: #a2d9f7;
 }
-/* line 668, sass/media.scss */
+/* line 671, sass/media.scss */
 footer .copyright .poweredby {
   margin-left: 25px;
 }

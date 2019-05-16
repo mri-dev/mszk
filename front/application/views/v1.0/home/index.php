@@ -67,8 +67,8 @@
                     <div class="sub-services">
                       <div class="sub-service" ng-class="{'selected': isPickedSubService(subserv.ID)}" ng-repeat="subserv in service.child">
                         <div class="wrapper">
-                          <div class="title">
-                            <div class="adder" ng-click="pickServiceSub(subserv.ID)"></div>
+                          <div class="title" ng-click="pickServiceSub(subserv.ID)">
+                            <div class="adder" ></div>
                             {{subserv.neve}}
                             <div class="subserv-item-text" ng-show="(subserv.child.length)">
                               {{subserv.child.length}} <?=__('db alszolgáltatás konfigurálható.')?>

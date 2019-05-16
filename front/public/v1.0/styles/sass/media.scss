@@ -440,6 +440,8 @@ body.singlepage{
                 border: 0.5px solid #d5d5d5;
                 padding: 15px;
                 border-radius: 20px;
+                -webkit-transition: all .5s;
+                transition: all .5s;
 
                 & > .title{
                   text-transform: uppercase;
@@ -447,6 +449,8 @@ body.singlepage{
                   font-weight: bold;
                   color: #6a6a6a;
                   position: relative;
+                  outline: none;
+                  cursor: pointer;
 
                   .subserv-item-text{
                     font-weight: 300;
@@ -457,12 +461,10 @@ body.singlepage{
 
                   .adder{
                     position: absolute;
-                    right: 5px;
+                    right: 13px;
                     top: 50%;
                     -webkit-transform:translateY(-50%);
                     transform:translateY(-50%);
-                    outline: none;
-                    cursor: pointer;
                     &:before{
                       font-weight: 400;
                       font-family: "Font Awesome 5 Free";
@@ -484,6 +486,7 @@ body.singlepage{
                     border-radius: 10px;
                     padding: 15px;
                     min-height: 55px;
+                    border: 0.5px solid #d5d5d5;
                   }
                 }
               }

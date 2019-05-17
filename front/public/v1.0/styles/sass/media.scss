@@ -633,12 +633,14 @@ body.singlepage{
 
       .subitem{
         border-bottom: 0.5px solid #c9c9c9;
+        outline: none;
         & > .head{
           color: #555555;
           text-transform: uppercase;
           font-weight: bold;
           border-bottom: 0.5px solid #c9c9c9;
           padding: 20px;
+          outline: none;
 
           i{
             color: $color-red;
@@ -656,15 +658,39 @@ body.singlepage{
           padding: 10px 45px;
           line-height: 1.2;
           color: black;
+          outline: none;
 
           i {
             color: $color-cian;
             font-size: 0.8rem;
             margin: 0 5px 0 0;
           }
+
+          &.unselected{
+            color: #8c8c8c;
+            cursor: pointer;
+            i{
+              color: #8c8c8c;
+            }
+          }
+        }
+
+        &.unselected{
+          & > .head{
+            color: #acacac;
+            cursor: pointer;
+            outline: none;
+            i{
+              color: #acacac;
+            }
+          }
         }
       }
     }
+  }
+  & > .footer{
+    padding: 15px;
+    background: white;
   }
 }
 

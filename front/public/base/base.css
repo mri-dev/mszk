@@ -219,6 +219,6 @@ input[type=checkbox].ccb:checked + label:before {
 
 /* line 36, sass/base.scss */
 .btn-default {
-  background: #efefef;
-  color: #828282;
+  background: #c4c4c4;
+  color: #ffffff;
 }

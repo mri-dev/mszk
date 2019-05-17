@@ -162,7 +162,33 @@
                 </div>
               </div>
               <div class="col-md-4">
-                jobb
+                <div class="block-list">
+                  <div class="header">
+                    <?=__('Ezek is érdekelhetik')?>
+                  </div>
+                  <div class="wrapper">
+                    <div class="item" ng-repeat="service in resources.szolgaltatasok" ng-hide="selected_services.indexOf(service.ID)===-1">
+                      <div class="head">
+                        <i class="fas fa-plus"></i> {{service.neve}}
+                      </div>
+                      <div class="subitem" ng-class="{'unselected': !isPickedSubService(subserv.ID)}" ng-repeat="subserv in service.child">
+                        <div class="head" ng-click="pickServiceSub(subserv.ID)">
+                          <i class="fas fa-check" ng-show="isPickedSubService(subserv.ID)"></i>
+                          <i class="far fa-square" ng-show="!isPickedSubService(subserv.ID)"></i>
+                          {{subserv.neve}}
+                        </div>
+                        <div class="paramitem" ng-click="pickServiceSubItem(subservitem.ID)" ng-class="{'unselected': !isPickedSubServiceItem(subservitem.ID)}" ng-repeat="subservitem in subserv.child">
+                          <i class="fas fa-check-double" ng-show="isPickedSubServiceItem(subservitem.ID)"></i>
+                          <i class="far fa-square" ng-show="!isPickedSubServiceItem(subservitem.ID)"></i>
+                          {{subservitem.neve}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer text-center">
+                    <button type="button" ng-click="goToStep(2)" class="btn btn-secondary btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza a megjegyzések szerkesztéséhez')?> <i class="far fa-comment-dots"></i></button>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="next-btn">
@@ -188,7 +214,47 @@
           <div class="wrapper">
             <div class="row">
               <div class="col-md-7">
+                <div class="block-list">
+                  <div class="wrapper">
+                    <div class="item" ng-repeat="service in resources.szolgaltatasok" ng-hide="selected_services.indexOf(service.ID)===-1">
+                      <div class="head">
+                        {{service.neve}}
+                      </div>
+                      <div class="subitem" ng-repeat="subserv in service.child" ng-show="isPickedSubService(subserv.ID)">
+                        <div class="head">
+                          <i class="fas fa-check"></i> {{subserv.neve}}
+                        </div>
+                        <div class="paramitem" ng-repeat="subservitem in subserv.child" ng-show="isPickedSubServiceItem(subservitem.ID)">
+                          <i class="fas fa-check-double"></i> {{subservitem.neve}}
+                        </div>
+                        <div class="service-comment">
+                          <strong><i class="far fa-comment-dots"></i> <?=__('Megjegyzés')?>:</strong>
+                          <div class="">
+                            {{service_desc[subserv.ID]}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
+                <div class="next-btn">
+                  <div class="" ng-show="selected_services.length > 0" >
+                    <div class="row justify-content-between align-items-center">
+                      <div class="col text-left">
+                          <button type="button" ng-click="prevStep()" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza: Összegzés')?> </button>
+                      </div>
+                      <div class="col text-right">
+                        <button type="button" ng-click="nextStep()" class="btn btn-primary btn-lg"><?=__('Tovább a küldéshez')?> <i class="fas fa-chevron-right"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="info-next">
+                    <div ng-hide="selected_services.length > 0">
+                      <?=__('A továbbhaladáshoz válasszon szolgáltatásaink közül.')?>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="col-md-5">
                 <div class="requester-form">

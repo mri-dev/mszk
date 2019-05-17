@@ -92,11 +92,30 @@
                 </div>
               </div>
               <div class="col-md-5">
-                jobb
+                <div class="block-list">
+                  <div class="header">
+                    <?=__('Kiválasztott szolgáltatások')?>
+                  </div>
+                  <div class="wrapper">
+                    <div class="item" ng-repeat="service in resources.szolgaltatasok" ng-hide="selected_services.indexOf(service.ID)===-1">
+                      <div class="head">
+                        {{service.neve}}
+                      </div>
+                      <div class="subitem" ng-repeat="subserv in service.child" ng-show="isPickedSubService(subserv.ID)">
+                        <div class="head">
+                          <i class="fas fa-check"></i> {{subserv.neve}}
+                        </div>
+                        <div class="paramitem" ng-repeat="subservitem in subserv.child" ng-show="isPickedSubServiceItem(subservitem.ID)">
+                          <i class="fas fa-check-double"></i> {{subservitem.neve}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="next-btn">
-              <div class="" ng-show="selected_services.length > 0" >
+              <div class="" ng-show="selected_subservices.length > 0" >
                 <div class="row justify-content-between align-items-center">
                   <div class="col text-left">
                       <button type="button" ng-click="prevStep()" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza: Szolgáltatások')?> </button>
@@ -107,8 +126,8 @@
                 </div>
               </div>
               <div class="info-next">
-                <div ng-hide="selected_services.length > 0">
-                  <?=__('A továbbhaladáshoz válasszon szolgáltatásaink közül.')?>
+                <div ng-hide="selected_subservices.length > 0" class="text-right">
+                  <?=__('Válassza ki, hogy milyen alszolgáltatásokkal kapcsolatban kér ajánlatot!')?>
                 </div>
               </div>
             </div>
@@ -117,10 +136,32 @@
         <div class="step-layout step3" ng-show="(step == 3)">
           <div class="services-overview">
             <div class="row">
-              <div class="col-md-7">
-                bal
+              <div class="col-md-8">
+                <div class="block-list">
+                  <div class="wrapper">
+                    <div class="item" ng-repeat="service in resources.szolgaltatasok" ng-hide="selected_services.indexOf(service.ID)===-1">
+                      <div class="head">
+                        {{service.neve}}
+                      </div>
+                      <div class="subitem" ng-repeat="subserv in service.child" ng-show="isPickedSubService(subserv.ID)">
+                        <div class="head">
+                          <i class="fas fa-check"></i> {{subserv.neve}}
+                        </div>
+                        <div class="paramitem" ng-repeat="subservitem in subserv.child" ng-show="isPickedSubServiceItem(subservitem.ID)">
+                          <i class="fas fa-check-double"></i> {{subservitem.neve}}
+                        </div>
+                        <div class="service-comment">
+                          <strong><i class="far fa-comment-dots"></i> <?=__('Megjegyzés')?>:</strong>
+                          <div class="">
+                            {{service_desc[subserv.ID]}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-5">
+              <div class="col-md-4">
                 jobb
               </div>
             </div>

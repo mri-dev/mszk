@@ -285,7 +285,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12">
-                        <textarea ng-model="requester.message" placeholder="<?=__('Üzenet')?>"></textarea>
+                        <textarea style="min-height: 300px;" ng-model="requester.message" placeholder="<?=__('Üzenet')?>"></textarea>
                       </div>
                     </div>
                     <div class="row">

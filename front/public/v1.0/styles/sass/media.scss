@@ -241,7 +241,15 @@ body.singlepage{
           transform:translateY(-50%);
           .progress{
             width: 50%;
-            background: $color-blue !important;
+            /*background: $color-blue !important;*/
+            /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#2c62c7+0,2c62c7+60,66c0b7+100 */
+            background: #2c62c7; /* Old browsers */
+            background: -moz-linear-gradient(left,  #2c62c7 0%, #2c62c7 60%, #66c0b7 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(left,  #2c62c7 0%,#2c62c7 60%,#66c0b7 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to right,  #2c62c7 0%,#2c62c7 60%,#66c0b7 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c62c7', endColorstr='#66c0b7',GradientType=1 ); /* IE6-9 */
+
+
             position: absolute;
             left: 0;
             top: 0;

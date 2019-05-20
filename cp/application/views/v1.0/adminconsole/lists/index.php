@@ -183,6 +183,19 @@
         break;
       }
 
+      if ($this->_USERDATA['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $this->_USERDATA['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN)
+      {
+        // Adminok feltöltési mappája
+        $uploadfolder = 'admin';
+      } else
+      {
+        // Felhasználók galéria mappájas
+        $uploadfolder = 'byusers/'.$this->_USERDATA['data']['ID'];
+
+        if (!file_exists('src/uploads/'.$uploadfolder)) {
+          mkdir('src/uploads/'.$uploadfolder, 0755);
+        }
+      }
     ?>
     <a name="creator"></a>
     <div class="wblock color-<?=$color?>">
@@ -239,7 +252,7 @@
                 <div class="input-group">
                   <input id="creator_kep" type="text" class="form-control" name="kep" value="<?=(isset($_POST['kep']))?$_POST['kep']:(($this->list)?$this->list->getImage():'')?>">
                   <div class="input-group-append">
-                    <span class="input-group-text"><a title="Kép kiválasztása galériából" href="/src/js/tinymce/plugins/filemanager/dialog.php?type=1&amp;lang=hu_HU&amp;field_id=img" data-fancybox-type="iframe" class="iframe-btn"><i class="fas fa-images"></i></a></span>
+                    <span class="input-group-text"><a title="Kép kiválasztása galériából" href="/src/js/tinymce/plugins/filemanager/dialog.php?type=1&amp;lang=hu_HU&amp;field_id=creator_kep&amp;subfolder=<?=$uploadfolder?>" data-fancybox-type="iframe" class="iframe-btn"><i class="fas fa-images"></i></a></span>
                   </div>
                 </div>
               </div>

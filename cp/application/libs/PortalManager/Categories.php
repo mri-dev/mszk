@@ -79,6 +79,7 @@ class Categories
 		$parent = ($data['szulo_id']) ?: NULL;
 		$hashkey = ($data['hashkey']) ?: NULL;
 		$groupid = ($data['group_id']) ?: NULL;
+		$leiras = ($data['leiras']) ?: NULL;
 		$kep = ($data['kep']) ?: NULL;
 		$oldal_hashkeys = (count($new_data['oldal_hashkeys']) > 0) ? implode(",",$new_data['oldal_hashkeys']) : NULL;
 
@@ -101,6 +102,7 @@ class Categories
 			array(
 				'neve' 		=> $name,
 				'neve_en' 		=> $name_en,
+				'leiras' 		=> addslashes($leiras),
 				'szulo_id' 	=> $parent,
 				'group_id' => $groupid,
 				'sorrend' 	=> $sort,
@@ -127,6 +129,7 @@ class Categories
 		$parent = ($new_data['szulo_id']) ?: NULL;
 		$hashkey = ($new_data['hashkey']) ?: NULL;
 		$groupid = ($new_data['group_id']) ?: NULL;
+		$leiras = ($new_data['leiras']) ?: NULL;
 		$oldal_hashkeys = (count($new_data['oldal_hashkeys']) > 0) ? implode(",",$new_data['oldal_hashkeys']) : NULL;
 		$image = ( isset($new_data['kep']) ) ? $new_data['kep'] : NULL;
 
@@ -146,7 +149,8 @@ class Categories
 
 		$category->edit(array(
 			'neve' 		=> $name,
-			'neve_en' 		=> $name_en,
+			'neve_en' 	=> $name_en,
+			'leiras' 		=> addslashes($leiras),
 			'szulo_id' 	=> $parent,
 			'sorrend' 	=> $sort,
 			'group_id' => $groupid,

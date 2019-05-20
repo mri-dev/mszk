@@ -161,6 +161,13 @@ body.singlepage{
   }
 }
 
+.info-next{
+  .text-error {
+    font-size: 1.1rem;
+    color: $color-red;
+  }
+}
+
 .home-after-header{
   & > .wrapper{
     position: relative;
@@ -558,6 +565,15 @@ body.singlepage{
       button[class*=btn-default]{
         border-radius: 25px;
       }
+      button[class*=btn-warning]{
+        border-radius: 25px;
+        color: white;
+      }
+      button[class*=btn-cian]{
+        border-radius: 25px;
+        background: $color-cian;
+        color: white;
+      }
       button[class*=btn-primary]{
         text-transform: uppercase;
         border-radius: 25px;
@@ -613,7 +629,7 @@ body.singlepage{
   overflow: hidden;
   & > .header{
     text-align: center;
-    font-size: 1.8vw;
+    font-size: 1.5vw;
     color: #444444;
     text-transform: uppercase;
     padding: 15px;

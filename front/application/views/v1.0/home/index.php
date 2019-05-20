@@ -32,11 +32,9 @@
                   {{service.neve}}
                 </div>
                 <div class="image">
-
+                  <img src="" ng-src="<?=str_replace('/src/','', SOURCE)?>{{service.kep}}" alt="">
                 </div>
-                <div class="desc">
-                  {{service.leiras}}
-                </div>
+                <div class="desc" ng-bind-html="service.leiras|unsafe"></div>
                 <div class="more-info"><i class="fas fa-info-circle"></i> <?=__('Bővebb információ')?></div>
                 <div class="sel-item"><input id="service_s{{service.ID}}" type="checkbox" name="" class="ccb" value="" ng-click="pickService(service.ID)"> <label for="service_s{{service.ID}}"><?=__('Kiválasztom')?></label></div>
               </div>
@@ -50,7 +48,10 @@
             </div>
             <div class="info-next text-right">
               <div ng-hide="selected_services.length > 0">
-                <?=__('A továbbhaladáshoz válasszon szolgáltatásaink közül.')?>
+                <div class="text-error">
+                  <?=__('A továbbhaladáshoz válasszon szolgáltatásaink közül.')?>
+                </div>
+
               </div>
             </div>
           </div>
@@ -127,7 +128,9 @@
               </div>
               <div class="info-next">
                 <div ng-hide="selected_subservices.length > 0" class="text-right">
-                  <?=__('Válassza ki, hogy milyen alszolgáltatásokkal kapcsolatban kér ajánlatot!')?>
+                  <div class="text-error">
+                    <?=__('Válassza ki, hogy milyen alszolgáltatásokkal kapcsolatban kér ajánlatot!')?>
+                  </div>
                 </div>
               </div>
             </div>
@@ -243,9 +246,10 @@
                     <div class="row justify-content-between align-items-center">
                       <div class="col text-left">
                           <button type="button" ng-click="prevStep()" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza: Összegzés')?> </button>
+                          <button type="button" ng-click="goToStep(2)" class="btn btn-cian btn-sm"><i class="fas fa-bars"></i> <?=__('Módosítás')?> </button>
                       </div>
                       <div class="col text-right">
-                        <button type="button" ng-click="nextStep()" class="btn btn-primary btn-lg"><?=__('Tovább a küldéshez')?> <i class="fas fa-chevron-right"></i></button>
+                        <button type="button" ng-click="saveSession()" class="btn btn-warning btn-sm"><?=__('Konfiguráció mentése')?> <i class="fas fa-save"></i></button>
                       </div>
                     </div>
                   </div>
@@ -296,7 +300,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12 text-right">
-                        <input type="submit"class="btn btn-danger btn-lg" value="<?=__('Ajánlatkérés elküldése')?>">
+                        <button type="submit" class="btn btn-danger btn-lg"><?=__('Ajánlatkérés elküldése')?> <i class="far fa-arrow-alt-circle-right"></i></button>
                       </div>
                     </div>
                   </div>

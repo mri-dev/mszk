@@ -11,6 +11,11 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
   $scope.walkedstep = 1;
   $scope.max_step = 4;
   $scope.resources = {};
+  $scope.savingsession = false;
+  $scope.savedconfig = false;
+  $scope.savedconfigtime = false;
+  $scope.sendingofferrequest = false;
+  $scope.requester = {};
   $scope.title = [
     {
       main: 'Szolgáltatásaink',
@@ -89,11 +94,95 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
     }
   }
 
+  $scope.saveSession = function()
+  {
+    if ( !$scope.savingsession )
+    {
+      var session = {};
+      $scope.savingsession = true;
+      session.selected_services = $scope.selected_services;
+      session.selected_subservices = $scope.selected_subservices;
+      session.selected_subservices_items  = $scope.selected_subservices_items;
+      session.service_desc = $scope.service_desc;
+      session.walkedstep = $scope.walkedstep;
+      session.step = 4;
+
+      $cookies.putObject( 'config', session, {} );
+      $cookies.put( 'config_time', new Date(), {});
+      $scope.loadSavedConfig();
+      $scope.savingsession = false;
+    }
+  }
+
+
+  $scope.loadSavedConfig = function( callback ) {
+    var config  = $cookies.getObject( 'config' );
+    var time  = $cookies.get( 'config_time' );
+    if (typeof config === 'undefined') {
+      $scope.savedconfig = false;
+      $scope.savedconfigtime = false;
+    } else {
+      $scope.savedconfig = config;
+      $scope.savedconfigtime = new Date(time);
+    }
+
+    if (typeof callback !== 'undefined') {
+      callback();
+    }
+  }
+
   $scope.prepareAjanlatkeres = function()
   {
     $scope.loadAjanlatkeresResources(function(){
-      console.log('Prepared');
+      $scope.loadSavedConfig(function(){
+        if ($scope.savedconfig) {
+          $scope.selected_services = $scope.savedconfig.selected_services;
+          $scope.selected_subservices = $scope.savedconfig.selected_subservices;
+          $scope.selected_subservices_items  = $scope.savedconfig.selected_subservices_items;
+          $scope.service_desc = $scope.savedconfig.service_desc;
+          $scope.walkedstep = $scope.savedconfig.walkedstep;
+          $scope.step = $scope.savedconfig.step;
+        }
+      });
     });
+  }
+
+  $scope.sendAjanlatkeres = function( callback ) {
+    if (!$scope.sendingofferrequest)
+    {
+      $scope.sendingofferrequest = true;
+      $scope.requestmessageclass = 'requestmessage alert-warning'
+      $scope.requestmessage = 'Ajánlatkérés küldése folyamatban <i class="fas fa-spinner fa-spin"></i>';
+      $http({
+        method: 'POST',
+        url: '/ajax/post',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          type: "Ajanlatkeres",
+          mode: 'send',
+          requester: $scope.requester,
+          config: {
+            selected_services: $scope.savedconfig.selected_services,
+            selected_subservices: $scope.savedconfig.selected_subservices,
+            selected_subservices_items : $scope.savedconfig.selected_subservices_items,
+            service_desc: $scope.savedconfig.service_desc
+          }
+        })
+      }).success(function(r){
+        //$scope.sendingofferrequest = false;
+        console.log(r);
+        if (r.success == 1) {
+          $scope.requestmessageclass = 'requestmessage alert-success'
+          $scope.requestmessage = r.msg;
+        } else {
+          $scope.requestmessageclass = 'requestmessage alert-danger'
+          $scope.requestmessage = r.msg;
+        }
+        if (typeof callback !== 'undefined') {
+          callback();
+        }
+      });
+    }
   }
 
   $scope.loadAjanlatkeresResources = function( callback )

@@ -586,12 +586,22 @@ body.singlepage{
         text-transform: uppercase;
         border-radius: 25px;
       }
+
+      .saved-config-date{
+        font-size: 0.8rem;
+        margin: 5px 0 0 0;
+      }
     }
 
     .requester-form{
       background: #f5f4f4;
       border-radius: 5px;
       border: 0.5px solid #dbdbdb;
+      .redalert{
+        color: $color-red;
+        font-size: 0.75rem;
+        margin: 5px 0;
+      }
       & > .wrapper{
         padding: 25px;
 
@@ -599,7 +609,7 @@ body.singlepage{
           margin-top: 15px;
         }
 
-        input[type=text], textarea{
+        input[type=text], input[type=email], textarea{
           font-weight: bold;
           color: black;
           border-radius: 20px;

@@ -1,5 +1,6 @@
 <?php
 use PortalManager\Categories;
+use PortalManager\OfferRequests;
 
 class ajax extends Controller{
 		function __construct()
@@ -20,13 +21,27 @@ class ajax extends Controller{
 			switch($type)
 			{
 				case 'Ajanlatkeres':
-					// Marketing eszközök
-					$categories = new Categories( array( 'db' => $this->db ) );
-					$arg = array();
-					$arg['group_slug'] = 'szolgaltatasok';
-					$eszkozok	= $categories->getTree( false, $arg );
-					$ret['data']['szolgaltatasok'] = $eszkozok->tree;
-					$ret['success'] = 1;
+					switch ($mode) {
+						case 'getResources':
+							// Marketing eszközök
+							$categories = new Categories( array( 'db' => $this->db ) );
+							$arg = array();
+							$arg['group_slug'] = 'szolgaltatasok';
+							$eszkozok	= $categories->getTree( false, $arg );
+							$ret['data']['szolgaltatasok'] = $eszkozok->tree;
+							$ret['success'] = 1;
+						break;
+						case 'send':
+							$request = new OfferRequests(array('db' => $this->db));
+							try {
+								$request->sendRequest( $_POST['requester'], $_POST['config'] );
+								$this->setSuccess( __('Sikeresen elküldte ajánlatkérését!'), $ret);
+							} catch (\Exception $e) {
+								$this->escape( $e->getMessage(), $ret);
+							}
+						break;
+					}
+
 				break;
 				default: break;
 			}

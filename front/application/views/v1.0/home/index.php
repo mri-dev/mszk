@@ -243,13 +243,20 @@
 
                 <div class="next-btn">
                   <div class="" ng-show="selected_services.length > 0" >
-                    <div class="row justify-content-between align-items-center">
+                    <div class="row justify-content-between align-items-start">
                       <div class="col text-left">
                           <button type="button" ng-click="prevStep()" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza: Összegzés')?> </button>
                           <button type="button" ng-click="goToStep(2)" class="btn btn-cian btn-sm"><i class="fas fa-bars"></i> <?=__('Módosítás')?> </button>
                       </div>
                       <div class="col text-right">
                         <button type="button" ng-click="saveSession()" class="btn btn-warning btn-sm"><?=__('Konfiguráció mentése')?> <i class="fas fa-save"></i></button>
+                        <div class="" ng-show="savingsession">
+                          <?=__('Konfiguráció mentése folyamatban')?> <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="saved-config-date" ng-show="savedconfigtime">
+                          <strong><?=__('Utoljára mentve')?>:</strong>
+                          <div class="datetime">{{savedconfigtime|date:'yyyy. MM. dd. hh:mm'}}</div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -280,7 +287,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12">
-                        <input type="text" ng-model="requester.email" value="" class="form-control"  placeholder="* <?=__('E-mail cím')?>" required="required">
+                        <input type="email" ng-model="requester.email" value="" class="form-control" email="true"  placeholder="* <?=__('E-mail cím')?>" required="required">
                       </div>
                     </div>
                     <div class="row">
@@ -300,7 +307,13 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12 text-right">
-                        <button type="submit" class="btn btn-danger btn-lg"><?=__('Ajánlatkérés elküldése')?> <i class="far fa-arrow-alt-circle-right"></i></button>
+                        <div class="alert text-left" ng-class="requestmessageclass" ng-bind-html="requestmessage|unsafe" ng-show="sendingofferrequest"></div>
+                        <div class="redalert" ng-show="!requester.name || !requester.phone || !requester.email">
+                          <?=__('Az ajánlatkérés küldéséhez kérjük a a kötelező (*) adatok megadását!')?>
+                        </div>
+                        <div ng-hide="!requester.name || !requester.phone || !requester.email">
+                          <button ng-show="!sendingofferrequest" type="submit" class="btn btn-danger btn-lg" ng-click="sendAjanlatkeres()"><?=__('Ajánlatkérés elküldése')?> <i class="far fa-arrow-alt-circle-right"></i></button>
+                        </div>
                       </div>
                     </div>
                   </div>

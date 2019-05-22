@@ -7,6 +7,8 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
   $scope.selected_subservices = [];
   $scope.selected_subservices_items = [];
   $scope.service_desc = [];
+  $scope.service_cashall = [];
+  $scope.service_cashrow = [];
   $scope.step = 1;
   $scope.walkedstep = 1;
   $scope.max_step = 4;
@@ -104,6 +106,8 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
       session.selected_subservices = $scope.selected_subservices;
       session.selected_subservices_items  = $scope.selected_subservices_items;
       session.service_desc = $scope.service_desc;
+      session.service_cashall = $scope.service_cashall;
+      session.service_cashrow = $scope.service_cashrow;
       session.walkedstep = $scope.walkedstep;
       session.step = 4;
 
@@ -131,6 +135,15 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
     }
   }
 
+  $scope.recalcCashAll = function(subservid, subservitemid ) {
+    var totalcash = 0;
+    angular.forEach($scope.service_cashrow[subservid], function(cash,sid){
+      totalcash += cash;
+    });
+
+    $scope.service_cashall[subservid] = totalcash;
+  }
+
   $scope.prepareAjanlatkeres = function()
   {
     $scope.loadAjanlatkeresResources(function(){
@@ -141,6 +154,8 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
           $scope.selected_subservices_items  = $scope.savedconfig.selected_subservices_items;
           $scope.service_desc = $scope.savedconfig.service_desc;
           $scope.walkedstep = $scope.savedconfig.walkedstep;
+          $scope.service_cashall = $scope.savedconfig.service_cashall;
+          $scope.service_cashrow = $scope.savedconfig.service_cashrow;
           $scope.step = $scope.savedconfig.step;
         }
       });
@@ -148,6 +163,7 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
   }
 
   $scope.sendAjanlatkeres = function( callback ) {
+    $scope.requestreturn = false;
     if (!$scope.sendingofferrequest)
     {
       $scope.sendingofferrequest = true;
@@ -165,12 +181,15 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
             selected_services: $scope.savedconfig.selected_services,
             selected_subservices: $scope.savedconfig.selected_subservices,
             selected_subservices_items : $scope.savedconfig.selected_subservices_items,
+            selected_cashall : $scope.savedconfig.service_cashall,
+            selected_cashrow : $scope.savedconfig.service_cashrow,
             service_desc: $scope.savedconfig.service_desc
           }
         })
       }).success(function(r){
         //$scope.sendingofferrequest = false;
         console.log(r);
+        $scope.requestreturn = r;
         if (r.success == 1) {
           $scope.requestmessageclass = 'requestmessage alert-success'
           $scope.requestmessage = r.msg;

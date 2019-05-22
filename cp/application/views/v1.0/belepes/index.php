@@ -16,7 +16,7 @@
       <form action="" method="post">
         <div class="input-group">
 	        <span class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user-tie"></i></span></span>
-				  <input type="text" class="form-control" name="email" placeholder="<?=__('E-mail cím')?>">
+				  <input type="text" class="form-control" name="email" value="<?=(isset($_GET['email'])) ? $_GET['email']:''?>" placeholder="<?=__('E-mail cím')?>">
 				</div>
         <br>
         <div class="input-group">

@@ -86,6 +86,22 @@
                             <div class="head"><?=__('Az Ön igényei')?>:</div>
                             <textarea class="form-control" ng-model="service_desc[subserv.ID]" placeholder="<?=__('Milyen igényei vannak a(z) {{subserv.neve}} szolgáltatással kapcsolatban?')?>"></textarea>
                           </div>
+                          <div class="service-cash" ng-show="isPickedSubService(subserv.ID)">
+                            <div class="head"><?=__('Tételes keretösszegek')?>:</div>
+                            <div class="cashrow" ng-repeat="subservitem in subserv.child" ng-show="isPickedSubServiceItem(subservitem.ID)">
+                              <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text">+ {{subservitem.neve}}</span></div>
+                                <input type="number" step="1" ng-change="recalcCashAll(subserv.ID, subservitem.ID)" ng-model="service_cashrow[subserv.ID][subservitem.ID]" class="form-control">
+                                <div class="input-group-append"><span class="input-group-text"><?=__('+ ÁFA')?></span></div>
+                              </div>
+                            </div>
+                            <div class="head"><?=__('Teljes keretösszeg a(z) <strong>{{subserv.neve}}</strong> projektekre')?>:</div>
+                            <div class="input-group">
+                              <div class="input-group-prepend"><span class="input-group-text"><?=__('Nettó')?></span></div>
+                              <input type="number" step="1" ng-model="service_cashall[subserv.ID]" class="form-control">
+                              <div class="input-group-append"><span class="input-group-text"><?=__('+ ÁFA')?></span></div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -151,13 +167,15 @@
                           <i class="fas fa-check"></i> {{subserv.neve}}
                         </div>
                         <div class="paramitem" ng-repeat="subservitem in subserv.child" ng-show="isPickedSubServiceItem(subservitem.ID)">
-                          <i class="fas fa-check-double"></i> {{subservitem.neve}}
+                          <i class="fas fa-check-double"></i> {{subservitem.neve}} <span class="cashrow-conf" ng-show="service_cashrow[subserv.ID][subservitem.ID]">{{service_cashrow[subserv.ID][subservitem.ID]}} <?=__('+ ÁFA')?></span>
                         </div>
                         <div class="service-comment">
-                          <strong><i class="far fa-comment-dots"></i> <?=__('Megjegyzés')?>:</strong>
-                          <div class="">
-                            {{service_desc[subserv.ID]}}
-                          </div>
+                          <strong><i class="far fa-comment-dots"></i> <?=__('Megjegyzés / Igények')?>:</strong>
+                          <div class="" ng-bind-html="service_desc[subserv.ID]|unsafe"></div>
+                        </div>
+                        <div class="service-cash" ng-show="service_cashall[subserv.ID]">
+                          <strong><i class="fas fa-money-check-alt"></i> <?=__('Költségvetés')?>:</strong>
+                          <div ><?=__('A(z) {{subserv.neve}} teljes keretösszege')?>: <strong>{{service_cashall[subserv.ID]}} <?=__('+ ÁFA')?></strong></div>
                         </div>
                       </div>
                     </div>
@@ -189,7 +207,7 @@
                     </div>
                   </div>
                   <div class="footer text-center">
-                    <button type="button" ng-click="goToStep(2)" class="btn btn-secondary btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza a megjegyzések szerkesztéséhez')?> <i class="far fa-comment-dots"></i></button>
+                    <button type="button" ng-click="goToStep(2)" class="btn btn-secondary btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza a tételek szerkesztéséhez')?> <i class="far fa-edit"></i></button>
                   </div>
                 </div>
               </div>
@@ -228,13 +246,15 @@
                           <i class="fas fa-check"></i> {{subserv.neve}}
                         </div>
                         <div class="paramitem" ng-repeat="subservitem in subserv.child" ng-show="isPickedSubServiceItem(subservitem.ID)">
-                          <i class="fas fa-check-double"></i> {{subservitem.neve}}
+                          <i class="fas fa-check-double"></i> {{subservitem.neve}} <span class="cashrow-conf" ng-show="service_cashrow[subserv.ID][subservitem.ID]">{{service_cashrow[subserv.ID][subservitem.ID]}} <?=__('+ ÁFA')?></span>
                         </div>
                         <div class="service-comment">
-                          <strong><i class="far fa-comment-dots"></i> <?=__('Megjegyzés')?>:</strong>
-                          <div class="">
-                            {{service_desc[subserv.ID]}}
-                          </div>
+                          <strong><i class="far fa-comment-dots"></i> <?=__('Megjegyzés / Igények')?>:</strong>
+                          <div class="" ng-bind-html="service_desc[subserv.ID]|unsafe"></div>
+                        </div>
+                        <div class="service-cash" ng-show="service_cashall[subserv.ID]">
+                          <strong><i class="fas fa-money-check-alt"></i> <?=__('Költségvetés')?>:</strong>
+                          <div ><?=__('A(z) {{subserv.neve}} teljes keretösszege')?>: <strong>{{service_cashall[subserv.ID]}} <?=__('+ ÁFA')?></strong></div>
                         </div>
                       </div>
                     </div>
@@ -246,7 +266,7 @@
                     <div class="row justify-content-between align-items-start">
                       <div class="col text-left">
                           <button type="button" ng-click="prevStep()" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza: Összegzés')?> </button>
-                          <button type="button" ng-click="goToStep(2)" class="btn btn-cian btn-sm"><i class="fas fa-bars"></i> <?=__('Módosítás')?> </button>
+                          <button type="button" ng-click="goToStep(2)" class="btn btn-cian btn-sm"><i class="far fa-edit"></i> <?=__('Módosítás')?> </button>
                       </div>
                       <div class="col text-right">
                         <button type="button" ng-click="saveSession()" class="btn btn-warning btn-sm"><?=__('Konfiguráció mentése')?> <i class="fas fa-save"></i></button>
@@ -308,6 +328,20 @@
                     <div class="row">
                       <div class="col-md-12 text-right">
                         <div class="alert text-left" ng-class="requestmessageclass" ng-bind-html="requestmessage|unsafe" ng-show="sendingofferrequest"></div>
+                        <div class="" ng-show="requestreturn">
+                          <div class="" ng-show="!requestreturn.created_user_id">
+                            <div class="alert alert-warning text-left">
+                              <?=__('Az ajánlatkérés részleteit megtekintheti a profiljában!')?><br><br>
+                              <a class="btn btn-sm btn-warning"  href="<?=ADMROOT?>belepes/?email={{requestreturn.email}}&request={{requestreturn.request_hashkey}}"><?=__('Bejelentkezés')?></a>
+                            </div>
+                          </div>
+                          <div class="" ng-show="requestreturn.created_user_id">
+                            <div class="alert alert-warning text-left">
+                              <?=__('Új profilja elkészült! Az ajánlatkérés részleteit megtekintheti a fiókjában!')?><br><br>
+                              <a class="btn btn-sm btn-warning" href="<?=ADMROOT?>belepes/?email={{requestreturn.email}}&request={{requestreturn.request_hashkey}}"><?=__('Bejelentkezés')?></a>
+                            </div>
+                          </div>
+                        </div>
                         <div class="redalert" ng-show="!requester.name || !requester.phone || !requester.email">
                           <?=__('Az ajánlatkérés küldéséhez kérjük a a kötelező (*) adatok megadását!')?>
                         </div>

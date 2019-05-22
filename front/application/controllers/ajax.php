@@ -34,7 +34,8 @@ class ajax extends Controller{
 						case 'send':
 							$request = new OfferRequests(array('db' => $this->db));
 							try {
-								$request->sendRequest( $_POST['requester'], $_POST['config'] );
+								$back = $request->sendRequest( $_POST['requester'], $_POST['config'] );
+								$ret = array_merge( $ret, $back );
 								$this->setSuccess( __('Sikeresen elküldte ajánlatkérését!'), $ret);
 							} catch (\Exception $e) {
 								$this->escape( $e->getMessage(), $ret);

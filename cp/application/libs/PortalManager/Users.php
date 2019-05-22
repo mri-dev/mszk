@@ -5,8 +5,6 @@ use MailManager\Mailer;
 use MailManager\MailTemplates;
 use PortalManager\Template;
 use PortalManager\Portal;
-use PortalManager\CasadaShop;
-use PortalManager\Request;
 
 /**
  * class Users
@@ -485,7 +483,7 @@ class Users
 		);
 	}
 
-	function getData($what, $by = 'email'){
+	function getData($what, $by = 'email') {
 		if($what == '') return false;
 		$q = "SELECT * FROM ".self::TABLE_NAME." WHERE `".$by."` = '$what'";
 
@@ -621,29 +619,16 @@ class Users
 			throw new \Exception("Felhasználó jelszavát kötelező megadni!");
 		}
 
-		$user_group 	= 'user';
-		$price_group 	= (int)$data['data']['price_group'];
-		$distributor 	= 0;
-		$jelszo 		= $data['data']['felhasznalok']['jelszo'];
+		$user_group	= 'user';
+		$jelszo = $data['data']['felhasznalok']['jelszo'];
 
-		$data['data']['felhasznalok']['cash'] 		= (empty($data['data']['felhasznalok']['cash']) || !is_numeric($data['data']['felhasznalok']['cash'])) ? 0 : (int)$data['data']['felhasznalok']['cash'];
 		$data['data']['felhasznalok']['jelszo'] 	= \Hash::jelszo($data['data']['felhasznalok']['jelszo']);
-
-		if (isset($data['is_reseller'])) {
-			$user_group = 'reseller';
-		}
-
-		if (isset($data['is_reseller'])) {
-			$distributor = 1;
-		}
 
 		$insert = $data['data']['felhasznalok'];
 		$insert['engedelyezve'] = 1;
 		$insert['aktivalva'] 	= NOW;
-		$insert['regisztralt'] 	= NOW;
-		$insert['user_group'] 	= $user_group;
-		$insert['price_group'] 	= ($price_group == 0) ? 1 : $price_group;
-		$insert['distributor'] 	= $distributor;
+		$insert['regisztralt'] = NOW;
+		$insert['user_group'] = $user_group;
 
 		$this->db->insert(
 			self::TABLE_NAME,
@@ -664,11 +649,10 @@ class Users
 				'noThumbImg' => true,
 				'noWaterMark' => true
 			));
-			$data['data']['felhasznalo_adatok']['casadapont_tanacsado_profil'] = $profil['file'];
-
+			$data['data']['felhasznalo_adatok']['proil_kep'] = $profil['file'];
 		}
 
-		foreach ($data['data']['felhasznalo_adatok'] as $key => $value)
+		foreach ((array)$data['data']['felhasznalo_adatok'] as $key => $value)
 		{
 			if( empty($value) ) continue;
 			$this->addAccountDetail($new_uid, $key, $value);
@@ -690,6 +674,8 @@ class Users
 			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'account_create_byadmin', $arg ) );
 			$re = $mail->sendMail();
 		}
+
+		return (int)$new_uid;
 	}
 
 	function add( $data )

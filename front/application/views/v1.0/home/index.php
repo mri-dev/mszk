@@ -31,8 +31,8 @@
                 <div class="title">
                   {{service.neve}}
                 </div>
-                <div class="image">
-                  <img src="" ng-src="<?=str_replace('/src/','', SOURCE)?>{{service.kep}}" alt="">
+                <div class="image autocorrect-height-by-width" data-image-ratio="1:1">
+                  <img class="" ng-src="<?=str_replace('/src/','', SOURCE)?>{{service.kep}}" alt="">
                 </div>
                 <div class="desc" ng-bind-html="service.leiras|unsafe"></div>
                 <div class="more-info"><i class="fas fa-info-circle"></i> <?=__('Bővebb információ')?></div>

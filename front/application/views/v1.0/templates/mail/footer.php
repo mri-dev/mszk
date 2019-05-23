@@ -22,7 +22,7 @@
 <div class="cdiv"></div>
 <div class="width pad footer">
  <div class="row" style="text-align: center;">
-   <img src="<?=DOMAIN?><?=str_replace('logo','logo-white',$settings['logo'])?>" alt="<?=$settings['page_title']?>" style="width: 20%; margin: 0 auto;">
+   <img src="<?=ADMROOT?><?=str_replace('logo','logo-white',$settings['logo'])?>" alt="<?=$settings['page_title']?>" style="width: 20%; margin: 0 auto;">
  </div>
 </div>
 <div class="row contacts" style="background: #1f4da3;">

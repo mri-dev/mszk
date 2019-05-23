@@ -249,10 +249,12 @@ class Categories
 			LEFT OUTER JOIN lists_group as lg ON lg.ID = l.group_id
 			WHERE 1=1 ";
 
-		if ( !$top_category_id ) {
-			$qry .= " and l.szulo_id IS NULL ";
-		} else {
-			$qry .= " and l.szulo_id = ".$top_category_id;
+		if (!isset($arg['parenting_off'])) {
+			if ( !$top_category_id ) {
+				$qry .= " and l.szulo_id IS NULL ";
+			} else {
+				$qry .= " and l.szulo_id = ".$top_category_id;
+			}
 		}
 
 		// Group ID
@@ -274,7 +276,7 @@ class Categories
 		}
 
 		$qry .= " ORDER BY l.sorrend ASC, l.ID ASC;";
-		error_log($qry);
+
 
 		$top_cat_qry 	= $this->db->query($qry);
 		$top_cat_data 	= $top_cat_qry->fetchAll(\PDO::FETCH_ASSOC);
@@ -294,7 +296,10 @@ class Categories
 			$this->tree_steped_item[] = $top_cat;
 
 			// Alkategóriák betöltése
-			$top_cat['child'] = $this->getChildCategories($top_cat['ID']);
+			if (!isset($arg['unload_child'])) {
+				$top_cat['child'] = $this->getChildCategories($top_cat['ID']);
+			}
+
 			$tree[] = $top_cat;
 		}
 

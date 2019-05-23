@@ -111,13 +111,20 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
       session.walkedstep = $scope.walkedstep;
       session.step = 4;
 
-      $cookies.putObject( 'config', session, {} );
-      $cookies.put( 'config_time', new Date(), {});
+      var date = new Date();
+      var expires = new Date(date.setDate(date.getDate() + 30));
+      $cookies.putObject( 'config', session, {'expires': expires} );
+      $cookies.put( 'config_time', new Date(), {'expires': expires});
       $scope.loadSavedConfig();
       $scope.savingsession = false;
     }
   }
 
+  $scope.clearSession = function() {
+    $cookies.remove('config');
+    $cookies.remove('config_time');
+    $scope.loadSavedConfig();
+  }
 
   $scope.loadSavedConfig = function( callback ) {
     var config  = $cookies.getObject( 'config' );
@@ -187,12 +194,12 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
           }
         })
       }).success(function(r){
-        //$scope.sendingofferrequest = false;
-        console.log(r);
+        //console.log(r);
         $scope.requestreturn = r;
         if (r.success == 1) {
           $scope.requestmessageclass = 'requestmessage alert-success'
           $scope.requestmessage = r.msg;
+          $scope.clearSession();
         } else {
           $scope.requestmessageclass = 'requestmessage alert-danger'
           $scope.requestmessage = r.msg;
@@ -303,5 +310,27 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
 app.filter('unsafe', function($sce){ return $sce.trustAsHtml; });
 
 $(function(){
+  $.each($('.autocorrect-height-by-width'), function(i,e){
+    var ew = $(e).width();
+    var ap = $(e).data('image-ratio');
+    var respunder = $(e).data('image-under');
+  	var pw = $(window).width();
+    ap = (typeof ap !== 'undefined') ? ap : '4:3';
+  	console.log(ap);
+    var aps = ap.split(":");
+    var th = ew / parseInt(aps[0])  * parseInt(aps[1]);
 
+  	if (respunder) {
+  		if (pw < respunder) {
+  			$(e).css({
+          height: th
+        });
+  		}
+  	} else{
+  		$(e).css({
+        height: th
+      });
+  	}
+
+  });
 });

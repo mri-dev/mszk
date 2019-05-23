@@ -64,7 +64,6 @@
         .footer {
             text-align: center;
             font-size: 12px !important;
-            color: #ffffff !important;
         }
         .footer a {
           color: white;
@@ -147,7 +146,7 @@
               <tbody>
                   <tr>
                       <td style="text-align:center;">
-                          <img src="<?=DOMAIN?><?=$settings['logo']?>" alt="<?=$settings['page_title']?>" style="width: 33%;">
+                          <img src="<?=ADMROOT?><?=$settings['logo']?>" alt="<?=$settings['page_title']?>" style="width: 33%;">
                           <div class="relax"><?=$settings['page_description']?></div>
                       </td>
                   </tr>

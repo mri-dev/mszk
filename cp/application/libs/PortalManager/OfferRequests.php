@@ -4,6 +4,7 @@ namespace PortalManager;
 use PortalManager\Users;
 use PortalManager\Template;
 use MailManager\Mailer;
+use PortalManager\Categories;
 
 /**
 * class OfferRequests
@@ -18,6 +19,80 @@ class OfferRequests
 	{
 		$this->db = $arg[db];
 		return $this;
+	}
+
+	public function collectOfferData( $value = '', $findby = 'hashkey' )
+	{
+		if (!in_array($findby, array('ID', 'hashkey', 'email', 'phone', 'name', 'company')))
+		{
+			$findby = 'hashkey';
+		}
+
+		$q = "SELECT r.* FROM requests as r WHERE r.".$findby." = :value";
+		$qry = $this->db->squery($q, array('value' => trim($value) ));
+
+		$rc = $qry->rowCount();
+
+		if ( $rc == 0) {
+			return array();
+		} else {
+			if ($rc == 1) {
+				$data = $qry->fetch(\PDO::FETCH_ASSOC);
+				$this->prepareRAWOfferData( $data );
+			} else if($rc > 1){
+				$datas = $qry->fetchAll(\PDO::FETCH_ASSOC);
+				$data = array();
+				foreach ((array)$datas as $d) {
+					$this->prepareRAWOfferData( $d );
+					$data[] = $d;
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	private function prepareRAWOfferData( &$data )
+	{
+		$temp = $data;
+		$data = array();
+
+		$data['cash']['total'] = $temp['cash_total'];
+		$data['cash']['subservices_overall'] = json_decode($temp['cash'], true);
+		$data['cash']['subservicesitems'] = json_decode($temp['cash_config'], true);
+
+		$data['services']['ids'] = json_decode($temp['services'], true);
+		$data['services']['items'] = $this->findServicesItems( $data['services']['ids'] );
+		$data['subservices']['ids'] = json_decode($temp['subservices'], true);
+		$data['subservices']['items'] = $this->findServicesItems( $data['subservices']['ids'] );
+		$data['subservicesitems']['ids'] = json_decode($temp['subservices_items'], true);
+		$data['subservicesitems']['items'] = $this->findServicesItems( $data['subservicesitems']['ids'] );
+		$data['subservices_descriptions'] = json_decode($temp['service_description'], true);
+
+		$data['rawdb'] = $temp;
+		unset($temp);
+
+		return $data;
+	}
+
+	private function findServicesItems( $ids = array() )
+	{
+		$list = array();
+
+		$handler = new Categories(array('db' => $this->db));
+		$arg = array();
+		$arg['group_id'] = 1;
+		$arg['id_set'] = (array)$ids;
+		$arg['parenting_off'] = true;
+		$arg['unload_child'] = true;
+		$lists 	= $handler->getTree( false, $arg );
+
+		while( $lists->walk() ){
+			$item = $lists->the_cat();
+			$list[] = $item;
+		}
+
+		return $list;
 	}
 
   public function sendRequest( $requester, $config )
@@ -127,6 +202,8 @@ class OfferRequests
 		$ret['request_id'] = (int)$request_id;
 		$ret['email'] = trim($requester['email']);
 
+		$configuration = $this->collectOfferData( $hashkey );
+
 		// Ha van user_id vagy létre lett hozva
 		if ( $user_id != 0 )
 		{
@@ -135,12 +212,12 @@ class OfferRequests
 			// E-mail - Igénylő értesítő
 			if (true)
 			{
-				$mail = new Mailer( $this->settings['page_title'], SMTP_USER, $this->settings['mail_sender_mode'] );
+				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
 				$mail->add( trim($requester['email']) );
 				$arg = array(
 					'nev' => trim($requester['name']),
 					'jelszo' => $rand_password,
-					'settings' => $this->settings,
+					'settings' => $this->db->settings,
 					'data' => array(
 						'requester' => $requester,
 						'config' => $config
@@ -149,6 +226,7 @@ class OfferRequests
 						'hashkey' => $hashkey,
 						'id' => (int)$request_id,
 					),
+					'configuration' => $configuration,
 					'new_user_id' => $ret['created_user_id'],
 					'user_id' => $user_id,
 					'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
@@ -159,21 +237,28 @@ class OfferRequests
 			}
 
 	    // E-mail - Admin értesítő
-			if (false)
+			if (true)
 			{
-				$mail = new Mailer( $this->settings['page_title'], SMTP_USER, $this->settings['mail_sender_mode'] );
-				$mail->add( $this->settings['alert_email'] );
+				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+				$mail->add( $this->db->settings['alert_email'] );
 				$arg = array(
 					'nev' => trim($requester['name']),
 					'jelszo' => $rand_password,
-					'settings' => $this->settings,
+					'settings' => $this->db->settings,
 					'data' => array(
 						'requester' => $requester,
 						'config' => $config
 					),
-					'infoMsg' 		=> 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+					'request' => array(
+						'hashkey' => $hashkey,
+						'id' => (int)$request_id,
+					),
+					'configuration' => $configuration,
+					'new_user_id' => $ret['created_user_id'],
+					'user_id' => $user_id,
+					'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
 				);
-				$mail->setSubject( __('Új ajánlatkérés érkezett.') );
+				$mail->setSubject( __('Értesítés: új ajánlatkérés érkezett.') );
 				$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'request_new_admin', $arg ) );
 				$re = $mail->sendMail();
 			}

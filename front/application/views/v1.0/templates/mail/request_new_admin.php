@@ -1,8 +1,48 @@
 <? require "head.php"; ?>
-<h2>Tisztelt <?=$nev?>!</h2>
-<p>Köszönjük, hogy érdeklődik szolgáltatásaink iránt! Sikeresen fogadtuk ajánlatkérését, melynek feldolgozását hamarosan megkezdjük és kiajánljuk partnereinknek!</p>
-
-<div><h3>Az Ön konfigurációja</h3></div>
+<h2>Új ajánlatkérés érkezett!</h2>
+<p>A feldolgozás érdekében jelentkezzen be az <a href="<?=ADMROOT?>belepes/?admhandler=ajanlatkeresek&request=<?=$request['hashkey']?>"><strong>adminisztrációs felületre</strong></a>. Ajánlatkérések között ki tudja ajánlani partnereinek az igényt.</p>
+<div><h3>Ajánlatkérő adatai</h3></div>
+<table class="if">
+  <tbody>
+    <tr>
+      <th>Név:</th>
+      <td><?=$nev?></td>
+    </tr>
+    <tr>
+      <th>E-mail cím:</th>
+      <td><?=$data['requester']['email']?></td>
+    </tr>
+    <tr>
+      <th>Cég:</th>
+      <td><?=$data['requester']['company']?></td>
+    </tr>
+    <tr>
+      <th>Telefonszám:</th>
+      <td><?=$data['requester']['phone']?></td>
+    </tr>
+    <tr>
+      <th>Felhasználó ID:</th>
+      <td><?=$user_id?></td>
+    </tr>
+    <tr>
+      <th>Új regiszráció:</th>
+      <td><?=($new_user_id != '')?'Igen':'Nem'?></td>
+    </tr>
+    <tr>
+      <th>Üzenete:</th>
+      <td><?=$data['requester']['message']?></td>
+    </tr>
+    <tr>
+      <th>Ajánlatkérés azonosítók:</th>
+      <td>
+        <div class="">#ID: <?=$request['id']?></div>
+        <div class="">Hashkey: <?=$request['hashkey']?></div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<div><h3>Leadott konfigurációs paraméterek</h3></div>
 <div class="selected-services">
   <?php foreach ((array)$configuration['services']['items'] as $service): ?>
   <div class="service">
@@ -38,25 +78,6 @@
     Teljes költségvetés összege: <strong><?php echo number_format($configuration['cash']['total'], 0, '.', ' '); ?> Ft</strong>
   </div>
 </div>
-
-<?php if (!empty($new_user_id)): ?>
-<div><h3>Új fiókja elkészült! Belépési adatok:</h3></div>
-<table class="if">
-  <tbody>
-    <tr>
-      <th>E-mail cím:</th>
-      <td><?=$data['requester']['email']?></td>
-    </tr>
-    <tr>
-      <th>Ideiglenes (automatikus) jelszó:</th>
-      <td><?=$jelszo?></td>
-    </tr>
-  </tbody>
-</table>
-<?php endif; ?>
-
-<br>
-<a href="<?=ADMROOT?>belepes/?email=<?=$data['requester']['email']?>&request=<?=$request['hashkey']?>"><strong>Ide kattintva bejelentkezhet fiókjába >></strong></a>
 
 <style media="all">
 /* line 854, sass/media.scss */

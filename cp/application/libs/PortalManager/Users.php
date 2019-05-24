@@ -566,6 +566,33 @@ class Users
 		);
 	}
 
+	public function saveProfil( $uid, $data )
+	{
+		$this->db->update(
+			self::TABLE_NAME,
+			$data['data']['felhasznalok'],
+			"ID = ".$uid
+		);
+
+		foreach ($data['data']['felhasznalo_adatok'] as $key => $value ) {
+			$this->editAccountDetail($uid, $key, $value);
+		}
+
+		// Képfeltöltés, csere
+		if ( isset($_FILES['profil']['tmp_name'][0]) && !empty($_FILES['profil']['name'][0]) )
+		{
+			$profil = \Images::upload(array(
+				'src' 		=> 'profil',
+				'upDir' 	=> 'src/profil',
+				'noRoot' 	=> true,
+				'fileName' 	=> \Helper::makeSafeUrl($data['data']['felhasznalok']['nev']).'-profil',
+				'noThumbImg' => true,
+				'noWaterMark' => true
+			));
+			$this->editAccountDetail( $uid, 'casadapont_tanacsado_profil', $profil['file'] );
+		}
+	}
+
 	public function saveByAdmin( $uid, $data )
 	{
 		if ( empty($data['data']['felhasznalok']['nev']) ) {
@@ -885,6 +912,40 @@ class Users
 		$ret[data] = $B;
 
 		return $ret;
+	}
+
+	public function saveProfilServices( $userdata = array(), $post )
+	{
+		if ( !$userdata || ($userdata['user_group'] != self::USERGROUP_SERVICES) ) {
+			throw new \Exception(__("Csak szolgáltató fióktípusú felhasználó mentheti a szolgáltatás beállításait."));
+		}
+
+		if (empty($post) || $post[0] == '') {
+			throw new \Exception(__("Válasszon ki legalább egy szolgáltatást a listából a mentéshez!"));
+		}
+
+		$uid = $userdata['ID'];
+
+		foreach ( (array)$post as $p ) {
+			$check = $this->db->squery("SELECT ID FROM felhasznalo_services WHERE user_id = :uid and configval = :cval", array('uid' => $uid, 'cval' => $p));
+
+			// HA még nem lett regisztrálva, akkor mentés
+			if ($check->rowCount() == 0)
+			{
+				// X_X_X = serviceid_subserviceid_subserviceitemid
+				$xval = explode("_", $p);
+				$this->db->insert(
+					"felhasznalo_services",
+					array(
+						'user_id' => (int)$uid,
+						'configval' => trim($p),
+						'item_id' => (int)$xval[2],
+						'service_id' => (int)$xval[0],
+						'subservice_id' => (int)$xval[1]
+					)
+				);
+			}
+		}
 	}
 
 	function logout()

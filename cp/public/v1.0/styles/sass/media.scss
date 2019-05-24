@@ -831,6 +831,104 @@ footer {
 	}
 }
 
+.page-desc {
+	position: relative;
+	padding: 0 0 0 100px;
+	font-size: 1.2rem;
+	line-height: 1.4;
+	margin: 10px 0 35px 0;
+
+	&:before{
+		content:"\f1cd";
+		font-family: "Font Awesome 5 Free";
+		position: absolute;
+		left: 5px;
+		top: 0;
+		line-height: 1;
+		font-size: 60px;
+		width: 100px;
+		text-align: left;
+		color: $color-red-light;
+	}
+}
+
+.services-config-settings{
+	border: 0.5px solid #d7d7d7;
+  padding: 0.5px;
+  overflow: hidden;
+  border-radius: 8px;
+	margin: 10px 0 0 0;
+  .service{
+    &:first-child{
+      border-top: none;
+    }
+    & > .head{
+      background: $color-blue;
+      padding: 10px 0;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-bottom: 0.5px solid lighten($color-blue, 10%);
+      color: white;
+      font-size: 1.2rem;
+    }
+		.servicesubs{
+			display: none;
+		}
+    .subservice{
+      border-bottom: 0.5px dashed #eaeaea;
+      padding: 0;
+      & > .head{
+        color: $color-red;
+        padding: 10px 15px;
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .subserviceitems{
+        font-size: 0.9rem;
+
+        .serviceitem{
+					label {
+						display: block;
+						width: 100%;
+						background: #f3f3f3;
+						padding: 10px 15px;
+						margin: 0;
+						border-bottom: 0.5px solid #dbdbdb;
+						color: black;
+						cursor: pointer;
+					}
+					input[type=checkbox] + label:before{
+						margin: 0 8px 0 0;
+					}
+
+					input[type=checkbox]:checked + label {
+						background: $color-green;
+						color: white;
+					}
+				}
+      }
+    }
+  }
+
+	.listtoggler{
+		a{
+			color: #cddbf7;
+			font-size: 0.8rem;
+			font-weight: 300;
+			text-decoration: none;
+			text-transform: none;
+
+			i {
+				color: white;
+				margin: 0 0 0 10px;
+				font-size: 1rem;
+    		vertical-align: text-bottom;
+			}
+		}
+	}
+}
+
 body.user-group-user{
   #top .control-bar{
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */

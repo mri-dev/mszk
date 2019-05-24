@@ -63,23 +63,21 @@
       </div>
     </div>
     <div class="col-md-8">
-      <div class="wblock">
-        <div class="wblock color-green">
-          <div class="data-container">
-            <div class="no-data-view">
-              <div class="ico"><i class="far fa-circle"></i></div>
-              <div class="text"><?=__('Nincsenek ajánlatkérései.')?></div>
-            </div>
+      <div class="wblock color-green">
+        <div class="data-container">
+          <div class="no-data-view">
+            <div class="ico"><i class="far fa-circle"></i></div>
+            <div class="text"><?=__('Nincsenek ajánlatkérései.')?></div>
           </div>
-          <div class="data-footer">
-            <div class="d-flex align-items-center">
-              <div class="title">
-                <h3><?=__('Ajánlat kérések')?></h3>
-                <a href="/ajanlatkeresek/"><?=__('Tovább az összes ajánlatkéréshez')?></a>
-              </div>
-              <div class="count">
-                <div class="count-wrapper"><div class="num">4</div></div>
-              </div>
+        </div>
+        <div class="data-footer">
+          <div class="d-flex align-items-center">
+            <div class="title">
+              <h3><?=__('Ajánlat kérések')?></h3>
+              <a href="/ajanlatkeresek/"><?=__('Tovább az összes ajánlatkéréshez')?></a>
+            </div>
+            <div class="count">
+              <div class="count-wrapper"><div class="num">4</div></div>
             </div>
           </div>
         </div>
@@ -109,23 +107,21 @@
       </div>
     </div>
     <div class="col-md-8">
-      <div class="wblock">
-        <div class="wblock color-blue">
-          <div class="data-container">
-            <div class="no-data-view">
-              <div class="ico"><i class="fab fa-buffer"></i></div>
-              <div class="text"><?=__('Nincsenek folyamatban lévő projektek.')?></div>
-            </div>
+      <div class="wblock color-blue">
+        <div class="data-container">
+          <div class="no-data-view">
+            <div class="ico"><i class="fab fa-buffer"></i></div>
+            <div class="text"><?=__('Nincsenek folyamatban lévő projektek.')?></div>
           </div>
-          <div class="data-footer">
-            <div class="d-flex align-items-center">
-              <div class="title">
-                <h3><?=__('Aktuális projektek')?></h3>
-                <a href="/projektek"><?=__('Tovább az összes projekthez')?></a>
-              </div>
-              <div class="count">
-                <div class="count-wrapper"><div class="num">12</div></div>
-              </div>
+        </div>
+        <div class="data-footer">
+          <div class="d-flex align-items-center">
+            <div class="title">
+              <h3><?=__('Aktuális projektek')?></h3>
+              <a href="/projektek"><?=__('Tovább az összes projekthez')?></a>
+            </div>
+            <div class="count">
+              <div class="count-wrapper"><div class="num">12</div></div>
             </div>
           </div>
         </div>

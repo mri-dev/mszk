@@ -21,6 +21,58 @@ class OfferRequests
 		return $this;
 	}
 
+	public function getList( $arg = array() )
+	{
+		$list = array();
+		$qarg = array();
+		$q = "SELECT
+			r.*
+		FROM requests as r
+		WHERE 1=1 ";
+
+		if (isset($arg['offerout'])) {
+			$q .= " and r.offerout  = :offerout";
+			$qarg['offerout'] = (int)$arg['offerout'];
+		}
+
+		$data = $this->db->squery($q, $qarg);
+
+		if ($data->rowCount() == 0) {
+			return $list;
+		}
+
+		$data = $data->fetchAll(\PDO::FETCH_ASSOC);
+
+		$users = new Users( array('db' => $this->db ));
+
+		foreach ((array)$data as $d) {
+			$d['cash'] = json_decode($d['cash'], true);
+			$d['cash_config'] = json_decode($d['cash_config'], true);
+			$d['services'] = $this->findServicesItems(json_decode($d['services'], true));
+			$d['subservices'] = $this->findServicesItems(json_decode($d['subservices'], true));
+			$d['subservices_items'] = $this->findServicesItems(json_decode($d['subservices_items'], true));
+			$d['service_description'] = json_decode($d['service_description'], true);
+			$d['user'] = $users->get( array('user' => $d['user_id'], 'userby' => 'ID') );
+			$d['requested_at'] = \Helper::distanceDate($d['requested']);
+
+			// Lehetséges szolgáltatók betöltése
+			if (isset($arg['loadpossibleservices']) && $arg['loadpossibleservices'] == 1)
+			{
+				$d['services_hints'] = $this->possibleRequestServices( $d['services'], $d['subservices'], $d['subservices_items'] );
+			}
+
+			$list[] = $d;
+		}
+
+		return $list;
+	}
+
+	public function possibleRequestServices( $services, $subservices, $items )
+	{
+		$list = array();
+		return $list;
+	}
+
 	public function collectOfferData( $value = '', $findby = 'hashkey' )
 	{
 		if (!in_array($findby, array('ID', 'hashkey', 'email', 'phone', 'name', 'company')))

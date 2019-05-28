@@ -34,6 +34,8 @@ class cegem extends Controller {
 			$list_tree 	= $lists->getTree( false, $arg );
       // Lista elemek
   		$this->out( 'lists', $list_tree->tree );
+			// Felhasználó cég szolgáltatások
+			$this->out( 'user_services', $this->Users->getUserServices($this->view->_USERDATA['data']['ID'], $this->view->_USERDATA['data']['user_group']));
 
 		}
 

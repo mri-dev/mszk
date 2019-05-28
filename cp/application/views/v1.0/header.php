@@ -115,7 +115,7 @@
       </script>
     <?php endif; ?>
 </head>
-<body class="<?=$this->bodyclass?> <? if($this->_USER): ?>logged-in user-group-<?=$this->_USERDATA['data']['user_group']?><? endif; ?>">
+<body class="<?=$this->bodyclass?> <? if($this->_USER): ?>logged-in user-group-<?=$this->_USERDATA['data']['user_group']?><? endif; ?>" ng-app="App">
 
 <? if($this->_USER): ?>
 <div id="top">
@@ -182,6 +182,9 @@
             <!-- End of MODULS-->
             <li class="has-more <?=($this->gets[0] == 'ajanlatkeresek')?'on':''?>"><a href="/ajanlatkeresek" title="<?=__('Árajánlat kérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Árajánlat kérések')?> <span class="badge badge-primary">7</span></a></li>
             <?php if ($this->gets[0] == 'ajanlatkeresek'): ?>
+              <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
+                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'feldolgozatlan')?'on':''?>"><a href="/ajanlatkeresek/feldolgozatlan" title="<?=__('Feldolgozatlan')?>"><span class="ni">8</span><i class="fas fa-minus"></i> <?=__('Feldolgozatlan')?></a></li>
+              <?php endif; ?>
               <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'elfogadott')?'on':''?>"><a href="/ajanlatkeresek/elfogadott" title="<?=__('Elfogadott')?>"><span class="ni">8</span><i class="fas fa-check"></i> <?=__('Elfogadott')?></a></li>
               <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'fuggoben')?'on':''?>"><a href="/ajanlatkeresek/fuggoben" title="<?=__('Függőben')?>"><span class="ni">8</span><i class="fas fa-question"></i> <?=__('Függőben')?></a></li>
             <?php endif; ?>

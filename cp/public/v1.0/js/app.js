@@ -1,25 +1,49 @@
-var a = angular.module('App', ['ngMaterial', 'ngSanitize']);
+var a = angular.module('App', ['ngMaterial']);
 
-a.controller("ctrl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
+a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
 {
-	$scope.init = function( )
+	$scope.requests = [];
+	$scope.request = false;
+	$scope.readrequest = 0;
+	$scope.loadconfig = {};
+	$scope.init = function( conf )
 	{
+		$scope.loadconfig = conf;
+		$scope.loadEverything();
 	}
 
-	$scope.saveOwnStyle = function() {
+	$scope.loadEverything = function() {
+		$scope.loadLists(function( data ){
+
+		});
+	}
+
+	$scope.pickRequest = function( request ) {
+		$scope.readrequest = request.ID;
+		$scope.request = request;
+	}
+
+	$scope.loadLists = function( callback ) {
 		$http({
 			method: 'POST',
 			url: '/ajax/post',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			data: $.param({
-				type: "Moza",
-				mode: 'saveStyleConfig',
-				id: $scope.loadid,
-				motivum: $scope.motivum,
-				name: $scope.ownmotifname
+				type: "Requests",
+				mode: 'List',
+				filter: {
+					offerout: 0,
+					loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0
+				}
 			})
 		}).success(function(r){
-
+			console.log(r);
+			if (r.data && r.data.length != 0) {
+				$scope.requests = r.data;
+			}
+			if (typeof callback !== 'undefined') {
+				callback(r.data);
+			}
 		});
 	}
 	$scope.toast = function( text, mode, delay ){
@@ -37,6 +61,9 @@ a.controller("ctrl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $h
 		}
 	}
 }]);
+
+
+a.filter('unsafe', function($sce){ return $sce.trustAsHtml; });
 
 $(function(){
 	$('*[data-list-searcher]').keyup(function(ev){

@@ -914,6 +914,46 @@ class Users
 		return $ret;
 	}
 
+	public function getUserServices( $uid, $user_group = false )
+	{
+		$list = array();
+
+		if ( !$user_group || $user_group !== self::USERGROUP_SERVICES ) {
+			return $list;
+		}
+
+		$qry = $this->db->squery("SELECT
+			s.ID,
+			s.configval,
+			s.item_id,
+			s.subservice_id,
+			s.service_id,
+			l1.neve as service_neve,
+			l2.neve as subservice_neve,
+			l3.neve as item_neve
+		FROM felhasznalo_services as s
+		LEFT OUTER JOIN lists as l1 ON l1.ID = s.service_id
+		LEFT OUTER JOIN lists as l2 ON l2.ID = s.subservice_id
+		LEFT OUTER JOIN lists as l3 ON l3.ID = s.item_id
+		WHERE 1=1 and
+			s.user_id = :uid
+		", array(
+			'uid' => $uid
+		));
+
+		if ($qry->rowCount() == 0) {
+			return $list;
+		}
+
+		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+
+		foreach ((array)$data as $d) {
+			$list[] = $d;
+		}
+
+		return $list;
+	}
+
 	public function saveProfilServices( $userdata = array(), $post )
 	{
 		if ( !$userdata || ($userdata['user_group'] != self::USERGROUP_SERVICES) ) {
@@ -921,10 +961,17 @@ class Users
 		}
 
 		if (empty($post) || $post[0] == '') {
-			throw new \Exception(__("Válasszon ki legalább egy szolgáltatást a listából a mentéshez!"));
+			//throw new \Exception(__("Válasszon ki legalább egy szolgáltatást a listából a mentéshez!"));
 		}
 
 		$uid = $userdata['ID'];
+
+		// Összes config érték betöltése a törlés ellenőrzéséhez
+		$configlist = array();
+		$clist = $this->db->squery("SELECT configval FROM felhasznalo_services WHERE user_id = :uid", array('uid' => $uid))->fetchAll(\PDO::FETCH_ASSOC);
+		foreach ((array)$clist as $l) {
+			$configlist[] = $l['configval'];
+		}
 
 		foreach ( (array)$post as $p ) {
 			$check = $this->db->squery("SELECT ID FROM felhasznalo_services WHERE user_id = :uid and configval = :cval", array('uid' => $uid, 'cval' => $p));
@@ -944,6 +991,17 @@ class Users
 						'subservice_id' => (int)$xval[1]
 					)
 				);
+			}
+
+			if (($key = array_search($p, $configlist)) !== false) {
+			    unset($configlist[$key]);
+			}
+		}
+
+		// Törlendő configok
+		if ($configlist && count($configlist) > 0) {
+			foreach ((array)$configlist as $cl) {
+				$this->db->squery("DELETE FROM felhasznalo_services WHERE user_id = :uid and configval = :config", array('uid' => $uid, 'config' => $cl));
 			}
 		}
 	}

@@ -353,6 +353,7 @@ input, textarea{
 }
 .innerContent{
   padding: 25px;
+	background: #edf1f5;
 }
 .page-pagination{
   font-size: 0.8rem;
@@ -859,10 +860,82 @@ footer {
 	font-weight: bold;
 }
 
+.selected-services-overview{
+	margin: 10px 0 25px 0;
+	& > .service + .service{
+		margin: 15px 0 0 0;
+	}
+	& > .service {
+		& > .header{
+			font-weight: bold;
+			text-transform: uppercase;
+			background: $color-blue;
+			color: white;
+			padding: 10px;
+		}
+
+		& > .subservices{
+			padding-left: 15px;
+			& > .subservice + .subservice{
+				margin: 10px 0 0 0;
+			}
+			& > .subservice {
+				& > .header{
+					font-weight: bold;
+					text-transform: uppercase;
+					background: white;
+					color: $color-red;
+					padding: 10px;
+
+
+					.sub-cash{
+						float: right;
+						background: $color-red-light;
+						color: white;
+						font-size: 0.7rem;
+						border-radius: 4px;
+						padding: 6px;
+						line-height: 1;
+					}
+				}
+
+				& > .subservicesitems{
+					& > .subservice-item{
+						margin: 5px 0;
+						background: #e6e6e6;
+						color: black;
+						padding: 8px 10px;
+
+						.cash{
+							float: right;
+							background: $color-green;
+							color: white;
+							font-size: 0.7rem;
+							border-radius: 4px;
+							padding: 6px;
+							line-height: 1;
+						}
+					}
+				}
+				.subservice-comment{
+					margin: 15px 0;
+					padding-left: 10px;
+					color: black;
+					line-height: 1.2;
+					.head{
+						font-weight: bold;
+						margin: 0 0 5px 0;
+					}
+				}
+			}
+		}
+	}
+}
+
 .request-controller{
 	.request-list{
 		flex-basis: 280px;
-		background: #f6f6f6;
+		background: #ffffff;
 		border-right: 0.5px solid #d8e2ec;
     padding-right: 0.5px;
 		& > .head{
@@ -873,7 +946,7 @@ footer {
 
 		.req-list{
 			.request{
-				border-bottom: 2px solid #dedede;
+				border-bottom: 2px solid #ececec;
 				outline: none;
 				& > .wrapper{
 					padding: 10px;
@@ -904,8 +977,9 @@ footer {
 
 				&:hover,
 				&.active{
-					background-color: #ffffff;
+					background-color: #f5f6f6;
 					cursor: pointer;
+					color: black;
 				}
 			}
 		}
@@ -913,6 +987,25 @@ footer {
 	.request-data{
 		font-size: 0.9rem;
 		flex: 1;
+		background: #f5f6f6;
+		box-shadow: inset 5px 0 20px -10px #c0c0c0;
+		.row-header{
+			background: #eaeaea;
+			padding: 15px;
+			border-bottom: 0.5px solid #d5d5d5;
+
+			.desc {
+				margin: 5px 0 0 0;
+				font-size: 0.85em;
+			}
+			h3{
+				color: #000000;
+				text-transform: uppercase;
+				font-size: 1.1rem;
+				font-weight: bold;
+				margin: 0 !important;
+			}
+		}
 		.row + .row {
 		   margin-top: 5px;
 		}
@@ -927,17 +1020,98 @@ footer {
 		.row > .col:first-child{
 			flex-basis: 30%;
 		}
-		h3{
-			color: #000000;
-			text-transform: uppercase;
-			font-size: 0.9rem;
-		}
 		.dpad{
 			padding: 15px;
 		}
 		.divider{
 			height: 1px;
 			background: #d9d9d9;
+		}
+		.total-cash{
+			font-weight: bold;
+			font-size: 1.1rem;
+			color: $color-green;
+		}
+	}
+}
+
+.services-hints{
+	margin: 20px 0;
+	.service-user-list{
+		.service-group{
+			& > .header{
+				& > .wrapper{
+					display: -webkit-box;
+				  display: -ms-flexbox;
+				  display: flex;
+					flex-wrap: nowrap;
+			    background: $color-green;
+			    padding: 0 8px;
+					box-shadow: inset 20px 0 darken($color-green, 20%);
+					& > div {
+						background: $color-green;
+						color: white;
+						font-weight: bold;
+						padding: 10px 25px;
+				    transform: skewX(-20deg);
+				    text-transform: uppercase;
+						& > .txt {
+					    transform: skewX(20deg);
+						}
+					}
+					& > div:nth-child(1){
+						padding-left: 10px;
+						background: darken($color-green, 20%);
+					}
+					& > div:nth-child(2){
+						background: darken($color-green, 10%);
+					}
+
+					& > div:nth-child(3){
+						padding-right: 10px;
+					}
+				}
+			}
+
+			.servicers{
+				padding: 5px;
+
+				.user {
+					& > .wrapper{
+						label{
+							display: block;
+							background: #ececec;
+							padding: 9px;
+							margin: 5px 0;
+							border: 0.5px solid #d5d5d5;
+							cursor: pointer;
+							color: black;
+						}
+
+
+						.company {
+							color: $color-red-light;
+							margin: 0 5px 0 0;
+						}
+
+						input[type=checkbox]:checked + label {
+							background: $color-blue-light;
+							color: white;
+						}
+
+						.infos{
+							float: right;
+							font-size: 0.68rem;
+							span {
+								margin-left: 5px;
+							}
+						}
+					}
+				}
+			}
+		}
+		.service-group + .service-group{
+			margin: 10px 0 0 0;
 		}
 	}
 }

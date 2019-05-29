@@ -11,6 +11,8 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 		$scope.loadconfig = conf;
 		$scope.loadEverything();
 	}
+	$scope.servuser = {};
+	$scope.servicesrequestprogress = false;
 
 	$scope.loadEverything = function() {
 		$scope.loadLists(function( data ){
@@ -21,6 +23,18 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 	$scope.pickRequest = function( request ) {
 		$scope.readrequest = request.ID;
 		$scope.request = request;
+		$scope.servuser = {};
+
+		if (request.services_hints) {
+			angular.forEach(request.services_hints, function(requester,itemid){
+				$scope.servuser['item_'+itemid] = {};
+				angular.forEach(requester.users, function(user,i){
+					if (typeof $scope.servuser['item_'+itemid][user.ID] === 'undefined') {
+						$scope.servuser['item_'+itemid][user.ID] = true;
+					}
+				});
+			});
+		}
 	}
 
 	$scope.loadLists = function( callback ) {
@@ -46,6 +60,27 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 			}
 		});
 	}
+
+	$scope.sendServicesRequest = function()
+	{
+		$scope.servicesrequestprogress = true;
+		console.log($scope.servuser);
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "Requests",
+				mode: 'sendServiceRequest',
+				servicesus: $scope.servuser,
+				request: $scope.request.hashkey,
+			})
+		}).success(function(r){
+			console.log(r);
+			$scope.servicesrequestprogress = false;
+		});
+	}
+
 	$scope.toast = function( text, mode, delay ){
 		mode = (typeof mode === 'undefined') ? 'simple' : mode;
 		delay = (typeof delay === 'undefined') ? 5000 : delay;

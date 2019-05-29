@@ -70,6 +70,92 @@ class OfferRequests
 	public function possibleRequestServices( $services, $subservices, $items )
 	{
 		$list = array();
+		$itemids = array();
+		$qarg = array();
+
+		foreach ((array)$items as $i) {
+			$itemids[] = (int)$i['ID'];
+		}
+
+		if (empty($itemids)) {
+			return $list;
+		}
+
+		$q = "SELECT
+			s.user_id,
+			s.item_id,
+			s.service_id,
+			s.subservice_id,
+			f.nev as user_neve,
+			f.email as user_email,
+			f.regisztralt,
+			f.utoljara_belepett,
+			fa.ertek as user_company,
+			l1.neve as item_neve,
+			l1.leiras as item_desc,
+			l1.szulo_id as item_parent,
+			l2.neve as service_neve,
+			l2.leiras as service_desc,
+			l2.szulo_id as service_parent,
+			l3.neve as subservice_neve,
+			l3.leiras as subservice_desc,
+			l3.szulo_id as subservice_parent
+		FROM felhasznalo_services as s
+		LEFT OUTER JOIN felhasznalok as f ON f.ID = s.user_id
+		LEFT OUTER JOIN felhasznalo_adatok as fa ON fa.fiok_id = s.user_id and fa.nev = 'company_name'
+		LEFT OUTER JOIN lists as l1 ON l1.ID = s.item_id
+		LEFT OUTER JOIN lists as l2 ON l2.ID = s.service_id
+		LEFT OUTER JOIN lists as l3 ON l3.ID = s.subservice_id
+		WHERE 1=1 and f.user_group = '".\PortalManager\Users::USERGROUP_SERVICES."' and  f.engedelyezve = 1 and f.aktivalva IS NOT NULL and f.mukodik = 1 ";
+		$q .= " and s.item_id IN (".implode(",", $itemids).")";
+
+		$qry = $this->db->squery($q, $qarg);
+
+		if ($qry->rowCount() != 0) {
+			$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+
+			$in = array();
+			foreach ((array)$data as $d)
+			{
+				if (!array_key_exists((int)$d['user_id'],	$in['users']))
+				{
+					$in['users'][(int)$d['user_id']] = array(
+						'ID' => (int)$d['user_id'],
+						'nev' => $d['user_neve'],
+						'email' => $d['user_email'],
+						'company' => $d['user_company'],
+						'regisztralt' => $d['regisztralt'],
+						'regisztralt_dist' => \Helper::distanceDate($d['regisztralt']),
+						'utoljara_belepett' => $d['utoljara_belepett'],
+						'utoljara_belepett_dist' => \Helper::distanceDate($d['utoljara_belepett'])
+					);
+				}
+
+				$in['item'] = array(
+					'ID' => (int)$d['item_id'],
+					'szulo_id' => (int)$d['item_parent'],
+					'nev' => $d['item_neve'],
+					'desc' => $d['item_desc']
+				);
+
+				$in['service'] = array(
+					'ID' => (int)$d['service_id'],
+					'szulo_id' => (int)$d['service_parent'],
+					'nev' => $d['service_neve'],
+					'desc' => $d['service_desc']
+				);
+
+				$in['subservice'] = array(
+					'ID' => (int)$d['subservice_id'],
+					'szulo_id' => (int)$d['subservice_parent'],
+					'nev' => $d['subservice_neve'],
+					'desc' => $d['subservice_desc']
+				);
+
+				$list[(int)$d['item_id']] = $in;
+			}
+		}
+
 		return $list;
 	}
 

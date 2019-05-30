@@ -35,6 +35,8 @@ class OfferRequests
 			$qarg['offerout'] = (int)$arg['offerout'];
 		}
 
+		$q .= " ORDER BY r.visited ASC, r.requested ASC";
+
 		$data = $this->db->squery($q, $qarg);
 
 		if ($data->rowCount() == 0) {
@@ -117,7 +119,7 @@ class OfferRequests
 			$in = array();
 			foreach ((array)$data as $d)
 			{
-				if (!array_key_exists((int)$d['user_id'],	$in['users']))
+				if (!array_key_exists((int)$d['user_id'],	(array)$in['users']))
 				{
 					$in['users'][(int)$d['user_id']] = array(
 						'ID' => (int)$d['user_id'],
@@ -157,6 +159,167 @@ class OfferRequests
 		}
 
 		return $list;
+	}
+
+	public function sendServiceRequest( $request_hashkey = false, $tousers )
+	{
+		$to_servicers = array();
+		$request_id = 0;
+
+		/**
+		* Ellenőrzés
+		**/
+		// hashkey check
+		if ( empty($request_hashkey) || !$request_hashkey )
+		{
+			throw new \Exception(__("Az ajánlatkérés azonosítója nem lett megadva!"));
+		}
+
+		$ch = $this->db->squery("SELECT s.ID FROM requests as s WHERE hashkey = :hash", array('hash' => $request_hashkey ));
+		if ( $ch->rowCount() == 0 )
+		{
+			throw new \Exception(__("Hibás ajánlatkérés azonosító! Nem létezik ilyen igénylés!"));
+		}
+		$request_id = (int)$ch->fetchColumn();
+
+		// prepare users
+		if ($tousers)
+		{
+			foreach ( (array)$tousers as $itemstr => $us )
+			{
+				$serv_item_id = (int)str_replace("item_", "", $itemstr);
+
+				foreach ( (array)$us as $u => $bool )
+				{
+					if ($bool == "true") {
+						// user check
+						$uch = $this->db->squery("SELECT ro.ID FROM requests_offerouts as ro WHERE ro.user_id = :uid and ro.request_id = :rid and ro.item_id = :item", array('uid' => $u, 'rid' => $request_id, 'item' => $serv_item_id));
+
+						if ($uch->rowCount() == 0) {
+							$to_servicers[$serv_item_id][] = (int)$u;
+						}
+					}
+				}
+			}
+		}
+
+		/**
+		* Kiajánlások rögzítése @ requests_offerouts
+		**/
+		if ( $to_servicers )
+		{
+			$outgo_emails = array();
+			foreach ( (array)$to_servicers as $iid => $users )
+			{
+				foreach ( (array)$users as $u )
+				{
+					$user_email = $this->db->squery("SELECT email FROM felhasznalok WHERE ID = :id", array('id' => $u))->fetchColumn();
+					$configval = $this->getConfigvalUserByRequest( $iid, $u );
+					$this->db->insert(
+						"requests_offerouts",
+						array(
+							'user_id' => (int)$u,
+							'request_id' => $request_id,
+							'item_id' => $iid,
+							'configval' => $configval
+						)
+					);
+
+					$offerout_id = $this->db->lastInsertId();
+					$outgo_emails[$u]['email'] = $user_email;
+					$outgo_emails[$u]['ID'] = $u;
+					$outgo_emails[$u]['stack'][] = array(
+						'ID' => $offerout_id,
+						'configval' => $configval,
+						'item_id' => $iid
+					);
+				}
+			}
+
+			/**
+			* Kiajánló e-mailek várólistára helyezése
+			**/
+			$r = array();
+			if ($outgo_emails)
+			{
+				foreach ( (array)$outgo_emails as $uid => $out )
+				{
+					$r['users'][] = $uid;
+
+					$check = $this->db->squery("SELECT ro.ID FROM requests_outgo_emails as ro WHERE ro.user_id = :uid and ro.request_id = :rid", array('uid' => $out['ID'], 'rid' => $request_id));
+					if ($check->rowCount() == 0)
+					{
+						$paramters = array();
+						$paramters['offers'] = $out['stack'];
+						$rout = array(
+							'user_id' => (int)$uid,
+							'request_id' => $request_id,
+							'parameters' => json_encode($paramters, \JSON_UNESCAPED_UNICODE),
+							'to_email' => $out['email']
+						);
+						$this->db->insert(
+							"requests_outgo_emails",
+							$rout
+						);
+					}
+				}
+			}
+		}
+
+		/**
+		* Kiküldés logolása a requestnél
+		**/
+		$upd = array();
+		$upd['offerout'] = 1;
+
+		$visited = $this->db->squery("SELECT ID FROM requests WHERE hashkey = :hash and visited = 1", array('hash' => $request_hashkey))->rowCount();
+
+		if ($visited == 0) {
+			$upd['visited'] = 1;
+			$upd['visited_at'] = NOW;
+		}
+
+		$this->db->update(
+			"requests",
+			$upd,
+			sprintf("hashkey = '%s'", $request_hashkey)
+		);
+
+		return $r;
+	}
+
+	public function setRequestData( $request_id = 0, $field, $value )
+	{
+		$accepted_fields = array('visited', 'visited_at', 'elutasitva', 'offerout');
+		if (empty($request_id) || $request_id == 0)
+		{
+			throw new \Exception(__('Hiányzó ajánlat kérés azonosító!'));
+		}
+
+		if ( !in_array($field, (array)$accepted_fields) )
+		{
+				throw new \Exception(sprintf(__('Hibás vagy nem engedélyezett műveletet próbál végrehajtani az ajánlat kérésen: %s (field)'), $field));
+		}
+
+		$update[$field] = $value;
+
+		$this->db->update(
+			"requests",
+			$update,
+			sprintf("ID = %d", $request_id)
+		);
+
+		return true;
+	}
+
+	public function getConfigvalUserByRequest( $item_id, $uid )
+	{
+		$q = $this->db->squery("SELECT fs.configval FROM felhasznalo_services as fs WHERE fs.user_id = :uid and fs.item_id = :item", array('uid' => $uid, 'item' => $item_id));
+		if ($q->rowCount() == 0) {
+			return false;
+		} else {
+			return $q->fetchColumn();
+		}
 	}
 
 	public function collectOfferData( $value = '', $findby = 'hashkey' )

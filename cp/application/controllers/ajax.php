@@ -33,6 +33,43 @@ class ajax extends Controller
 
 							$ret['data'] = $requests->getList( $arg );
 						break;
+						case 'sendServiceRequest':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							try {
+								$ret['t'] = $requests->sendServiceRequest( $request, $servicesus );
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
+						case 'requestActions':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							try {
+								switch ($what) {
+									case 'visit':
+										$requests->setRequestData( $request, 'visited', 1);
+										$requests->setRequestData( $request, 'visited_at', NOW);
+										$this->setSuccess(sprintf(__('Megtekintett állapot módosítva lett: Látta (%s)'), NOW), $ret);
+									break;
+									case 'unvisit':
+										$requests->setRequestData( $request, 'visited', 0);
+										$requests->setRequestData( $request, 'visited_at', NULL);
+										$this->setSuccess(__('Megtekintett állapot módosítva lett: Láttam levétele'), $ret);
+									break;
+									case 'elutasit':
+										$requests->setRequestData( $request, 'elutasitva', 1);
+										$requests->setRequestData( $request, 'offerout', 1);
+										$requests->setRequestData( $request, 'visited', 1);
+										$requests->setRequestData( $request, 'visited_at', NOW);
+									$this->setSuccess(__('Az ajánlatkérést sikeresen elutasítottnak jelölte.'), $ret);
+									break;
+									default:
+										$this->escape(sprintf(__('Nincs ilyen végrehajtható művelet: %s'), $what), $ret);
+									break;
+								}
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
 					}
 					echo json_encode($ret);
 					return;

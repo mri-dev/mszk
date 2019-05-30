@@ -33,6 +33,29 @@ body.logged-in{
 	background: #edf1f5;
 	color: #818e9d;
 }
+md-toast{
+	z-index: 99999;
+	position: fixed;
+  left: 50%;
+	-webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+
+	&.mode-alert{
+		.md-toast-content{
+			background: $color-red !important;
+		}
+	}
+	&.mode-warning{
+		.md-toast-content{
+			background: #ff9723 !important;
+		}
+	}
+	&.mode-success{
+		.md-toast-content{
+			background: $color-green !important;
+		}
+	}
+}
 input, textarea{
   -webkit-transition: all 0.30s ease-in-out;
   -moz-transition: all 0.30s ease-in-out;
@@ -351,9 +374,11 @@ input, textarea{
   padding-top: $top-control-height+$top-title-height;
 	padding-bottom: 40px;
 }
+body:not(.login) .innerContent{
+	background: #edf1f5;
+}
 .innerContent{
   padding: 25px;
-	background: #edf1f5;
 }
 .page-pagination{
   font-size: 0.8rem;
@@ -989,6 +1014,14 @@ footer {
 		flex: 1;
 		background: #f5f6f6;
 		box-shadow: inset 5px 0 20px -10px #c0c0c0;
+
+		.iteractive-infos{
+			text-align: center;
+			font-size: 1.2rem;
+			padding: 3rem;
+			font-weight: bold;
+			color: black;
+		}
 		.row-header{
 			background: #eaeaea;
 			padding: 15px;

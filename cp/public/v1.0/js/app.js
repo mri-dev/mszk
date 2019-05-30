@@ -46,7 +46,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 				type: "Requests",
 				mode: 'List',
 				filter: {
-					offerout: 0,
+					offerout: ($scope.loadconfig && $scope.loadconfig.offerout) ? $scope.loadconfig.offerout : 0,
 					loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0
 				}
 			})
@@ -59,6 +59,40 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 				callback(r.data);
 			}
 		});
+	}
+
+	$scope.runRequestAction = function(request_id, mode )
+	{
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "Requests",
+				mode: 'requestActions',
+				what: mode,
+				request: request_id,
+			})
+		}).success(function(r){
+			if (r.success == 0) {
+				$scope.toast( r.msg, 'alert', 5000);
+			} else if(r.success == 1){
+				$scope.toast( r.msg, 'success', 5000);
+				$scope.loadLists(function( data ){
+					$scope.reloadRequestObject(data, request_id );
+				});
+			}
+		});
+	}
+
+	$scope.reloadRequestObject = function( data, id ) {
+		if (data) {
+			angular.forEach(data, function(e,i){
+				if(e.ID == id) {
+					$scope.pickRequest( e );
+				}
+			});
+		}
 	}
 
 	$scope.sendServicesRequest = function()

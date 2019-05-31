@@ -1132,6 +1132,14 @@ footer {
 							color: white;
 						}
 
+						input[type=checkbox].offered + label {
+							background: #3a8e1f;
+							color: white;
+							&:before{
+								content: "\f058";
+							}
+						}
+
 						.infos{
 							float: right;
 							font-size: 0.68rem;

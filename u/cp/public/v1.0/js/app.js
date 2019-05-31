@@ -1,463 +1,118 @@
-var a = angular.module('Moza', ['ngMaterial', 'ngSanitize']);
+var a = angular.module('App', ['ngMaterial']);
 
-a.controller("MotifConfigurator", ['$scope', '$http', '$mdToast', function($scope, $http, $mdToast)
+a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
 {
-	$scope.motiv_size = 364;
-	$scope.kategoria_lista = [];
-  $scope.colors = [];
-	$scope.motivumkod = '';
-	$scope.motivum = {};
-	$scope.motifs = [];
-	$scope.loadid = 0;
-	$scope.calcScaleFactor = function( size ){
-    return parseFloat( size / 200);
-  }
-
-	$scope.init = function( id )
+	$scope.requests = [];
+	$scope.request = false;
+	$scope.readrequest = 0;
+	$scope.loadconfig = {};
+	$scope.init = function( conf )
 	{
-		$scope.loadid = id ;
-		$scope.loadSettings(function()
-    {
-			$scope.loadMotivum(function( motivum ){
-				motivum.lathato = (motivum.lathato == '1') ? true : false;
-				motivum.sorrend = parseInt(motivum.sorrend);
-				$scope.motivumkod = motivum.mintakod;
-				$scope.motivum = motivum;
-			});
+		$scope.loadconfig = conf;
+		$scope.loadEverything();
+	}
+	$scope.servuser = {};
+	$scope.servicesrequestprogress = false;
+
+	$scope.loadEverything = function() {
+		$scope.loadLists(function( data ){
+
 		});
 	}
 
-	$scope.saveOwnStyle = function() {
-		$http({
-			method: 'POST',
-			url: '/ajax/post',
-			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			data: $.param({
-				type: "Moza",
-				mode: 'saveStyleConfig',
-				id: $scope.loadid,
-				motivum: $scope.motivum,
-				name: $scope.ownmotifname
-			})
-		}).success(function(r){
-			console.log(r);
-			if (r.success == 1) {
-				$scope.toast(r.msg, 'success', 5000);
-				$scope.ownmotifname = '';
-			} else {
-				$scope.toast(r.msg, 'alert', 10000);
-			}
-		});
-	}
+	$scope.pickRequest = function( request ) {
+		$scope.readrequest = request.ID;
+		$scope.request = request;
+		$scope.servuser = {};
 
-	$scope.createMotivum = function() {
-		$scope.saveMotivum(function(data, success, newid){
-			if (success == 1) {
-				if (newid && newid !== true) {
-					window.location.href = '/motivumjaim/config/'+newid;
-				} else {
-					$scope.init( $scope.loadid );
-				}
-			}
-		});
-	}
-
-	$scope.saveMotivum = function( callback ){
-		$http({
-			method: 'POST',
-			url: '/ajax/post',
-			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			data: $.param({
-				type: "Moza",
-				mode: 'addMotivum',
-				id: $scope.loadid,
-				motivum: $scope.motivum
-			})
-		}).success(function(r){
-			console.log(r);
-			if (r.success == 1) {
-				$scope.toast(r.msg, 'success', 5000);
-			} else {
-				$scope.toast(r.msg, 'alert', 10000);
-			}
-			if (typeof callback !== 'undefined') {
-				callback(r.data, r.success, r.newid);
-			}
-		});
-	}
-
-	$scope.loadMotivum = function( callback ){
-    $http({
-      method: 'POST',
-      url: '/ajax/post',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Moza",
-        mode: 'getMotivumok',
-				hideown: 1,
-				getid: $scope.loadid,
-				admin: 1
-      })
-    }).success(function(r){
-			if (r && r.data) {
-				$scope.motifs = r.data;
-			}
-      if (typeof callback !== 'undefined') {
-				if (r && r.data && r.data[0]) {
-					callback(r.data[0]);
-				} else {
-					callback(false);
-				}
-      }
-    });
-  }
-
-	$scope.loadSettings = function( callback ){
-    $http({
-      method: 'POST',
-      url: '/ajax/post',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Moza",
-        mode: 'getSettings'
-      })
-    }).success(function(r){
-      if (r.data) {
-        if (r.data.kategoria_lista !== 'undefined') {
-          $scope.kategoria_lista = r.data.kategoria_lista;
-        }
-        if (r.data.colors !== 'undefined') {
-          $scope.colors = r.data.colors;
-        }
-      }
-      if (typeof callback !== 'undefined') {
-        callback();
-      }
-    });
-  }
-
-	$scope.changingFillColor = function( color, rgb ) {
-    if (typeof color === 'string') {
-      $scope.findColorObjectByRGB( rgb.replace("#",""),  function( color ){
-        $scope.currentFillColor = rgb;
-        $scope.changeColorObj = color;
-      } );
-    } else {
-      $scope.currentFillColor = '#'+rgb;
-      $scope.changeColorObj = color;
-    }
-  }
-
-  $scope.findColorObjectByRGB = function( rgb, callback ){
-    if ($scope.colors && $scope.colors.length != 0) {
-      angular.forEach( $scope.colors, function(c,i){
-        if( c.szin_rgb == rgb ) {
-          callback(c);
-        }
-      });
-    }
-
-    return rgb;
-  }
-
-	$scope.toast = function( text, mode, delay ){
-		mode = (typeof mode === 'undefined') ? 'simple' : mode;
-		delay = (typeof delay === 'undefined') ? 5000 : delay;
-
-		if (typeof text !== 'undefined') {
-			$mdToast.show(
-				$mdToast.simple()
-				.textContent(text)
-				.position('top')
-				.toastClass('alert-toast mode-'+mode)
-				.hideDelay(delay)
-			);
-		}
-	}
-}]);
-
-a.controller("MotifsStyler", ['$scope', '$http', '$mdToast', function($scope, $http, $mdToast)
-{
-	$scope.motifs = {};
-	$scope.motiv_size = 80;
-
-	$scope.calcScaleFactor = function( size ){
-    return parseFloat( size / 200);
-  }
-
-	$scope.init = function( id ){
-		$scope.loadMotivums(function( motivums )
-		{
-			$scope.motifs = motivums;
-		});
-	}
-
-	$scope.loadMotivums = function( callback ){
-    $http({
-      method: 'POST',
-      url: '/ajax/post',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Moza",
-        mode: 'getStyleConfigs',
-				admin: 1
-      })
-    }).success(function(r){
-			console.log(r);
-      if (typeof callback !== 'undefined') {
-        callback(r.data);
-      }
-    });
-  }
-
-	$scope.toast = function( text, mode, delay ){
-		mode = (typeof mode === 'undefined') ? 'simple' : mode;
-		delay = (typeof delay === 'undefined') ? 5000 : delay;
-
-		if (typeof text !== 'undefined') {
-			$mdToast.show(
-				$mdToast.simple()
-				.textContent(text)
-				.position('top')
-				.toastClass('alert-toast mode-'+mode)
-				.hideDelay(delay)
-			);
-		}
-	}
-}]);
-
-a.controller("MotifsEditor", ['$scope', '$http', '$mdToast', function($scope, $http, $mdToast)
-{
-  $scope.kategoria_lista = [];
-  $scope.colors = [];
-	$scope.motifs = {};
-	$scope.motiv_size = 80;
-
-	$scope.calcScaleFactor = function( size ){
-    return parseFloat( size / 200);
-  }
-
-	$scope.init = function( id ){
-		$scope.loadSettings(function()
-    {
-      $scope.loadMotivums(function( motivums )
-      {
-				angular.forEach(motivums, function(e,i){
-					if (typeof $scope.motifs[e.kat_hashkey] === 'undefined') {
-						$scope.motifs[e.kat_hashkey] = [];
+		if (request.services_hints) {
+			angular.forEach(request.services_hints, function(requester,itemid){
+				$scope.servuser['item_'+itemid] = {};
+				angular.forEach(requester.users, function(user,i){
+					if (typeof $scope.servuser['item_'+itemid][user.ID] === 'undefined') {
+						$scope.servuser['item_'+itemid][user.ID] = true;
 					}
-					$scope.motifs[e.kat_hashkey].push(e);
 				});
-      });
-    });
+			});
+		}
 	}
 
-	$scope.loadSettings = function( callback ){
-    $http({
-      method: 'POST',
-      url: '/ajax/post',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Moza",
-        mode: 'getSettings'
-      })
-    }).success(function(r){
-      if (r.data) {
-        if (r.data.kategoria_lista !== 'undefined') {
-          $scope.kategoria_lista = r.data.kategoria_lista;
-        }
-        if (r.data.colors !== 'undefined') {
-          $scope.colors = r.data.colors;
-        }
-      }
-      if (typeof callback !== 'undefined') {
-        callback();
-      }
-    });
-  }
-
-	$scope.loadMotivums = function( callback ){
-    $http({
-      method: 'POST',
-      url: '/ajax/post',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Moza",
-        mode: 'getMotivumok',
-				admin: 1
-      })
-    }).success(function(r){
+	$scope.loadLists = function( callback ) {
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "Requests",
+				mode: 'List',
+				filter: {
+					offerout: ($scope.loadconfig && $scope.loadconfig.offerout) ? $scope.loadconfig.offerout : 0,
+					loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0
+				}
+			})
+		}).success(function(r){
 			console.log(r);
-      if (typeof callback !== 'undefined') {
-        callback(r.data);
-      }
-    });
-  }
-
-	$scope.toast = function( text, mode, delay ){
-		mode = (typeof mode === 'undefined') ? 'simple' : mode;
-		delay = (typeof delay === 'undefined') ? 5000 : delay;
-
-		if (typeof text !== 'undefined') {
-			$mdToast.show(
-				$mdToast.simple()
-				.textContent(text)
-				.position('top')
-				.toastClass('alert-toast mode-'+mode)
-				.hideDelay(delay)
-			);
-		}
-	}
-}]);
-
-a.controller("DocumentList", ['$scope', '$http', '$sce', '$mdToast', function($scope, $http, $sce, $mdToast)
-{
-	$scope.docs = [];
-	$scope.docs_inserted_ids = [];
-	$scope.searchdocs = [];
-	$scope.selectedItem = null;
-	$scope.searcher = null;
-	$scope.loading = false;
-	$scope.termid = 0;
-	$scope.error = false;
-	$scope.docs_in_sync = false;
-	$scope.currentFillColor = '#f6f6f6';
-  $scope.changeColorObj = {};
-
-	$scope.init = function( id ){
-		$scope.termid = id;
-		$scope.loadDocsList( function( docs ){
-			$scope.searchdocs = docs;
-			$scope.loadList();
-		} );
-	}
-
-	$scope.findSearchDocs = function( src ) {
-		var result = src ? $scope.searchdocs.filter( $scope.filterForSearch( src ) ) : $scope.searchdocs;
-
-		return result;
-	}
-
-	$scope.filterForSearch = function( query ){
-		var lowercaseQuery = angular.lowercase(query);
-
-    return function filterFn(item) {
-      return (item.value.indexOf(lowercaseQuery) !== -1);
-    };
-	}
-
-	$scope.searchTextChange = function(text) {
-		console.log( 'searchTextChange: ' + text );
-  }
-
-	$scope.selectedItemChange = function( item )
-	{
-		if ( item && typeof item !== 'undefined' && typeof item.ID !== 'undefined') {
-			var checkin = $scope.docs_inserted_ids.indexOf( parseInt(item.ID) );
-			if ( checkin === -1 ) $scope.docs_inserted_ids.push(parseInt(item.ID));
-		}
-
-		if (typeof item !== 'undefined') {
-			if ( checkin === -1 ) $scope.docs.push(item);
-		}
-
-		$scope.syncDocuments(function(){
-
+			if (r.data && r.data.length != 0) {
+				$scope.requests = r.data;
+			}
+			if (typeof callback !== 'undefined') {
+				callback(r.data);
+			}
 		});
 	}
 
-	$scope.loadDocsList = function( callback )
+	$scope.runRequestAction = function(request_id, mode )
 	{
 		$http({
-      method: 'POST',
-      url: '/ajax/get',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Documents",
-        key: 'DocsList'
-      })
-    }).success(function( r ){
-			if (typeof callback !== 'undefined') {
-				callback( r.data.map(function(doc){
-					doc.value = doc.cim.toLowerCase();
-					return doc;
-				}) );
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "Requests",
+				mode: 'requestActions',
+				what: mode,
+				request: request_id,
+			})
+		}).success(function(r){
+			if (r.success == 0) {
+				$scope.toast( r.msg, 'alert', 5000);
+			} else if(r.success == 1){
+				$scope.toast( r.msg, 'success', 5000);
+				$scope.loadLists(function( data ){
+					$scope.reloadRequestObject(data, request_id );
+				});
 			}
-    });
+		});
 	}
 
-	$scope.removeDocument = function(docid){
-		$scope.docs_in_sync = true;
-		$http({
-      method: 'POST',
-      url: '/ajax/get',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Documents",
-        key: 'RemoveItemFromList',
-				id: $scope.termid,
-				docid: docid
-      })
-    }).success(function( r ){
-			$scope.docs_in_sync = false;
-			$scope.toast('Dokumentum eltávolítva. Lista mentve.', 'success', 5000);
-			$scope.loadList();
-    });
-	}
-
-	$scope.syncDocuments = function( callback )
-	{
-		$scope.docs_in_sync = true;
-		$http({
-      method: 'POST',
-      url: '/ajax/get',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Documents",
-        key: 'SaveList',
-				id: $scope.termid,
-				list: $scope.docs
-      })
-    }).success(function( r ){
-			console.log(r);
-			$scope.docs_in_sync = false;
-			if ( r.synced == 0 ) {
-				$scope.toast('Dokumentum lista mentve. Nem történt új dokumentumfelvétel.', 'warning', 5000);
-			} else {
-				$scope.toast(r.synced + 'db új dokumentum hozzáadva a termékhez.', 'success', 8000);
-			}
-			if (typeof callback !== 'undefined') {
-				callback();
-			}
-    });
-	}
-
-	$scope.loadList = function()
-	{
-		$scope.loading = true;
-		$http({
-      method: 'POST',
-      url: '/ajax/get',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        type: "Documents",
-        key: 'List',
-				id: $scope.termid
-      })
-    }).success(function(r){
-			$scope.loading = false;
-			if (r.error == 0) {
-				$scope.error = false;
-				if ( r.data.length != 0) {
-					$scope.docs = r.data;
-					angular.forEach( $scope.docs, function(v,k) {
-						$scope.docs_inserted_ids.push(parseInt(v.doc_id));
-					});
+	$scope.reloadRequestObject = function( data, id ) {
+		if (data) {
+			angular.forEach(data, function(e,i){
+				if(e.ID == id) {
+					$scope.pickRequest( e );
 				}
-			} else {
-				$scope.error = r.msg;
-			}
-    });
+			});
+		}
+	}
+
+	$scope.sendServicesRequest = function()
+	{
+		$scope.servicesrequestprogress = true;
+		console.log($scope.servuser);
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "Requests",
+				mode: 'sendServiceRequest',
+				servicesus: $scope.servuser,
+				request: $scope.request.hashkey,
+			})
+		}).success(function(r){
+			console.log(r);
+			$scope.servicesrequestprogress = false;
+		});
 	}
 
 	$scope.toast = function( text, mode, delay ){
@@ -474,68 +129,168 @@ a.controller("DocumentList", ['$scope', '$http', '$sce', '$mdToast', function($s
 			);
 		}
 	}
-
 }]);
 
 
-a.directive('motivum', function($rootScope){
-  var motivum = {};
-  motivum.restrict = 'E';
-  motivum.scope = true;
-  motivum.transclude = true;
-  motivum.replace = true;
-  motivum.compile  = function(e, a){
-    return function($scope, e, a)
-    {
-      var konva = {};
-      var id = 'katmot'+$scope.m.mintakod+$scope.m.ID;
-      e.attr("id", id);
-      konva.stage = new Konva.Stage({
-        container: id,
-        width: $scope.motiv_size,
-        height: $scope.motiv_size
-      });
-      konva.stage.setAttr('minta', $scope.m.mintakod);
-      konva.layer = new Konva.Layer();
+a.filter('unsafe', function($sce){ return $sce.trustAsHtml; });
 
-      if ($scope.m.shapes && $scope.m.shapes.length) {
-				var six = 0;
-        angular.forEach( $scope.m.shapes, function(si, se){
-					six++;
-          // TODO: konva draw shape
-          var shape =  new Konva.Shape({
-            sceneFunc: function(ctx)
-            {
-              eval(si.canvas_js);
-              ctx.fillStrokeShape(this);
-            },
-            fill: si.fill_color,
-            scale: {
-              x: $scope.calcScaleFactor($scope.motiv_size),
-              y: $scope.calcScaleFactor($scope.motiv_size)
-            }
-          });
+$(function(){
+	$('*[data-list-searcher]').keyup(function(ev){
+		ev.preventDefault();
+		var src = $(this).val();
+		var list = $(this).data('list-searcher');
+		var target_table = $('table#'+list);
+		var lines = target_table.find('tbody > tr[data-itemsrc]');
 
-					if (a.editor && a.editor == '1') {
-						shape.on('click', function(s){
-							if ($scope.motivum.shapes) {
-								$scope.motivum.shapes[s.target.index].fill_color = $scope.currentFillColor;
-							}
-							this.fill( $scope.currentFillColor );
-			        konva.layer.draw();
-						});
-					}
+		jQuery.each(lines, function(i,e){
+			var t = $(e);
+			var ts = t.data('itemsrc');
+			var finded = -1;
 
-          konva.layer.add( shape );
-          konva.stage.add( konva.layer );
-          konva.layer.draw();
-        });
-      }
+			if (src != '') {
+				finded = ts.indexOf(src);
+				if (finded == -1) {
+					t.hide();
+				} else {
+					t.show();
+				}
+			} else {
+				t.show();
+			}
+		});
+	})
+	$('.con i.hbtn').click(function(){
+		var key = $(this).attr('key');
 
-      $scope.konva = konva;
-      $rootScope.$broadcast('KONVA:READY', konva.stage);
-    }
-  }
+		$('.'+key).slideToggle(200);
+	});
 
-  return motivum;
+	getNotifications();
+	startReceiveNotification( 10000 );
+
+	tinymce.init({
+	    selector: "textarea:not(.no-editor)",
+	    editor_deselector : 'no-editor',
+	    theme: "modern",
+	    language: "hu_HU",
+	    content_css : "/public/v1.0/styles/DinFonts.css",
+	    allow_styles: 'family-font',
+	    font_formats :
+	   			"Din Composit=Din Comp, sans-serif;"+
+	   			"Din Condensed=Din Cond, sans-serif;"+
+	    		"Andale Mono=andale mono,times;"+
+                "Arial=arial,helvetica,sans-serif;"+
+                "Arial Black=arial black,avant garde;"+
+                "Book Antiqua=book antiqua,palatino;"+
+                "Comic Sans MS=comic sans ms,sans-serif;"+
+                "Courier New=courier new,courier;"+
+                "Georgia=georgia,palatino;"+
+                "Helvetica=helvetica;"+
+                "Impact=impact,chicago;"+
+                "Symbol=symbol;"+
+                "Tahoma=tahoma,arial,helvetica,sans-serif;"+
+                "Terminal=terminal,monaco;"+
+                "Times New Roman=times new roman,times;"+
+                "Trebuchet MS=trebuchet ms,geneva;"+
+                "Verdana=verdana,geneva;"+
+                "Webdings=webdings;"+
+                "Wingdings=wingdings,zapf dingbats",
+	    plugins: [
+	         "advlist autolink link image lists charmap print preview hr anchor pagebreak autoresize",
+	         "searchreplace wordcount visualblocks visualchars insertdatetime media nonbreaking",
+	         "table contextmenu directionality emoticons paste textcolor responsivefilemanager fullscreen code"
+	   ],
+	   toolbar1: "undo redo | bold italic underline | fontselect fontsizeselect forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
+	   toolbar2: "| responsivefilemanager | link unlink anchor | image media |  print preview code ",
+	   image_advtab: true ,
+	   theme_advanced_resizing : true,
+	   external_filemanager_path:"/filemanager/",
+	   filemanager_title:"Responsive Filemanager" ,
+	   external_plugins: { "filemanager" : "/filemanager/plugin.min.js"}
+	 });
+
+	$('.zoom').fancybox({
+		openEffect	: 'none',
+		closeEffect	: 'none'
+	});
+
+	$('.iframe-btn').fancybox({
+		maxWidth	: 800,
+		maxHeight	: 600,
+		fitToView	: false,
+		width		: '70%',
+		height		: '70%',
+		autoSize	: false,
+		closeClick	: false,
+		openEffect	: 'none',
+		closeEffect	: 'none',
+		closeBtn 	: false,
+		padding		: 0
+    });
 });
+
+
+var t = null;
+function startReceiveNotification( timer ){
+	t = setInterval( getNotifications, timer );
+}
+
+function loadTemplate ( key, arg, callback) {
+	$.post('/ajax/post', {
+		type : 'template',
+		key : key,
+		arg : $.param(arg)
+	}, function(d){
+		callback(d);
+	},"html");
+}
+
+// Admin live értesítő
+function getNotifications(){
+	$.post("/ajax/get", {
+		type : 'getNotification'
+	}, function(d){
+		if (d) {
+			var a = $.parseJSON(d);
+			// Üzenetek
+			var msg_nf 		= $('.slideMenu .menu li a[title=Üzenetek]');
+			var msg_nf_e 	= msg_nf.find('.ni');
+
+			if( a.data.new_msg == 0 ){
+				msg_nf_e
+					.text( 0 )
+					.attr( 'title', '' );
+				msg_nf_e.css({
+					visibility : 'hidden'
+				});
+			}else{
+				msg_nf_e
+					.text( a.data.new_msg )
+					.attr( 'title', a.data.new_msg+ ' db új üzenet' );
+				msg_nf_e.css({
+					visibility : 'visible'
+				});
+			}
+
+			// Megrendelés
+			var order_nf 		= $('.slideMenu .menu li a[title=Megrendelések]');
+			var order_nf_e 		= order_nf.find('.ni');
+
+			if( a.data.new_order == 0 ){
+				order_nf_e
+					.text( 0 )
+					.attr( 'title', '' );
+				order_nf_e.css({
+					visibility : 'hidden'
+				});
+			}else{
+				order_nf_e
+					.text( a.data.new_order )
+					.attr( 'title', a.data.new_order+ ' db új megrendelés' );
+				order_nf_e.css({
+					visibility : 'visible'
+				});
+			}
+		}
+	}, "html");
+}

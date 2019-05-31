@@ -61,9 +61,52 @@ class OfferRequests
 			if (isset($arg['loadpossibleservices']) && $arg['loadpossibleservices'] == 1)
 			{
 				$d['services_hints'] = $this->possibleRequestServices( $d['services'], $d['subservices'], $d['subservices_items'] );
+				$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
 			}
 
 			$list[] = $d;
+		}
+
+		return $list;
+	}
+
+	public function getRequestOfferouts( $request_id )
+	{
+		$list = array();
+		$qarg = array();
+		$q = "SELECT
+			ro.ID,
+			ro.user_id,
+			ro.offerout_at,
+			ro.item_id,
+			ro.requester_accepted,
+			ro.configval
+		FROM requests_offerouts as ro
+		WHERE 1=1 and ro.request_id = :rid";
+
+		$qarg['rid'] = $request_id;
+
+		$q .= " ORDER BY ro.offerout_at ASC";
+
+		$data = $this->db->squery($q, $qarg);
+
+		if ($data->rowCount() == 0) {
+			return $list;
+		}
+
+		$data = $data->fetchAll(\PDO::FETCH_ASSOC);
+
+		foreach ( (array)$data as $d )
+		{
+			$uid = (int)$d['user_id'];
+			$d['offerout_at_dist'] = \Helper::distanceDate($d['offerout_at']); 
+			if (!in_array($uid, (array)$list['user_ids'])) {
+				$list['user_ids'][] = $uid;
+			}
+			$list['data'][$d['ID']] = $d;
+			$list['users'][$uid][$d['item_id']] = $d;
+
+			$list['configval_users'][$d['configval']][] = $uid;
 		}
 
 		return $list;
@@ -132,6 +175,7 @@ class OfferRequests
 						'utoljara_belepett_dist' => \Helper::distanceDate($d['utoljara_belepett'])
 					);
 				}
+				$in['configval'] = $d['service_id'].'_'.$d['subservice_id'].'_'.$d['item_id'];
 
 				$in['item'] = array(
 					'ID' => (int)$d['item_id'],

@@ -4,6 +4,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 {
 	$scope.requests = [];
 	$scope.request = false;
+	$scope.request_offerouts = {};
 	$scope.readrequest = 0;
 	$scope.loadconfig = {};
 	$scope.init = function( conf )
@@ -24,17 +25,49 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 		$scope.readrequest = request.ID;
 		$scope.request = request;
 		$scope.servuser = {};
+		$scope.request_offerouts = {};
 
 		if (request.services_hints) {
 			angular.forEach(request.services_hints, function(requester,itemid){
 				$scope.servuser['item_'+itemid] = {};
 				angular.forEach(requester.users, function(user,i){
 					if (typeof $scope.servuser['item_'+itemid][user.ID] === 'undefined') {
-						$scope.servuser['item_'+itemid][user.ID] = true;
+						var already_offered = $scope.checkOfferOuts( request.ID, user.ID, requester);
+
+						if (typeof $scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] === 'undefined') {
+							$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] = {};
+						}
+						
+						$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID][user.ID] = already_offered;
+
+						if ( !already_offered ) {
+							$scope.servuser['item_'+itemid][user.ID] = true;
+						}
 					}
 				});
 			});
 		}
+		console.log($scope.request_offerouts);
+	}
+
+	$scope.checkOfferOuts = function( request_id, user, request ) {
+		var configval = false;
+
+		if ( request && request.item && request.service && request.subservice ) {
+			configval = request.service.ID+'_'+request.subservice.ID+'_'+request.item.ID
+		}
+
+		if ( !configval ) {
+			return false;
+		}
+
+		var check = -1;
+
+		if ( $scope.request.offerouts && $scope.request.offerouts.configval_users && typeof $scope.request.offerouts.configval_users[ configval ] !== 'undefined') {
+			check = $scope.request.offerouts.configval_users[ configval ].indexOf( user );
+		}
+
+		return (check === -1) ? false : true;
 	}
 
 	$scope.loadLists = function( callback ) {

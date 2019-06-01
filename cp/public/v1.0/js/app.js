@@ -2,6 +2,7 @@ var a = angular.module('App', ['ngMaterial']);
 
 a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
 {
+	$scope.quicksearch = '';
 	$scope.requests = [];
 	$scope.request = false;
 	$scope.request_offerouts = {};
@@ -37,7 +38,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 						if (typeof $scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] === 'undefined') {
 							$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] = {};
 						}
-						
+
 						$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID][user.ID] = already_offered;
 
 						if ( !already_offered ) {
@@ -131,7 +132,6 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 	$scope.sendServicesRequest = function()
 	{
 		$scope.servicesrequestprogress = true;
-		console.log($scope.servuser);
 		$http({
 			method: 'POST',
 			url: '/ajax/post',
@@ -146,6 +146,18 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 			console.log(r);
 			$scope.servicesrequestprogress = false;
 		});
+	}
+
+	$scope.quickFilterSearch = function( row )
+	{
+		return !!(
+			(
+				row.name.indexOf($scope.quicksearch || '') !== -1 ||
+				row.phone.indexOf($scope.quicksearch || '') !== -1 ||
+				row.hashkey.indexOf($scope.quicksearch || '') !== -1 ||
+				(row.company && row.company.indexOf($scope.quicksearch || '') !== -1) ||
+				row.email.indexOf($scope.quicksearch || '') !== -1)
+		);
 	}
 
 	$scope.toast = function( text, mode, delay ){

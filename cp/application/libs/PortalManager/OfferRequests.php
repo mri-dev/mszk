@@ -30,6 +30,11 @@ class OfferRequests
 		FROM requests as r
 		WHERE 1=1 ";
 
+		if ( isset($arg['ids']) && !empty($arg['ids']) ) {
+			$q .= " and r.ID IN (:idslist)";
+			$qarg['idslist'] = implode(",", (array)$arg['ids']);
+		}
+
 		if (isset($arg['offerout'])) {
 			$q .= " and r.offerout  = :offerout";
 			$qarg['offerout'] = (int)$arg['offerout'];
@@ -64,7 +69,7 @@ class OfferRequests
 				$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
 			}
 
-			$list[] = $d;
+			$list[$d['ID']] = $d;
 		}
 
 		return $list;
@@ -99,7 +104,7 @@ class OfferRequests
 		foreach ( (array)$data as $d )
 		{
 			$uid = (int)$d['user_id'];
-			$d['offerout_at_dist'] = \Helper::distanceDate($d['offerout_at']); 
+			$d['offerout_at_dist'] = \Helper::distanceDate($d['offerout_at']);
 			if (!in_array($uid, (array)$list['user_ids'])) {
 				$list['user_ids'][] = $uid;
 			}
@@ -107,6 +112,36 @@ class OfferRequests
 			$list['users'][$uid][$d['item_id']] = $d;
 
 			$list['configval_users'][$d['configval']][] = $uid;
+		}
+
+		return $list;
+	}
+
+	public function pickOfferoutEmailStack( $limit = 20 )
+	{
+		$list = array();
+		$qarg = array();
+		$q = "SELECT
+			e.ID,
+			e.to_email,
+			e.parameters,
+			e.request_id
+		FROM requests_outgo_emails as e
+		WHERE 1=1 and e.sended = 0 and e.cannot_send = 0";
+
+		$q .= " ORDER BY e.added_at ASC";
+
+		$qry = $this->db->squery($q, $qarg);
+
+		if ($qry->rowCount() == 0) {
+			return $list;
+		}
+
+		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+
+		foreach ( (array)$data as $d ) {
+			$d['parameters'] = json_decode($d['parameters'], true);
+			$list[] = $d;
 		}
 
 		return $list;

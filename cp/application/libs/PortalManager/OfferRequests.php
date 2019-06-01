@@ -31,7 +31,7 @@ class OfferRequests
 		WHERE 1=1 ";
 
 		if ( isset($arg['ids']) && !empty($arg['ids']) ) {
-			$q .= " and r.ID IN (:idslist)";
+			$q .= " and FIND_IN_SET(r.ID, :idslist)";
 			$qarg['idslist'] = implode(",", (array)$arg['ids']);
 		}
 
@@ -43,7 +43,6 @@ class OfferRequests
 		$q .= " ORDER BY r.visited ASC, r.requested ASC";
 
 		$data = $this->db->squery($q, $qarg);
-
 		if ($data->rowCount() == 0) {
 			return $list;
 		}

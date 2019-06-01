@@ -3,7 +3,7 @@
     <div class="d-flex">
       <div class="request-list">
         <div class="head">
-          <input type="text" class="form-control" placeholder="<?=__('Gyors keresés...')?>">
+          <input type="text" ng-model="" class="form-control" placeholder="<?=__('Gyors keresés...')?>">
         </div>
         <div class="req-list">
           <div class="request" ng-class="{'active': (readrequest == request.ID)}" ng-repeat="request in requests" ng-click="pickRequest(request)">

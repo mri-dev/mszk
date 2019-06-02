@@ -2,6 +2,7 @@
 use PortalManager\OfferRequests;
 use MailManager\Mailer;
 use MailManager\MailTemplates;
+use PortalManager\Template;
 
 class cron extends Controller
 {
@@ -30,31 +31,32 @@ class cron extends Controller
         }
       }
 
-      $request_list = $requests->getList(array('ids' => $request_ids));
+      $request_list = $requests->getList(array('ids' => $request_ids, 'bindIDToList' => 1));
 
       foreach ( (array)$email_stack as $es )
       {
-        if (false)
+				echo '<pre>';
+	      print_r($es);
+
+        if (true)
         {
           // Aktiváló e-mail kiküldése
       		$mail = new Mailer( $this->settings['page_title'], SMTP_USER, $this->settings['mail_sender_mode'] );
-      		$mail->add( $email );
+      		//$mail->add();
 
       		$arg = array(
-      			'settings' 		=> $this->settings
+						'cimzett_neve' => 'Molnár István',
+      			'settings' => $this->db->settings
       		);
       		$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('services_users_offerouts', $arg);
 
+					$mailmsg = (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg );
       		$mail->setSubject( sprintf(__('Új ajánlatkérései vannak: %d darab szolgáltatás.'), 1) );
-      		$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
-      		$re = $mail->sendMail();
+      		$mail->setMsg( $mailmsg );
+					echo $mailmsg;
+      		//$re = $mail->sendMail();
         }
       }
-
-
-
-      echo '<pre>';
-      print_r($request_list);
     }
 
 		function __destruct(){

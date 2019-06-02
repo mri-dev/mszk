@@ -3,10 +3,10 @@
     <div class="d-flex">
       <div class="request-list">
         <div class="head">
-          <input type="text" class="form-control" placeholder="<?=__('Gyors keresés...')?>">
+          <input type="text" ng-model="quicksearch" class="form-control" placeholder="<?=__('Gyors keresés...')?>">
         </div>
         <div class="req-list">
-          <div class="request" ng-class="{'active': (readrequest == request.ID)}" ng-repeat="request in requests" ng-click="pickRequest(request)">
+          <div class="request" ng-class="{'active': (readrequest == request.ID)}" ng-repeat="request in requests|filter:quickFilterSearch" ng-click="pickRequest(request)">
             <div class="wrapper">
               <div class="head">
                 <div class="name">{{request.name}}</div>
@@ -210,9 +210,12 @@
                     <div class="servicers">
                       <div class="user" ng-repeat="user in service.users">
                         <div class="wrapper">
-                          <input type="checkbox" checked="checked" ng-model="servuser['item_'+service.item.ID][user.ID]" class="ccb" id="servu{{service.item.ID}}_us{{user.ID}}"> <label for="servu{{service.item.ID}}_us{{user.ID}}"> <strong><span class="company" ng-if="user.company">{{user.company}}</span>{{user.nev}} (#{{user.ID}})</strong> {{user.email}}
-                            <div class="infos">
+                          <input type="checkbox" ng-disabled="(request_offerouts && request_offerouts[service.configval][user.ID])" checked="checked" ng-model="servuser['item_'+service.item.ID][user.ID]" class="ccb" ng-class="{'offered': (request_offerouts && request_offerouts[service.configval][user.ID])}" id="servu{{service.item.ID}}_us{{user.ID}}"> <label for="servu{{service.item.ID}}_us{{user.ID}}"> <strong><span class="company" ng-if="user.company">{{user.company}}</span>{{user.nev}} (#{{user.ID}})</strong> {{user.email}}
+                            <div class="infos" ng-hide="(request_offerouts && request_offerouts[service.configval][user.ID])">
                               <span title="{{user.utoljara_belepett}}"><?=__('Belépett:')?> {{user.utoljara_belepett_dist}}</span>  <span title="{{user.regisztralt}}"><?=__('Regisztrált:')?> {{user.regisztralt_dist}}</span>
+                            </div>
+                            <div class="infos" ng-show="(request_offerouts && request_offerouts[service.configval][user.ID])">
+                              <span title="{{request.offerouts.users[user.ID][service.item.ID].offerout_at}}"><?=__('Ajánlat kiküldve neki:')?> {{request.offerouts.users[user.ID][service.item.ID].offerout_at_dist}} </span>
                             </div>
                           </label>
                         </div>

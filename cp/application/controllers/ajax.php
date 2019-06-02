@@ -30,7 +30,6 @@ class ajax extends Controller
 							if (isset($_POST['filter'])) {
 								$arg = (array)$_POST['filter'];
 							}
-
 							$ret['data'] = $requests->getList( $arg );
 						break;
 						case 'sendServiceRequest':

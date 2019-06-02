@@ -67,8 +67,11 @@ class OfferRequests
 				$d['services_hints'] = $this->possibleRequestServices( $d['services'], $d['subservices'], $d['subservices_items'] );
 				$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
 			}
-
-			$list[$d['ID']] = $d;
+			if ( isset($arg['bindIDToList']) && $arg['bindIDToList'] == 1 ) {
+				$list[$d['ID']] = $d;
+			} else {
+				$list[] = $d;
+			}
 		}
 
 		return $list;
@@ -122,11 +125,14 @@ class OfferRequests
 		$qarg = array();
 		$q = "SELECT
 			e.ID,
+			e.user_id,
 			e.to_email,
 			e.parameters,
-			e.request_id
+			e.request_id,
+			f.nev as cimzett_neve
 		FROM requests_outgo_emails as e
-		WHERE 1=1 and e.sended = 0 and e.cannot_send = 0";
+		LEFT OUTER JOIN felhasznalok as f ON f.ID = e.user_id
+		WHERE 1=1 and e.sended = 0 and e.cannot_send = 0 and f.mukodik = 1";
 
 		$q .= " ORDER BY e.added_at ASC";
 

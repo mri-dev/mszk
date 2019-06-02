@@ -81,7 +81,8 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 				mode: 'List',
 				filter: {
 					offerout: ($scope.loadconfig && $scope.loadconfig.offerout) ? $scope.loadconfig.offerout : 0,
-					loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0
+					loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0,
+					bindIDToList: 0
 				}
 			})
 		}).success(function(r){

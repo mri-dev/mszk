@@ -9,7 +9,9 @@ class ajanlatkeresek extends Controller {
 				'link' => '/'.__CLASS__,
 				'title' => parent::$pageTitle
 			));
-
+			if ( !$this->view->_USERDATA ) {
+        \Helper::reload('/');
+      }
 		}
 
     public function feldolgozatlan()

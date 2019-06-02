@@ -35,8 +35,8 @@ class cron extends Controller
 
       foreach ( (array)$email_stack as $es )
       {
-				echo '<pre>';
-	      print_r($es);
+				//echo '<pre>';
+	      //print_r($es);
 
         if (true)
         {

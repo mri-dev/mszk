@@ -1,5 +1,108 @@
 var a = angular.module('App', ['ngMaterial']);
 
+a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
+{
+	$scope.quicksearch = '';
+	$scope.relation = 'to';
+	$scope.loadconfig = {};
+	$scope.init = function( conf )
+	{
+		$scope.loadconfig = conf;
+		$scope.loadEverything();
+	}
+
+	$scope.loadEverything = function() {
+		$scope.loadLists(function( data ){
+
+		});
+	}
+
+	$scope.changeRelation = function()
+	{
+		$scope.relation = ($scope.relation == 'to') ? 'from' : 'to';
+	}
+
+	$scope.pickRequest = function( request ) {
+		$scope.readrequest = request.ID;
+		$scope.request = request;
+		$scope.servuser = {};
+		$scope.request_offerouts = {};
+
+		if (request.services_hints) {
+			angular.forEach(request.services_hints, function(requester,itemid){
+				$scope.servuser['item_'+itemid] = {};
+				angular.forEach(requester.users, function(user,i){
+					if (typeof $scope.servuser['item_'+itemid][user.ID] === 'undefined') {
+						var already_offered = $scope.checkOfferOuts( request.ID, user.ID, requester);
+
+						if (typeof $scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] === 'undefined') {
+							$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] = {};
+						}
+
+						$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID][user.ID] = already_offered;
+
+						if ( !already_offered ) {
+							$scope.servuser['item_'+itemid][user.ID] = true;
+						}
+					}
+				});
+			});
+		}
+		console.log($scope.request_offerouts);
+	}
+
+	$scope.loadLists = function( callback ) {
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "RequestOffers",
+				mode: 'List',
+				filter: {
+
+				}
+			})
+		}).success(function(r){
+			console.log(r);
+			/*
+			if (r.data && r.data.length != 0) {
+				$scope.requests = r.data;
+			}*/
+			if (typeof callback !== 'undefined') {
+				callback(r.data);
+			}
+		});
+	}
+
+	$scope.quickFilterSearch = function( row )
+	{
+		return !!(
+			(
+				row.name.indexOf($scope.quicksearch || '') !== -1 ||
+				row.phone.indexOf($scope.quicksearch || '') !== -1 ||
+				row.hashkey.indexOf($scope.quicksearch || '') !== -1 ||
+				(row.company && row.company.indexOf($scope.quicksearch || '') !== -1) ||
+				row.email.indexOf($scope.quicksearch || '') !== -1)
+		);
+	}
+
+	$scope.toast = function( text, mode, delay ){
+		mode = (typeof mode === 'undefined') ? 'simple' : mode;
+		delay = (typeof delay === 'undefined') ? 5000 : delay;
+
+		if (typeof text !== 'undefined') {
+			$mdToast.show(
+				$mdToast.simple()
+				.textContent(text)
+				.position('top')
+				.toastClass('alert-toast mode-'+mode)
+				.hideDelay(delay)
+			);
+		}
+	}
+}]);
+
 a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
 {
 	$scope.quicksearch = '';

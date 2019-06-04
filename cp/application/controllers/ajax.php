@@ -72,6 +72,35 @@ class ajax extends Controller
 					}
 					echo json_encode($ret);
 					return;
+
+				break;
+
+				case 'RequestOffers':
+					$ret['data'] = array();
+					$ret['pass'] = $_POST;
+
+					if ( !$this->view->_USERDATA ) {
+						$this->escape(__('Kérjük, hogy jelentkezzen be újra!'), $ret);
+					}
+
+					$uid = (int)$this->view->_USERDATA['data']['ID'];
+					$user_group = $this->view->_USERDATA['data']['user_group'];
+
+					switch ( $mode )
+					{
+						case 'List':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							try {
+								$requestoffers = $requests->getUserOfferRequests( $uid, $user_group );
+								$ret['data'] = $requestoffers;
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+
+						break;
+					}
+
+					echo json_encode($ret);
 				break;
 			}
 		}

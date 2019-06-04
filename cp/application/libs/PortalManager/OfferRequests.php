@@ -77,6 +77,40 @@ class OfferRequests
 		return $list;
 	}
 
+	public function getUserOfferRequests( $uid, $user_group )
+	{
+		$re = array();
+		$qarg = array();
+
+		$q = "SELECT
+			ro.ID,
+			ro.item_id,
+			ro.configval,
+			ro.offerout_at,
+			ro.user_id as user_to_id,
+			r.user_id as user_from_id,
+			IF(ro.user_id = :uid, 'to', 'from') as my_relation
+		FROM `requests_offerouts` as ro
+		LEFT OUTER JOIN requests as r ON r.ID = ro.request_id
+		WHERE 1=1 ";
+
+		$q .= " and (ro.user_id = :uid or r.user_id = :uid)";
+		$qarg['uid'] = (int)$uid;
+
+		$qry = $this->db->squery($q, $qarg);
+
+		if ($qry->rowCount() == 0) {
+			return $re;
+		}
+
+		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+		foreach ( (array)$data as $d ) {
+			$re[] = $d;
+		}
+
+		return $re;
+	}
+
 	public function getRequestOfferouts( $request_id )
 	{
 		$list = array();
@@ -129,12 +163,15 @@ class OfferRequests
 			e.to_email,
 			e.parameters,
 			e.request_id,
-			f.nev as cimzett_neve
+			f.nev as cimzett_neve,
+			fa.ertek as company_nev
 		FROM requests_outgo_emails as e
 		LEFT OUTER JOIN felhasznalok as f ON f.ID = e.user_id
+		LEFT OUTER JOIN felhasznalo_adatok as fa ON fa.fiok_id = e.user_id and fa.nev = 'company_name'
 		WHERE 1=1 and e.sended = 0 and e.cannot_send = 0 and f.mukodik = 1";
 
 		$q .= " ORDER BY e.added_at ASC";
+		$q .= " LIMIT 0,".$limit;
 
 		$qry = $this->db->squery($q, $qarg);
 

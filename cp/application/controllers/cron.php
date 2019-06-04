@@ -9,7 +9,7 @@ class cron extends Controller
 		function __construct(){
 			parent::__construct();
 
-      if ( !isset($_GET['key']) && $_GET['key'] !== 't38fsdfu82f92r32ur9w(EU3r2u9Wd3f)3f')
+      if ( !isset($_GET['key']) || (isset($_GET['key']) && $_GET['key'] != 't38fsdfu82f92r32ur9w(EU3r2u9Wd3f)3f'))
       {
         header("HTTP/1.0 404 Not Found");
         die();
@@ -22,7 +22,11 @@ class cron extends Controller
 
       $request_ids = array();
 
-      $email_stack = $requests->pickOfferoutEmailStack( 1 );
+      $email_stack = $requests->pickOfferoutEmailStack( 20 );
+
+			if (!$email_stack) {
+				return false;
+			}
 
       foreach ( (array)$email_stack as $es )
       {
@@ -36,26 +40,63 @@ class cron extends Controller
       foreach ( (array)$email_stack as $es )
       {
 				//echo '<pre>';
-	      //print_r($es);
+	     	//print_r($es);
 
         if (true)
         {
           // Aktiváló e-mail kiküldése
-      		$mail = new Mailer( $this->settings['page_title'], SMTP_USER, $this->settings['mail_sender_mode'] );
-      		//$mail->add();
+      		$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+      		$mail->add($es['to_email']);
 
       		$arg = array(
-						'cimzett_neve' => 'Molnár István',
+						'offer_nums' => count($es['parameters']['offers']),
+						'if_company_name'  => ($es['company_nev'] == '')?'':' a következő céghez: <span class="company_name">'.$es['company_nev'].'</span>',
+						'cimzett_neve' => $es['cimzett_neve'],
+						'to_email' => $es['to_email'],
       			'settings' => $this->db->settings
       		);
-      		$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('services_users_offerouts', $arg);
+
+					// Request overview
+					$es['request'] = $request_list[$es['request_id']];
+					$request_arg = array(
+						'request' => $es
+					);
+					$arg['request'] = (new Template( VIEW . 'templates/mail/' ))->get( 'offerouts_request_overview', $request_arg );
+
+					$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('services_users_offerouts', $arg);
 
 					$mailmsg = (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg );
-      		$mail->setSubject( sprintf(__('Új ajánlatkérései vannak: %d darab szolgáltatás.'), 1) );
+      		$mail->setSubject( sprintf(__('Új ajánlatkérései vannak: %d darab szolgáltatás.'), count($es['parameters']['offers'])) );
       		$mail->setMsg( $mailmsg );
-					echo $mailmsg;
-      		//$re = $mail->sendMail();
+					//echo $mailmsg;
+      		$re = $mail->sendMail();
+
+					if ($re) {
+						if ( !empty($re['success'][0]) ) {
+							// Sikeres
+							$this->db->update(
+								"requests_outgo_emails",
+								array(
+									"sended" => 1,
+									"sended_at" => NOW
+								),
+								sprintf("ID = %d", (int)$es['ID'])
+							);
+						} else {
+							// Sikertelen
+							$this->db->update(
+								"requests_outgo_emails",
+								array(
+									"cannot_send" => 1,
+									"sended_at" => NOW,
+									"send_error_msg" => $re['failed'][0]['msg']
+								),
+								sprintf("ID = %d", (int)$es['ID'])
+							);
+						}
+					}
         }
+				usleep(500);
       }
     }
 

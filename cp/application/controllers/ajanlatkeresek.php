@@ -50,6 +50,11 @@ class ajanlatkeresek extends Controller {
       ));
     }
 
+		public function fuggoben()
+		{
+			// code...
+		}
+
 		function __destruct(){
 			// RENDER OUTPUT
 				parent::bodyHead();					# HEADER

@@ -1070,7 +1070,96 @@ footer {
 
 	&.user-controller{
 		margin: -25px;
+		.request-list{
+			flex-basis: 380px;
+			& > .head{
+				padding: 0;
+				border-bottom: none;
+
+				.switcher{
+					isplay: -webkit-box;
+				  display: -ms-flexbox;
+				  display: flex;
+					flex-wrap: nowrap;
+					align-items: center;
+					& > div {
+						flex-basis: 50%;
+
+						button {
+							display: block;
+							width: 100%;
+							text-align: center;
+							background: transparent;
+							border: none;
+							padding: 0 15px;
+							line-height: 51px;
+							text-transform: uppercase;
+							font-size: 0.85rem;
+							font-weight: bold;
+							color: #a7aaad;
+							outline: none;
+						}
+						&.active {
+							button {
+								background: darken($color-blue, 5%);
+								color: $color-green-light;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.request-service{
+			& > .wrapper > .head{
+				background: $color-blue;
+				color: white;
+				padding: 15px;
+			}
+		}
+		.request-subservice{
+			& > .head{
+				background: #e0e0e0;
+				color: $color-red;
+				padding: 15px;
+				font-weight: bold;
+			}
+		}
+
+		.request{
+			padding: 15px;
+			font-size: 0.7rem;
+			.head{
+				font-size: 0.85rem;
+				margin: 0 0 4px 0;
+			}
+
+			.cashinfo .cash{
+				padding: 2px 4px;
+				border-radius: 4px;
+				background: #4c4c4c;
+				color: white;
+				margin: 0 8px;
+			}
+
+			&.closed{
+				background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8OP0aQZGZEGQAIepKUIQJgDSBFaJLAAW/H7q1H+QFmQAAGuiH4AWiuhWAAAAAElFTkSuQmCC) repeat;
+				color: red;
+			}
+			&.declined{
+				background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8O3uFgZGZEGQAJeyD0IQJgDSBFaJLAAW/Hpn83+QFmQAAGjmH3lXAuK1AAAAAElFTkSuQmCC) repeat;
+				color: orange;
+			}
+			&.accepted{
+				background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYkcO3NFQZGZEGQgJaIDkIQJgDSBFaJLAAWvPr68n+QFmQAAG6vH4i4eHMaAAAAAElFTkSuQmCC) repeat;
+				color: #2f682f;
+			}
+		}
 	}
+}
+
+.red-txt{
+	color: $color-red-light;
 }
 
 .services-hints{

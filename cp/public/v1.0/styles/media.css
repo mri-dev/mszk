@@ -1186,12 +1186,104 @@ footer a, footer a:visited, footer a:hover {
 .request-controller.user-controller {
   margin: -25px;
 }
+/* line 1073, sass/media.scss */
+.request-controller.user-controller .request-list {
+  flex-basis: 380px;
+}
+/* line 1075, sass/media.scss */
+.request-controller.user-controller .request-list > .head {
+  padding: 0;
+  border-bottom: none;
+}
+/* line 1079, sass/media.scss */
+.request-controller.user-controller .request-list > .head .switcher {
+  isplay: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+/* line 1085, sass/media.scss */
+.request-controller.user-controller .request-list > .head .switcher > div {
+  flex-basis: 50%;
+}
+/* line 1088, sass/media.scss */
+.request-controller.user-controller .request-list > .head .switcher > div button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: transparent;
+  border: none;
+  padding: 0 15px;
+  line-height: 51px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #a7aaad;
+  outline: none;
+}
+/* line 1103, sass/media.scss */
+.request-controller.user-controller .request-list > .head .switcher > div.active button {
+  background: #1b438e;
+  color: #53e69d;
+}
+/* line 1114, sass/media.scss */
+.request-controller.user-controller .request-service > .wrapper > .head {
+  background: #1f4da3;
+  color: white;
+  padding: 15px;
+}
+/* line 1121, sass/media.scss */
+.request-controller.user-controller .request-subservice > .head {
+  background: #e0e0e0;
+  color: #e31e24;
+  padding: 15px;
+  font-weight: bold;
+}
+/* line 1129, sass/media.scss */
+.request-controller.user-controller .request {
+  padding: 15px;
+  font-size: 0.7rem;
+}
+/* line 1132, sass/media.scss */
+.request-controller.user-controller .request .head {
+  font-size: 0.85rem;
+  margin: 0 0 4px 0;
+}
+/* line 1137, sass/media.scss */
+.request-controller.user-controller .request .cashinfo .cash {
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: #4c4c4c;
+  color: white;
+  margin: 0 8px;
+}
+/* line 1145, sass/media.scss */
+.request-controller.user-controller .request.closed {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8OP0aQZGZEGQAIepKUIQJgDSBFaJLAAW/H7q1H+QFmQAAGuiH4AWiuhWAAAAAElFTkSuQmCC) repeat;
+  color: red;
+}
+/* line 1149, sass/media.scss */
+.request-controller.user-controller .request.declined {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8O3uFgZGZEGQAJeyD0IQJgDSBFaJLAAW/Hpn83+QFmQAAGjmH3lXAuK1AAAAAElFTkSuQmCC) repeat;
+  color: orange;
+}
+/* line 1153, sass/media.scss */
+.request-controller.user-controller .request.accepted {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYkcO3NFQZGZEGQgJaIDkIQJgDSBFaJLAAWvPr68n+QFmQAAG6vH4i4eHMaAAAAAElFTkSuQmCC) repeat;
+  color: #2f682f;
+}
 
-/* line 1076, sass/media.scss */
+/* line 1161, sass/media.scss */
+.red-txt {
+  color: #ff7676;
+}
+
+/* line 1165, sass/media.scss */
 .services-hints {
   margin: 20px 0;
 }
-/* line 1081, sass/media.scss */
+/* line 1170, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1201,7 +1293,7 @@ footer a, footer a:visited, footer a:hover {
   padding: 0 8px;
   box-shadow: inset 20px 0 #307251;
 }
-/* line 1089, sass/media.scss */
+/* line 1178, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div {
   background: #52b684;
   color: white;
@@ -1210,28 +1302,28 @@ footer a, footer a:visited, footer a:hover {
   transform: skewX(-20deg);
   text-transform: uppercase;
 }
-/* line 1096, sass/media.scss */
+/* line 1185, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div > .txt {
   transform: skewX(20deg);
 }
-/* line 1100, sass/media.scss */
+/* line 1189, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(1) {
   padding-left: 10px;
   background: #307251;
 }
-/* line 1104, sass/media.scss */
+/* line 1193, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(2) {
   background: #3f966b;
 }
-/* line 1108, sass/media.scss */
+/* line 1197, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(3) {
   padding-right: 10px;
 }
-/* line 1114, sass/media.scss */
+/* line 1203, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers {
   padding: 5px;
 }
-/* line 1119, sass/media.scss */
+/* line 1208, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper label {
   display: block;
   background: #ececec;
@@ -1241,40 +1333,40 @@ footer a, footer a:visited, footer a:hover {
   cursor: pointer;
   color: black;
 }
-/* line 1130, sass/media.scss */
+/* line 1219, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .company {
   color: #ff7676;
   margin: 0 5px 0 0;
 }
-/* line 1135, sass/media.scss */
+/* line 1224, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox]:checked + label {
   background: #3d98e2;
   color: white;
 }
-/* line 1140, sass/media.scss */
+/* line 1229, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox].offered + label {
   background: #3a8e1f;
   color: white;
 }
-/* line 1143, sass/media.scss */
+/* line 1232, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox].offered + label:before {
   content: "\f058";
 }
-/* line 1148, sass/media.scss */
+/* line 1237, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .infos {
   float: right;
   font-size: 0.68rem;
 }
-/* line 1151, sass/media.scss */
+/* line 1240, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .infos span {
   margin-left: 5px;
 }
-/* line 1159, sass/media.scss */
+/* line 1248, sass/media.scss */
 .services-hints .service-user-list .service-group + .service-group {
   margin: 10px 0 0 0;
 }
 
-/* line 1165, sass/media.scss */
+/* line 1254, sass/media.scss */
 .services-config-settings {
   border: 0.5px solid #d7d7d7;
   padding: 0.5px;
@@ -1282,11 +1374,11 @@ footer a, footer a:visited, footer a:hover {
   border-radius: 8px;
   margin: 10px 0 0 0;
 }
-/* line 1172, sass/media.scss */
+/* line 1261, sass/media.scss */
 .services-config-settings .service:first-child {
   border-top: none;
 }
-/* line 1175, sass/media.scss */
+/* line 1264, sass/media.scss */
 .services-config-settings .service > .head {
   background: #1f4da3;
   padding: 10px 0;
@@ -1296,7 +1388,7 @@ footer a, footer a:visited, footer a:hover {
   color: white;
   font-size: 1.2rem;
 }
-/* line 1184, sass/media.scss */
+/* line 1273, sass/media.scss */
 .services-config-settings .service > .head .active-label {
   font-size: 0.6rem;
   font-weight: normal;
@@ -1306,23 +1398,23 @@ footer a, footer a:visited, footer a:hover {
   vertical-align: middle;
   color: white;
 }
-/* line 1194, sass/media.scss */
+/* line 1283, sass/media.scss */
 .services-config-settings .service .servicesubs {
   display: none;
 }
-/* line 1197, sass/media.scss */
+/* line 1286, sass/media.scss */
 .services-config-settings .service .subservice {
   border-bottom: 0.5px dashed #eaeaea;
   padding: 0;
 }
-/* line 1200, sass/media.scss */
+/* line 1289, sass/media.scss */
 .services-config-settings .service .subservice > .head {
   color: #e31e24;
   padding: 10px 15px;
   font-size: 1.1rem;
   font-weight: bold;
 }
-/* line 1205, sass/media.scss */
+/* line 1294, sass/media.scss */
 .services-config-settings .service .subservice > .head .active-label {
   font-size: 0.6rem;
   font-weight: normal;
@@ -1333,11 +1425,11 @@ footer a, footer a:visited, footer a:hover {
   text-transform: uppercase;
   color: white;
 }
-/* line 1217, sass/media.scss */
+/* line 1306, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems {
   font-size: 0.9rem;
 }
-/* line 1221, sass/media.scss */
+/* line 1310, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem label {
   display: block;
   width: 100%;
@@ -1348,16 +1440,16 @@ footer a, footer a:visited, footer a:hover {
   color: black;
   cursor: pointer;
 }
-/* line 1231, sass/media.scss */
+/* line 1320, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem input[type=checkbox] + label:before {
   margin: 0 8px 0 0;
 }
-/* line 1235, sass/media.scss */
+/* line 1324, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem input[type=checkbox]:checked + label {
   background: #52b684;
   color: white;
 }
-/* line 1245, sass/media.scss */
+/* line 1334, sass/media.scss */
 .services-config-settings .listtoggler a {
   color: #cddbf7;
   font-size: 0.8rem;
@@ -1365,7 +1457,7 @@ footer a, footer a:visited, footer a:hover {
   text-decoration: none;
   text-transform: none;
 }
-/* line 1252, sass/media.scss */
+/* line 1341, sass/media.scss */
 .services-config-settings .listtoggler a i {
   color: white;
   margin: 0 0 0 10px;
@@ -1373,7 +1465,7 @@ footer a, footer a:visited, footer a:hover {
   vertical-align: text-bottom;
 }
 
-/* line 1263, sass/media.scss */
+/* line 1352, sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -1388,7 +1480,7 @@ body.user-group-user #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 1273, sass/media.scss */
+/* line 1362, sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -1403,7 +1495,7 @@ body.user-group-superadmin #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 1283, sass/media.scss */
+/* line 1372, sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;

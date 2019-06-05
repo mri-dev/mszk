@@ -87,8 +87,23 @@ class OfferRequests
 			ro.item_id,
 			ro.configval,
 			ro.offerout_at,
+			ro.request_id,
 			ro.user_id as user_to_id,
+			ro.recepient_visited_at,
+			ro.recepient_accepted,
+			ro.recepient_declined,
+			r.hashkey as request_hashkey,
+			r.cash,
+			r.cash_config,
 			r.user_id as user_from_id,
+			r.name as requester_form_name,
+			r.company as requester_form_company,
+			r.phone as requester_form_phone,
+			r.email as requester_form_email,
+			r.message as requester_form_message,
+			r.service_description,
+			r.requested,
+			r.closed as request_closed,
 			IF(ro.user_id = :uid, 'to', 'from') as my_relation
 		FROM `requests_offerouts` as ro
 		LEFT OUTER JOIN requests as r ON r.ID = ro.request_id
@@ -97,15 +112,40 @@ class OfferRequests
 		$q .= " and (ro.user_id = :uid or r.user_id = :uid)";
 		$qarg['uid'] = (int)$uid;
 
+		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, r.requested ASC";
+
 		$qry = $this->db->squery($q, $qarg);
 
 		if ($qry->rowCount() == 0) {
 			return $re;
 		}
 
+		$users = new Users( array('db' => $this->db ));
+
 		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
-		foreach ( (array)$data as $d ) {
-			$re[] = $d;
+		foreach ( (array)$data as $d )
+		{
+			$xserv = explode("_",$d['configval']);
+			$servicegroup = $xserv[0].'_'.$xserv[1];
+			$d['servicegroup'] = $servicegroup;
+			$d['service'] = $this->findServicesItems((array)$xserv[0])[0];
+			$d['subservice'] = $this->findServicesItems((array)$xserv[1])[0];
+			$d['item'] = $this->findServicesItems((array)$d['item_id'])[0];
+			$d['servicegroup_name'] = $d['service']['neve']. ' / '.$d['subservice']['neve'];
+			$d['cash'] = json_decode($d['cash'], true);
+			$d['cash_config'] = json_decode($d['cash_config'], true);
+			$d['service_description'] = json_decode($d['service_description'], true);
+
+			$d['user_to'] = $users->get( array('user' => $d['user_to_id'], 'userby' => 'ID') );
+			$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID') );
+			$d['requested_dist'] = \Helper::distanceDate($d['requested']);
+
+			$re[$d['servicegroup']]['serviceID'] = (int)$xserv[0];
+			$re[$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
+			$re[$d['servicegroup']]['name'] = $d['servicegroup_name'];
+			$re[$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
+			$re[$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
+			$re[$d['servicegroup']]['items'][$d['item_id']]['users'][] = $d;
 		}
 
 		return $re;

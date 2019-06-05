@@ -5,6 +5,9 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 	$scope.quicksearch = '';
 	$scope.relation = 'to';
 	$scope.loadconfig = {};
+	$scope.requests = {};
+	$scope.request = false;
+	$scope.readrequest = 0;
 	$scope.init = function( conf )
 	{
 		$scope.loadconfig = conf;
@@ -17,38 +20,19 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 		});
 	}
 
-	$scope.changeRelation = function()
+	$scope.changeRelation = function( what )
 	{
-		$scope.relation = ($scope.relation == 'to') ? 'from' : 'to';
+		if (typeof what === 'undefined') {
+			$scope.relation = ($scope.relation == 'to') ? 'from' : 'to';
+		} else {
+			$scope.relation = what;
+		}
 	}
 
 	$scope.pickRequest = function( request ) {
 		$scope.readrequest = request.ID;
 		$scope.request = request;
-		$scope.servuser = {};
-		$scope.request_offerouts = {};
-
-		if (request.services_hints) {
-			angular.forEach(request.services_hints, function(requester,itemid){
-				$scope.servuser['item_'+itemid] = {};
-				angular.forEach(requester.users, function(user,i){
-					if (typeof $scope.servuser['item_'+itemid][user.ID] === 'undefined') {
-						var already_offered = $scope.checkOfferOuts( request.ID, user.ID, requester);
-
-						if (typeof $scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] === 'undefined') {
-							$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] = {};
-						}
-
-						$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID][user.ID] = already_offered;
-
-						if ( !already_offered ) {
-							$scope.servuser['item_'+itemid][user.ID] = true;
-						}
-					}
-				});
-			});
-		}
-		console.log($scope.request_offerouts);
+		console.log($scope.request);
 	}
 
 	$scope.loadLists = function( callback ) {
@@ -65,10 +49,10 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 			})
 		}).success(function(r){
 			console.log(r);
-			/*
+
 			if (r.data && r.data.length != 0) {
 				$scope.requests = r.data;
-			}*/
+			}
 			if (typeof callback !== 'undefined') {
 				callback(r.data);
 			}
@@ -77,14 +61,6 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 
 	$scope.quickFilterSearch = function( row )
 	{
-		return !!(
-			(
-				row.name.indexOf($scope.quicksearch || '') !== -1 ||
-				row.phone.indexOf($scope.quicksearch || '') !== -1 ||
-				row.hashkey.indexOf($scope.quicksearch || '') !== -1 ||
-				(row.company && row.company.indexOf($scope.quicksearch || '') !== -1) ||
-				row.email.indexOf($scope.quicksearch || '') !== -1)
-		);
 	}
 
 	$scope.toast = function( text, mode, delay ){

@@ -112,7 +112,7 @@ class OfferRequests
 		$q .= " and (ro.user_id = :uid or r.user_id = :uid)";
 		$qarg['uid'] = (int)$uid;
 
-		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, r.requested ASC";
+		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, r.requested ASC";
 
 		$qry = $this->db->squery($q, $qarg);
 
@@ -140,12 +140,12 @@ class OfferRequests
 			$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID') );
 			$d['requested_dist'] = \Helper::distanceDate($d['requested']);
 
-			$re[$d['servicegroup']]['serviceID'] = (int)$xserv[0];
-			$re[$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
-			$re[$d['servicegroup']]['name'] = $d['servicegroup_name'];
-			$re[$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
-			$re[$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
-			$re[$d['servicegroup']]['items'][$d['item_id']]['users'][] = $d;
+			$re[$d['my_relation']][$d['servicegroup']]['serviceID'] = (int)$xserv[0];
+			$re[$d['my_relation']][$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
+			$re[$d['my_relation']][$d['servicegroup']]['name'] = $d['servicegroup_name'];
+			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
+			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
+			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['users'][] = $d;
 		}
 
 		return $re;
@@ -447,6 +447,30 @@ class OfferRequests
 		);
 
 		return $r;
+	}
+
+	public function setRequestOfferData( $request_id = 0, $field, $value )
+	{
+		$accepted_fields = array('recepient_visited_at','recepient_declined','recepient_accepted');
+		if (empty($request_id) || $request_id == 0)
+		{
+			throw new \Exception(__('Hiányzó ajánlat kérés azonosító!'));
+		}
+
+		if ( !in_array($field, (array)$accepted_fields) )
+		{
+				throw new \Exception(sprintf(__('Hibás vagy nem engedélyezett műveletet próbál végrehajtani az ajánlat kérésen: %s (field)'), $field));
+		}
+
+		$update[$field] = $value;
+
+		$this->db->update(
+			"requests_offerouts",
+			$update,
+			sprintf("ID = %d", $request_id)
+		);
+
+		return true;
 	}
 
 	public function setRequestData( $request_id = 0, $field, $value )

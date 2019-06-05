@@ -22,6 +22,8 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 
 	$scope.changeRelation = function( what )
 	{
+		$scope.request = false;
+		$scope.readrequest = 0;
 		if (typeof what === 'undefined') {
 			$scope.relation = ($scope.relation == 'to') ? 'from' : 'to';
 		} else {
@@ -57,6 +59,44 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 				callback(r.data);
 			}
 		});
+	}
+
+	$scope.runRequestAction = function(request_id, mode )
+	{
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "RequestOffers",
+				mode: 'requestActions',
+				what: mode,
+				request: request_id,
+			})
+		}).success(function(r){
+			if (r.success == 0) {
+				$scope.toast( r.msg, 'alert', 5000);
+			} else if(r.success == 1){
+				$scope.toast( r.msg, 'success', 5000);
+				$scope.loadLists(function( data ){
+					$scope.reloadRequestObject(data[$scope.relation], request_id );
+				});
+			}
+		});
+	}
+
+	$scope.reloadRequestObject = function( data, id ) {
+		if (data) {
+			angular.forEach(data, function(e,i){
+				angular.forEach(e.items, function(a,i){
+					angular.forEach(a.users, function(b,i){
+						if(b.ID == id) {
+							$scope.pickRequest( b );
+						}
+					});
+				});
+			});
+		}
 	}
 
 	$scope.quickFilterSearch = function( row )

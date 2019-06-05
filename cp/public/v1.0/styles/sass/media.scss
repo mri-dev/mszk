@@ -959,6 +959,18 @@ footer {
 }
 
 .request-controller{
+	.no-requests{
+		& > .wrapper{
+			padding: 25px;
+			text-align: center;
+			color: black;
+			i{
+				display: block;
+				font-size: 3rem;
+				margin: 0 0 10px 0;
+			}
+		}
+	}
 	.request-list{
 		flex-basis: 280px;
 		background: #ffffff;

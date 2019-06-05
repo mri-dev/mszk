@@ -98,6 +98,31 @@ class ajax extends Controller
 							}
 
 						break;
+						case 'requestActions':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							try {
+								switch ($what) {
+									case 'visit':
+										$requests->setRequestOfferData( $request, 'recepient_visited_at', NOW);
+										$this->setSuccess(sprintf(__('Megtekintett állapot módosítva lett: Látta (%s)'), NOW), $ret);
+									break;
+									case 'unvisit':
+										$requests->setRequestOfferData( $request, 'recepient_visited_at', NULL);
+										$this->setSuccess(__('Megtekintett állapot módosítva lett: Láttam levétele'), $ret);
+									break;
+									case 'decline':
+										$requests->setRequestOfferData( $request, 'recepient_declined', 1);
+										$requests->setRequestOfferData( $request, 'recepient_visited_at', NOW);
+									$this->setSuccess(__('Az ajánlatkérést sikeresen elutasítottnak jelölte.'), $ret);
+									break;
+									default:
+										$this->escape(sprintf(__('Nincs ilyen végrehajtható művelet: %s'), $what), $ret);
+									break;
+								}
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
 					}
 
 					echo json_encode($ret);

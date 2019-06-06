@@ -104,6 +104,11 @@ class OfferRequests
 			),
 			sprintf("ID = %d", (int)$request['ID'])
 		);
+
+		// TODO: E-mail értesítő az ajánlat kérőnek
+
+		return (int)$offer_id;
+
 	}
 
 	public function getUserOfferRequests( $uid, $user_group, $arg = array() )

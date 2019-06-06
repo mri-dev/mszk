@@ -152,11 +152,55 @@
                 </div>
                 <div class="col-md-6 text-right">
                   <div class="" ng-if="request.request_closed==0">
-                    <button type="button" ng-if="request.recepient_declined==0 && request.recepient_accepted==0" class="btn btn-sm btn-success" ng-click="prepareOfferSend(request.ID)"><?=__('ÉRDEKEL - Ajánlatot küldök')?> <i class="fas fa-check"></i></button>
+                    <button type="button" ng-if="request.recepient_declined==0 && request.recepient_accepted==0" class="btn btn-sm btn-success" ng-click="showOfferSending(true)"><?=__('ÉRDEKEL - Ajánlatot küldök')?> <i class="fas fa-check"></i></button>
                     <button type="button" ng-if="request.recepient_declined==0" class="btn btn-sm btn-danger" ng-click="runRequestAction(request.ID, 'decline')"><?=__('NEM ÉRDEKEL - Tárgytalan')?> <i class="fas fa-times"></i></button>
                   </div>
                   <div class="red-txt" ng-if="request.request_closed==1">
                     <strong><?=__('Ezt az ajánlatkérőt lezárta az igénylő! Nem lehet rá ajánlatot küldeni!')?></strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="send-offer-holder" ng-if="!showoffersend">
+              <div class="row-header">
+                <h3><?=__('Ajánlat küldése erre az ajánlat kérésre')?></h3>
+              </div>
+              <div class="dpad">
+                <div ng-if="sendingoffer">
+                  <div class="alert alert-warning">
+                    <?=__('Ajánlat elküldése folyamatban...')?> <i class="fas fa-sync fa-spin"></i>
+                  </div>
+                </div>
+                <div class="" ng-if="!sendingoffer">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <label for="offer_price"><?=__('Kínált szolgáltatás díja')?></label>
+                      <div class="input-group">
+                        <input type="number" id="offer_price" ng-model="offer.price" class="form-control">
+                        <div class="input-group-append">
+                          <span class="input-group-text"><?=__('Ft + ÁFA')?></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="offer_project_start_at"><?=__('Legkorábbi indulás')?>?</label>
+                      <input type="date" id="offer_project_start_at" ng-model="offer.project_start_at" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                      <label for="offer_project_idotartam"><?=__('Várható projekt időtartama')?>?</label>
+                      <input type="text" id="offer_project_idotartam" ng-model="offer.project_idotartam" class="form-control">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="offer_message"><?=__('Ajánlat tartalma')?></label>
+                      <textarea class="form-control" id="offer_message" ng-model="offer.message" rows="12"></textarea>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 text-right">
+                      <button type="button" class="btn btn-md btn-success" ng-click="sendOffer()"><?=__('Ajánlat elküldése')?></button>
+                    </div>
                   </div>
                 </div>
               </div>

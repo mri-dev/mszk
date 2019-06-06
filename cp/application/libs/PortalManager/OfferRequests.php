@@ -77,7 +77,36 @@ class OfferRequests
 		return $list;
 	}
 
-	public function getUserOfferRequests( $uid, $user_group )
+	public function registerOffer( $user_id, $request, $offer )
+	{
+		// Register offer
+		$this->db->insert(
+			"offers",
+			array(
+				'from_user_id' => $user_id,
+				'offerout_id' => $request['ID'],
+				'message' => $offer['message'],
+				'project_start_at' => $offer['project_start_at'],
+				'offer_project_idotartam' => $offer['project_idotartam'],
+				'price' => (float)$offer['price']
+			)
+		);
+
+		$offer_id = $this->db->lastInsertId();
+
+		// Offerout update offer id
+		$this->db->update(
+			"requests_offerouts",
+			array(
+				'user_offer_id' => $offer_id,
+				'recepient_accepted' => 1,
+				'recepient_visited_at' => NOW
+			),
+			sprintf("ID = %d", (int)$request['ID'])
+		);
+	}
+
+	public function getUserOfferRequests( $uid, $user_group, $arg = array() )
 	{
 		$re = array();
 		$qarg = array();
@@ -111,6 +140,30 @@ class OfferRequests
 
 		$q .= " and (ro.user_id = :uid or r.user_id = :uid)";
 		$qarg['uid'] = (int)$uid;
+
+		if (isset($arg['inprogress']))
+		{
+			if ( $arg['inprogress'] == 1 )
+			{
+				$q .= " and r.closed = 0 and (ro.recepient_accepted = 0 and ro.recepient_declined = 0)";
+			}
+			else if( $arg['inprogress'] == 0 )
+			{
+				$q .= " and (ro.recepient_accepted = 1 or ro.recepient_declined = 1)";
+			}
+		}
+
+		if (isset($arg['accepted']))
+		{
+			if ( $arg['accepted'] == 1 )
+			{
+				$q .= " and ro.recepient_accepted = 1";
+			}
+			else if( $arg['accepted'] == 0 )
+			{
+				$q .= " and ro.recepient_accepted = 0";
+			}
+		}
 
 		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, r.requested ASC";
 

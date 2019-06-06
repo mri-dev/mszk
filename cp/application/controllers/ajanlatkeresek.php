@@ -52,7 +52,29 @@ class ajanlatkeresek extends Controller {
 
 		public function fuggoben()
 		{
-			// code...
+			parent::$pageTitle = __('Függőben lévő ajánlat kérések');
+			$this->addPagePagination(array(
+				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
+				'title' => parent::$pageTitle
+			));
+		}
+
+		public function elfogadott()
+		{
+			parent::$pageTitle = __('Elfogadott ajánlat kérések');
+			$this->addPagePagination(array(
+				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
+				'title' => parent::$pageTitle
+			));
+		}
+
+		public function osszes()
+		{
+			parent::$pageTitle = __('Összes ajánlat kérések');
+			$this->addPagePagination(array(
+				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
+				'title' => parent::$pageTitle
+			));
 		}
 
 		function __destruct(){

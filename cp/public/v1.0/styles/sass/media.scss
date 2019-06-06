@@ -1174,6 +1174,7 @@ footer {
 	color: $color-red-light;
 }
 
+
 .services-hints{
 	margin: 20px 0;
 	.service-user-list{
@@ -1356,6 +1357,30 @@ footer {
 				font-size: 1rem;
     		vertical-align: text-bottom;
 			}
+		}
+	}
+}
+
+
+.send-offer-holder{
+	border: 5px solid darken($color-green, 10%);
+	.row-header{
+		background: $color-green !important;
+		h3{
+			color: white !important;
+		}
+	}
+
+	.dpad{
+		background: #f1f9f5 !important;
+
+		.row + .row{
+			margin-top: 10px;
+		}
+
+		label {
+			color: black;
+			font-weight: bold;
 		}
 	}
 }

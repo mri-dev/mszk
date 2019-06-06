@@ -88,15 +88,24 @@ class ajax extends Controller
 
 					switch ( $mode )
 					{
+						case 'sendOffer':
+							$requests = new OfferRequests( array('db' => $this->db) );
+
+							try {
+								$requests->registerOffer($uid, $request, $offer);
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
 						case 'List':
 							$requests = new OfferRequests( array('db' => $this->db) );
 							try {
-								$requestoffers = $requests->getUserOfferRequests( $uid, $user_group );
+								$arg = $filter;
+								$requestoffers = $requests->getUserOfferRequests( $uid, $user_group, $arg );
 								$ret['data'] = $requestoffers;
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);
 							}
-
 						break;
 						case 'requestActions':
 							$requests = new OfferRequests( array('db' => $this->db) );

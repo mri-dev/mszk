@@ -1,13 +1,16 @@
 var a = angular.module('App', ['ngMaterial']);
 
-a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
+a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', function($scope, $http, $mdToast, $sce, $filter)
 {
 	$scope.quicksearch = '';
 	$scope.relation = 'to';
 	$scope.loadconfig = {};
+	$scope.offer = {};
 	$scope.requests = {};
 	$scope.request = false;
 	$scope.readrequest = 0;
+	$scope.showoffersend = false;
+	$scope.sendingoffer = false;
 	$scope.init = function( conf )
 	{
 		$scope.loadconfig = conf;
@@ -18,6 +21,10 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 		$scope.loadLists(function( data ){
 
 		});
+	}
+
+	$scope.showOfferSending = function( f ) {
+		$scope.showoffersend = f;
 	}
 
 	$scope.changeRelation = function( what )
@@ -34,10 +41,50 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 	$scope.pickRequest = function( request ) {
 		$scope.readrequest = request.ID;
 		$scope.request = request;
+		$scope.showOfferSending(false);
 		console.log($scope.request);
 	}
 
+	$scope.sendOffer = function()
+	{
+		if ( !$scope.sendingoffer )
+		{
+			$scope.sendingoffer = true;
+			var offer = {};
+			angular.copy($scope.offer, offer);
+			var project_date = $filter('date')($scope.offer.project_start_at, 'yyyy-MM-dd');
+			offer.project_start_at = project_date;
+
+			$http({
+				method: 'POST',
+				url: '/ajax/post',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				data: $.param({
+					type: "RequestOffers",
+					mode: 'sendOffer',
+					offer: offer,
+					request: $scope.request
+				})
+			}).success(function(r){
+				$scope.sendingoffer = false;
+				console.log(r);
+				if (r.success == 1) {
+
+				} else {
+
+				}
+			});
+		}
+	}
+
 	$scope.loadLists = function( callback ) {
+		var filters = {};
+		if (typeof $scope.loadconfig.inprogress !== 'undefined') {
+			filters.inprogress = parseInt($scope.loadconfig.inprogress);
+		}
+		if (typeof $scope.loadconfig.accepted !== 'undefined') {
+			filters.accepted = parseInt($scope.loadconfig.accepted);
+		}
 		$http({
 			method: 'POST',
 			url: '/ajax/post',
@@ -45,9 +92,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 			data: $.param({
 				type: "RequestOffers",
 				mode: 'List',
-				filter: {
-
-				}
+				filter: filters
 			})
 		}).success(function(r){
 			console.log(r);
@@ -102,6 +147,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', function($s
 	$scope.quickFilterSearch = function( row )
 	{
 	}
+
 
 	$scope.toast = function( text, mode, delay ){
 		mode = (typeof mode === 'undefined') ? 'simple' : mode;

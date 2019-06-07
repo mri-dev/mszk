@@ -1138,6 +1138,17 @@ footer {
 			}
 		}
 
+		.requestgroup{
+			& > .head{
+				background: #fbfbd6;
+				color: black;
+				font-size: 0.8rem;
+				padding: 10px 15px;
+				color: black;
+				border-top: 2px solid #b0b06b;
+			}
+		}
+
 		.request{
 			padding: 15px;
 			font-size: 0.7rem;

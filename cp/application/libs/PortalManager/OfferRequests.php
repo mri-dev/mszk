@@ -126,6 +126,7 @@ class OfferRequests
 			ro.recepient_visited_at,
 			ro.recepient_accepted,
 			ro.recepient_declined,
+			ro.user_offer_id,
 			r.hashkey as request_hashkey,
 			r.cash,
 			r.cash_config,
@@ -170,6 +171,18 @@ class OfferRequests
 			}
 		}
 
+		if (isset($arg['offeraccepted']))
+		{
+			if ( $arg['offeraccepted'] == 1 )
+			{
+				$q .= " and ro.requester_accepted = 1";
+			}
+			else if( $arg['offeraccepted'] == 0 )
+			{
+				$q .= " and ro.requester_accepted = 0";
+			}
+		}
+
 		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, r.requested ASC";
 
 		$qry = $this->db->squery($q, $qarg);
@@ -193,6 +206,8 @@ class OfferRequests
 			$d['cash'] = json_decode($d['cash'], true);
 			$d['cash_config'] = json_decode($d['cash_config'], true);
 			$d['service_description'] = json_decode($d['service_description'], true);
+			$d['offer'] = $this->getOfferData($d['user_offer_id']);
+			$d['offers'] = $this->getOfferDatas($d['ID']);
 
 			$d['user_to'] = $users->get( array('user' => $d['user_to_id'], 'userby' => 'ID') );
 			$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID') );
@@ -203,10 +218,73 @@ class OfferRequests
 			$re[$d['my_relation']][$d['servicegroup']]['name'] = $d['servicegroup_name'];
 			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
 			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['users'][] = $d;
+			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['idopont'] = $d['requested'];
+			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['hashkey'] = $d['request_hashkey'];
+			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['users'][] = $d;
 		}
 
 		return $re;
+	}
+
+	private function offerDatarowPreparer( &$row )
+	{
+		$row['ID'] = (int)$row['ID'];
+		$row['from_user_id'] = (int)$row['from_user_id'];
+		$row['sended_at_dist'] = \Helper::distanceDate($row['sended_at']);
+
+		return $row;
+	}
+
+	public function getOfferData( $id )
+	{
+		$list = array();
+		$qarg = array();
+		$q = "SELECT
+			o.*
+		FROM offers as o
+		WHERE 1=1 and o.ID = :id";
+
+		$qarg['id'] = (int)$id;
+
+		$data = $this->db->squery($q, $qarg);
+
+		if ($data->rowCount() == 0) {
+			return false;
+		}
+
+		$data = $data->fetch(\PDO::FETCH_ASSOC);
+
+		$this->offerDatarowPreparer($data);
+
+		return $data;
+	}
+
+
+	public function getOfferDatas( $offerout_id)
+	{
+		$list = array();
+		$qarg = array();
+		$q = "SELECT
+			o.*
+		FROM offers as o
+		WHERE 1=1 and o.offerout_id = :oid";
+
+		$qarg['oid'] = (int)$offerout_id;
+
+		$data = $this->db->squery($q, $qarg);
+
+		if ($data->rowCount() == 0) {
+			return false;
+		}
+
+		$data = $data->fetchAll(\PDO::FETCH_ASSOC);
+
+		foreach ((array)$data as $d) {
+			$this->offerDatarowPreparer($d);
+			$list[] = $d;
+		}
+
+		return $list;
 	}
 
 	public function getRequestOfferouts( $request_id )

@@ -47,6 +47,8 @@ class Controller {
         $this->out('_USER', $this->Users->user);
         // Felh. adatok
         $this->out('_USERDATA', $this->Users->get());
+        // Admin jogosultságú felhasználó flag
+        $this->out('is_admin_logged', ($this->view->_USERDATA['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN || $this->view->_USERDATA['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN) ? true : false);
 
         // Ha nem ajax requestről van szó
         if ($this->gets[0] != 'ajax')

@@ -85,6 +85,9 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 		if (typeof $scope.loadconfig.accepted !== 'undefined') {
 			filters.accepted = parseInt($scope.loadconfig.accepted);
 		}
+		if (typeof $scope.loadconfig.offeraccepted !== 'undefined') {
+			filters.offeraccepted = parseInt($scope.loadconfig.offeraccepted);
+		}
 		$http({
 			method: 'POST',
 			url: '/ajax/post',

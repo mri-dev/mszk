@@ -12,6 +12,18 @@ class ajanlatkeresek extends Controller {
 			if ( !$this->view->_USERDATA ) {
         \Helper::reload('/');
       }
+
+			$uid = $this->view->_USERDATA['data']['ID'];
+
+			// még nem feldolgozott kéréseim
+			$notoffered_requests_arg = array();
+			$notoffered_requests_qry = "SELECT ID FROM requests WHERE elutasitva = 0 and offerout = 0";
+			if ( !$this->view->is_admin_logged ) {
+				$notoffered_requests_qry .= " and user_id = :uid";
+				$notoffered_requests_arg['uid'] = $uid;
+			}
+			$notoffered_requests = $this->db->squery($notoffered_requests_qry, $notoffered_requests_arg)->rowCount();
+			$this->out('notoffered_requests', $notoffered_requests);
 		}
 
     public function feldolgozatlan()
@@ -49,6 +61,15 @@ class ajanlatkeresek extends Controller {
 				'title' => parent::$pageTitle
       ));
     }
+
+		public function ajanlat_elkuldve()
+		{
+			parent::$pageTitle = __('Feldolgozott ajánlat kérések');
+			$this->addPagePagination(array(
+				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
+				'title' => parent::$pageTitle
+			));
+		}
 
 		public function fuggoben()
 		{

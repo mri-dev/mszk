@@ -32,6 +32,7 @@
                         <span ng-if="u.request_closed==1" class="badge badge-danger badge-sm"><i class="fas fa-lock"></i> <?=__('lezárva')?></span>
                         <span ng-if="u.recepient_declined==1" class="badge badge-warning badge-sm"><i class="fas fa-times"></i> <?=__('tárgytalan')?></span>
                         <span ng-if="u.recepient_accepted==1" class="badge badge-success badge-sm"><i class="fas fa-check"></i> <?=__('Ajánlat küldve')?></span>
+                        <span ng-if="u.requester_accepted==1" class="badge badge-success badge-sm"><i class="fas fa-check-double"></i> <?=__('Ajánlat elfogadva')?></span>
                       </div>
                     </div>
                     <div class="sub">
@@ -128,6 +129,15 @@
                 </div>
                 <div class="col">
                   <span class="badge badge-warning"><?=__('IGEN')?></span>
+                </div>
+              </div>
+              <div class="row" ng-if="(request && request.requester_accepted == '1')" >
+                <div class="col">
+                  <label for="" ng-if="relation=='from'"><?=__('Ajánlatot elfogadtam')?></label>
+                  <label for="" ng-if="relation=='to'"><?=__('Elfogadták az ajánlatot')?></label>
+                </div>
+                <div class="col">
+                  <span class="badge badge-success"><?=__('IGEN')?></span>
                 </div>
               </div>
             </div>

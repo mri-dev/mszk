@@ -126,6 +126,7 @@ class OfferRequests
 			ro.recepient_visited_at,
 			ro.recepient_accepted,
 			ro.recepient_declined,
+			ro.requester_accepted,
 			ro.user_offer_id,
 			r.hashkey as request_hashkey,
 			r.cash,

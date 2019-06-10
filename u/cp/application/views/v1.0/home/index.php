@@ -1,6 +1,5 @@
 <div class="dashboard">
 <? if($this->_USER): ?>
-<pre><?php print_r($this->badges); ?></pre>
   <div class="wblock overview-services p-2">
     <div class="row">
       <div class="col ct-info color-blue">

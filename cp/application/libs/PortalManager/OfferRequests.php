@@ -184,6 +184,13 @@ class OfferRequests
 			}
 		}
 
+		if (isset($arg['progressed']))
+		{
+			if ( $arg['progressed'] == 1 )
+			{
+				$q .= " and ((ro.recepient_accepted = 1 and ro.requester_accepted IS NULL) or ro.recepient_declined = 1)";
+			}
+		}
 		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, r.requested ASC";
 
 		$qry = $this->db->squery($q, $qarg);
@@ -195,6 +202,13 @@ class OfferRequests
 		$users = new Users( array('db' => $this->db ));
 
 		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+		$from_num = 0;
+		$from_users_num = 0;
+		$to_num = 0;
+		$to_users_num = 0;
+		$from_hashes = array();
+		$to_hashes = array();
+
 		foreach ( (array)$data as $d )
 		{
 			$xserv = explode("_",$d['configval']);
@@ -214,15 +228,36 @@ class OfferRequests
 			$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID') );
 			$d['requested_dist'] = \Helper::distanceDate($d['requested']);
 
-			$re[$d['my_relation']][$d['servicegroup']]['serviceID'] = (int)$xserv[0];
-			$re[$d['my_relation']][$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
-			$re[$d['my_relation']][$d['servicegroup']]['name'] = $d['servicegroup_name'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['idopont'] = $d['requested'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['hashkey'] = $d['request_hashkey'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['users'][] = $d;
+			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['serviceID'] = (int)$xserv[0];
+			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
+			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['name'] = $d['servicegroup_name'];
+			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
+			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
+			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['users'][] = $d;
+			$re[$d['my_relation']][$d['request_hashkey']]['idopont'] = $d['requested'];
+			$re[$d['my_relation']][$d['request_hashkey']]['hashkey'] = $d['request_hashkey'];
+			$re[$d['my_relation']][$d['request_hashkey']]['user_name'] = $d['requester_form_name'];
+
+			if ($d['my_relation'] == 'from') {
+				$from_users_num += 1;
+				if (!in_array($d['request_hashkey'], $from_hashes)) {
+					$from_hashes[] = $d['request_hashkey'];
+				}
+			}
+			if ($d['my_relation'] == 'to') {
+				$to_users_num += 1;
+				if (!in_array($d['request_hashkey'], $to_hashes)) {
+					$to_hashes[] = $d['request_hashkey'];
+				}
+			}
 		}
+
+		$re['from_users_num'] = $from_users_num;
+		$re['to_users_num'] = $to_users_num;
+		$re['from_num'] = count($from_hashes);
+		$re['to_num'] = count($to_hashes);
+		$re['from_hashes'] = $from_hashes;
+		$re['to_hashes'] = $to_hashes;
 
 		return $re;
 	}

@@ -1096,6 +1096,21 @@ footer {
 					align-items: center;
 					& > div {
 						flex-basis: 50%;
+						position: relative;
+
+						.badge{
+							position: absolute;
+							z-index: 1;
+							background: $color-red;
+							color: white;
+							width: 20px;
+							height: 20px;
+							line-height: 20px;
+							border-radius: 20px;
+							padding: 0;
+							right: 30px;
+							top: 7px;
+						}
 
 						button {
 							display: block;
@@ -1139,13 +1154,15 @@ footer {
 		}
 
 		.requestgroup{
+			background: #fbfbd6;
+			padding-left: 5px;
+			border-top: 2px solid #b0b06b;
 			& > .head{
 				background: #fbfbd6;
 				color: black;
 				font-size: 0.8rem;
 				padding: 10px 15px;
 				color: black;
-				border-top: 2px solid #b0b06b;
 			}
 		}
 

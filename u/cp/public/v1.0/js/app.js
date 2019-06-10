@@ -1,5 +1,173 @@
 var a = angular.module('App', ['ngMaterial']);
 
+a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', function($scope, $http, $mdToast, $sce, $filter)
+{
+	$scope.quicksearch = '';
+	$scope.relation = 'to';
+	$scope.loadconfig = {};
+	$scope.offer = {};
+	$scope.requests = {};
+	$scope.request = false;
+	$scope.readrequest = 0;
+	$scope.showoffersend = false;
+	$scope.sendingoffer = false;
+	$scope.init = function( conf )
+	{
+		$scope.loadconfig = conf;
+		$scope.loadEverything();
+	}
+
+	$scope.loadEverything = function() {
+		$scope.loadLists(function( data ){
+
+		});
+	}
+
+	$scope.showOfferSending = function( f ) {
+		$scope.showoffersend = f;
+	}
+
+	$scope.changeRelation = function( what )
+	{
+		$scope.request = false;
+		$scope.readrequest = 0;
+		if (typeof what === 'undefined') {
+			$scope.relation = ($scope.relation == 'to') ? 'from' : 'to';
+		} else {
+			$scope.relation = what;
+		}
+	}
+
+	$scope.pickRequest = function( request ) {
+		$scope.readrequest = request.ID;
+		$scope.request = request;
+		$scope.showOfferSending(false);
+		console.log($scope.request);
+	}
+
+	$scope.sendOffer = function()
+	{
+		if ( !$scope.sendingoffer )
+		{
+			$scope.sendingoffer = true;
+			var offer = {};
+			angular.copy($scope.offer, offer);
+			var project_date = $filter('date')($scope.offer.project_start_at, 'yyyy-MM-dd');
+			offer.project_start_at = project_date;
+
+			$http({
+				method: 'POST',
+				url: '/ajax/post',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				data: $.param({
+					type: "RequestOffers",
+					mode: 'sendOffer',
+					offer: offer,
+					request: $scope.request
+				})
+			}).success(function(r){
+				$scope.sendingoffer = false;
+				console.log(r);
+				if (r.success == 1) {
+
+				} else {
+
+				}
+			});
+		}
+	}
+
+	$scope.loadLists = function( callback ) {
+		var filters = {};
+		if (typeof $scope.loadconfig.inprogress !== 'undefined') {
+			filters.inprogress = parseInt($scope.loadconfig.inprogress);
+		}
+		if (typeof $scope.loadconfig.accepted !== 'undefined') {
+			filters.accepted = parseInt($scope.loadconfig.accepted);
+		}
+		if (typeof $scope.loadconfig.offeraccepted !== 'undefined') {
+			filters.offeraccepted = parseInt($scope.loadconfig.offeraccepted);
+		}
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "RequestOffers",
+				mode: 'List',
+				filter: filters
+			})
+		}).success(function(r){
+			console.log(r);
+
+			if (r.data && r.data.length != 0) {
+				$scope.requests = r.data;
+			}
+			if (typeof callback !== 'undefined') {
+				callback(r.data);
+			}
+		});
+	}
+
+	$scope.runRequestAction = function(request_id, mode )
+	{
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "RequestOffers",
+				mode: 'requestActions',
+				what: mode,
+				request: request_id,
+			})
+		}).success(function(r){
+			if (r.success == 0) {
+				$scope.toast( r.msg, 'alert', 5000);
+			} else if(r.success == 1){
+				$scope.toast( r.msg, 'success', 5000);
+				$scope.loadLists(function( data ){
+					$scope.reloadRequestObject(data[$scope.relation], request_id );
+				});
+			}
+		});
+	}
+
+	$scope.reloadRequestObject = function( data, id ) {
+		if (data) {
+			angular.forEach(data, function(e,i){
+				angular.forEach(e.items, function(a,i){
+					angular.forEach(a.users, function(b,i){
+						if(b.ID == id) {
+							$scope.pickRequest( b );
+						}
+					});
+				});
+			});
+		}
+	}
+
+	$scope.quickFilterSearch = function( row )
+	{
+	}
+
+
+	$scope.toast = function( text, mode, delay ){
+		mode = (typeof mode === 'undefined') ? 'simple' : mode;
+		delay = (typeof delay === 'undefined') ? 5000 : delay;
+
+		if (typeof text !== 'undefined') {
+			$mdToast.show(
+				$mdToast.simple()
+				.textContent(text)
+				.position('top')
+				.toastClass('alert-toast mode-'+mode)
+				.hideDelay(delay)
+			);
+		}
+	}
+}]);
+
 a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
 {
 	$scope.quicksearch = '';
@@ -81,7 +249,8 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 				mode: 'List',
 				filter: {
 					offerout: ($scope.loadconfig && $scope.loadconfig.offerout) ? $scope.loadconfig.offerout : 0,
-					loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0
+					loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0,
+					bindIDToList: 0
 				}
 			})
 		}).success(function(r){

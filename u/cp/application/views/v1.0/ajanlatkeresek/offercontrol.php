@@ -1,0 +1,280 @@
+<div class="wblock">
+  <div class="data-container">
+    <div class="d-flex">
+      <div class="request-list">
+        <div class="head">
+          <div class="switcher">
+            <div class="" ng-click="changeRelation('to')" ng-class="{'active': (relation=='to')}">
+              <button type="button"><i class="far fa-arrow-alt-circle-right"></i> <?=__('Beérkező')?></button>
+            </div>
+            <div class="" ng-click="changeRelation('from')" ng-class="{'active': (relation=='from')}">
+              <button type="button"><?=__('Kimenő')?> <i class="far fa-arrow-alt-circle-right"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="req-list">
+          <div class="request-service"  ng-repeat="request in requests[relation]">
+            <div class="wrapper">
+              <div class="head">
+                <div class="name">{{request.name}}</div>
+              </div>
+              <div class="request-subservice" ng-repeat="r in request.items">
+                <div class="head">{{r.name}}</div>
+                <div class="requestgroup" ng-repeat="re in r.requests">
+                  <div class="head">
+                    <div class="hashkey"><?=__('Ajánlat hash')?>: <strong>{{re.hashkey}}</strong></div>
+                    <div class="reqdate"><?=__('Időpont')?>: <strong>{{re.idopont}}</strong></div>
+                  </div>
+                  <div class="request" ng-class="{'active': (readrequest == u.ID), 'closed': (u.request_closed==1), 'declined': (u.recepient_declined==1), 'accepted': (u.recepient_accepted==1)}" ng-repeat="u in re.users" ng-click="pickRequest(u)">
+                    <div class="head">
+                      <span class="name"><i class="fas" ng-class="(!u.recepient_visited_at)?'fa-eye-slash':'fa-eye'"></i> {{u.requester_form_name}}</span> <span ng-if="u.requester_form_company && u.requester_form_company!=''" class="company">// <strong>{{u.requester_form_company}}</strong></span>
+                      <div class="badges">
+                        <span ng-if="u.request_closed==1" class="badge badge-danger badge-sm"><i class="fas fa-lock"></i> <?=__('lezárva')?></span>
+                        <span ng-if="u.recepient_declined==1" class="badge badge-warning badge-sm"><i class="fas fa-times"></i> <?=__('tárgytalan')?></span>
+                        <span ng-if="u.recepient_accepted==1" class="badge badge-success badge-sm"><i class="fas fa-check"></i> <?=__('Ajánlat küldve')?></span>
+                        <span ng-if="u.requester_accepted==1" class="badge badge-success badge-sm"><i class="fas fa-check-double"></i> <?=__('Ajánlat elfogadva')?></span>
+                      </div>
+                    </div>
+                    <div class="sub">
+                      <span class="date" title="<?=__('Az igénylés rögzítési ideje')?>: {{u.requested}}"><i class="far fa-clock"></i> {{u.requested_dist}}</span>
+                      <span class="cashinfo" ng-if="u.cash_config[u.subservice.ID][u.item_id]"><span class="cash">{{u.cash_config[u.subservice.ID][u.item_id]}} Ft + ÁFA</span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="no-requests" ng-if="!requests[relation]">
+            <div class="wrapper" ng-if="relation=='to'">
+              <i class="far fa-folder-open"></i><?=__('Nincs beérkező ajánlat kérése.')?>
+            </div>
+            <div class="wrapper" ng-if="relation=='from'">
+                <i class="far fa-folder-open"></i><?=__('Nincs kimenő ajánlat kérése.')?>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="request-data">
+        <div class="" ng-if="!request">
+          <div class="wrapper">
+            <div class="iteractive-infos">
+              <div class="" ng-if="requests[relation].length==0">
+                <?=__('Nincs megjeleníthető ajánlat kérés.')?>
+              </div>
+              <div class="" ng-if="requests[relation].length!=0 && !request">
+                <?=__('A bal oldali kérsek közül válassza ki a kezelendő ajánlat kérést.')?>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="wrapper" ng-if="request">
+          <div class="requester">
+            <div class="row-header">
+              <h3><?=__('Ajánlat adatai')?></h3>
+            </div>
+            <div class="dpad">
+              <div class="row">
+                <div class="col">
+                  <label for=""><?=__('Szolgáltatás')?></label>
+                </div>
+                <div class="col">
+                  {{request.service.neve}} / {{request.subservice.neve}} / {{request.item.neve}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label for=""><?=__('Név')?></label>
+                </div>
+                <div class="col">
+                  {{request.requester_form_name}}
+                </div>
+              </div>
+              <div class="row" ng-if="request.requester_form_company">
+                <div class="col">
+                  <label for=""><?=__('Cégnév')?></label>
+                </div>
+                <div class="col">
+                  {{request.requester_form_company}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label for=""><?=__('Ajánlatkérés hashkey')?></label>
+                </div>
+                <div class="col">
+                  {{request.request_hashkey}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label for=""><?=__('Ajánlatkérés ideje')?></label>
+                </div>
+                <div class="col">
+                  {{request.requested_dist}} ({{request.requested}})
+                </div>
+              </div>
+              <div class="row" ng-if="(request && request.recepient_visited_at)" >
+                <div class="col">
+                  <label for="" ng-if="relation=='to'"><?=__('Láttam')?></label>
+                  <label for="" ng-if="relation=='from'"><?=__('Látta')?></label>
+                </div>
+                <div class="col">
+                  <span class="badge badge-success"><?=__('IGEN')?>: {{request.recepient_visited_at}}</span>
+                </div>
+              </div>
+              <div class="row" ng-if="(request && request.recepient_declined == '1')" >
+                <div class="col">
+                  <label for="" ng-if="relation=='to'"><?=__('Tárgytalan részemről')?></label>
+                  <label for="" ng-if="relation=='from'"><?=__('Tárgytalan')?></label>
+                </div>
+                <div class="col">
+                  <span class="badge badge-warning"><?=__('IGEN')?></span>
+                </div>
+              </div>
+              <div class="row" ng-if="(request && request.requester_accepted == '1')" >
+                <div class="col">
+                  <label for="" ng-if="relation=='from'"><?=__('Ajánlatot elfogadtam')?></label>
+                  <label for="" ng-if="relation=='to'"><?=__('Elfogadták az ajánlatot')?></label>
+                </div>
+                <div class="col">
+                  <span class="badge badge-success"><?=__('IGEN')?></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="message" ng-if="request.requester_form_message">
+              <div class="row-header">
+                  <h3><?=__('Megjegyzés')?></h3>
+              </div>
+              <div class="dpad">
+                <div class="row">
+                  <div class="col-md-12" ng-bind-html="request.requester_form_message|unsafe"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row-header">
+                <h3><?=__('Szolgáltatás igények leírása')?></h3>
+            </div>
+            <div class="dpad">
+              <div ng-bind-html="request.service_description[request.subservice.ID]|unsafe"></div>
+            </div>
+            <div class="" ng-if="!request.user_offer_id && relation=='to'">
+              <div class="row-header">
+                  <h3><?=__('Műveletek')?></h3>
+              </div>
+              <div class="dpad">
+                <div class="row">
+                  <div class="col-md-6">
+                    <button ng-if="(request && request.recepient_visited_at && !request.user_offer_id)" type="button" class="btn btn-sm btn-primary" ng-click="runRequestAction(request.ID, 'unvisit')"><?=__('Láttam eltávolítása')?> <i class="far fa-eye-slash"></i></button>
+                    <button ng-if="(request && !request.recepient_visited_at && !request.user_offer_id)" type="button" class="btn btn-sm btn-primary" ng-click="runRequestAction(request.ID, 'visit')"><?=__('Láttam / Megtekintettem')?> <i class="far fa-eye"></i></button>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <div class="" ng-if="request.request_closed==0">
+                      <button type="button" ng-if="request.recepient_declined==0 && request.recepient_accepted==0" class="btn btn-sm btn-success" ng-click="showOfferSending(true)"><?=__('ÉRDEKEL - Ajánlatot küldök')?> <i class="fas fa-check"></i></button>
+                      <button type="button" ng-if="request.recepient_declined==0 && !request.user_offer_id" class="btn btn-sm btn-danger" ng-click="runRequestAction(request.ID, 'decline')"><?=__('NEM ÉRDEKEL - Tárgytalan')?> <i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="red-txt" ng-if="request.request_closed==1">
+                      <strong><?=__('Ezt az ajánlatkérőt lezárta az igénylő! Nem lehet rá ajánlatot küldeni!')?></strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="send-offer-holder" ng-if="showoffersend && (!request.user_offer_id && relation=='to')">
+              <div class="row-header">
+                <h3><?=__('Ajánlat küldése erre az ajánlat kérésre')?></h3>
+              </div>
+              <div class="dpad">
+                <div ng-if="sendingoffer">
+                  <div class="alert alert-warning">
+                    <?=__('Ajánlat elküldése folyamatban...')?> <i class="fas fa-sync fa-spin"></i>
+                  </div>
+                </div>
+                <div class="" ng-if="!sendingoffer">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <label for="offer_price"><?=__('Kínált szolgáltatás díja')?></label>
+                      <div class="input-group">
+                        <input type="number" id="offer_price" ng-model="offer.price" class="form-control">
+                        <div class="input-group-append">
+                          <span class="input-group-text"><?=__('Ft + ÁFA')?></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="offer_project_start_at"><?=__('Legkorábbi indulás')?>?</label>
+                      <input type="date" id="offer_project_start_at" ng-model="offer.project_start_at" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                      <label for="offer_project_idotartam"><?=__('Várható projekt időtartama')?>?</label>
+                      <input type="text" id="offer_project_idotartam" ng-model="offer.project_idotartam" class="form-control">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="offer_message"><?=__('Ajánlat tartalma')?></label>
+                      <textarea class="form-control" id="offer_message" ng-model="offer.message" rows="12"></textarea>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 text-right">
+                      <button type="button" class="btn btn-md btn-success" ng-click="sendOffer()"><?=__('Ajánlat elküldése')?></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="send-offer-holder" ng-if="request.user_offer_id">
+              <div class="row-header">
+                <h3 ng-if="relation=='to'"><?=__('Elküldött ajánlatom részletei')?></h3>
+                <h3 ng-if="relation=='from'"><?=__('Beérkezett ajánlat részletei')?></h3>
+              </div>
+              <div class="dpad">
+                <div class="row">
+                  <div class="col-md-3">
+                    <?=__('Rögzítve')?>
+                  </div>
+                  <div class="col-md-9">
+                    <strong>{{request.offer.sended_at_dist}} ({{request.offer.sended_at}})</strong>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <?=__('Ajánlott szolgáltatás díj')?>
+                  </div>
+                  <div class="col-md-9">
+                    <strong>{{request.offer.price}} <?=__('Ft + ÁFA')?></strong>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <?=__('Legkorábbi indulás')?>
+                  </div>
+                  <div class="col-md-9">
+                    <strong>{{request.offer.project_start_at}}</strong>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <?=__('Projekt időtartam')?>
+                  </div>
+                  <div class="col-md-9">
+                    <strong>{{request.offer.offer_project_idotartam}}</strong>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <?=__('Ajánlat tartalma')?>:<br>
+                    <div style="color:black; line-height: 1.4;" ng-bind-html="request.offer.message|unsafe"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

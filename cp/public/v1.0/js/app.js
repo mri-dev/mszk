@@ -11,9 +11,18 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	$scope.readrequest = 0;
 	$scope.showoffersend = false;
 	$scope.sendingoffer = false;
+	$scope.badges = {
+		'in': 0,
+		'out': 0
+	}
 	$scope.init = function( conf )
 	{
-		$scope.loadconfig = conf;
+		if (typeof conf !== 'undefined') {
+			$scope.loadconfig = conf;
+		} else {
+			$scope.loadconfig = {};
+		}
+
 		$scope.loadEverything();
 	}
 
@@ -41,6 +50,10 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	$scope.pickRequest = function( request ) {
 		$scope.readrequest = request.ID;
 		$scope.request = request;
+		var price = request.cash_config[request.subservice.ID][request.item_id];
+		if (price) {
+			$scope.offer.price = parseFloat(price);
+		}
 		$scope.showOfferSending(false);
 		console.log($scope.request);
 	}
@@ -69,7 +82,11 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 				$scope.sendingoffer = false;
 				console.log(r);
 				if (r.success == 1) {
-
+					$scope.showoffersend = false;
+					$scope.loadLists(function( data ){
+						$scope.request.recepient_accepted = 1;
+						$scope.reloadRequestObject(data[$scope.relation], $scope.request.ID );
+					});
 				} else {
 
 				}
@@ -88,6 +105,9 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 		if (typeof $scope.loadconfig.offeraccepted !== 'undefined') {
 			filters.offeraccepted = parseInt($scope.loadconfig.offeraccepted);
 		}
+		if (typeof $scope.loadconfig.progressed !== 'undefined') {
+			filters.progressed = parseInt($scope.loadconfig.progressed);
+		}
 		$http({
 			method: 'POST',
 			url: '/ajax/post',
@@ -102,6 +122,12 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 
 			if (r.data && r.data.length != 0) {
 				$scope.requests = r.data;
+				if (r.data.from_num) {
+					$scope.badges.out = r.data.from_num;
+				}
+				if (r.data.to_num) {
+					$scope.badges.in = r.data.to_num;
+				}
 			}
 			if (typeof callback !== 'undefined') {
 				callback(r.data);
@@ -136,11 +162,13 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	$scope.reloadRequestObject = function( data, id ) {
 		if (data) {
 			angular.forEach(data, function(e,i){
-				angular.forEach(e.items, function(a,i){
-					angular.forEach(a.users, function(b,i){
-						if(b.ID == id) {
-							$scope.pickRequest( b );
-						}
+				angular.forEach(e.services, function(a,i){
+					angular.forEach(a.items, function(b,i){
+						angular.forEach(b.users, function(c,i){
+							if(c.ID == id) {
+								$scope.pickRequest( c );
+							}
+						});
 					});
 				});
 			});

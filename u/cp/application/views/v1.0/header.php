@@ -180,7 +180,7 @@
             <?php endforeach; ?>
             <?php endif; ?>
             <!-- End of MODULS-->
-            <li class="has-more <?=($this->gets[0] == 'ajanlatkeresek')?'on':''?>"><a href="/ajanlatkeresek" title="<?=__('Árajánlat kérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Árajánlat kérések')?> <span class="badge badge-primary">7</span></a></li>
+            <li class="has-more <?=($this->gets[0] == 'ajanlatkeresek')?'on':''?>"><a href="/ajanlatkeresek" title="<?=__('Árajánlat kérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Árajánlat kérések')?> <? if($this->badges['offers']['all']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['all']['total']?></span><? endif; ?></a></li>
             <?php if ($this->gets[0] == 'ajanlatkeresek'): ?>
               <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
                 <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'feldolgozatlan')?'on':''?>"><a href="/ajanlatkeresek/feldolgozatlan" title="<?=__('Feldolgozatlan')?>"><span class="ni">8</span><i class="fas fa-minus"></i> <?=__('Feldolgozatlan')?></a></li>
@@ -188,8 +188,13 @@
               <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
                 <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'feldolgozott')?'on':''?>"><a href="/ajanlatkeresek/feldolgozott" title="<?=__('Feldolgozott')?>"><span class="ni">8</span><i class="fas fa-plus"></i> <?=__('Feldolgozott')?></a></li>
               <?php endif; ?>
-              <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'elfogadott')?'on':''?>"><a href="/ajanlatkeresek/elfogadott" title="<?=__('Elfogadott')?>"><span class="ni">8</span><i class="fas fa-check"></i> <?=__('Elfogadott')?></a></li>
-              <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'fuggoben')?'on':''?>"><a href="/ajanlatkeresek/fuggoben" title="<?=__('Függőben')?>"><span class="ni">8</span><i class="fas fa-question"></i> <?=__('Függőben')?></a></li>
+              <?php if ($this->_USERDATA['data']['user_group'] != 'superadmin' && $this->_USERDATA['data']['user_group'] != 'admin'): ?>
+                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'osszes')?'on':''?>"><a href="/ajanlatkeresek/osszes" title="<?=__('Összes')?>"><span class="ni">8</span><i class="fas fa-minus"></i> <?=__('Összes')?><? if($this->badges['offers']['all']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['all']['total']?></span><? endif; ?></a></li>
+                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'fuggoben')?'on':''?>"><a href="/ajanlatkeresek/fuggoben" title="<?=__('Függőben')?>"><span class="ni">8</span><i class="fas fa-question"></i> <?=__('Függőben')?><? if($this->badges['offers']['inprogress']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['inprogress']['total']?></span><? endif; ?></a></li>
+                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'ajanlat_elkuldve')?'on':''?>"><a href="/ajanlatkeresek/ajanlat_elkuldve" title="<?=__('Feldolgozott')?>"><span class="ni">8</span><i class="fas fa-plus"></i> <?=__('Feldolgozott')?></a></li>
+                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'elfogadott')?'on':''?>"><a href="/ajanlatkeresek/elfogadott" title="<?=__('Elfogadott')?>"><span class="ni">8</span><i class="fas fa-check"></i> <?=__('Elfogadott')?><? if($this->badges['offers']['accepted']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['accepted']['total']?></span><? endif; ?></a></li>
+
+              <?php endif; ?>
             <?php endif; ?>
             <li class="has-more <?=($this->gets[0] == 'projektek')?'on':''?>"><a href="/projektek" title="<?=__('Projektek')?>"><span class="ni">8</span><i class="far fa-lightbulb"></i> <?=__('Projektek')?> <span class="badge badge-primary">10</span></a></li>
             <?php if ($this->gets[0] == 'projektek'): ?>
@@ -223,6 +228,9 @@
             // Admin és Super admin menük
             if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
               <li class="head"><?=__('Adminisztráció')?></li>
+              <?php if (true): ?>
+                <li class="<?=($this->gets[0] == 'emails')?'on':''?>"><a href="/emails" title="Email sablonok"><span class="ni">8</span><i class="fa fa-envelope"></i> Email sablonok</a></li>
+              <?php endif; ?>
               <?php if (true): ?>
                 <li class="<?=($this->gets[0] == 'adminconsole' && $this->gets[1] == 'felhasznalok')?'on':''?>"><a href="/adminconsole/felhasznalok" title="<?=__('Felhasználók')?>"><span class="ni">8</span><i class="fas fa-users"></i> <?=__('Felhasználók')?></a></li>
               <?php endif; ?>

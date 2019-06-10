@@ -30,7 +30,6 @@ class ajax extends Controller
 							if (isset($_POST['filter'])) {
 								$arg = (array)$_POST['filter'];
 							}
-
 							$ret['data'] = $requests->getList( $arg );
 						break;
 						case 'sendServiceRequest':
@@ -73,6 +72,69 @@ class ajax extends Controller
 					}
 					echo json_encode($ret);
 					return;
+
+				break;
+
+				case 'RequestOffers':
+					$ret['data'] = array();
+					$ret['pass'] = $_POST;
+
+					if ( !$this->view->_USERDATA ) {
+						$this->escape(__('Kérjük, hogy jelentkezzen be újra!'), $ret);
+					}
+
+					$uid = (int)$this->view->_USERDATA['data']['ID'];
+					$user_group = $this->view->_USERDATA['data']['user_group'];
+
+					switch ( $mode )
+					{
+						case 'sendOffer':
+							$requests = new OfferRequests( array('db' => $this->db) );
+
+							try {
+								$requests->registerOffer($uid, $request, $offer);
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
+						case 'List':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							try {
+								$arg = $filter;
+								$requestoffers = $requests->getUserOfferRequests( $uid, $user_group, $arg );
+								$ret['data'] = $requestoffers;
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
+						case 'requestActions':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							try {
+								switch ($what) {
+									case 'visit':
+										$requests->setRequestOfferData( $request, 'recepient_visited_at', NOW);
+										$this->setSuccess(sprintf(__('Megtekintett állapot módosítva lett: Látta (%s)'), NOW), $ret);
+									break;
+									case 'unvisit':
+										$requests->setRequestOfferData( $request, 'recepient_visited_at', NULL);
+										$this->setSuccess(__('Megtekintett állapot módosítva lett: Láttam levétele'), $ret);
+									break;
+									case 'decline':
+										$requests->setRequestOfferData( $request, 'recepient_declined', 1);
+										$requests->setRequestOfferData( $request, 'recepient_visited_at', NOW);
+									$this->setSuccess(__('Az ajánlatkérést sikeresen elutasítottnak jelölte.'), $ret);
+									break;
+									default:
+										$this->escape(sprintf(__('Nincs ilyen végrehajtható művelet: %s'), $what), $ret);
+									break;
+								}
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
+					}
+
+					echo json_encode($ret);
 				break;
 			}
 		}

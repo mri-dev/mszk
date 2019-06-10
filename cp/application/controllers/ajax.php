@@ -90,7 +90,7 @@ class ajax extends Controller
 					{
 						case 'sendOffer':
 							$requests = new OfferRequests( array('db' => $this->db) );
-
+							$this->setSuccess(__('Ajánlat kérés elfogadása sikeres.'), $ret);
 							try {
 								$requests->registerOffer($uid, $request, $offer);
 							} catch (\Exception $e) {

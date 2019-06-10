@@ -69,69 +69,9 @@ class Controller {
           }
         }
 
-        // Admin cp
-        if ( !defined('PRODUCTIONSITE') || PRODUCTIONSITE == false )
-        {
-          $this->out( 'badges', $this->getBadges());
-        }
-
         $this->out( 'kozterulet_jellege', $this->kozterulet_jellege() );
 
         if(!$arg[hidePatern]){ $this->hidePatern = false; }
-    }
-
-    public function getBadges()
-    {
-      $badges = array();
-
-      $uid = $this->view->_USERDATA['data']['ID'];
-
-      // All
-
-      $badges['offers']['all']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
-
-      $badges['offers']['all']['in'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.offerout = 1 and r.elutasitva = 0 and o.user_id = :uid GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
-
-      // Függőben / inprogress
-
-      $badges['offers']['inprogress']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.closed = 0 and r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid and o.recepient_accepted = 0 and o.recepient_declined = 0 GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
-
-      $badges['offers']['inprogress']['in'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.closed = 0 and r.offerout = 1 and r.elutasitva = 0 and o.user_id = :uid and o.recepient_accepted = 0 and o.recepient_declined = 0 GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
-
-      // Feldolgozott / progressed
-
-      $badges['offers']['progressed']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.closed = 0 and r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid and ((o.recepient_accepted = 1 and o.requester_accepted IS NULL) or o.recepient_declined = 1) GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
-
-      $badges['offers']['progressed']['in'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.closed = 0 and r.offerout = 1 and r.elutasitva = 0 and o.user_id = :uid and ((o.recepient_accepted = 1 and o.requester_accepted IS NULL) or o.recepient_declined = 1) GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
-
-      // Elfogadott / accepted
-
-      $badges['offers']['accepted']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid and o.recepient_accepted = 1 and o.requester_accepted = 1 GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
-
-      $badges['offers']['accepted']['in'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.offerout = 1 and r.elutasitva = 0 and o.user_id = :uid and o.recepient_accepted = 1 and o.requester_accepted = 1 GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
-
-      $badges['offers']['all']['total'] = $badges['offers']['all']['out'] + $badges['offers']['all']['in'];
-      $badges['offers']['accepted']['total'] = $badges['offers']['accepted']['out'] + $badges['offers']['accepted']['in'];
-      $badges['offers']['inprogress']['total'] = $badges['offers']['inprogress']['out'] + $badges['offers']['inprogress']['in'];
-      $badges['offers']['progressed']['total'] = $badges['offers']['progressed']['out'] + $badges['offers']['progressed']['in'];
-
-      return $badges;
     }
 
     function out( $viewKey, $output )

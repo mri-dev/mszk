@@ -45,7 +45,10 @@
                     </div>
                     <div class="sub">
                       <span class="date" title="<?=__('Az igénylés rögzítési ideje')?>: {{u.requested}}"><i class="far fa-clock"></i> {{u.requested_dist}}</span>
-                      <span class="cashinfo" ng-if="u.cash_config[u.subservice.ID][u.item_id]"><span class="cash">{{u.cash_config[u.subservice.ID][u.item_id]}} Ft + ÁFA</span></span>
+                      <span class="cashinfo" ng-if="u.cash_config[u.subservice.ID][u.item_id]">
+                        <span class="cash" title="<?=__('Költséghatár')?>">{{u.cash_config[u.subservice.ID][u.item_id]}} Ft + ÁFA</span>
+                        <span class="cash" ng-if="u.offers" style="background: #ff6a21;" title="<?=__('Ajánlott szolgáltatás díja')?>">{{u.offers[0].price}} Ft + ÁFA</span>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -271,12 +274,16 @@
                     <strong>{{request.offer.offer_project_idotartam}}</strong>
                   </div>
                 </div>
-
                 <div class="row">
                   <div class="col-md-12">
                     <?=__('Ajánlat tartalma')?>:<br>
                     <div style="color:black; line-height: 1.4;" ng-bind-html="request.offer.message|unsafe"></div>
                   </div>
+                </div>
+              </div>
+              <div class="offer-accepter" ng-if="relation='from' && !request.requester_accepted">
+                <div class="head">
+                  <?=__('Ajánlat elfogadása / Projekt létrehozása')?>
                 </div>
               </div>
             </div>

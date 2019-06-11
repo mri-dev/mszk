@@ -40,6 +40,16 @@ class OfferRequests
 			$qarg['offerout'] = (int)$arg['offerout'];
 		}
 
+		if (isset($arg['elutasitva'])) {
+			$q .= " and r.elutasitva  = :elutasitva";
+			$qarg['elutasitva'] = (int)$arg['elutasitva'];
+		}
+
+		if (isset($arg['user'])) {
+			$q .= " and r.user_id  = :uid";
+			$qarg['uid'] = (int)$arg['user'];
+		}
+
 		$q .= " ORDER BY r.visited ASC, r.requested ASC";
 
 		$data = $this->db->squery($q, $qarg);
@@ -51,15 +61,25 @@ class OfferRequests
 
 		$users = new Users( array('db' => $this->db ));
 
-		foreach ((array)$data as $d) {
-			$d['cash'] = json_decode($d['cash'], true);
-			$d['cash_config'] = json_decode($d['cash_config'], true);
-			$d['services'] = $this->findServicesItems(json_decode($d['services'], true));
-			$d['subservices'] = $this->findServicesItems(json_decode($d['subservices'], true));
+		foreach ((array)$data as $d)
+		{
+			if (!isset($arg['shortlist']))
+			{
+				$d['cash'] = json_decode($d['cash'], true);
+				$d['cash_config'] = json_decode($d['cash_config'], true);
+				$d['services'] = $this->findServicesItems(json_decode($d['services'], true));
+				$d['subservices'] = $this->findServicesItems(json_decode($d['subservices'], true));
+				$d['service_description'] = json_decode($d['service_description'], true);
+				$d['user'] = $users->get( array('user' => $d['user_id'], 'userby' => 'ID') );
+			}
+
 			$d['subservices_items'] = $this->findServicesItems(json_decode($d['subservices_items'], true));
-			$d['service_description'] = json_decode($d['service_description'], true);
-			$d['user'] = $users->get( array('user' => $d['user_id'], 'userby' => 'ID') );
 			$d['requested_at'] = \Helper::distanceDate($d['requested']);
+
+			if (isset($arg['servicetree']))
+			{
+				$d['services_list'] = $this->getServicesList( $d['subservices_items'] );
+			}
 
 			// Lehetséges szolgáltatók betöltése
 			if (isset($arg['loadpossibleservices']) && $arg['loadpossibleservices'] == 1)
@@ -75,6 +95,82 @@ class OfferRequests
 		}
 
 		return $list;
+	}
+
+	public function getServicesList( $items )
+	{
+		$back = array();
+
+		if (empty($items))
+		{
+			return $back;
+		}
+
+		foreach ((array)$items as $i )
+		{
+			$parent = $i['szulo_id'];
+			$parents = array();
+			$fullname = '';
+
+			while( $parent ) {
+				$p = $this->getCatData( $parent );
+				$parents[] = array(
+					'ID' => $p['ID'],
+					'neve' => $p['neve'],
+					'szulo_id' => $p['szulo_id']
+				);
+
+				if ($p['szulo_id'] == '0') {
+					$parent = false;
+				} else {
+					$parent = $p['szulo_id'];
+				}
+			}
+
+			$parents = array_reverse($parents);
+
+			foreach ((array)$parents as $pa) {
+				$fullname .= $pa['neve'] . ' / ';
+			}
+
+			$fullname .= $i['neve'];
+
+			$dat = array(
+				'ID' => $i['ID'],
+				'neve' => $i['neve'],
+				'fullneve' => $fullname,
+				'szulo_id' => $i['szulo_id'],
+				'parents' => $parents
+			);
+
+			$back[] = $dat;
+		}
+
+
+		return $back;
+	}
+
+	public function getCatData( $id )
+	{
+		$qarg = array();
+		$q = "SELECT
+			l.*
+		FROM lists as l
+		WHERE 1=1 ";
+
+		$q .= " and l.group_id = 1";
+
+		$q .= " and l.ID = :id";
+		$qarg['id'] = (int)$id;
+
+		$data = $this->db->squery($q, $qarg);
+		if ($data->rowCount() == 0) {
+			return false;
+		}
+
+		$data = $data->fetch(\PDO::FETCH_ASSOC);
+
+		return $data;
 	}
 
 	public function registerOffer( $user_id, $request, $offer )
@@ -115,6 +211,7 @@ class OfferRequests
 	{
 		$re = array();
 		$qarg = array();
+		$format = (isset($arg['format'])) ? $arg['format'] : 'grouped';
 
 		$q = "SELECT
 			ro.ID,
@@ -139,6 +236,7 @@ class OfferRequests
 			r.message as requester_form_message,
 			r.service_description,
 			r.requested,
+			r.offerout,
 			r.closed as request_closed,
 			IF(ro.user_id = :uid, 'to', 'from') as my_relation
 		FROM `requests_offerouts` as ro
@@ -191,6 +289,12 @@ class OfferRequests
 				$q .= " and ((ro.recepient_accepted = 1 and ro.requester_accepted IS NULL) or ro.recepient_declined = 1)";
 			}
 		}
+
+		if ($format == 'list') {
+			//$q .= " GROUP BY r.hashkey ";
+		}
+
+
 		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, r.requested ASC";
 
 		$qry = $this->db->squery($q, $qarg);
@@ -213,30 +317,6 @@ class OfferRequests
 		{
 			$xserv = explode("_",$d['configval']);
 			$servicegroup = $xserv[0].'_'.$xserv[1];
-			$d['servicegroup'] = $servicegroup;
-			$d['service'] = $this->findServicesItems((array)$xserv[0])[0];
-			$d['subservice'] = $this->findServicesItems((array)$xserv[1])[0];
-			$d['item'] = $this->findServicesItems((array)$d['item_id'])[0];
-			$d['servicegroup_name'] = $d['service']['neve']. ' / '.$d['subservice']['neve'];
-			$d['cash'] = json_decode($d['cash'], true);
-			$d['cash_config'] = json_decode($d['cash_config'], true);
-			$d['service_description'] = json_decode($d['service_description'], true);
-			$d['offer'] = $this->getOfferData($d['user_offer_id']);
-			$d['offers'] = $this->getOfferDatas($d['ID']);
-
-			$d['user_to'] = $users->get( array('user' => $d['user_to_id'], 'userby' => 'ID') );
-			$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID') );
-			$d['requested_dist'] = \Helper::distanceDate($d['requested']);
-
-			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['serviceID'] = (int)$xserv[0];
-			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
-			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['name'] = $d['servicegroup_name'];
-			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
-			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
-			$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['users'][] = $d;
-			$re[$d['my_relation']][$d['request_hashkey']]['idopont'] = $d['requested'];
-			$re[$d['my_relation']][$d['request_hashkey']]['hashkey'] = $d['request_hashkey'];
-			$re[$d['my_relation']][$d['request_hashkey']]['user_name'] = $d['requester_form_name'];
 
 			if ($d['my_relation'] == 'from') {
 				$from_users_num += 1;
@@ -250,6 +330,42 @@ class OfferRequests
 					$to_hashes[] = $d['request_hashkey'];
 				}
 			}
+
+			if ($format == 'grouped') {
+				$d['servicegroup'] = $servicegroup;
+				$d['service'] = $this->findServicesItems((array)$xserv[0])[0];
+				$d['subservice'] = $this->findServicesItems((array)$xserv[1])[0];
+				$d['item'] = $this->findServicesItems((array)$d['item_id'])[0];
+				$d['servicegroup_name'] = $d['service']['neve']. ' / '.$d['subservice']['neve'];
+				$d['cash'] = json_decode($d['cash'], true);
+				$d['cash_config'] = json_decode($d['cash_config'], true);
+				$d['service_description'] = json_decode($d['service_description'], true);
+				$d['offer'] = $this->getOfferData($d['user_offer_id']);
+				$d['offers'] = $this->getOfferDatas($d['ID']);
+
+				$d['user_to'] = $users->get( array('user' => $d['user_to_id'], 'userby' => 'ID') );
+				$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID') );
+				$d['requested_dist'] = \Helper::distanceDate($d['requested']);
+
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['serviceID'] = (int)$xserv[0];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['name'] = $d['servicegroup_name'];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['users'][] = $d;
+				$re[$d['my_relation']][$d['request_hashkey']]['idopont'] = $d['requested'];
+				$re[$d['my_relation']][$d['request_hashkey']]['hashkey'] = $d['request_hashkey'];
+				$re[$d['my_relation']][$d['request_hashkey']]['user_name'] = $d['requester_form_name'];
+			} else
+			if( $format == 'list' )
+			{
+				$re['data'][] = $d;
+			}
+
+		}
+
+		if ($format == 'grouped') {
+			// code...
 		}
 
 		$re['from_users_num'] = $from_users_num;

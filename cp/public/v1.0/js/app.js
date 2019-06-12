@@ -11,6 +11,11 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	$scope.readrequest = 0;
 	$scope.showoffersend = false;
 	$scope.sendingoffer = false;
+	$scope.sendingofferaccept = false;
+	$scope.acceptofferdata = {
+		project: '',
+		password: ''
+	};
 	$scope.badges = {
 		'in': 0,
 		'out': 0
@@ -47,7 +52,9 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 		}
 	}
 
-	$scope.pickRequest = function( request ) {
+	$scope.pickRequest = function( request )
+	{
+		$scope.acceptofferdata = {};
 		$scope.readrequest = request.ID;
 		$scope.request = request;
 		var price = request.cash_config[request.subservice.ID][request.item_id];
@@ -56,6 +63,37 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 		}
 		$scope.showOfferSending(false);
 		console.log($scope.request);
+	}
+
+	$scope.acceptOffer = function()
+	{
+		if ( !$scope.sendingofferaccept )
+		{
+			$scope.sendingofferaccept = true;
+			$http({
+				method: 'POST',
+				url: '/ajax/post',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				data: $.param({
+					type: "RequestOffers",
+					mode: 'acceptOffer',
+					request: $scope.request.ID,
+					project: $scope.acceptofferdata
+				})
+			}).success(function(r){
+				$scope.sendingofferaccept = false;
+				console.log(r);
+				if (r.success == 1) {
+					$scope.acceptofferdata = {};
+					$scope.loadLists(function( data ){
+						$scope.request.request_accepted = 1;
+						$scope.reloadRequestObject(data[$scope.relation], $scope.request.ID );
+					});
+				} else {
+
+				}
+			});
+		}
 	}
 
 	$scope.sendOffer = function()

@@ -93,7 +93,7 @@ input, textarea {
 /* line 75, sass/media.scss */
 .form-control:focus {
   border: 1px solid #a2c2ff !important;
-  box-shadow: 0 0 0 0.2rem rgba(9, 127, 189, 0) !important;
+  box-shadow: 0 0 0 0.2rem rgba(9, 127, 189, 0.28) !important;
 }
 
 /* line 79, sass/media.scss */
@@ -274,7 +274,7 @@ input, textarea {
   background: white;
   z-index: 1000;
   width: 280px;
-  box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0);
+  box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0.72);
 }
 /* line 212, sass/media.scss */
 .slideMenu .headerlogo {
@@ -1537,8 +1537,24 @@ footer a, footer a:visited, footer a:hover {
   color: black;
   font-weight: bold;
 }
+/* line 1420, sass/media.scss */
+.send-offer-holder .offer-accepter {
+  background: white;
+}
+/* line 1423, sass/media.scss */
+.send-offer-holder .offer-accepter .head {
+  background: #f3c538;
+  padding: 10px;
+  color: #201e15;
+  font-weight: bold;
+}
+/* line 1430, sass/media.scss */
+.send-offer-holder .offer-accepter .dpad {
+  color: #3c3c3c;
+  background: white !important;
+}
 
-/* line 1422, sass/media.scss */
+/* line 1438, sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -1553,7 +1569,7 @@ body.user-group-user #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 1432, sass/media.scss */
+/* line 1448, sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -1568,7 +1584,7 @@ body.user-group-superadmin #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 1442, sass/media.scss */
+/* line 1458, sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;

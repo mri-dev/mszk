@@ -88,6 +88,14 @@ class ajax extends Controller
 
 					switch ( $mode )
 					{
+						case 'acceptOffer':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							try {
+								$requests->acceptOffer( $uid, (int)$request, $project );
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
 						case 'sendOffer':
 							$requests = new OfferRequests( array('db' => $this->db) );
 							$this->setSuccess(__('Ajánlat kérés elfogadása sikeres.'), $ret);

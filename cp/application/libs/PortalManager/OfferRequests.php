@@ -207,6 +207,14 @@ class OfferRequests
 
 	}
 
+	public function acceptOffer( $user_id, $request_id, $projectdata )
+	{
+		// TODO: project data validálás
+		// TODO: project generálása
+		// TODO: request lekezelés: flag, állapot, project_id, close
+		// TODO: e-mail értesítés
+	}
+
 	public function getUserOfferRequests( $uid, $user_group, $arg = array() )
 	{
 		$re = array();

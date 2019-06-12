@@ -1416,6 +1416,22 @@ footer {
 			font-weight: bold;
 		}
 	}
+
+	.offer-accepter{
+		background: white;
+
+		.head{
+			background: #f3c538;
+	    padding: 10px;
+	    color: #201e15;
+	    font-weight: bold;
+		}
+
+		.dpad {
+			color: #3c3c3c;
+			background: white !important;
+		}
+	}
 }
 
 body.user-group-user{

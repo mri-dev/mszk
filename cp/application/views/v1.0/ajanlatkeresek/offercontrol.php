@@ -281,9 +281,35 @@
                   </div>
                 </div>
               </div>
-              <div class="offer-accepter" ng-if="relation='from' && !request.requester_accepted">
+              <div class="offer-accepter" ng-if="relation=='from' && !request.requester_accepted">
                 <div class="head">
                   <?=__('Ajánlat elfogadása / Projekt létrehozása')?>
+                </div>
+                <div class="dpad">
+                  <?=__('Az elfogadásával Ön elfogadja jelen ajánlatot és lezárul az ajánlat kérése. További ajánlatot nem tudnak küldeni erre az ajánlat kérésére!')?>
+                  <br><br>
+                  <?=__('Az elfogadás követően egy új projektet nyit, melyen keresztül lebonyolítható az ajánlat tárgya, hozzáférhet a partner adataihoz.')?>
+                  <br><br>
+                  <div class="" ng-if="!sendingofferaccept">
+                    <div class="row align-items-end">
+                      <div class="col-md-5">
+                        <label for=""><?=__('Új projekt elnevezése / Azonosító')?></label>
+                        <input type="text" ng-model="acceptofferdata.project" autocomplete="new-password" class="form-control">
+                      </div>
+                      <div class="col-md-3">
+                        <label for=""><?=__('Fiók jelszó')?></label>
+                        <input type="password" ng-model="acceptofferdata.password" autocomplete="new-password" class="form-control">
+                      </div>
+                      <div class="col-md-4">
+                        <button type="button" class="btn btn-block btn-warning" ng-click="acceptOffer()"><?=__('Új projekt létrehozása')?></button>
+                      </div>
+                    </div>
+                  </div>
+                  <div ng-if="sendingofferaccept">
+                    <div class="alert alert-warning">
+                      <?=__('Ajánlat elfogadása és projekt létrehozása folyamatban...')?>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

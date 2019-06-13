@@ -432,6 +432,10 @@ body:not(.login) .innerContent{
 			background: $color-blue-light;
 	    -moz-transform: translateY(-50%);
 	    transform: translateY(-50%);
+
+			&.badge-danger{
+				background: $color-red-light;
+			}
 		}
   }
 	& > ul > li.shortcut > a {

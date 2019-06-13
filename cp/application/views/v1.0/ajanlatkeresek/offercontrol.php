@@ -280,6 +280,15 @@
                     <div style="color:black; line-height: 1.4;" ng-bind-html="request.offer.message|unsafe"></div>
                   </div>
                 </div>
+
+                <div class="row" ng-if="request.offer.accepted==1">
+                  <div class="col-md-3">
+                    <i class="fas fa-check-double"></i> <?=__('Projekt ajánlat elfogadva')?>
+                  </div>
+                  <div class="col-md-9">
+                    <strong>{{request.offer.accepted_at}}</strong>
+                  </div>
+                </div>
               </div>
               <div class="offer-accepter" ng-if="relation=='from' && !request.requester_accepted">
                 <div class="head">
@@ -303,6 +312,12 @@
                       <div class="col-md-4">
                         <button type="button" class="btn btn-block btn-warning" ng-click="acceptOffer()"><?=__('Új projekt létrehozása')?></button>
                       </div>
+                    </div>
+                  </div>
+                  <div class="" ng-if="acceptoffererror">
+                    <br>
+                    <div class="alert alert-danger">
+                      {{acceptoffererror}}
                     </div>
                   </div>
                   <div ng-if="sendingofferaccept">

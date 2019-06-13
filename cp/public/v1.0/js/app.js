@@ -1,5 +1,66 @@
 var a = angular.module('App', ['ngMaterial']);
 
+a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', function($scope, $http, $mdToast, $sce, $filter)
+{
+	$scope.init = function( conf )
+	{
+		if (typeof conf !== 'undefined') {
+			$scope.loadconfig = conf;
+		} else {
+			$scope.loadconfig = {};
+		}
+
+		//$scope.loadEverything();
+	}
+
+	$scope.loadEverything = function() {
+		$scope.loadLists(function( data ){
+
+		});
+	}
+
+	$scope.loadLists = function( callback ) {
+		var filters = {};
+
+		if (typeof $scope.loadconfig.inprogress !== 'undefined') {
+			filters.inprogress = parseInt($scope.loadconfig.inprogress);
+		}
+
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "Projects",
+				mode: 'get',
+				filter: filters
+			})
+		}).success(function(r){
+			console.log(r);
+
+
+			if (typeof callback !== 'undefined') {
+				callback(r.data);
+			}
+		});
+	}
+
+	$scope.toast = function( text, mode, delay ){
+		mode = (typeof mode === 'undefined') ? 'simple' : mode;
+		delay = (typeof delay === 'undefined') ? 5000 : delay;
+
+		if (typeof text !== 'undefined') {
+			$mdToast.show(
+				$mdToast.simple()
+				.textContent(text)
+				.position('top')
+				.toastClass('alert-toast mode-'+mode)
+				.hideDelay(delay)
+			);
+		}
+	}
+}]);
+
 a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', function($scope, $http, $mdToast, $sce, $filter)
 {
 	$scope.quicksearch = '';
@@ -12,6 +73,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	$scope.showoffersend = false;
 	$scope.sendingoffer = false;
 	$scope.sendingofferaccept = false;
+	$scope.acceptoffererror= false;
 	$scope.acceptofferdata = {
 		project: '',
 		password: ''
@@ -70,6 +132,8 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 		if ( !$scope.sendingofferaccept )
 		{
 			$scope.sendingofferaccept = true;
+			$scope.acceptoffererror= false;
+
 			$http({
 				method: 'POST',
 				url: '/ajax/post',
@@ -78,6 +142,10 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 					type: "RequestOffers",
 					mode: 'acceptOffer',
 					request: $scope.request.ID,
+					offer: $scope.request.offer.ID,
+					fromuserid: $scope.request.user_from_id,
+					touserid: $scope.request.user_to_id,
+					relation: $scope.request.my_relation,
 					project: $scope.acceptofferdata
 				})
 			}).success(function(r){
@@ -85,14 +153,16 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 				console.log(r);
 				if (r.success == 1) {
 					$scope.acceptofferdata = {};
+					$scope.toast( r.msg, 'success', 5000);
 					$scope.loadLists(function( data ){
 						$scope.request.request_accepted = 1;
 						$scope.reloadRequestObject(data[$scope.relation], $scope.request.ID );
 					});
 				} else {
-
+					$scope.acceptoffererror= r.msg;
 				}
 			});
+
 		}
 	}
 

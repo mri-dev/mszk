@@ -86,8 +86,11 @@ class Controller {
 
       $uid = $this->view->_USERDATA['data']['ID'];
 
-      // All
+      /**
+      * Ajánlat kérések
+      **/
 
+      // All
       $badges['offers']['all']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid GROUP BY o.request_id", array(
         'uid' => $uid
       ))->rowCount();
@@ -97,7 +100,6 @@ class Controller {
       ))->rowCount();
 
       // Függőben / inprogress
-
       $badges['offers']['inprogress']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.closed = 0 and r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid and o.recepient_accepted = 0 and o.recepient_declined = 0 GROUP BY o.request_id", array(
         'uid' => $uid
       ))->rowCount();
@@ -107,7 +109,6 @@ class Controller {
       ))->rowCount();
 
       // Feldolgozott / progressed
-
       $badges['offers']['progressed']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.closed = 0 and r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid and ((o.recepient_accepted = 1 and o.requester_accepted IS NULL) or o.recepient_declined = 1) GROUP BY o.request_id", array(
         'uid' => $uid
       ))->rowCount();
@@ -117,7 +118,6 @@ class Controller {
       ))->rowCount();
 
       // Elfogadott / accepted
-
       $badges['offers']['accepted']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid and o.recepient_accepted = 1 and o.requester_accepted = 1 GROUP BY o.request_id", array(
         'uid' => $uid
       ))->rowCount();
@@ -130,6 +130,32 @@ class Controller {
       $badges['offers']['accepted']['total'] = $badges['offers']['accepted']['out'] + $badges['offers']['accepted']['in'];
       $badges['offers']['inprogress']['total'] = $badges['offers']['inprogress']['out'] + $badges['offers']['inprogress']['in'];
       $badges['offers']['progressed']['total'] = $badges['offers']['progressed']['out'] + $badges['offers']['progressed']['in'];
+
+      /**
+      * Projektek
+      **/
+      // Futó
+      $badges['projects']['inprogress'] = $this->db->squery("SELECT p.ID FROM projects as p WHERE p.closed = 0 and (p.requester_id = :uid or p.servicer_id = :uid)", array(
+        'uid' => $uid
+      ))->rowCount();
+
+      // Lezárt
+      $badges['projects']['closed'] = $this->db->squery("SELECT p.ID FROM projects as p WHERE p.closed = 1 and (p.requester_id = :uid or p.servicer_id = :uid)", array(
+        'uid' => $uid
+      ))->rowCount();
+
+      $badges['projects']['all'] = $badges['projects']['inprogress'] + $badges['projects']['closed'];
+
+      /**
+      * Dokumentumok
+      **/
+      $badges['docs']['dijbekero']['aktualis'] = 0;
+      $badges['docs']['dijbekero']['lejart'] = 0;
+
+      /**
+      * Üzenetek
+      **/
+      $badges['messages']['all'] = 0;
 
       return $badges;
     }

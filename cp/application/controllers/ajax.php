@@ -90,8 +90,12 @@ class ajax extends Controller
 					{
 						case 'acceptOffer':
 							$requests = new OfferRequests( array('db' => $this->db) );
+							$fid = ($relation != 'from') ? $touserid : $fromuserid ;
+							$toid = ($relation == 'from') ? $touserid : $fromuserid ;
 							try {
-								$requests->acceptOffer( $uid, (int)$request, $project );
+								$hash = $requests->acceptOffer( $uid, $fid, $toid, (int)$request, (int)$offer, $project, $relation );
+								$ret['project_hashkey'] = $hash;
+								$this->setSuccess(__('Az ajánlatot elfogadta. Projekt létrehozása sikeres.'), $ret);
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);
 							}

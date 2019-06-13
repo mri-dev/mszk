@@ -8,7 +8,7 @@
             <div class="ico-wrapper"><i class="far fa-lightbulb"></i></div>
           </div>
           <div class="title"><?=__('Projektek')?><div class="line"></div></div>
-          <div class="count">10</div>
+          <div class="count"><?=$this->badges['projects']['all']?></div>
         </div>
       </div>
       <div class="col ct-info color-green">
@@ -17,7 +17,7 @@
             <div class="ico-wrapper"><i class="fas fa-file-import"></i></div>
           </div>
           <div class="title"><?=__('Ajánlat kérések')?><div class="line"></div></div>
-          <div class="count">4</div>
+          <div class="count"><?=$this->badges['offers']['all']['total']?></div>
         </div>
       </div>
       <div class="col ct-info color-blue-light">
@@ -26,7 +26,7 @@
             <div class="ico-wrapper"><i class="far fa-file-alt"></i></div>
           </div>
           <div class="title"><?=__('Díjbekérők')?><div class="line"></div></div>
-          <div class="count">12</div>
+          <div class="count"><?=$this->badges['docs']['dijbekero']['aktualis']?></div>
         </div>
       </div>
       <div class="col ct-info color-red">
@@ -35,7 +35,7 @@
             <div class="ico-wrapper"><i class="far fa-calendar-times"></i></div>
           </div>
           <div class="title"><?=__('Lejárt díjbekérők')?><div class="line"></div></div>
-          <div class="count">2</div>
+          <div class="count"><?=$this->badges['docs']['dijbekero']['lejart']?></div>
         </div>
       </div>
     </div>
@@ -56,7 +56,7 @@
               <a href="/dokumentumok/dijbekero"><?=__('Tovább az összes díjbekérőhöz')?></a>
             </div>
             <div class="count">
-              <div class="count-wrapper"><div class="num">2</div></div>
+              <div class="count-wrapper"><div class="num"><?=$this->badges['docs']['dijbekero']['aktualis']?></div></div>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@
               <a href="/ajanlatkeresek/"><?=__('Tovább az összes ajánlatkéréshez')?></a>
             </div>
             <div class="count">
-              <div class="count-wrapper"><div class="num">4</div></div>
+              <div class="count-wrapper"><div class="num"><?=$this->badges['offers']['all']['total']?></div></div>
             </div>
           </div>
         </div>
@@ -100,7 +100,7 @@
               <a href="/uzenetek"><?=__('Tovább az összes üzenethez')?></a>
             </div>
             <div class="count">
-              <div class="count-wrapper"><div class="num">2</div></div>
+              <div class="count-wrapper"><div class="num"><?=$this->badges['messages']['all']?></div></div>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@
               <a href="/projektek"><?=__('Tovább az összes projekthez')?></a>
             </div>
             <div class="count">
-              <div class="count-wrapper"><div class="num">12</div></div>
+              <div class="count-wrapper"><div class="num"><?=$this->badges['projects']['inprogress']?></div></div>
             </div>
           </div>
         </div>

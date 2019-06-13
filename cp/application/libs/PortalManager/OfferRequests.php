@@ -207,12 +207,110 @@ class OfferRequests
 
 	}
 
-	public function acceptOffer( $user_id, $request_id, $projectdata )
+	public function acceptOffer( $user_id, $requester_id, $servicer_id, $request_id, $offer_id, $projectdata, $relation )
 	{
-		// TODO: project data validálás
+		// jelszó ellenőrzés
+		$pass = \Hash::jelszo( trim($projectdata['password']) );
+
+		$uv = $this->db->squery("SELECT ID FROM felhasznalok WHERE ID = :id and jelszo = :pw", array('id' => $user_id, 'pw' => $pass));
+
+		if ( $uv->rowCount() == 0 ) {
+			throw new \Exception(__('A megadott jelszó hibás! Kérjük, hogy adja meg a fiók jelszavát a projekt létrehozásához.'));
+		}
+
 		// TODO: project generálása
+		$hashkey = md5(uniqid());
+
+		$this->db->insert(
+			"projects",
+			array(
+				'hashkey' => $hashkey,
+				'requester_id' => $requester_id,
+				'servicer_id' => $servicer_id,
+				'request_id' => $request_id,
+				'offer_id' => $offer_id,
+				'requester_title' => ($relation == 'from') ? $projectdata['project'] : NULL,
+				'servicer_title' => ($relation == 'to') ? $projectdata['project'] : NULL
+			)
+		);
+
+		$inserted_project_id = $this->db->lastInsertId();
+
 		// TODO: request lekezelés: flag, állapot, project_id, close
+		$req_id = (int)$this->db->squery("SELECT request_id FROM requests_offerouts WHERE ID = :id", array('id' => $request_id))->fetchColumn();
+
+		// update requests_offerouts
+		$this->db->update(
+			"requests_offerouts",
+			array(
+				'project_id' => $inserted_project_id,
+				'requester_accepted' => 1
+			),
+			sprintf("ID = %d", (int)$request_id)
+		);
+
+		// update offer
+		$this->db->update(
+			"offers",
+			array(
+				'accepted' => 1,
+				'project_id' => $inserted_project_id,
+				'accepted_at' => NOW
+			),
+			sprintf("ID = %d", (int)$offer_id)
+		);
+
 		// TODO: e-mail értesítés
+
+		$offer_data = $this->getOfferData( $offer_id );
+
+		// e-mail értesítő az igénylőnek (requester)
+		$requester_data = $this->db->squery("SELECT nev, email FROM felhasznalok WHERE ID = :id", array('id' => $requester_id))->fetch(\PDO::FETCH_ASSOC);
+
+		if (true)
+		{
+			$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+			$mail->add( trim($requester_data['email']) );
+			$arg = array(
+				'nev' => trim($requester_data['nev']),
+				'projekt_hashkey' => $hashkey,
+				'projekt_szolgaltatas' => $offer_data['szolgaltatas']['fullneve'],
+				'projekt_price' => $offer_data['price'],
+				'projekt_idotartam' => $offer_data['offer_project_idotartam'],
+				'projekt_start' => $offer_data['project_start_at'],
+				'projekt_elfogadva' => $offer_data['accepted_at'],
+				'settings' => $this->db->settings,
+				'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+			);
+			$mail->setSubject( __('Elfogadott egy ajánlatot. Új projekt létrehozva!') );
+			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'offers_accept_to_requester', $arg ) );
+			$re = $mail->sendMail();
+		}
+
+		// e-mail értesítő a szolgáltatónak (servicer)
+		$servicer_data = $this->db->squery("SELECT nev, email FROM felhasznalok WHERE ID = :id", array('id' => $servicer_id))->fetch(\PDO::FETCH_ASSOC);
+
+		if (true)
+		{
+			$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+			$mail->add( trim($servicer_data['email']) );
+			$arg = array(
+				'nev' => trim($servicer_data['nev']),
+				'projekt_hashkey' => $hashkey,
+				'projekt_szolgaltatas' => $offer_data['szolgaltatas']['fullneve'],
+				'projekt_price' => $offer_data['price'],
+				'projekt_idotartam' => $offer_data['offer_project_idotartam'],
+				'projekt_start' => $offer_data['project_start_at'],
+				'projekt_elfogadva' => $offer_data['accepted_at'],
+				'settings' => $this->db->settings,
+				'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+			);
+			$mail->setSubject( __('Elfogadták az egyik ajánlatát. Új projekt létrehozva!') );
+			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'offers_accept_to_servicer', $arg ) );
+			$re = $mail->sendMail();
+		}
+
+		return $hashkey;
 	}
 
 	public function getUserOfferRequests( $uid, $user_group, $arg = array() )
@@ -391,6 +489,7 @@ class OfferRequests
 		$row['ID'] = (int)$row['ID'];
 		$row['from_user_id'] = (int)$row['from_user_id'];
 		$row['sended_at_dist'] = \Helper::distanceDate($row['sended_at']);
+		$row['szolgaltatas'] = $this->getServiceItemData( $row['service_item_id'] );
 
 		return $row;
 	}
@@ -400,8 +499,10 @@ class OfferRequests
 		$list = array();
 		$qarg = array();
 		$q = "SELECT
-			o.*
+			o.*,
+			ro.item_id as service_item_id
 		FROM offers as o
+		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
 		WHERE 1=1 and o.ID = :id";
 
 		$qarg['id'] = (int)$id;
@@ -419,6 +520,46 @@ class OfferRequests
 		return $data;
 	}
 
+	public function getServiceItemData( $id )
+	{
+		$top = $this->getCatData( $id );
+		$parent = $top['szulo_id'];
+		$parents = array();
+		$fullname = '';
+
+		while( $parent ) {
+			$p = $this->getCatData( $parent );
+			$parents[] = array(
+				'ID' => $p['ID'],
+				'neve' => $p['neve'],
+				'szulo_id' => $p['szulo_id']
+			);
+
+			if ($p['szulo_id'] == '0') {
+				$parent = false;
+			} else {
+				$parent = $p['szulo_id'];
+			}
+		}
+
+		$parents = array_reverse($parents);
+
+		foreach ((array)$parents as $pa) {
+			$fullname .= $pa['neve'] . ' / ';
+		}
+
+		$fullname .= $top['neve'];
+
+		$dat = array(
+			'ID' => $top['ID'],
+			'neve' => $top['neve'],
+			'fullneve' => $fullname,
+			'szulo_id' => $top['szulo_id'],
+			'parents' => $parents
+		);
+
+		return $dat;
+	}
 
 	public function getOfferDatas( $offerout_id)
 	{
@@ -426,7 +567,9 @@ class OfferRequests
 		$qarg = array();
 		$q = "SELECT
 			o.*
+			ro.item_id as service_item_id
 		FROM offers as o
+		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
 		WHERE 1=1 and o.offerout_id = :oid";
 
 		$qarg['oid'] = (int)$offerout_id;

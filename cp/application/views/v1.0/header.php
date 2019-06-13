@@ -196,14 +196,14 @@
 
               <?php endif; ?>
             <?php endif; ?>
-            <li class="has-more <?=($this->gets[0] == 'projektek')?'on':''?>"><a href="/projektek" title="<?=__('Projektek')?>"><span class="ni">8</span><i class="far fa-lightbulb"></i> <?=__('Projektek')?> <span class="badge badge-primary">10</span></a></li>
+            <li class="has-more <?=($this->gets[0] == 'projektek')?'on':''?>"><a href="/projektek" title="<?=__('Projektek')?>"><span class="ni">8</span><i class="far fa-lightbulb"></i> <?=__('Projektek')?> <? if($this->badges['projects']['inprogress']!=0): ?><span class="badge badge-danger"><?=$this->badges['projects']['inprogress']?></span><? endif; ?></a></li>
             <?php if ($this->gets[0] == 'projektek'): ?>
-              <li class="sub <?=($this->gets[0] == 'projektek' && $this->gets[1] == 'aktualis')?'on':''?>"><a href="/projektek/aktualis" title="<?=__('Aktív projektek')?>"><span class="ni">8</span><i class="far fa-folder-open"></i> <?=__('Aktív projektek')?> <span class="badge badge-primary">10</span></a></li>
-              <li class="sub <?=($this->gets[0] == 'projektek' && $this->gets[1] == 'lezart')?'on':''?>"><a href="/projektek/lezart" title="<?=__('Lezárt projektek')?>"><span class="ni">8</span><i class="fas fa-folder"></i> <?=__('Lezárt projektek')?> <span class="badge badge-primary">8</span></a></li>
+              <li class="sub <?=($this->gets[0] == 'projektek' && $this->gets[1] == 'aktualis')?'on':''?>"><a href="/projektek/aktualis" title="<?=__('Aktív projektek')?>"><span class="ni">8</span><i class="far fa-folder-open"></i> <?=__('Aktív projektek')?> <? if($this->badges['projects']['inprogress']!=0): ?><span class="badge badge-primary"><?=$this->badges['projects']['inprogress']?></span><? endif; ?></a></li>
+              <li class="sub <?=($this->gets[0] == 'projektek' && $this->gets[1] == 'lezart')?'on':''?>"><a href="/projektek/lezart" title="<?=__('Lezárt projektek')?>"><span class="ni">8</span><i class="fas fa-folder"></i> <?=__('Lezárt projektek')?> <? if($this->badges['projects']['closed']!=0): ?><span class="badge badge-primary"><?=$this->badges['projects']['closed']?></span><? endif; ?></a></li>
             <?php endif; ?>
 
             <?php if (in_array($this->_USERDATA['data']['user_group'], array('user', 'szolgaltato'))): ?>
-            <li class="has-more <?=($this->gets[0] == 'uzenetek')?'on':''?>"><a href="/uzenetek" title="<?=__('Üzenetek')?>"><span class="ni">8</span><i class="fas fa-envelope"></i> <?=__('Üzenetek')?> <span class="badge badge-primary">2</span></a></li>
+            <li class="has-more <?=($this->gets[0] == 'uzenetek')?'on':''?>"><a href="/uzenetek" title="<?=__('Üzenetek')?>"><span class="ni">8</span><i class="fas fa-envelope"></i> <?=__('Üzenetek')?></a></li>
             <?php endif; ?>
 
             <li class="has-more <?=($this->gets[0] == 'dokumentumok')?'on':''?>"><a href="/dokumentumok" title="<?=__('Dokumentumok')?>"><span class="ni">8</span><i class="far fa-file-alt"></i> <?=__('Dokumentumok')?></a></li>

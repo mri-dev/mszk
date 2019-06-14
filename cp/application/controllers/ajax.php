@@ -1,6 +1,7 @@
 <?
 use PortalManager\Template;
 use PortalManager\OfferRequests;
+use PortalManager\Projects;
 
 class ajax extends Controller
 {
@@ -18,6 +19,32 @@ class ajax extends Controller
 
 			switch($type)
 			{
+				case 'Projects':
+					$ret['data'] = array();
+					$ret['pass'] = $_POST;
+
+					$projects = new Projects(array('db' => $this->db));
+
+
+					switch ( $mode )
+					{
+						case 'get':
+							$listarg = array();
+							$listarg['uid'] = $this->view->_USERDATA['data']['ID'];
+							$listarg['getproject'] = $hashkey;
+
+							try {
+								$p = $projects->getList( $listarg );
+								$ret['data'] = $p;
+								$this->setSuccess(__('Project adatok betöltve.'), $ret);
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+
+						break;
+					}
+					echo json_encode($ret);
+					break;
 				case 'Requests':
 					$ret['data'] = array();
 					$ret['pass'] = $_POST;

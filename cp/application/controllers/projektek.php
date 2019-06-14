@@ -12,7 +12,6 @@ class projektek extends Controller
 				'title' => parent::$pageTitle
 			));
 
-
 			if ( !$this->view->_USERDATA ) {
         \Helper::reload('/');
       }
@@ -26,7 +25,7 @@ class projektek extends Controller
 
     public function projekt()
     {
-      parent::$pageTitle = __('Projekt');
+      parent::$pageTitle = __('Projekt adatlap');
 
       $this->addPagePagination(array(
         'link' => '/'.__CLASS__.'/'.__FUNCTION__,
@@ -47,6 +46,7 @@ class projektek extends Controller
 
       $projects = new Projects(array('db' => $this->db));
       $listarg = array();
+			$listarg['uid'] = $this->view->_USERDATA['data']['ID'];
       $this->out( 'projects', $projects->getList( $listarg ));
     }
 

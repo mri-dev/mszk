@@ -362,6 +362,8 @@ input, textarea{
     color: #818e9d;
     font-size: 1.1rem;
     padding: 0 25px;
+		border-bottom: 0.5px solid white;
+    box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.29);
     .page-title{
       text-transform: uppercase;
     }
@@ -379,6 +381,13 @@ body:not(.login) .innerContent{
 }
 .innerContent{
   padding: 25px;
+}
+.nosetdata{
+	font-style: italic;
+	font-size: 0.65rem;
+	color: #707070;
+	letter-spacing: 0.4px;
+	text-decoration: underline;
 }
 .page-pagination{
   font-size: 0.8rem;
@@ -1297,6 +1306,118 @@ footer {
 		}
 		.service-group + .service-group{
 			margin: 10px 0 0 0;
+		}
+	}
+}
+
+.project-controller{
+	a:hover{
+		text-decoration: none;
+	}
+	h2{
+		color: black;
+		font-size: 1.4rem;
+		font-weight: bold;
+		text-transform: uppercase;
+		margin: 0 0 12px 0;
+	}
+	.messenger-quick-msg{
+		.unreaded-txt{
+			font-weight: bold;
+			color: $color-red-light;
+			margin-left: 10px;
+			font-size: 0.85rem;
+		}
+		& > .wrapper{
+			background: white;
+			border-radius: 5px;
+			padding: 15px;
+    	border: 2px solid #e3e5e6;
+			textarea{
+				min-height: 80px;
+				border: 1px solid #e6e6e6;
+    		background: #fbfbfc;
+				box-shadow: inset 0 -5px 19px -6px #e4e4e4;
+			}
+			label{
+				font-weight: bold;
+				margin: 0 0 12px 0;
+				display: block;
+				color: #3c3c3c;
+				font-size: 1rem;
+				strong {
+					color: $color-blue-light;
+				}
+			}
+		}
+	}
+	.overview{
+		margin: -25px -25px 0 -25px;
+		background: white;
+
+		table.table{
+			margin: 0 !important;
+		}
+
+		& > .d-flex > div {
+			border-right: 1px solid #d5d9dc;
+		}
+		& > .d-flex > div:last-child {
+			border-right: none !important;
+		}
+
+		.head{
+			text-align: center;
+	    padding: 15px;
+	    text-transform: uppercase;
+	    background: #586068;
+	    color: #ffffff;
+	    font-weight: bold;
+			position: relative;
+
+			.own-data{
+				color: white;
+		    text-transform: uppercase;
+		    font-weight: normal;
+		    padding: 5px 8px;
+		    border-radius: 5px;
+		    font-size: 0.7rem;
+		    line-height: 1;
+		    position: absolute;
+		    bottom: -10px;
+		    left: 50%;
+    		border: 2px solid white;
+				-webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+			}
+		}
+
+		.requester{
+			.head{
+				background: darken($color-blue-light, 10%);
+				color: white;
+
+				.own-data{
+					background: $color-blue-light;
+				}
+			}
+		}
+		.servicer{
+			.head{
+				background: darken($color-cian, 10%);
+				color: white;
+				.own-data{
+					background: $color-cian;
+				}
+			}
+		}
+
+		.project{
+			flex-basis: 30%;
+		}
+
+		.requester, .servicer{
+			flex-basis: calc(70% / 2);
 		}
 	}
 }

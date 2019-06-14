@@ -56,6 +56,19 @@
       return $bytes;
 	}
 
+		static function progressBarColor( $percent = 0 )
+		{
+			if ( $percent >= 0 && $percent <= 35 ) {
+				return 'bg-danger';
+			} else if( $percent > 35 && $percent <= 65 ){
+				return 'bg-warning';
+			} else if( $percent > 65 && $percent <= 85 ){
+				return 'bg-primary';
+			} else if( $percent > 85 && $percent <= 100 ){
+				return 'bg-success';
+			}
+		}
+
 		static function getParam($arg = array()){
 			$get = self::GET();
 

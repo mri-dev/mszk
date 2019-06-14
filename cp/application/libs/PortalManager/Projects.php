@@ -20,10 +20,19 @@ class Projects
 	{
 		$list = array();
 		$qarg = array();
+
+		$uid = (int)$arg['uid'];
+		$users = new Users( array('db' => $this->db ));
+
 		$q = "SELECT
 			p.*
 		FROM projects as p
 		WHERE 1=1 ";
+
+		if (isset($arg['getproject'])) {
+			$q .= " and p.hashkey  = :getproject";
+			$qarg['getproject'] =$arg['getproject'];
+		}
 
     if (isset($arg['hashkey'])) {
 			$q .= " and p.hashkey  = :hashkey";
@@ -56,7 +65,19 @@ class Projects
 
 		foreach ((array)$data as $d)
 		{
+			$d['my_relation'] = ($uid == $d['requester_id']) ? 'requester': 'servicer';
+			$d['title'] = $d[$d['my_relation'].'_title'];
+			$d['created_dist'] = \Helper::distanceDate($d['created_at']);
+			$d['status_percent'] = 15;
+			$d['paying_percent'] = 50;
+			$d['user_requester'] = $users->get( array('user' => $d['requester_id'], 'userby' => 'ID', 'alerts' => false) );
+			$d['user_servicer'] = $users->get( array('user' => $d['servicer_id'], 'userby' => 'ID', 'alerts' => false) );
+			$d['partner'] = ($d['my_relation'] == 'requester') ? $d['user_servicer'] : $d['user_requester'];
 			$list[] = $d;
+		}
+
+		if (isset($arg['getproject'])) {
+			$list = $list[0];
 		}
 
 		return $list;

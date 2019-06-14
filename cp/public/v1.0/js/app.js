@@ -2,6 +2,14 @@ var a = angular.module('App', ['ngMaterial']);
 
 a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', function($scope, $http, $mdToast, $sce, $filter)
 {
+	$scope.partner = {
+		neve: 'Molnár István'
+	};
+	$scope.messanger = {
+		text: ''
+	};
+	$scope.project = {};
+
 	$scope.init = function( conf )
 	{
 		if (typeof conf !== 'undefined') {
@@ -10,7 +18,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$sce', '$filter'
 			$scope.loadconfig = {};
 		}
 
-		//$scope.loadEverything();
+		$scope.loadEverything();
 	}
 
 	$scope.loadEverything = function() {
@@ -19,11 +27,15 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$sce', '$filter'
 		});
 	}
 
+	$scope.sendQuickMessage = function( project_hashkey ) {
+
+	}
+
 	$scope.loadLists = function( callback ) {
 		var filters = {};
 
 		if (typeof $scope.loadconfig.inprogress !== 'undefined') {
-			filters.inprogress = parseInt($scope.loadconfig.inprogress);
+			//filters.inprogress = parseInt($scope.loadconfig.inprogress);
 		}
 
 		$http({
@@ -33,12 +45,17 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$sce', '$filter'
 			data: $.param({
 				type: "Projects",
 				mode: 'get',
+				hashkey: $scope.loadconfig.hashkey,
 				filter: filters
 			})
 		}).success(function(r){
 			console.log(r);
+			if (r.success == 1) {
+				$scope.project = r.data;
+				$scope.partner = r.data.partner;
 
-
+				console.log($scope.project);
+			}
 			if (typeof callback !== 'undefined') {
 				callback(r.data);
 			}

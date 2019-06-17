@@ -41,7 +41,7 @@
             </tr>
             <tr>
               <td><?=__('Létrejött')?></td>
-              <td><strong></strong></td>
+              <td><strong>{{project}}sd</strong></td>
             </tr>
             <tr>
               <td><?=__('Indulás')?></td>
@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <td><?=__('Befejezés')?></td>
-              <td><strong></strong></td>
+              <td><strong></strong></td> 
             </tr>
           </tbody>
         </table>

@@ -65,6 +65,7 @@ class Projects
 
 		foreach ((array)$data as $d)
 		{
+			$d['closed'] = (int)$d['closed'];
 			$d['my_relation'] = ($uid == $d['requester_id']) ? 'requester': 'servicer';
 			$d['title'] = $d[$d['my_relation'].'_title'];
 			$d['created_dist'] = \Helper::distanceDate($d['created_at']);

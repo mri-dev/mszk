@@ -1,6 +1,6 @@
 var a = angular.module('App', ['ngMaterial']);
 
-a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', function($scope, $http, $mdToast, $sce, $filter)
+a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sce', '$filter', function($scope, $http, $mdToast, $mdDialog, $sce, $filter)
 {
 	$scope.partner = {
 		neve: 'Molnár István'
@@ -31,7 +31,8 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$sce', '$filter'
 
 	}
 
-	$scope.loadLists = function( callback ) {
+	$scope.loadLists = function( callback )
+	{
 		var filters = {};
 
 		if (typeof $scope.loadconfig.inprogress !== 'undefined') {
@@ -60,6 +61,67 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$sce', '$filter'
 				callback(r.data);
 			}
 		});
+	}
+
+	$scope.projectEditor = function()
+	{
+		var confirm = $mdDialog.confirm({
+			controller: ProjectEditorDialigController,
+			templateUrl: '/ajax/modal/usereditproject',
+			parent: angular.element(document.body),
+			locals: {
+        config: $scope.loadconfig,
+				project: $scope.project
+			}
+		});
+
+		$mdDialog.show(confirm)
+		.then(function() {
+      $scope.status = 'You decided to get rid of your debt.';
+    }, function() {
+      $scope.status = 'You decided to keep your debt.';
+    });
+
+		function ProjectEditorDialigController( $scope, $mdDialog, config, project) {
+      $scope.saving = false;
+      $scope.loadconfig = config;
+      $scope.project = project;
+
+			$scope.closeDialog = function(){
+				$mdDialog.hide();
+			}
+
+      $scope.saveProject = function( type ){
+        if (!$scope.saving) {
+          $scope.saving = true;
+
+					/*
+          $http({
+      			method: 'POST',
+      			url: '/ajax/post',
+      			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      			data: $.param({
+      				type: "modalMessage",
+              modalby: type,
+              datas: $scope[type]
+      			})
+      		}).success(function(r){
+            console.log(r);
+      			$scope.sending = false;
+      			$scope.termekkerdes = {};
+
+            if (r.error == 1) {
+              $scope.toast(r.msg, 'alert', 10000);
+            } else {
+              $mdToast.hide();
+              $scope.closeDialog();
+              $scope.toast(r.msg, 'success', 10000);
+            }
+      		});
+					*/
+        }
+      }
+		}
 	}
 
 	$scope.toast = function( text, mode, delay ){

@@ -1,0 +1,55 @@
+<md-dialog aria-label="<?=__('Projekt adatainak módosítása')?>" class="ajaxdialog saveproject">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2><?=__('Projekt adatainak módosítása')?></h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="closeDialog()">
+          <md-icon md-svg-src="/src/images/ic_close_white_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <md-input-container class="md-block">
+          <label><?=__('Projekt elnevezése')?></label>
+          <input ng-model="project.title">
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label><?=__('Projekt készültségi állapota (%)')?></label>
+          <input type="number" max="100" ng-model="project.status_percent">
+        </md-input-container>
+        <md-input-container class="md-block">
+          <md-switch ng-true-value="0" ng-false-value="1" md-invert="true" ng-model="project.closed" aria-label="<?=__('Projekt státusz')?>">
+            <?=__('Aktív projekt')?>:
+          </md-switch>
+        </md-input-container>
+        <div layout-gt-xs="row">
+          <div flex-gt-xs>
+            <md-input-container class="md-block">
+              <h4><?=__('Projekt indulásának ideje')?></h4>
+              <md-datepicker ng-model="project.project_start" md-placeholder="<?=__('Időpont választása')?>"></md-datepicker>
+            </md-input-container>
+          </div>
+          <div flex-gt-xs>
+            <md-input-container class="md-block">
+              <h4><?=__('Projekt befejezésének ideje')?></h4>
+              <md-datepicker ng-model="project.project_end" md-placeholder="<?=__('Időpont választása')?>"></md-datepicker>
+            </md-input-container>
+          </div>
+        </div>
+      </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <md-button ng-click="closeDialog()">
+       <?=__('Mégse')?>
+      </md-button>
+      <span flex></span>
+      <md-button class="md-primary md-raised" ng-click="saveProject()">
+        <?=__('Projekt adatok mentése')?>
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

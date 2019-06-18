@@ -218,6 +218,12 @@ class ajax extends Controller
 			$this->view->render(__CLASS__.'/'.__FUNCTION__.'/'.$type.$sub_page, true);
 		}
 
+		public function modal()
+		{
+			$type = $this->view->gets[2];
+			$this->view->render(__CLASS__.'/'.__FUNCTION__.'/'.$type, true);
+		}
+
 		function __destruct(){
 		}
 	}

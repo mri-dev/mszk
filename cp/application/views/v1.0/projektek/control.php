@@ -3,6 +3,7 @@
     <div class="project">
       <div class="head">
         <?=__('Projekt')?>
+        <div class="own-data edit" ng-click="projectEditor()"><?=__('Szerkesztés')?> <i class="far fa-edit"></i></div>
       </div>
       <div class="cont">
         <table class="table table-bordered">

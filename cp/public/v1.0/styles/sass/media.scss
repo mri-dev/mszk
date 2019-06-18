@@ -205,7 +205,7 @@ input, textarea{
 	top: 0;
   bottom: 0;
 	background: white;
-	z-index: 1000;
+	z-index: 60;
 	width: $sidebar-width;
 	box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0.72);
 
@@ -253,7 +253,7 @@ input, textarea{
   top: 0;
   right: 0;
   width: 100%;
-  z-index: 999;
+  z-index: 50;
   padding-left: $sidebar-width;
   color: white;
   font-size: 1rem;
@@ -857,7 +857,7 @@ footer {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	z-index: 90;
+	z-index: 40;
 	color: #4a5f79;
 	padding-left: $sidebar-width;
 	font-size: 0.7rem;
@@ -1389,6 +1389,20 @@ footer {
     		border: 2px solid white;
 				-webkit-transform: translateX(-50%);
           transform: translateX(-50%);
+
+					&.edit{
+						cursor: pointer;
+						outline: none;
+					}
+			}
+		}
+
+		.project{
+			.head{
+				.own-data{
+					background: #6aad63;
+					text-transform: none;
+				}
 			}
 		}
 
@@ -1574,6 +1588,17 @@ footer {
 		background: $color-cian;
 		padding: 10px;
 		color: white;
+	}
+}
+.ajaxdialog.saveproject{
+	min-width: 650px;
+}
+
+md-dialog{
+	h4 {
+		font-size: 1rem;
+		marign: 0 0 5px 0;
+		font-weight: bold;
 	}
 }
 

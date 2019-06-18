@@ -36,7 +36,7 @@
               <td>
                 <div class="progress">
                   <div class="progress-bar <?=\Helper::progressBarColor($p['status_percent'])?>" role="progressbar" style="width: <?=$p['status_percent']?>%;" aria-valuenow="<?=$p['status_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['status_percent']?>%</div>
-                </div>
+                </div> 
               </td>
             </tr>
             <tr>
@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <td><?=__('Befejezés')?></td>
-              <td><strong></strong></td> 
+              <td><strong></strong></td>
             </tr>
           </tbody>
         </table>

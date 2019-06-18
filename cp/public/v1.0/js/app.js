@@ -95,32 +95,21 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
         if (!$scope.saving) {
           $scope.saving = true;
 
-					/*
           $http({
       			method: 'POST',
       			url: '/ajax/post',
       			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       			data: $.param({
-      				type: "modalMessage",
-              modalby: type,
-              datas: $scope[type]
+      				type: "Projects",
+              mode: 'saveProject',
+							project: $scope.project
       			})
       		}).success(function(r){
             console.log(r);
       			$scope.sending = false;
-      			$scope.termekkerdes = {};
-
-            if (r.error == 1) {
-              $scope.toast(r.msg, 'alert', 10000);
-            } else {
-              $mdToast.hide();
-              $scope.closeDialog();
-              $scope.toast(r.msg, 'success', 10000);
-            }
-      		});
-					*/
-        }
-      }
+	        });
+      	}
+			}
 		}
 	}
 

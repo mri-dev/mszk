@@ -1684,7 +1684,25 @@ footer a, footer a:visited, footer a:hover {
   background: white !important;
 }
 
-/* line 1563, sass/media.scss */
+/* line 1562, sass/media.scss */
+.service-info, .offer-info {
+  margin: 0 0 25px 0;
+}
+/* line 1565, sass/media.scss */
+.service-info h4, .offer-info h4 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #3296e7;
+}
+
+/* line 1573, sass/media.scss */
+.service-info .service-offered {
+  background: #58bdad;
+  padding: 10px;
+  color: white;
+}
+
+/* line 1581, sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -1699,7 +1717,7 @@ body.user-group-user #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 1573, sass/media.scss */
+/* line 1591, sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -1714,7 +1732,7 @@ body.user-group-superadmin #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 1583, sass/media.scss */
+/* line 1601, sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;

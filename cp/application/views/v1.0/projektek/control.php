@@ -13,7 +13,7 @@
             </tr>
             <tr>
               <td><?=__('Státusz')?></td>
-              <td><strong>{{project.title}}</strong></td>
+              <td><span class="badge" ng-class="{'badge-success': (project.closed==0), 'badge-danger': (project.closed==1) }">{{(project.closed==0)?'<?=__('Aktív projekt')?>':'<?=__('Lezárt projekt')?>'}}</span></td>
             </tr>
             <tr>
               <td><?=__('Hashkey')?></td>
@@ -23,33 +23,33 @@
               <td><?=__('Állapot')?></td>
               <td>
                 <div class="progress">
-                  <div class="progress-bar <?=\Helper::progressBarColor($p['status_percent'])?>" role="progressbar" style="width: <?=$p['status_percent']?>%;" aria-valuenow="<?=$p['status_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['status_percent']?>%</div>
+                  <div class="progress-bar" ng-class="project.status_percent_class" role="progressbar" style="width: {{project.status_percent}}%;" aria-valuenow="{{project.status_percent}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project.status_percent!=0">{{project.status_percent}}%</span></div>
                 </div>
               </td>
             </tr>
             <tr>
               <td><?=__('Projekt költsége')?></td>
-              <td><strong></strong></td>
+              <td><strong>{{project.offer.price}} <?=__('Ft + ÁFA')?></strong></td>
             </tr>
             <tr>
               <td><?=__('Díjfizetés')?></td>
               <td>
                 <div class="progress">
-                  <div class="progress-bar <?=\Helper::progressBarColor($p['status_percent'])?>" role="progressbar" style="width: <?=$p['status_percent']?>%;" aria-valuenow="<?=$p['status_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['status_percent']?>%</div>
-                </div> 
+                  <div class="progress-bar" ng-class="project.paying_percent_class" role="progressbar" style="width: {{project.paying_percent}}%;" aria-valuenow="{{project.paying_percent}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project.paying_percent!=0">{{project.paying_percent}}%</span></div>
+                </div>
               </td>
             </tr>
             <tr>
               <td><?=__('Létrejött')?></td>
-              <td><strong>{{project}}sd</strong></td>
+              <td><strong>{{project.created_dist}}</strong> ({{project.created_at}})</td>
             </tr>
             <tr>
               <td><?=__('Indulás')?></td>
-              <td><strong></strong></td>
+              <td><strong>{{project.project_start}}</strong><span class="nosetdata" ng-if="!project.project_start"><?=__('Még nincs meghatározva.')?></span></td>
             </tr>
             <tr>
               <td><?=__('Befejezés')?></td>
-              <td><strong></strong></td>
+              <td><strong>{{project.project_end}}</strong><span class="nosetdata" ng-if="!project.project_end"><?=__('Még nincs meghatározva.')?></span></td>
             </tr>
           </tbody>
         </table>
@@ -229,7 +229,39 @@
     </div>
   </div>
   <div class="col-md-7">
-    <h2><?=__('Szolgáltatás leírása')?></h2>
+    <h2><?=__('Szolgáltatás')?></h2>
+    <div class="service-info">
+      <div class="service-offered">
+        {{project.offer.szolgaltatas.fullneve}}
+      </div>
+    </div>
     <h2><?=__('Ajánlat referencia')?></h2>
+    <div class="offer-info">
+
+      <h4><?=__('Ajánlat adatok')?></h4>
+      <table class="table">
+        <tbody>
+          <tr>
+            <td><?=__('Ajánlat beérkezése')?></td>
+            <td><strong>{{project.offer.sended_at_dist}}</strong> ({{project.offer.sended_at}})</td>
+          </tr>
+          <tr>
+            <td><?=__('Ajánlat elfogadva')?></td>
+            <td><strong>{{project.offer.accepted_at_dist}}</strong> ({{project.offer.accepted_at}})</td>
+          </tr>
+          <tr>
+            <td><?=__('Tervezett indulás')?></td>
+            <td><strong>{{project.offer.project_start_at}}</strong></td>
+          </tr>
+          <tr>
+            <td><?=__('Tervezett projekt időtartam')?></td>
+            <td><strong>{{project.offer.offer_project_idotartam}}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4><?=__('Ajánlat tartalma')?></h4>
+      <div class="message" ng-bind-html="project.offer.message|unsafe"></div>
+    </div>
   </div>
 </div>

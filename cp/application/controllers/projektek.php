@@ -33,6 +33,15 @@ class projektek extends Controller
       ));
 
       $hashkey = $this->gets[2];
+
+			// Hozzáfárás ellenőrzése
+			$projects = new Projects(array('db' => $this->db));
+			$acceptpermission = $projects->validateProjectPermission( $hashkey, $this->view->_USERDATA['data']['ID'] );
+
+			if ( $acceptpermission !== true )
+			{
+				\Helper::reload('/'.__CLASS__.'/aktualis');
+			}
     }
 
     public function aktualis()

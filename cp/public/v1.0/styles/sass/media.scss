@@ -1559,6 +1559,24 @@ footer {
 	}
 }
 
+.service-info, .offer-info{
+	margin: 0 0 25px 0;
+
+	h4{
+		font-size: 1.1rem;
+		font-weight: bold;
+		color: #3296e7;
+	}
+}
+
+.service-info{
+	.service-offered{
+		background: $color-cian;
+		padding: 10px;
+		color: white;
+	}
+}
+
 body.user-group-user{
   #top .control-bar{
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */

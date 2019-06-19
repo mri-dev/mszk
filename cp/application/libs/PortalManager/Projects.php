@@ -23,6 +23,8 @@ class Projects
 
 		$uid = (int)$arg['uid'];
 		$users = new Users( array('db' => $this->db ));
+		$controll_user =  $users->get( array('user' => $uid, 'userby' => 'ID', 'alerts' => false) );
+		$controll_user_admin = ($controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN) ? true : false;
 
 		$q = "SELECT
 			p.*
@@ -66,7 +68,12 @@ class Projects
 		foreach ((array)$data as $d)
 		{
 			$d['closed'] = (int)$d['closed'];
-			$d['my_relation'] = ($uid == $d['requester_id']) ? 'requester': 'servicer';
+			if ($controll_user_admin) {
+				$d['my_relation'] = 'admin';
+			} else {
+				$d['my_relation'] = ($uid == $d['requester_id']) ? 'requester': 'servicer';
+			}
+
 			$d['title'] = $d[$d['my_relation'].'_title'];
 			$d['created_dist'] = \Helper::distanceDate($d['created_at']);
 			$d['user_requester'] = $users->get( array('user' => $d['requester_id'], 'userby' => 'ID', 'alerts' => false) );
@@ -87,6 +94,59 @@ class Projects
 		}
 
 		return $list;
+	}
+
+	public function userModifyProject( $project, $uid = false )
+	{
+		$updates = array();
+		$relation = $project['my_relation'];
+
+		if ($relation == 'admin') {
+			$requester_title = trim($project['requester_title']);
+			$updates['requester_title'] = ($requester_title == '') ? NULL : $requester_title;
+
+			$servicer_title = trim($project['servicer_title']);
+			$updates['servicer_title'] = ($servicer_title == '') ? NULL : $servicer_title;
+		}
+
+		$status_percent = (float)$project['status_percent'];
+		$updates['status_percent'] = $status_percent;
+
+		$closed = (int)$project['closed'];
+		$updates['closed'] = $closed;
+
+		$project_start = $project['project_start'];
+		$updates['project_start'] = $project_start;
+
+		$project_end = $project['project_end'];
+		$updates['project_end'] = $project_end;
+
+		if ($closed == 1) {
+			$check_close = (int)$this->db->squery("SELECT closed FROM projects WHERE hashkey = :hash", array('hash' => $project['hashkey']))->fetchColumn();
+
+			if ($check_close == 0) {
+				$updates['closed_by'] = $uid;
+			}
+		} else {
+				$updates['closed_by'] = NULL;
+		}
+
+		if ($relation != 'admin') {
+			$title = trim($project['title']);
+			$updates[$relation.'_title'] = ($title == '') ? NULL : $title;
+		}
+
+		if (!empty($updates)) {
+			$this->db->update(
+				'projects',
+				$updates,
+				sprintf("hashkey = '%s'", $project['hashkey'])
+			);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public function validateProjectPermission( $hashkey, $user_id )

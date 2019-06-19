@@ -56,6 +56,7 @@ class projektek extends Controller
       $projects = new Projects(array('db' => $this->db));
       $listarg = array();
 			$listarg['uid'] = $this->view->_USERDATA['data']['ID'];
+			$listarg['closed'] = 0;
       $this->out( 'projects', $projects->getList( $listarg ));
     }
 
@@ -67,6 +68,12 @@ class projektek extends Controller
         'link' => '/'.__CLASS__.'/'.__FUNCTION__,
 				'title' => parent::$pageTitle
       ));
+
+			$projects = new Projects(array('db' => $this->db));
+			$listarg = array();
+			$listarg['uid'] = $this->view->_USERDATA['data']['ID'];
+			$listarg['closed'] = 1;
+			$this->out( 'projects', $projects->getList( $listarg ));
     }
 
 

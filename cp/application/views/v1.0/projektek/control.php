@@ -8,7 +8,7 @@
       <div class="cont">
         <table class="table table-bordered">
           <tbody>
-            <tr>
+            <tr ng-if="project.my_relation!='admin'">
               <td><?=__('Elnevezés')?></td>
               <td><strong>{{project.title}}</strong></td>
             </tr>
@@ -64,6 +64,10 @@
       <div class="cont">
         <table class="table table-bordered">
           <tbody>
+            <tr ng-if="project.my_relation=='admin'">
+              <td><?=__('Projekt elnevezése')?></td>
+              <td><strong>{{project.requester_title}}</strong></td>
+            </tr>
             <tr>
               <td><?=__('Név / Kapcsolattartó')?></td>
               <td><strong>{{project.user_requester.data.nev}}</strong></td>
@@ -120,6 +124,10 @@
       <div class="cont">
         <table class="table table-bordered">
           <tbody>
+            <tr ng-if="project.my_relation=='admin'">
+              <td><?=__('Projekt elnevezése')?></td>
+              <td><strong>{{project.servicer_title}}</strong></td>
+            </tr>
             <tr>
               <td><?=__('Név / Kapcsolattartó')?></td>
               <td><strong>{{project.user_servicer.data.nev}}</strong></td>
@@ -147,7 +155,7 @@
   </div>
 </div>
 <br>
-<div class="row">
+<div class="row" ng-if="project.my_relation!='admin'">
   <div class="col-md-12">
     <h2><?=__('Üzenetküldés')?></h2>
     <div class="messenger-quick-msg">

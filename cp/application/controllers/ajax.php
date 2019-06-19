@@ -25,7 +25,6 @@ class ajax extends Controller
 
 					$projects = new Projects(array('db' => $this->db));
 
-
 					switch ( $mode )
 					{
 						case 'get':
@@ -37,6 +36,22 @@ class ajax extends Controller
 								$p = $projects->getList( $listarg );
 								$ret['data'] = $p;
 								$this->setSuccess(__('Project adatok betöltve.'), $ret);
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+
+						break;
+						case 'saveProject':
+							try {
+								$permission = $projects->validateProjectPermission( $project['hashkey'], $this->view->_USERDATA['data']['ID'] );
+
+								if ( $permission )
+								{
+									$ret['data'] = $projects->userModifyProject( $project, $this->view->_USERDATA['data']['ID'] );
+									$this->setSuccess(__('Projekt adatok mentésre kerültek.'), $ret);
+								} else {
+									$this->escape(__('Önnek nincs jogosultsága a projekt adatainak módosításához.'), $ret);
+								}
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);
 							}

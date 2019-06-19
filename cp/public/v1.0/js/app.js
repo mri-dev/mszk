@@ -21,9 +21,27 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 		$scope.loadEverything();
 	}
 
-	$scope.loadEverything = function() {
-		$scope.loadLists(function( data ){
-
+	$scope.loadEverything = function()
+	{
+		$scope.loadLists(function( data )
+		{
+			// Watches
+			$scope.$watch('project.project_start_Date', function(newValues, oldValues, scope){
+				if (typeof newValues !== 'undefined') {
+					$scope.project.project_start = $filter('date')(newValues, "yyyy-MM-dd");
+				}
+			});
+			$scope.$watch('project.project_start', function(newValues, oldValues, scope){
+				$scope.project.project_start_Date = new Date(newValues);
+			});
+			$scope.$watch('project.project_end_Date', function(newValues, oldValues, scope){
+				if (typeof newValues !== 'undefined') {
+					$scope.project.project_end = $filter('date')(newValues, "yyyy-MM-dd");
+				}
+			});
+			$scope.$watch('project.project_end', function(newValues, oldValues, scope){
+				$scope.project.project_end_Date = new Date(newValues);
+			});
 		});
 	}
 
@@ -69,6 +87,8 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 			controller: ProjectEditorDialigController,
 			templateUrl: '/ajax/modal/usereditproject',
 			parent: angular.element(document.body),
+			scope: $scope,
+			preserveScope:true,
 			locals: {
         config: $scope.loadconfig,
 				project: $scope.project
@@ -106,7 +126,13 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
       			})
       		}).success(function(r){
             console.log(r);
-      			$scope.sending = false;
+      			$scope.saving = false;
+						if (r.success == 1) {
+							$scope.toast(r.msg, 'success', 10000);
+							$scope.closeDialog();
+						} else {
+							$scope.toast(r.msg, 'alert', 10000);
+						}
 	        });
       	}
 			}

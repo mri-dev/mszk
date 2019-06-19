@@ -971,6 +971,31 @@ footer {
 	}
 }
 
+.documents-controll{
+	margin: -25px;
+
+	& > .wblock > .data-container{
+		.sidebar {
+			flex-basis: 280px;
+
+			.head {
+				background: #444444;
+				color: white;
+				text-align: center;
+				text-transform: uppercase;
+				padding: 0 15px;
+				line-height: 51px;
+			}
+		}
+		.docs{
+			font-size: 0.9rem;
+	    flex: 1;
+	    background: #f5f6f6;
+	    box-shadow: inset 5px 0 20px -10px silver;
+		}
+	}
+}
+
 .request-controller{
 	.no-requests{
 		& > .wrapper{

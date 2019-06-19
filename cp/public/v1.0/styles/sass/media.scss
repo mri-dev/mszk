@@ -979,12 +979,40 @@ footer {
 			flex-basis: 280px;
 
 			.head {
-				background: #444444;
+				background: $color-blue-light;
 				color: white;
-				text-align: center;
 				text-transform: uppercase;
 				padding: 0 15px;
 				line-height: 51px;
+			}
+			.folders{
+				padding: 8px 0;
+				.folder{
+					a{
+						display: block;
+						padding: 4px 15px;
+						color: #acacac;
+						text-decoration: none;
+
+						.badge{
+							float: right;
+						}
+					}
+
+					&.opened {
+						& > a {
+							font-weight: bold;
+							color: $color-blue-light;
+						}
+					}
+
+					&.sub{
+						padding-left: 18px;
+						a{
+							font-size: 0.8rem;
+						}
+					}
+				}
 			}
 		}
 		.docs{
@@ -992,6 +1020,35 @@ footer {
 	    flex: 1;
 	    background: #f5f6f6;
 	    box-shadow: inset 5px 0 20px -10px silver;
+			& > .head{
+				padding: 0 15px;
+				line-height: 51px;
+				background: $color-blue;
+				color: white;
+				.title{
+					text-transform: uppercase;
+					font-weight: bold;
+					font-size: 1.2rem;
+				}
+			}
+
+			& > .head + .filters{
+				background: #e6e6e6;
+				color: black;
+				padding: 10px 15px;
+
+				.d-flex{
+					margin: -5px;
+
+					.name{
+
+						flex: 1;
+					}
+				}
+				.d-flex > div {
+					padding: 5px;
+				}
+			}
 		}
 	}
 }

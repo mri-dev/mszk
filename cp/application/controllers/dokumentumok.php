@@ -1,4 +1,6 @@
 <?php
+use PortalManager\Documents;
+
 class dokumentumok extends Controller{
 		function __construct(){
 			parent::__construct();
@@ -25,6 +27,12 @@ class dokumentumok extends Controller{
   				'title' => $doc_type
   			));
       }
+
+			$uid = $this->view->_USERDATA['data']['ID'];
+
+			$docs = new Documents(array('db' => $this->db));
+			$docs_folders = $docs->getAvaiableFolders( $uid );
+			$this->out('folders', $docs_folders);
 
 			// SEO Információk
 			$SEO = null;

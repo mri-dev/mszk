@@ -93,7 +93,7 @@ input, textarea {
 /* line 75, sass/media.scss */
 .form-control:focus {
   border: 1px solid #a2c2ff !important;
-  box-shadow: 0 0 0 0.2rem rgba(9, 127, 189, 0.28) !important;
+  box-shadow: 0 0 0 0.2rem rgba(9, 127, 189, 0) !important;
 }
 
 /* line 79, sass/media.scss */
@@ -274,7 +274,7 @@ input, textarea {
   background: white;
   z-index: 60;
   width: 280px;
-  box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0.72);
+  box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0);
 }
 /* line 212, sass/media.scss */
 .slideMenu .headerlogo {
@@ -445,7 +445,7 @@ input, textarea {
   font-size: 1.1rem;
   padding: 0 25px;
   border-bottom: 0.5px solid white;
-  box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.29);
+  box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0);
 }
 /* line 367, sass/media.scss */
 #top .title-bar .page-title {
@@ -1089,152 +1089,171 @@ footer a, footer a:visited, footer a:hover {
 .documents-controll > .wblock > .data-container .sidebar .head {
   background: #3d98e2;
   color: white;
-  text-transform: uppercase;
+  font-weight: bold;
   padding: 0 15px;
   line-height: 51px;
 }
 /* line 988, sass/media.scss */
+.documents-controll > .wblock > .data-container .sidebar .head .adderbtn {
+  font-size: 0.7rem;
+  font-weight: 300;
+  text-transform: none;
+}
+/* line 993, sass/media.scss */
+.documents-controll > .wblock > .data-container .sidebar .head .adderbtn a {
+  color: white;
+  text-decoration: none;
+}
+/* line 997, sass/media.scss */
+.documents-controll > .wblock > .data-container .sidebar .head .adderbtn a i {
+  vertical-align: middle;
+}
+/* line 1003, sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders {
   padding: 8px 0;
 }
-/* line 991, sass/media.scss */
+/* line 1006, sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder a {
   display: block;
   padding: 4px 15px;
   color: #acacac;
   text-decoration: none;
 }
-/* line 997, sass/media.scss */
+/* line 1012, sass/media.scss */
+.documents-controll > .wblock > .data-container .sidebar .folders .folder a span.edit {
+  float: right;
+}
+/* line 1016, sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder a .badge {
   float: right;
 }
-/* line 1003, sass/media.scss */
+/* line 1022, sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder.opened > a {
   font-weight: bold;
   color: #3d98e2;
 }
-/* line 1009, sass/media.scss */
+/* line 1028, sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder.sub {
   padding-left: 18px;
 }
-/* line 1011, sass/media.scss */
+/* line 1030, sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder.sub a {
   font-size: 0.8rem;
 }
-/* line 1018, sass/media.scss */
+/* line 1037, sass/media.scss */
 .documents-controll > .wblock > .data-container .docs {
   font-size: 0.9rem;
   flex: 1;
   background: #f5f6f6;
   box-shadow: inset 5px 0 20px -10px silver;
 }
-/* line 1023, sass/media.scss */
+/* line 1042, sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head {
   padding: 0 15px;
   line-height: 51px;
   background: #1f4da3;
   color: white;
 }
-/* line 1028, sass/media.scss */
+/* line 1047, sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head .title {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 1.2rem;
 }
-/* line 1035, sass/media.scss */
+/* line 1054, sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters {
   background: #e6e6e6;
   color: black;
   padding: 10px 15px;
 }
-/* line 1040, sass/media.scss */
+/* line 1059, sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters .d-flex {
   margin: -5px;
 }
-/* line 1043, sass/media.scss */
+/* line 1062, sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters .d-flex .name {
   flex: 1;
 }
-/* line 1048, sass/media.scss */
+/* line 1067, sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters .d-flex > div {
   padding: 5px;
 }
 
-/* line 1058, sass/media.scss */
+/* line 1077, sass/media.scss */
 .request-controller .no-requests > .wrapper {
   padding: 25px;
   text-align: center;
   color: black;
 }
-/* line 1062, sass/media.scss */
+/* line 1081, sass/media.scss */
 .request-controller .no-requests > .wrapper i {
   display: block;
   font-size: 3rem;
   margin: 0 0 10px 0;
 }
-/* line 1069, sass/media.scss */
+/* line 1088, sass/media.scss */
 .request-controller .request-list {
   flex-basis: 280px;
   background: #ffffff;
   border-right: 0.5px solid #d8e2ec;
   padding-right: 0.5px;
 }
-/* line 1074, sass/media.scss */
+/* line 1093, sass/media.scss */
 .request-controller .request-list > .head {
   padding: 10px;
   background: #e8e8e8;
   border-bottom: 0.5px solid #d8e2ec;
 }
-/* line 1081, sass/media.scss */
+/* line 1100, sass/media.scss */
 .request-controller .request-list .req-list .request {
   border-bottom: 2px solid #ececec;
   outline: none;
   background: white;
 }
-/* line 1085, sass/media.scss */
+/* line 1104, sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper {
   padding: 10px;
   font-size: 0.9em;
   color: #515151;
 }
-/* line 1090, sass/media.scss */
+/* line 1109, sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .name {
   font-size: 1rem;
   font-weight: bold;
   color: #3d98e2;
 }
-/* line 1095, sass/media.scss */
+/* line 1114, sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .company {
   color: #ff7676;
 }
-/* line 1099, sass/media.scss */
+/* line 1118, sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .contacts {
   font-size: 0.85em;
 }
-/* line 1101, sass/media.scss */
+/* line 1120, sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .contacts span + span {
   margin: 0 0 0 10px;
 }
-/* line 1105, sass/media.scss */
+/* line 1124, sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .time {
   font-size: 0.6rem;
   margin: 5px 0 0 0;
   color: #707070;
 }
-/* line 1113, sass/media.scss */
+/* line 1132, sass/media.scss */
 .request-controller .request-list .req-list .request:hover, .request-controller .request-list .req-list .request.active {
   background-color: #f5f6f6;
   cursor: pointer;
   color: black;
 }
-/* line 1121, sass/media.scss */
+/* line 1140, sass/media.scss */
 .request-controller .request-data {
   font-size: 0.9rem;
   flex: 1;
   background: #f5f6f6;
   box-shadow: inset 5px 0 20px -10px silver;
 }
-/* line 1127, sass/media.scss */
+/* line 1146, sass/media.scss */
 .request-controller .request-data .iteractive-infos {
   text-align: center;
   font-size: 1.2rem;
@@ -1242,18 +1261,18 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   color: black;
 }
-/* line 1134, sass/media.scss */
+/* line 1153, sass/media.scss */
 .request-controller .request-data .row-header {
   background: #eaeaea;
   padding: 15px;
   border-bottom: 0.5px solid #d5d5d5;
 }
-/* line 1139, sass/media.scss */
+/* line 1158, sass/media.scss */
 .request-controller .request-data .row-header .desc {
   margin: 5px 0 0 0;
   font-size: 0.85em;
 }
-/* line 1143, sass/media.scss */
+/* line 1162, sass/media.scss */
 .request-controller .request-data .row-header h3 {
   color: #000000;
   text-transform: uppercase;
@@ -1261,52 +1280,52 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   margin: 0 !important;
 }
-/* line 1151, sass/media.scss */
+/* line 1170, sass/media.scss */
 .request-controller .request-data .row + .row {
   margin-top: 5px;
 }
-/* line 1155, sass/media.scss */
+/* line 1174, sass/media.scss */
 .request-controller .request-data .row > .col + .col {
   font-weight: bold;
   color: black;
 }
-/* line 1159, sass/media.scss */
+/* line 1178, sass/media.scss */
 .request-controller .request-data .row > .col {
   flex-basis: 70%;
 }
-/* line 1162, sass/media.scss */
+/* line 1181, sass/media.scss */
 .request-controller .request-data .row > .col:first-child {
   flex-basis: 30%;
 }
-/* line 1165, sass/media.scss */
+/* line 1184, sass/media.scss */
 .request-controller .request-data .dpad {
   padding: 15px;
 }
-/* line 1168, sass/media.scss */
+/* line 1187, sass/media.scss */
 .request-controller .request-data .divider {
   height: 1px;
   background: #d9d9d9;
 }
-/* line 1172, sass/media.scss */
+/* line 1191, sass/media.scss */
 .request-controller .request-data .total-cash {
   font-weight: bold;
   font-size: 1.1rem;
   color: #52b684;
 }
-/* line 1179, sass/media.scss */
+/* line 1198, sass/media.scss */
 .request-controller.user-controller {
   margin: -25px;
 }
-/* line 1181, sass/media.scss */
+/* line 1200, sass/media.scss */
 .request-controller.user-controller .request-list {
   flex-basis: 380px;
 }
-/* line 1183, sass/media.scss */
+/* line 1202, sass/media.scss */
 .request-controller.user-controller .request-list > .head {
   padding: 0;
   border-bottom: none;
 }
-/* line 1187, sass/media.scss */
+/* line 1206, sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher {
   isplay: -webkit-box;
   display: -ms-flexbox;
@@ -1314,12 +1333,12 @@ footer a, footer a:visited, footer a:hover {
   flex-wrap: nowrap;
   align-items: center;
 }
-/* line 1193, sass/media.scss */
+/* line 1212, sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher > div {
   flex-basis: 50%;
   position: relative;
 }
-/* line 1197, sass/media.scss */
+/* line 1216, sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher > div .badge {
   position: absolute;
   z-index: 1;
@@ -1333,7 +1352,7 @@ footer a, footer a:visited, footer a:hover {
   right: 30px;
   top: 7px;
 }
-/* line 1211, sass/media.scss */
+/* line 1230, sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher > div button {
   display: block;
   width: 100%;
@@ -1348,31 +1367,31 @@ footer a, footer a:visited, footer a:hover {
   color: #a7aaad;
   outline: none;
 }
-/* line 1226, sass/media.scss */
+/* line 1245, sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher > div.active button {
   background: #1b438e;
   color: #53e69d;
 }
-/* line 1237, sass/media.scss */
+/* line 1256, sass/media.scss */
 .request-controller.user-controller .request-service > .wrapper > .head {
   background: #1f4da3;
   color: white;
   padding: 10px;
 }
-/* line 1244, sass/media.scss */
+/* line 1263, sass/media.scss */
 .request-controller.user-controller .request-subservice > .head {
   background: #e0e0e0;
   color: #e31e24;
   padding: 10px;
   font-weight: bold;
 }
-/* line 1252, sass/media.scss */
+/* line 1271, sass/media.scss */
 .request-controller.user-controller .requestgroup {
   background: #fbfbd6;
   padding-left: 5px;
   border-top: 5px solid #707070;
 }
-/* line 1256, sass/media.scss */
+/* line 1275, sass/media.scss */
 .request-controller.user-controller .requestgroup > .head {
   background: #fbfbd6;
   color: black;
@@ -1380,22 +1399,22 @@ footer a, footer a:visited, footer a:hover {
   padding: 10px 4px;
   color: black;
 }
-/* line 1262, sass/media.scss */
+/* line 1281, sass/media.scss */
 .request-controller.user-controller .requestgroup > .head i {
   width: 20px;
   text-align: center;
 }
-/* line 1269, sass/media.scss */
+/* line 1288, sass/media.scss */
 .request-controller.user-controller .request {
   padding: 15px;
   font-size: 0.7rem;
 }
-/* line 1272, sass/media.scss */
+/* line 1291, sass/media.scss */
 .request-controller.user-controller .request .head {
   font-size: 0.85rem;
   margin: 0 0 4px 0;
 }
-/* line 1277, sass/media.scss */
+/* line 1296, sass/media.scss */
 .request-controller.user-controller .request .cashinfo .cash {
   padding: 2px 4px;
   border-radius: 4px;
@@ -1403,32 +1422,32 @@ footer a, footer a:visited, footer a:hover {
   color: white;
   margin: 0 8px;
 }
-/* line 1285, sass/media.scss */
+/* line 1304, sass/media.scss */
 .request-controller.user-controller .request.closed {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8OP0aQZGZEGQAIepKUIQJgDSBFaJLAAW/H7q1H+QFmQAAGuiH4AWiuhWAAAAAElFTkSuQmCC) repeat;
   color: red;
 }
-/* line 1289, sass/media.scss */
+/* line 1308, sass/media.scss */
 .request-controller.user-controller .request.declined {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8O3uFgZGZEGQAJeyD0IQJgDSBFaJLAAW/Hpn83+QFmQAAGjmH3lXAuK1AAAAAElFTkSuQmCC) repeat;
   color: orange;
 }
-/* line 1293, sass/media.scss */
+/* line 1312, sass/media.scss */
 .request-controller.user-controller .request.accepted {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYkcO3NFQZGZEGQgJaIDkIQJgDSBFaJLAAWvPr68n+QFmQAAG6vH4i4eHMaAAAAAElFTkSuQmCC) repeat;
   color: #2f682f;
 }
 
-/* line 1301, sass/media.scss */
+/* line 1320, sass/media.scss */
 .red-txt {
   color: #ff7676;
 }
 
-/* line 1306, sass/media.scss */
+/* line 1325, sass/media.scss */
 .services-hints {
   margin: 20px 0;
 }
-/* line 1311, sass/media.scss */
+/* line 1330, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1438,7 +1457,7 @@ footer a, footer a:visited, footer a:hover {
   padding: 0 8px;
   box-shadow: inset 20px 0 #307251;
 }
-/* line 1319, sass/media.scss */
+/* line 1338, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div {
   background: #52b684;
   color: white;
@@ -1447,28 +1466,28 @@ footer a, footer a:visited, footer a:hover {
   transform: skewX(-20deg);
   text-transform: uppercase;
 }
-/* line 1326, sass/media.scss */
+/* line 1345, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div > .txt {
   transform: skewX(20deg);
 }
-/* line 1330, sass/media.scss */
+/* line 1349, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(1) {
   padding-left: 10px;
   background: #307251;
 }
-/* line 1334, sass/media.scss */
+/* line 1353, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(2) {
   background: #3f966b;
 }
-/* line 1338, sass/media.scss */
+/* line 1357, sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(3) {
   padding-right: 10px;
 }
-/* line 1344, sass/media.scss */
+/* line 1363, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers {
   padding: 5px;
 }
-/* line 1349, sass/media.scss */
+/* line 1368, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper label {
   display: block;
   background: #ececec;
@@ -1478,44 +1497,44 @@ footer a, footer a:visited, footer a:hover {
   cursor: pointer;
   color: black;
 }
-/* line 1360, sass/media.scss */
+/* line 1379, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .company {
   color: #ff7676;
   margin: 0 5px 0 0;
 }
-/* line 1365, sass/media.scss */
+/* line 1384, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox]:checked + label {
   background: #3d98e2;
   color: white;
 }
-/* line 1370, sass/media.scss */
+/* line 1389, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox].offered + label {
   background: #3a8e1f;
   color: white;
 }
-/* line 1373, sass/media.scss */
+/* line 1392, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox].offered + label:before {
   content: "\f058";
 }
-/* line 1378, sass/media.scss */
+/* line 1397, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .infos {
   float: right;
   font-size: 0.68rem;
 }
-/* line 1381, sass/media.scss */
+/* line 1400, sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .infos span {
   margin-left: 5px;
 }
-/* line 1389, sass/media.scss */
+/* line 1408, sass/media.scss */
 .services-hints .service-user-list .service-group + .service-group {
   margin: 10px 0 0 0;
 }
 
-/* line 1396, sass/media.scss */
+/* line 1415, sass/media.scss */
 .project-controller a:hover {
   text-decoration: none;
 }
-/* line 1399, sass/media.scss */
+/* line 1418, sass/media.scss */
 .project-controller h2 {
   color: black;
   font-size: 1.4rem;
@@ -1523,28 +1542,28 @@ footer a, footer a:visited, footer a:hover {
   text-transform: uppercase;
   margin: 0 0 12px 0;
 }
-/* line 1407, sass/media.scss */
+/* line 1426, sass/media.scss */
 .project-controller .messenger-quick-msg .unreaded-txt {
   font-weight: bold;
   color: #ff7676;
   margin-left: 10px;
   font-size: 0.85rem;
 }
-/* line 1413, sass/media.scss */
+/* line 1432, sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper {
   background: white;
   border-radius: 5px;
   padding: 15px;
   border: 2px solid #e3e5e6;
 }
-/* line 1418, sass/media.scss */
+/* line 1437, sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper textarea {
   min-height: 80px;
   border: 1px solid #e6e6e6;
   background: #fbfbfc;
   box-shadow: inset 0 -5px 19px -6px #e4e4e4;
 }
-/* line 1424, sass/media.scss */
+/* line 1443, sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper label {
   font-weight: bold;
   margin: 0 0 12px 0;
@@ -1552,28 +1571,28 @@ footer a, footer a:visited, footer a:hover {
   color: #3c3c3c;
   font-size: 1rem;
 }
-/* line 1430, sass/media.scss */
+/* line 1449, sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper label strong {
   color: #3d98e2;
 }
-/* line 1436, sass/media.scss */
+/* line 1455, sass/media.scss */
 .project-controller .overview {
   margin: -25px -25px 0 -25px;
   background: white;
 }
-/* line 1440, sass/media.scss */
+/* line 1459, sass/media.scss */
 .project-controller .overview table.table {
   margin: 0 !important;
 }
-/* line 1444, sass/media.scss */
+/* line 1463, sass/media.scss */
 .project-controller .overview > .d-flex > div {
   border-right: 1px solid #d5d9dc;
 }
-/* line 1447, sass/media.scss */
+/* line 1466, sass/media.scss */
 .project-controller .overview > .d-flex > div:last-child {
   border-right: none !important;
 }
-/* line 1451, sass/media.scss */
+/* line 1470, sass/media.scss */
 .project-controller .overview .head {
   text-align: center;
   padding: 15px;
@@ -1583,7 +1602,7 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   position: relative;
 }
-/* line 1460, sass/media.scss */
+/* line 1479, sass/media.scss */
 .project-controller .overview .head .own-data {
   color: white;
   text-transform: uppercase;
@@ -1599,44 +1618,44 @@ footer a, footer a:visited, footer a:hover {
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-/* line 1475, sass/media.scss */
+/* line 1494, sass/media.scss */
 .project-controller .overview .head .own-data.edit {
   cursor: pointer;
   outline: none;
 }
-/* line 1484, sass/media.scss */
+/* line 1503, sass/media.scss */
 .project-controller .overview .project .head .own-data {
   background: #6aad63;
   text-transform: none;
 }
-/* line 1492, sass/media.scss */
+/* line 1511, sass/media.scss */
 .project-controller .overview .requester .head {
   background: #1f7fcd;
   color: white;
 }
-/* line 1496, sass/media.scss */
+/* line 1515, sass/media.scss */
 .project-controller .overview .requester .head .own-data {
   background: #3d98e2;
 }
-/* line 1502, sass/media.scss */
+/* line 1521, sass/media.scss */
 .project-controller .overview .servicer .head {
   background: #40a292;
   color: white;
 }
-/* line 1505, sass/media.scss */
+/* line 1524, sass/media.scss */
 .project-controller .overview .servicer .head .own-data {
   background: #58bdad;
 }
-/* line 1511, sass/media.scss */
+/* line 1530, sass/media.scss */
 .project-controller .overview .project {
   flex-basis: 30%;
 }
-/* line 1515, sass/media.scss */
+/* line 1534, sass/media.scss */
 .project-controller .overview .requester, .project-controller .overview .servicer {
   flex-basis: calc(70% / 2);
 }
 
-/* line 1521, sass/media.scss */
+/* line 1540, sass/media.scss */
 .services-config-settings {
   border: 0.5px solid #d7d7d7;
   padding: 0.5px;
@@ -1644,11 +1663,11 @@ footer a, footer a:visited, footer a:hover {
   border-radius: 8px;
   margin: 10px 0 0 0;
 }
-/* line 1528, sass/media.scss */
+/* line 1547, sass/media.scss */
 .services-config-settings .service:first-child {
   border-top: none;
 }
-/* line 1531, sass/media.scss */
+/* line 1550, sass/media.scss */
 .services-config-settings .service > .head {
   background: #1f4da3;
   padding: 10px 0;
@@ -1658,7 +1677,7 @@ footer a, footer a:visited, footer a:hover {
   color: white;
   font-size: 1.2rem;
 }
-/* line 1540, sass/media.scss */
+/* line 1559, sass/media.scss */
 .services-config-settings .service > .head .active-label {
   font-size: 0.6rem;
   font-weight: normal;
@@ -1668,23 +1687,23 @@ footer a, footer a:visited, footer a:hover {
   vertical-align: middle;
   color: white;
 }
-/* line 1550, sass/media.scss */
+/* line 1569, sass/media.scss */
 .services-config-settings .service .servicesubs {
   display: none;
 }
-/* line 1553, sass/media.scss */
+/* line 1572, sass/media.scss */
 .services-config-settings .service .subservice {
   border-bottom: 0.5px dashed #eaeaea;
   padding: 0;
 }
-/* line 1556, sass/media.scss */
+/* line 1575, sass/media.scss */
 .services-config-settings .service .subservice > .head {
   color: #e31e24;
   padding: 10px 15px;
   font-size: 1.1rem;
   font-weight: bold;
 }
-/* line 1561, sass/media.scss */
+/* line 1580, sass/media.scss */
 .services-config-settings .service .subservice > .head .active-label {
   font-size: 0.6rem;
   font-weight: normal;
@@ -1695,11 +1714,11 @@ footer a, footer a:visited, footer a:hover {
   text-transform: uppercase;
   color: white;
 }
-/* line 1573, sass/media.scss */
+/* line 1592, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems {
   font-size: 0.9rem;
 }
-/* line 1577, sass/media.scss */
+/* line 1596, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem label {
   display: block;
   width: 100%;
@@ -1710,16 +1729,16 @@ footer a, footer a:visited, footer a:hover {
   color: black;
   cursor: pointer;
 }
-/* line 1587, sass/media.scss */
+/* line 1606, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem input[type=checkbox] + label:before {
   margin: 0 8px 0 0;
 }
-/* line 1591, sass/media.scss */
+/* line 1610, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem input[type=checkbox]:checked + label {
   background: #52b684;
   color: white;
 }
-/* line 1601, sass/media.scss */
+/* line 1620, sass/media.scss */
 .services-config-settings .listtoggler a {
   color: #cddbf7;
   font-size: 0.8rem;
@@ -1727,7 +1746,7 @@ footer a, footer a:visited, footer a:hover {
   text-decoration: none;
   text-transform: none;
 }
-/* line 1608, sass/media.scss */
+/* line 1627, sass/media.scss */
 .services-config-settings .listtoggler a i {
   color: white;
   margin: 0 0 0 10px;
@@ -1735,79 +1754,79 @@ footer a, footer a:visited, footer a:hover {
   vertical-align: text-bottom;
 }
 
-/* line 1619, sass/media.scss */
+/* line 1638, sass/media.scss */
 .send-offer-holder {
   border: 5px solid #3f966b;
 }
-/* line 1621, sass/media.scss */
+/* line 1640, sass/media.scss */
 .send-offer-holder .row-header {
   background: #52b684 !important;
 }
-/* line 1623, sass/media.scss */
+/* line 1642, sass/media.scss */
 .send-offer-holder .row-header h3 {
   color: white !important;
 }
-/* line 1628, sass/media.scss */
+/* line 1647, sass/media.scss */
 .send-offer-holder .dpad {
   background: #f1f9f5 !important;
 }
-/* line 1631, sass/media.scss */
+/* line 1650, sass/media.scss */
 .send-offer-holder .dpad .row + .row {
   margin-top: 10px;
 }
-/* line 1635, sass/media.scss */
+/* line 1654, sass/media.scss */
 .send-offer-holder .dpad label {
   color: black;
   font-weight: bold;
 }
-/* line 1641, sass/media.scss */
+/* line 1660, sass/media.scss */
 .send-offer-holder .offer-accepter {
   background: white;
 }
-/* line 1644, sass/media.scss */
+/* line 1663, sass/media.scss */
 .send-offer-holder .offer-accepter .head {
   background: #f3c538;
   padding: 10px;
   color: #201e15;
   font-weight: bold;
 }
-/* line 1651, sass/media.scss */
+/* line 1670, sass/media.scss */
 .send-offer-holder .offer-accepter .dpad {
   color: #3c3c3c;
   background: white !important;
 }
 
-/* line 1658, sass/media.scss */
+/* line 1677, sass/media.scss */
 .service-info, .offer-info {
   margin: 0 0 25px 0;
 }
-/* line 1661, sass/media.scss */
+/* line 1680, sass/media.scss */
 .service-info h4, .offer-info h4 {
   font-size: 1.1rem;
   font-weight: bold;
   color: #3296e7;
 }
 
-/* line 1669, sass/media.scss */
+/* line 1688, sass/media.scss */
 .service-info .service-offered {
   background: #58bdad;
   padding: 10px;
   color: white;
 }
 
-/* line 1675, sass/media.scss */
+/* line 1694, sass/media.scss */
 .ajaxdialog.saveproject {
   min-width: 650px;
 }
 
-/* line 1680, sass/media.scss */
+/* line 1699, sass/media.scss */
 md-dialog h4 {
   font-size: 1rem;
   marign: 0 0 5px 0;
   font-weight: bold;
 }
 
-/* line 1688, sass/media.scss */
+/* line 1707, sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -1822,7 +1841,7 @@ body.user-group-user #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 1698, sass/media.scss */
+/* line 1717, sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -1837,7 +1856,7 @@ body.user-group-superadmin #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 1708, sass/media.scss */
+/* line 1727, sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;

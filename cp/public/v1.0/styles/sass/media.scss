@@ -981,9 +981,24 @@ footer {
 			.head {
 				background: $color-blue-light;
 				color: white;
-				text-transform: uppercase;
+				font-weight: bold;
 				padding: 0 15px;
 				line-height: 51px;
+
+				.adderbtn{
+					font-size: 0.7rem;
+					font-weight: 300;
+					text-transform: none;
+
+					a{
+						color: white;
+						text-decoration: none;
+
+						i{
+							vertical-align: middle;
+						}
+					}
+				}
 			}
 			.folders{
 				padding: 8px 0;
@@ -993,6 +1008,10 @@ footer {
 						padding: 4px 15px;
 						color: #acacac;
 						text-decoration: none;
+
+						span.edit{
+							float: right;
+						}
 
 						.badge{
 							float: right;

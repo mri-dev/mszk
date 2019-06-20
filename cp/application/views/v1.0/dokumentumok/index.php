@@ -4,7 +4,14 @@
       <div class="d-flex">
         <div class="sidebar">
           <div class="head">
-            <i class="fas fa-folder"></i> <?=__('Dokumentum mappák')?>
+            <div class="d-flex justify-content-between">
+              <div class="">
+                <i class="fas fa-folder"></i> <?=__('Mappák')?>
+              </div>
+              <div class="adderbtn">
+                <a href="/dokumentumok/folders?mode=create"><?=__('Új mappa')?> <i class="fas fa-folder-plus"></i></a>
+              </div>
+            </div>
           </div>
           <div class="folders">
             <?php if (empty($this->folders)): ?>
@@ -14,7 +21,7 @@
             <?php else: ?>
               <?php foreach ((array)$this->folders as $folder): $opened = ($_GET['folder'] == $folder['hashkey'] || $_GET['topfolder'] == $folder['hashkey']) ? true : false; ?>
               <div class="folder<?=($opened)?' opened':''?>">
-                <a href="/dokumentumok/?folder=<?=$folder['hashkey']?>"><i class="far <?=($_GET['folder'] == $folder['hashkey'])?'fa-folder-open':'fa-folder'?>"></i> <?=$folder['name']?> <span class="pull-right badge badge-primary">0</span></a>
+                <a href="/dokumentumok/?folder=<?=$folder['hashkey']?>"><i class="far <?=($_GET['folder'] == $folder['hashkey'])?'fa-folder-open':'fa-folder'?>"></i> <?=$folder['name']?><span class="pull-right badge badge-primary">0</span></a>
                 <?php if ( $opened && $folder['child']): ?>
                 <?php foreach ((array)$folder['child'] as $cfolder): $copened = ($_GET['folder'] == $cfolder['hashkey']) ? true : false; ?>
                 <div class="folder<?=($copened)?' opened':''?> sub">

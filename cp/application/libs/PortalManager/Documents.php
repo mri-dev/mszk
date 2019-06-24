@@ -160,6 +160,15 @@ class Documents
     return false;
   }
 
+  // TODO: Fájlok átcsatolása a ketegorizálatlan mappába
+  public function deleteFolder( $hashkey )
+  {
+    // fájlok átcsatolása
+
+    // törlés
+    $this->db->squery("DELETE FROM ".self::DBFOLDERS." WHERE hashkey = :hash", array('hash' => $hashkey));
+  }
+
   public function saveFolder( $hashkey, $post, $uid )
   {
     $update = array();

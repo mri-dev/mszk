@@ -45,7 +45,10 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12 right">
+          <div class="col-md-4 left">
+            <a href="/dokumentumok/folders?mode=delete&folder=<?=$this->folder['hashkey']?>" class="btn btn-sm btn-danger"><?=__('Törölni szeretném a mappát')?></a>
+          </div>
+          <div class="col-md-8 right">
             <button type="submit" class="btn btn-<?=($_GET['mode']=='create')?'primary':'success'?>" name="<?=($_GET['mode']=='create')?'addFolder':'saveFolder'?>"><?=($_GET['mode']=='create')?__('Mappa hozzádása').' <i class="fas fa-plus-circle"></i>':__('Változások mentése').' <i class="fas fa-save"></i>'?></button>
           </div>
         </div>
@@ -54,3 +57,36 @@
   </div>
 </div>
 <?php endif; /* END: Group Creator */ ?>
+
+<?php if (isset($_GET['mode']) && $_GET['mode'] == 'delete'): ?>
+  <div class="wblock color-red">
+    <div class="data-header">
+      <div class="d-flex">
+        <div class="col-md-8 title">
+          <i class="ico <?=$ico?>"></i> <?=__('Dokumentum mappa törlése')?>
+        </div>
+        <div class="col right closer">
+          <a href="/dokumentumok/"><i class="fas fa-times"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="data-container">
+      <div class="dc-padding">
+        <form class="" action="" method="post">
+          <div class="row">
+            <div class="col-md-12">
+              <?=sprintf(__('Biztos benne, hogy törli a(z) <strong>%s</strong> dokumentum mappát? A művelet nem visszavonható!'), $this->folder['name'])?>
+              <br><br>
+              <strong><?=__('A törlés során a dokumentumok átkerülnek a Kategorizálatlan mappába!')?></strong>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 right">
+              <button type="submit" class="btn btn-danger" name="deleteFolder"><?=__('Végleges törlés')?> <i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<?php endif; ?>

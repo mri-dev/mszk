@@ -20,7 +20,7 @@ class dokumentumok extends Controller{
         parent::$pageTitle = $doc_type . ' | ' . parent::$pageTitle;
       }
 
-      if ($doc_type && $doc_type != 'folders') {
+      if ($doc_type && $doc_type != 'folders' && $doc_type != 'hozzaad') {
         $this->addPagePagination(array(
   				'link' => '/'.__CLASS__.'/'.$doc_type,
   				'title' => $doc_type
@@ -118,8 +118,39 @@ class dokumentumok extends Controller{
 			// Törlés
 			if ( $_GET['mode'] == 'delete' )
 			{
+				$folder = $this->docs->getFolderData($_GET['folder']);
+				$permission = $this->docs->checkFolderEditPermission( $folder['hashkey'], $uid );
+				if ( !$permission ) {
+					Helper::reload('/dokumentumok');
+				}
+				parent::$pageTitle = '"'.$folder['name'].'" '.__('mappa törlése');
+				$this->addPagePagination(array(
+					'link' => false,
+					'title' => parent::$pageTitle
+				));
+				$this->out('folder', $folder);
 
+				// Csoport szerkesztés
+				if( isset($_POST['deleteFolder']) )
+				{
+					try {
+						$this->docs->deleteFolder( $folder['hashkey'] );
+						Helper::reload('/dokumentumok');
+					} catch ( Exception $e ) {
+						$this->view->err = true;
+						$this->view->bmsg = Helper::makeAlertMsg('pError', $e->getMessage());
+					}
+				}
 			}
+		}
+
+		public function hozzaad()
+		{
+			parent::$pageTitle = __('Új dokumentum hozzáadása');
+			$this->addPagePagination(array(
+				'link' => false,
+				'title' => parent::$pageTitle
+			));
 		}
 
 		function __destruct(){

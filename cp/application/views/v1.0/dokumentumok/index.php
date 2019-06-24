@@ -50,6 +50,9 @@
                 <?php endif; ?>
                 <span class="docsnum">0 <?=__('db')?></span>
               </div>
+              <div class="adder">
+                <a href="/dokumentumok/hozzaad"><?=__('új dokumentum')?> <i class="fas fa-plus"></i></a>
+              </div>
             </div>
           </div>
           <div class="filters">

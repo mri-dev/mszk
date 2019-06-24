@@ -1041,13 +1041,18 @@ footer {
 	    box-shadow: inset 5px 0 20px -10px silver;
 			& > .head{
 				padding: 0 15px;
-				line-height: 51px;
+				line-height: 49px;
 				background: $color-blue;
 				color: white;
 				.title{
 					text-transform: uppercase;
 					font-weight: bold;
 					font-size: 1.2rem;
+					flex: 1;
+				}
+
+				.info{
+					padding-right: 15px;
 				}
 
 				.docsnum{
@@ -1055,7 +1060,30 @@ footer {
 				}
 				.edit-folder{
 					margin-right: 10px;
-					color: #545454;
+					color: #dfeaff;
+    			background: #212731;
+					&:hover{
+						background: $color-red-light;
+					}
+				}
+
+				.info {
+
+				}
+
+				.adder{
+					a{
+						display: block;
+						background: $color-cian;
+						color: white;
+						padding: 0 15px;
+						margin-right: -15px;
+						text-transform: uppercase;
+						text-decoration: none;
+						font-weight: 300;
+						font-size: 0.8rem;
+						line-height: 50px;
+					}
 				}
 			}
 

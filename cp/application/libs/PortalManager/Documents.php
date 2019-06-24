@@ -65,6 +65,47 @@ class Documents
     return $list;
   }
 
+  public function findFolderHashkey( $slug, $uid )
+  {
+    if ($slug == 'folders') {
+      return false;
+    }
+
+    if ($uid == '') {
+      return false;
+    }
+
+    $hash = $this->db->squery($iq = "SELECT hashkey FROM ".self::DBFOLDERS." WHERE (isdefault = 0 and user_id = :uid and slug = :slug) or (isdefault = 1 and slug = :slug)", array('slug' => trim($slug), 'uid' => $uid))->fetchColumn();
+
+    if ( !$hash && isset($_GET['folder']) && !empty($_GET['folder']) ) {
+      $hash = $_GET['folder'];
+    }
+
+    return $hash;
+  }
+
+  public function getFolderData( $folderhash )
+  {
+    $qarg = array();
+
+    $q = "SELECT
+      d.*
+    FROM ".self::DBFOLDERS." as d
+    WHERE 1=1 and d.hashkey = :hash";
+    $qarg['hash'] = $folderhash;
+
+
+    $data = $this->db->squery($q, $qarg);
+
+    if ($data->rowCount() == 0) {
+      return false;
+    }
+
+    $data = $data->fetch(\PDO::FETCH_ASSOC);
+
+    return $data;
+  }
+
   public function addFolder( $uid, $post )
   {
     extract($post);
@@ -101,6 +142,43 @@ class Documents
         'hashkey' => $hash,
         'user_id' => $uid
       )
+    );
+  }
+
+  public function checkFolderEditPermission( $hashkey, $uid )
+  {
+    $folder = $this->db->squery("SELECT isdefault, user_id FROM ".self::DBFOLDERS." WHERE hashkey = :hash",array('hash' => $hashkey))->fetch(\PDO::FETCH_ASSOC);
+
+    if ($folder['isdefault'] == 1) {
+      return false;
+    }
+
+    if ( $uid == $folder['user_id'] ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public function saveFolder( $hashkey, $post, $uid )
+  {
+    $update = array();
+
+    $update['name'] = $post['name'];
+    $update['szulo_id'] = ($post['szulo_id'] != '') ? (int)$post['szulo_id'] : NULL;
+
+    $check_slug = $this->db->squery("SELECT slug FROM ".self::DBFOLDERS." WHERE hashkey = :hashkey", array('hashkey' => $hashkey))->fetchColumn();
+
+    if ( $check_slug != Formater::makeSafeUrl($post['name'],'') )
+    {
+      $slug = $this->checkEleres( $post['name'], $uid );
+      $update['slug'] = $slug;
+    }
+
+    $this->db->update(
+      self::DBFOLDERS,
+      $update,
+      sprintf("hashkey = '%s'", $hashkey)
     );
   }
 

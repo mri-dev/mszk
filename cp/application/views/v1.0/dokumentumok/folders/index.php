@@ -39,7 +39,7 @@
               <option value="" selected="selected"><?=__('ne legyen')?></option>
               <option value="" disabled="disabled"></option>
               <?php foreach ((array)$this->folders as $folder): ?>
-              <option value="<?=$folder['hashkey']?>" <?=((isset($_POST['szulo_id']) && $_POST['szulo_id'] == $folder['ID']))?'selected="selected"':(($this->folder && $this->folder['szulo_id'] == $folder['ID']))?>><?=$folder['name']?></option>
+              <option value="<?=$folder['hashkey']?>" <?=((isset($_POST['szulo_id']) && $_POST['szulo_id'] == $folder['ID']))?'selected="selected"':(($this->folder && $this->folder['szulo_id'] == $folder['ID'])?'selected="selected"':'')?>><?=$folder['name']?></option>
               <?php endforeach; ?>
             </select>
           </div>

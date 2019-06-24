@@ -19,11 +19,11 @@
               <?=__('Nincsenek mappák létrehozva.')?>
             </div>
             <?php else: ?>
-              <?php foreach ((array)$this->folders as $folder): $opened = ($_GET['folder'] == $folder['hashkey'] || $_GET['topfolder'] == $folder['hashkey']) ? true : false; ?>
+              <?php foreach ((array)$this->folders as $folder): $opened = (($this->folderinfo && $this->folderinfo['hashkey'] == $folder['hashkey']) || $_GET['topfolder'] == $folder['hashkey']) ? true : false; ?>
               <div class="folder<?=($opened)?' opened':''?>">
                 <a href="/dokumentumok/?folder=<?=$folder['hashkey']?>"><i class="far <?=($_GET['folder'] == $folder['hashkey'])?'fa-folder-open':'fa-folder'?>"></i> <?=$folder['name']?><span class="pull-right badge badge-primary">0</span></a>
                 <?php if ( $opened && $folder['child']): ?>
-                <?php foreach ((array)$folder['child'] as $cfolder): $copened = ($_GET['folder'] == $cfolder['hashkey']) ? true : false; ?>
+                <?php foreach ((array)$folder['child'] as $cfolder): $copened = ($this->folderinfo && $this->folderinfo['hashkey'] == $cfolder['hashkey']) ? true : false; ?>
                 <div class="folder<?=($copened)?' opened':''?> sub">
                   <a href="/dokumentumok/?folder=<?=$cfolder['hashkey']?>&topfolder=<?=$folder['hashkey']?>"><i class="far <?=($_GET['folder'] == $cfolder['hashkey'])?'fa-folder-open':'fa-folder'?>"></i> <?=$cfolder['name']?> <span class="pull-right badge badge-primary">0</span></a>
                 </div>
@@ -38,10 +38,17 @@
           <div class="head">
             <div class="d-flex justify-content-between">
               <div class="title">
-                <?=__('Összes dokumentum')?>
+                <?php if ($this->folderinfo): ?>
+                  <?=$this->folderinfo['name']?> &mdash; <?=__('Dokumentumok')?>
+                <?php else: ?>
+                  <?=__('Összes dokumentum')?>
+                <?php endif; ?>
               </div>
               <div class="info">
-                0 <?=__('db')?>
+                <?php if ($this->folderinfo && $this->folderinfo['isdefault'] == 0): ?>
+                <a href="/dokumentumok/folders?mode=edit&folder=<?=$this->folderinfo['hashkey']?>" class="btn btn-default btn-sm edit-folder"><?=__('mappa szerkesztése')?></a>
+                <?php endif; ?>
+                <span class="docsnum">0 <?=__('db')?></span>
               </div>
             </div>
           </div>

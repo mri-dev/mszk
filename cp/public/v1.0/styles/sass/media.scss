@@ -1049,6 +1049,14 @@ footer {
 					font-weight: bold;
 					font-size: 1.2rem;
 				}
+
+				.docsnum{
+					vertical-align: middle;
+				}
+				.edit-folder{
+					margin-right: 10px;
+					color: #545454;
+				}
 			}
 
 			& > .head + .filters{

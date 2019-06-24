@@ -10,7 +10,6 @@ class dokumentumok extends Controller{
 				'link' => '/'.__CLASS__,
 				'title' => parent::$pageTitle
 			));
-
 			// Ha nincs belépve, akkor átirányít a bejelentkezésre
 			if ( !$this->Users->user && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio') {
 				Helper::reload('/belepes');
@@ -32,8 +31,19 @@ class dokumentumok extends Controller{
 			$uid = $this->view->_USERDATA['data']['ID'];
 
 			$this->docs = new Documents(array('db' => $this->db));
+			$folderhash = $this->docs->findFolderHashkey($this->gets[1], $uid);
 			$docs_folders = $this->docs->getAvaiableFolders( $uid );
 			$this->out('folders', $docs_folders);
+			$this->out('folderinfo', $this->docs->getFolderData($folderhash));
+
+			if ($this->view->folderinfo) {
+				parent::$pageTitle = $this->view->folderinfo['name'];
+				$this->addPagePagination(array(
+					'link' => false,
+					'title' => parent::$pageTitle
+				));
+			}
+
 
 			// SEO Információk
 			$SEO = null;
@@ -53,6 +63,8 @@ class dokumentumok extends Controller{
 
 		public function folders()
 		{
+			$uid = $this->view->_USERDATA['data']['ID'];
+
 			// Létrehozás
 			if ( $_GET['mode'] == 'create' )
 			{
@@ -61,8 +73,6 @@ class dokumentumok extends Controller{
 					'link' => '/'.__CLASS__,
 					'title' => parent::$pageTitle
 				));
-
-				$uid = $this->view->_USERDATA['data']['ID'];
 
 				// Új csoport
 				if( isset($_POST['addFolder']) )
@@ -75,13 +85,34 @@ class dokumentumok extends Controller{
 						$this->view->bmsg 	= Helper::makeAlertMsg('pError', $e->getMessage());
 					}
 				}
-
 			}
 
 			// Módosítás
-			if ( $_GET['edit'] == 'edit' )
+			if ( $_GET['mode'] == 'edit' )
 			{
+				$folder = $this->docs->getFolderData($_GET['folder']);
+				$permission = $this->docs->checkFolderEditPermission( $folder['hashkey'], $uid );
+				if ( !$permission ) {
+					Helper::reload('/dokumentumok');
+				}
+				parent::$pageTitle = '"'.$folder['name'].'" '.__('mappa szerkesztése');
+				$this->addPagePagination(array(
+					'link' => false,
+					'title' => parent::$pageTitle
+				));
+				$this->out('folder', $folder);
 
+				// Csoport szerkesztés
+				if( isset($_POST['saveFolder']) )
+				{
+					try {
+						$this->docs->saveFolder( $folder['hashkey'], $_POST, $uid );
+						Helper::reload('/dokumentumok');
+					} catch ( Exception $e ) {
+						$this->view->err = true;
+						$this->view->bmsg = Helper::makeAlertMsg('pError', $e->getMessage());
+					}
+				}
 			}
 
 			// Törlés

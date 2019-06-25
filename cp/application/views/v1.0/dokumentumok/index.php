@@ -84,9 +84,45 @@
                   <th><?=__('Cím')?></th>
                   <th width="220"class="center"><?=__('Mappa')?></th>
                   <th width="200" class="center"><?=__('Létrehozta')?></th>
-                  <th width="120" class="center"><?=__('Időpont')?></th>
+                  <th width="150" class="center"><?=__('Időpont')?></th>
                 </tr>
               </thead>
+              <tbody>
+                <?php if (empty($this->docs)): ?>
+                <tr>
+                  <td colspan="10">
+                    <div class="no-dta">
+                      asd
+                    </div>
+                  </td>
+                </tr>
+                <?php else: ?>
+                  <?php foreach ((array)$this->docs as $doc): ?>
+                  <tr>
+                    <td>
+                      <div class="doctitle">
+                        <a href="/doc/<?=$doc['hashkey']?>"><strong><?=$doc['name']?></strong></a>
+                      </div>
+                      <td class="center">
+                        <a class="folder-link" href="/dokumentumok/<?=$doc['folders'][0]['folder_slug']?>"><?=$doc['folders'][0]['folder_name']?></a>
+                      </td>
+                      <td class="center user-author">
+                        <strong><?=$doc['user_nev']?></strong> <?=($doc['is_me'])?'(<span class="isme">'.__('Én').'</span>)':''?>
+                        <?php if ($doc['user_company'] != ''): ?>
+                        <div class="company">
+                          <?=$doc['user_company']?>
+                        </div>
+                        <?php endif; ?>
+                      </td>
+                      <td class="center">
+                        <?=$doc['created_at']?>
+                      </td>
+                    </td>
+                  </tr>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+
+              </tbody>
             </table>
           </div>
         </div>
@@ -94,3 +130,4 @@
     </div>
   </div>
 </div>
+<pre><?php print_r($this->docs); ?></pre>

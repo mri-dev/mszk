@@ -1,3 +1,4 @@
+<?php echo $this->bmsg; ?>
 <div class="wblock color-green">
   <div class="data-header">
     <div class="d-flex">
@@ -64,7 +65,7 @@
         </div>
         <div class="row">
           <div class="col-md-12 right">
-            <button type="submit" class="btn btn-success" name="addFile"><?=__('Hozzáadás')?> <i class="fas fa-plus"></i></button>
+            <button type="submit" class="btn btn-success" name="addFile" value="1"><?=__('Hozzáadás')?> <i class="fas fa-plus"></i></button>
           </div>
         </div>
       </form>

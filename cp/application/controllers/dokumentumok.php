@@ -36,6 +36,12 @@ class dokumentumok extends Controller{
 			$this->out('folders', $docs_folders);
 			$this->out('folderinfo', $this->docs->getFolderData($folderhash));
 
+			// Dokumentum lista
+			$arg = array();
+			$arg['uid'] = $uid;
+			$docs = $this->docs->getList( $arg );
+			$this->out('docs', $docs);
+
 			if ($this->view->folderinfo) {
 				parent::$pageTitle = $this->view->folderinfo['name'];
 				$this->addPagePagination(array(
@@ -145,6 +151,8 @@ class dokumentumok extends Controller{
 
 		public function hozzaad()
 		{
+			$uid = $this->view->_USERDATA['data']['ID'];
+
 			parent::$pageTitle = __('Új dokumentum hozzáadása');
 			$this->addPagePagination(array(
 				'link' => false,

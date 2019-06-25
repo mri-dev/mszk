@@ -173,11 +173,14 @@ class Documents
   {
     $hash = md5(uniqid());
 
+    if (empty($post['name'])) {
+      throw new \Exception(__('A dokumentum elnevezése kötelező!'));
+    }
+
     $ertek = (!empty($post['ertek'])) ? (float)$post['ertek'] : 0;
     $expipre_at = (!empty($post['expipre_at '])) ? $post['expipre_at '] : NULL;
     $teljesites_at = (!empty($post['teljesites_at'])) ? (float)$post['teljesites_at'] : NULL;
     $avaiable_to = (!empty($post['avaiable_to'])) ? $post['avaiable_to'] : NULL;
-
 
     $folder = (!empty($post['folder'])) ? $post['folder'] : false;
 
@@ -186,7 +189,8 @@ class Documents
       array(
         'user_id' => $uid,
         'hashkey' => $hash,
-        'name' => $this->db->db->quote($post['name']),
+        'name' => $post['name'],
+        'docfile' => $post['docfile'],
         'expire_at' => $expipre_at,
         'teljesites_at' => $teljesites_at,
         'avaiable_to' => $avaiable_to,
@@ -194,8 +198,20 @@ class Documents
       )
     );
 
-    if ($folder) {
-      // code...
+    $doc_id = $this->db->lastInsertId();
+
+    if ( $folder && $doc_id )
+    {
+      $folderdata = $this->getFolderData( $folder );
+      $folder_id = $folderdata['ID'];
+
+      $this->db->insert(
+        self::DBXREF_FOLDER,
+        array(
+          'doc_id' => $doc_id,
+          'folder_id' => $folder_id
+        )
+      );
     }
   }
 
@@ -251,6 +267,39 @@ class Documents
 		return $last_text;
 	}
 
+  public function getDocFolders( $id )
+  {
+    $folders = array();
+
+    if (empty($id)) {
+      return false;
+    }
+
+    $qry = $this->db->squery("SELECT
+      f.name as folder_name,
+      f.hashkey as folder_hashkey,
+      f.szulo_id as folder_szulo_id,
+      f.user_id as folder_author_user,
+      f.slug as folder_slug,
+      f.isdefault
+    FROM ".self::DBXREF_FOLDER." as df
+    LEFT OUTER JOIN ".self::DBFOLDERS." as f ON f.ID = df.folder_id
+    WHERE df.doc_id = :id
+    ", array('id' => $id));
+
+    if ($qry->rowCount() == 0) {
+      return false;
+    }
+
+    $data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ((array)$data as $d) {
+      $folders[] = $d;
+    }
+
+    return $folders;
+  }
+
 	public function getList( $arg = array() )
 	{
 		$list = array();
@@ -265,8 +314,12 @@ class Documents
     }
 
 		$q = "SELECT
-			d.*
+			d.*,
+      f.nev as user_nev,
+      fa.ertek as user_company
 		FROM ".self::DBTABLE." as d
+    LEFT OUTER JOIN felhasznalok as f ON f.ID = d.user_id
+    LEFT OUTER JOIN felhasznalo_adatok as fa ON fa.fiok_id = d.user_id and fa.nev = 'company_name'
 		WHERE 1=1 ";
 
 		if (isset($arg['get'])) {
@@ -295,6 +348,8 @@ class Documents
 
 		foreach ((array)$data as $d)
 		{
+      $d['folders'] = $this->getDocFolders( $d['ID'] );
+      $d['is_me'] = ($uid && $uid == $d['user_id']) ? true : false;
 
 			$list[] = $d;
 		}

@@ -44,7 +44,6 @@ class dokumentumok extends Controller{
 				));
 			}
 
-
 			// SEO Információk
 			$SEO = null;
 			// Site info
@@ -151,6 +150,18 @@ class dokumentumok extends Controller{
 				'link' => false,
 				'title' => parent::$pageTitle
 			));
+
+			if( isset($_POST['addFile']) )
+			{
+				try {
+					$this->docs->addFile( $uid, $_POST );
+					Helper::reload('/dokumentumok');
+				} catch ( Exception $e ) {
+					$this->view->err = true;
+					$this->view->bmsg = Helper::makeAlertMsg('pError', $e->getMessage());
+				}
+			}
+
 		}
 
 		function __destruct(){

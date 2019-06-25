@@ -50,6 +50,18 @@ class Controller {
         // Admin jogosultságú felhasználó flag
         $this->out('is_admin_logged', ($this->view->_USERDATA['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN || $this->view->_USERDATA['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN) ? true : false);
 
+        // Filemanager browser url
+        if ($this->view->_USERDATA) {
+          $owndir = 'src/uploads/byusers/'.$this->view->_USERDATA['data']['ID'];
+          if ( !file_exists($owndir) ) {
+            mkdir($owndir, 0766);
+          }
+          $_SESSION['RF']['subfolder'] = 'byusers/'.$this->view->_USERDATA['data']['ID'].'/';
+      		define('FILE_BROWSER_IMAGE', JS.'tinymce/plugins/filemanager/dialog.php?lang=hu_HU');
+        } else {
+      	   define('FILE_BROWSER_IMAGE', JS.'tinymce/plugins/filemanager/dialog.php?type=0&editor=0&lang=hu_HU');
+        }
+
         // Ha nem ajax requestről van szó
         if ($this->gets[0] != 'ajax')
         {

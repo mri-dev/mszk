@@ -55,7 +55,7 @@ $(function(){
 	});
 
 	$('.iframe-btn').fancybox({
-		maxWidth	: 800,
+		maxWidth	: 1050,
 		maxHeight	: 600,
 		fitToView	: false,
 		width		: '70%',

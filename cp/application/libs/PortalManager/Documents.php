@@ -169,6 +169,36 @@ class Documents
     $this->db->squery("DELETE FROM ".self::DBFOLDERS." WHERE hashkey = :hash", array('hash' => $hashkey));
   }
 
+  public function addFile( $uid, $post )
+  {
+    $hash = md5(uniqid());
+
+    $ertek = (!empty($post['ertek'])) ? (float)$post['ertek'] : 0;
+    $expipre_at = (!empty($post['expipre_at '])) ? $post['expipre_at '] : NULL;
+    $teljesites_at = (!empty($post['teljesites_at'])) ? (float)$post['teljesites_at'] : NULL;
+    $avaiable_to = (!empty($post['avaiable_to'])) ? $post['avaiable_to'] : NULL;
+
+
+    $folder = (!empty($post['folder'])) ? $post['folder'] : false;
+
+    $this->db->insert(
+      self::DBTABLE,
+      array(
+        'user_id' => $uid,
+        'hashkey' => $hash,
+        'name' => $this->db->db->quote($post['name']),
+        'expire_at' => $expipre_at,
+        'teljesites_at' => $teljesites_at,
+        'avaiable_to' => $avaiable_to,
+        'ertek' => $ertek
+      )
+    );
+
+    if ($folder) {
+      // code...
+    }
+  }
+
   public function saveFolder( $hashkey, $post, $uid )
   {
     $update = array();

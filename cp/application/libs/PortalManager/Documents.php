@@ -58,11 +58,31 @@ class Documents
     foreach ((array)$data as $d)
     {
       $child = $this->getAvaiableFolders( $uid, (int)$d['ID']);
+      $d['filecnt'] = $this->getFolderFileCount( $uid, (int)$d['ID'] );
       $d['child'] = $child;
       $list[] = $d;
     }
 
     return $list;
+  }
+
+  public function getFolderFileCount( $uid, $folder_id )
+  {
+    $qarg = array('folder' => $folder_id);
+
+    if ($uid) {
+      $user = $this->db->squery("SELECT user_group FROM felhasznalok WHERE ID = :id", array('id' => $uid))->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    $qry = "SELECT count(d.ID) FROM ".self::DBTABLE." as d WHERE 1=1";
+    if ($user && !in_array($user['user_group'], array(\PortalManager\Users::USERGROUP_ADMIN, \PortalManager\Users::USERGROUP_SUPERADMIN)) ) {
+      $qry .= " and d.user_id = :uid";
+      $qarg['uid'] = $uid;
+    }
+    $qry .= " and FIND_IN_SET(:folder, (SELECT folder_id FROM ".self::DBXREF_FOLDER." WHERE doc_id = d.ID))";
+    $cnt = $this->db->squery( $qry, $qarg )->fetchColumn();
+
+    return $cnt;
   }
 
   public function findFolderHashkey( $slug, $uid )
@@ -322,6 +342,10 @@ class Documents
     LEFT OUTER JOIN felhasznalo_adatok as fa ON fa.fiok_id = d.user_id and fa.nev = 'company_name'
 		WHERE 1=1 ";
 
+    if (!isset($arg['exclude_unavaiable'])) {
+			$q .= " and (d.avaiable_to IS NULL or d.avaiable_to <= now())";
+		}
+
 		if (isset($arg['get'])) {
 			$q .= " and d.hashkey  = :get";
 			$qarg['get'] =$arg['get'];
@@ -335,6 +359,11 @@ class Documents
 		if ( isset($arg['ids']) && !empty($arg['ids']) ) {
 			$q .= " and FIND_IN_SET(d.ID, :idslist)";
 			$qarg['idslist'] = implode(",", (array)$arg['ids']);
+		}
+
+    if ( isset($arg['folder']) && !empty($arg['folder']) ) {
+			$q .= " and FIND_IN_SET(:folder, (SELECT folder_id FROM ".self::DBXREF_FOLDER." WHERE doc_id = d.ID ))";
+      $qarg['folder'] = (int)$arg['folder'];
 		}
 
 		$q .= " ORDER BY d.created_at DESC";

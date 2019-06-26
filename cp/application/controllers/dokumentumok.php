@@ -10,6 +10,7 @@ class dokumentumok extends Controller{
 				'link' => '/'.__CLASS__,
 				'title' => parent::$pageTitle
 			));
+
 			// Ha nincs belépve, akkor átirányít a bejelentkezésre
 			if ( !$this->Users->user && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio') {
 				Helper::reload('/belepes');
@@ -39,10 +40,17 @@ class dokumentumok extends Controller{
 			// Dokumentum lista
 			$arg = array();
 			$arg['uid'] = $uid;
+
+			if ($this->view->folderinfo)
+			{
+				$arg['folder'] = (int)$this->view->folderinfo['ID'];
+			}
+
 			$docs = $this->docs->getList( $arg );
 			$this->out('docs', $docs);
 
-			if ($this->view->folderinfo) {
+			if ($this->view->folderinfo)
+			{
 				parent::$pageTitle = $this->view->folderinfo['name'];
 				$this->addPagePagination(array(
 					'link' => false,

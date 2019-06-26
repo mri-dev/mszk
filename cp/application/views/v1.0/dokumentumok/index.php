@@ -21,11 +21,11 @@
             <?php else: ?>
               <?php foreach ((array)$this->folders as $folder): $opened = (($this->folderinfo && $this->folderinfo['hashkey'] == $folder['hashkey']) || $_GET['topfolder'] == $folder['hashkey']) ? true : false; ?>
               <div class="folder<?=($opened)?' opened':''?>">
-                <a href="/dokumentumok/?folder=<?=$folder['hashkey']?>"><i class="far <?=($_GET['folder'] == $folder['hashkey'])?'fa-folder-open':'fa-folder'?>"></i> <?=$folder['name']?><span class="pull-right badge badge-primary">0</span></a>
+                <a href="/dokumentumok/?folder=<?=$folder['hashkey']?>"><i class="far <?=($_GET['folder'] == $folder['hashkey'])?'fa-folder-open':'fa-folder'?>"></i> <?=$folder['name']?><? if($folder['filecnt'] != 0):?><span class="pull-right badge badge-primary"><?=$folder['filecnt']?></span><? endif; ?></a>
                 <?php if ( $opened && $folder['child']): ?>
                 <?php foreach ((array)$folder['child'] as $cfolder): $copened = ($this->folderinfo && $this->folderinfo['hashkey'] == $cfolder['hashkey']) ? true : false; ?>
                 <div class="folder<?=($copened)?' opened':''?> sub">
-                  <a href="/dokumentumok/?folder=<?=$cfolder['hashkey']?>&topfolder=<?=$folder['hashkey']?>"><i class="far <?=($_GET['folder'] == $cfolder['hashkey'])?'fa-folder-open':'fa-folder'?>"></i> <?=$cfolder['name']?> <span class="pull-right badge badge-primary">0</span></a>
+                  <a href="/dokumentumok/?folder=<?=$cfolder['hashkey']?>&topfolder=<?=$folder['hashkey']?>"><i class="far <?=($_GET['folder'] == $cfolder['hashkey'])?'fa-folder-open':'fa-folder'?>"></i> <?=$cfolder['name']?><? if($folder['filecnt'] != 0):?><span class="pull-right badge badge-primary"><?=$cfolder['filecnt']?></span><? endif; ?></a>
                 </div>
                 <?php endforeach; ?>
                 <?php endif; ?>

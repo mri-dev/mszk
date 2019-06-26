@@ -1,5 +1,6 @@
 <?php
 use PortalManager\Documents;
+use PortalManager\Pagination;
 
 class dokumentumok extends Controller{
 		function __construct(){
@@ -16,12 +17,12 @@ class dokumentumok extends Controller{
 				Helper::reload('/belepes');
 			}
 
-      if ($this->gets[1] != '') {
+      if ($this->gets[1] != '' && !is_numeric($this->gets[1])) {
         $doc_type = $this->gets[1];
         parent::$pageTitle = $doc_type . ' | ' . parent::$pageTitle;
       }
 
-      if ($doc_type && $doc_type != 'folders' && $doc_type != 'hozzaad') {
+      if ($doc_type && $doc_type != 'folders' && $doc_type != 'hozzaad' && $doc_type != 'szerkeszt') {
         $this->addPagePagination(array(
   				'link' => '/'.__CLASS__.'/'.$doc_type,
   				'title' => $doc_type
@@ -40,14 +41,36 @@ class dokumentumok extends Controller{
 			// Dokumentum lista
 			$arg = array();
 			$arg['uid'] = $uid;
+			$arg['limit'] = 25;
+			$arg['page'] = (is_numeric(\Helper::getLastParam())) ? (int)\Helper::getLastParam() : 1;
 
 			if ($this->view->folderinfo)
 			{
 				$arg['folder'] = (int)$this->view->folderinfo['ID'];
 			}
 
+			if (isset($_GET['name']) && !empty($_GET['name']))
+			{
+				$arg['search']['name'] = $_GET['name'];
+			}
+
 			$docs = $this->docs->getList( $arg );
 			$this->out('docs', $docs);
+
+			// Pagination
+			$get = $_GET;
+			$root = '/'.__CLASS__;
+			unset($get['tag']);
+			$get = http_build_query($get);
+			$this->out( 'cget', $get );
+			$this->out( 'navigator', (new Pagination(array(
+				'class' => 'pagination pagination-sm center',
+				'current' => $docs['pages']['current'],
+				'max' => $docs['pages']['max'],
+				'root' => $root,
+				'after' => ( $get ) ? '?'.$get : '',
+				'item_limit' => 12
+			)))->render() );
 
 			if ($this->view->folderinfo)
 			{
@@ -171,6 +194,41 @@ class dokumentumok extends Controller{
 			{
 				try {
 					$this->docs->addFile( $uid, $_POST );
+					Helper::reload('/dokumentumok');
+				} catch ( Exception $e ) {
+					$this->view->err = true;
+					$this->view->bmsg = Helper::makeAlertMsg('pError', $e->getMessage());
+				}
+			}
+
+		}
+
+		public function szerkeszt()
+		{
+			$uid = $this->view->_USERDATA['data']['ID'];
+
+			$arg = array();
+			$arg['uid'] = $uid;
+			$arg['get'] = $this->gets[2];
+
+			$docs = $this->docs->getList( $arg );
+			$this->out('doc', $docs);
+
+			parent::$pageTitle =$docs['name']. ' | '. __('Dokumentum szerkesztés');
+			$this->addPagePagination(array(
+				'link' => false,
+				'title' =>__('Szerkesztés')
+			));
+
+			$this->addPagePagination(array(
+				'link' => false,
+				'title' => $docs['name']
+			));
+
+			if( isset($_POST['editFile']) )
+			{
+				try {
+					$this->docs->editFile( $uid, $_POST );
 					Helper::reload('/dokumentumok');
 				} catch ( Exception $e ) {
 					$this->view->err = true;

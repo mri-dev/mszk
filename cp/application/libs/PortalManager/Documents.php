@@ -74,7 +74,7 @@ class Documents
       $user = $this->db->squery("SELECT user_group FROM felhasznalok WHERE ID = :id", array('id' => $uid))->fetch(\PDO::FETCH_ASSOC);
     }
 
-    $qry = "SELECT count(d.ID) FROM ".self::DBTABLE." as d WHERE 1=1";
+    $qry = "SELECT count(d.ID) FROM ".self::DBTABLE." as d WHERE 1=1 and (d.avaiable_to IS NULL or d.avaiable_to >= now())";
     if ($user && !in_array($user['user_group'], array(\PortalManager\Users::USERGROUP_ADMIN, \PortalManager\Users::USERGROUP_SUPERADMIN)) ) {
       $qry .= " and d.user_id = :uid";
       $qarg['uid'] = $uid;
@@ -198,9 +198,9 @@ class Documents
     }
 
     $ertek = (!empty($post['ertek'])) ? (float)$post['ertek'] : 0;
-    $expipre_at = (!empty($post['expipre_at '])) ? $post['expipre_at '] : NULL;
-    $teljesites_at = (!empty($post['teljesites_at'])) ? (float)$post['teljesites_at'] : NULL;
-    $avaiable_to = (!empty($post['avaiable_to'])) ? $post['avaiable_to'] : NULL;
+    $expipre_at = (!empty($post['expipre_at'])) ? date('Y-m-d', strtotime($post['expipre_at'])) : NULL;
+    $teljesites_at = (!empty($post['teljesites_at'])) ? date('Y-m-d', strtotime($post['teljesites_at'])) : NULL;
+    $avaiable_to = (!empty($post['avaiable_to'])) ? date('Y-m-d', strtotime($post['avaiable_to'])) : NULL;
 
     $folder = (!empty($post['folder'])) ? $post['folder'] : false;
 
@@ -232,6 +232,59 @@ class Documents
           'folder_id' => $folder_id
         )
       );
+    }
+  }
+
+  public function editFile( $uid, $post )
+  {
+    $hash = $post['hashkey'];
+
+    if (empty($post['name'])) {
+      throw new \Exception(__('A dokumentum elnevezése kötelező!'));
+    }
+
+    $doc = $this->db->squery("SELECT * FROM ".self::DBTABLE." WHERE hashkey = :hash", array('hash' => $hash))->fetch(\PDO::FETCH_ASSOC);
+
+    $ertek = (!empty($post['ertek'])) ? (float)$post['ertek'] : 0;
+    $expire_at = (!empty($post['expire_at'])) ? date('Y-m-d', strtotime($post['expire_at'])) : NULL;
+    $teljesites_at = (!empty($post['teljesites_at'])) ? date('Y-m-d', strtotime($post['teljesites_at'])) : NULL;
+    $avaiable_to = (!empty($post['avaiable_to'])) ? date('Y-m-d', strtotime($post['avaiable_to'])) : NULL;
+
+    $folder = (!empty($post['folder'])) ? $post['folder'] : false;
+
+    $this->db->update(
+      self::DBTABLE,
+      array(
+        'name' => $post['name'],
+        'docfile' => $post['docfile'],
+        'expire_at' => $expire_at,
+        'teljesites_at' => $teljesites_at,
+        'avaiable_to' => $avaiable_to,
+        'ertek' => $ertek
+      ),
+      sprintf("hashkey = '%s'", $hash)
+    );
+
+    $doc_id = (int)$doc['ID'];
+
+    if ( $folder && $doc_id && $doc_id != 0 )
+    {
+      if ($post['prev_folder'] != $folder)
+      {
+        // reset
+        $this->db->squery("DELETE FROM ".self::DBXREF_FOLDER." WHERE doc_id = :did", array('did' => $doc_id));
+
+        $folderdata = $this->getFolderData( $folder );
+        $folder_id = $folderdata['ID'];
+
+        $this->db->insert(
+          self::DBXREF_FOLDER,
+          array(
+            'doc_id' => $doc_id,
+            'folder_id' => $folder_id
+          )
+        );
+      }
     }
   }
 
@@ -324,6 +377,11 @@ class Documents
 	{
 		$list = array();
 		$qarg = array();
+    $pages = array();
+		$total_num	= 0;
+    $limit = 50;
+    $current_page = ($arg['page']) ? $arg['page'] : \Helper::getLastParam();
+		$pages[current] = (is_numeric($current_page) && $current_page > 0) ? $current_page : 1;
 
 		$uid = (int)$arg['uid'];
 		$users = new Users( array('db' => $this->db ));
@@ -333,7 +391,7 @@ class Documents
       $controll_user_admin = ($controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN) ? true : false;
     }
 
-		$q = "SELECT
+		$q = "SELECT SQL_CALC_FOUND_ROWS
 			d.*,
       f.nev as user_nev,
       fa.ertek as user_company
@@ -343,7 +401,7 @@ class Documents
 		WHERE 1=1 ";
 
     if (!isset($arg['exclude_unavaiable'])) {
-			$q .= " and (d.avaiable_to IS NULL or d.avaiable_to <= now())";
+			$q .= " and (d.avaiable_to IS NULL or d.avaiable_to >= now())";
 		}
 
 		if (isset($arg['get'])) {
@@ -366,12 +424,37 @@ class Documents
       $qarg['folder'] = (int)$arg['folder'];
 		}
 
+    // Searches
+    if (isset($arg['search'])) {
+      foreach ((array)$arg['search'] as $sk => $s ) {
+        if ($sk == 'name') {
+          $q .= " and d.name LIKE :src_name";
+          $qarg['src_name'] = "%".trim($s)."%";
+        }
+      }
+    }
+
 		$q .= " ORDER BY d.created_at DESC";
 
+    if($arg[limit]){
+			$q = rtrim($q,";");
+			$limit = (is_numeric($arg[limit]) && $arg[limit] > 0 && $arg[limit] != '') ? $arg[limit] : $limit;
+			$l_min = 0;
+			$l_min = $pages[current] * $limit - $limit;
+			$q .= " LIMIT $l_min, $limit";
+			$q .= ";";
+		}
+
 		$data = $this->db->squery($q, $qarg);
+    $total_num 	=  $this->db->query("SELECT FOUND_ROWS();")->fetchColumn();
 		if ($data->rowCount() == 0) {
 			return $list;
 		}
+
+    $return_num = $data->rowCount();
+    ///
+    $pages[max] = ($total_num == 0) ? 0 : ceil($total_num / $limit);
+    $pages[limit]	= ($arg[limit]) ? $limit : false;
 
 		$data = $data->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -385,9 +468,15 @@ class Documents
 
 		if (isset($arg['get'])) {
 			$list = $list[0];
-		}
-
-		return $list;
+      return $list;
+		} else {
+      return array(
+        'pages' => $pages,
+        'return_num' => (int)$return_num,
+        'total_num' => (int)$total_num,
+        'data' => $list
+      );
+    }
 	}
 
 	public function __destruct()

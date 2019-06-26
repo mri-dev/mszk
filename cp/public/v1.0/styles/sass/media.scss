@@ -621,6 +621,7 @@ i.info {
 		}
 		table.table{
 			margin: 0;
+			background: white;
 		}
 	}
 
@@ -971,8 +972,42 @@ footer {
 	}
 }
 
+.nav-container{
+	text-align: center;
+	padding: 25px;
+	.pagination{
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+	}
+}
+
 .documents-controll{
 	margin: -25px;
+
+	.doctitle{
+		a{
+			color: $color-red;
+		}
+	}
+
+	.sub-datas{
+		margin: 5px 0 0 0;
+		font-size: 0.7rem;
+		color: #5e5e5e;
+
+		strong {
+			color: black;
+		}
+		span + span {
+			margin: 0 0 0 5px;
+		}
+	}
+
+
+	.folder-link{
+		color: $color-blue-light;
+	}
 
 	& > .wblock > .data-container{
 		.sidebar {
@@ -1105,6 +1140,17 @@ footer {
 				}
 			}
 		}
+	}
+}
+
+.no-data{
+	text-align: center;
+	padding: 25px;
+	font-size: 1.2rem;
+	i{
+		display: block;
+		margin: 0 0 15px 0;
+		font-size: 4rem;
 	}
 }
 

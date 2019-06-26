@@ -13,6 +13,7 @@ class Pagination
 	private $max_item = 1;
 	private $root = '';
 	private $page_limit = 10;
+	private $after = '';
 
 	function __construct( $arg = array() )
 	{
@@ -34,6 +35,9 @@ class Pagination
 		if ( $arg['item_limit'] ) {
 			$this->page_limit = $arg['item_limit'];
 		}
+		if ( $arg['after'] ) {
+			$this->after = $arg['after'];
+		}
 
 		return $this;
 	}
@@ -44,9 +48,9 @@ class Pagination
 		$do_end_much = false;
 		$r = '<div class="nav-container">';
 		$r .= '<ul class="'.$this->class.'">';
-		  $r .= '<li class="page-item"><a class="page-link" href="'.$this->root.'/1"><i class="fa fa-angle-left"></i></a></li>';
+		  $r .= '<li class="page-item"><a class="page-link" href="'.$this->root.'/1'.$this->after.'"><i class="fa fa-angle-left"></i></a></li>';
 		  if( $this->current_item-1 > ($this->page_limit/2) &&  $this->max_item > $this->page_limit )  {
-		  	$r .= '<li class="page-item"><a class="page-link" href="'.$this->root.'/1">1</a></li>';
+		  	$r .= '<li class="page-item"><a class="page-link" href="'.$this->root.'/1'.$this->after.'">1</a></li>';
 		  }
 		  for($p = 1; $p <= $this->max_item; $p++):
 		  	if( $p < ($this->current_item - ($this->page_limit/2))) {
@@ -62,12 +66,12 @@ class Pagination
 		  		}
 		  		continue;
 	  		}
-		  	$r .= '<li class="page-item '.( $this->current_item == $p  ? 'active' : '' ).'"><a class="page-link" href="'.$this->root.'/'.$p.'">'.$p.'</a></li>';
+		  	$r .= '<li class="page-item '.( $this->current_item == $p  ? 'active' : '' ).'"><a class="page-link" href="'.$this->root.'/'.$p.$this->after.'">'.$p.'</a></li>';
 		  endfor;
 		  if( ($this->current_item < $this->max_item - ($this->page_limit/2) ) &&  $this->max_item > $this->page_limit )  {
-		  	$r .= '<li class="page-item"><a class="page-link" href="'.$this->root.'/'.$this->max_item.'">'.$this->max_item.'</a></li>';
+		  	$r .= '<li class="page-item"><a class="page-link" href="'.$this->root.'/'.$this->max_item.$this->after.'">'.$this->max_item.'</a></li>';
 		  }
-		  $r .= '<li class="page-item"><a class="page-link" href="'.$this->root.'/'.$this->max_item.'"><i class="fa fa-angle-right"></i></a></li>';
+		  $r .= '<li class="page-item"><a class="page-link" href="'.$this->root.'/'.$this->max_item.$this->after.'"><i class="fa fa-angle-right"></i></a></li>';
 		$r .= '</ul>';
 		$r .= '</div>';
 

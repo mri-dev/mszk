@@ -51,9 +51,9 @@ class Projects
 			$qarg['closed'] = (int)$arg['closed'];
 		}
 
-		if (isset($arg['uservalid'])) {
+		if (isset($arg['uid'])) {
 			$q .= " and (p.requester_id = :uid or p.servicer_id = :uid)";
-			$qarg['uid'] = (int)$arg['uservalid'];
+			$qarg['uid'] = (int)$arg['uid'];
 		}
 
 		$q .= " ORDER BY p.created_at DESC";

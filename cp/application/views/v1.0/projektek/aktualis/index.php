@@ -56,4 +56,4 @@
   </div>
 </div>
 
-<pre><?php //print_r($this->projects); ?></pre>
+<pre><?php print_r($this->projects); ?></pre>

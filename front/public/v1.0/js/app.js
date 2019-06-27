@@ -173,6 +173,7 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
     $scope.requestreturn = false;
     if (!$scope.sendingofferrequest)
     {
+      $scope.saveSession();
       $scope.sendingofferrequest = true;
       $scope.requestmessageclass = 'requestmessage alert-warning'
       $scope.requestmessage = 'Ajánlatkérés küldése folyamatban <i class="fas fa-spinner fa-spin"></i>';

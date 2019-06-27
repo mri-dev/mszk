@@ -72,11 +72,11 @@
               <td><?=__('Név / Kapcsolattartó')?></td>
               <td><strong>{{project.user_requester.data.nev}}</strong></td>
             </tr>
-            <tr>
+            <tr ng-if="project.user_requester.data.company_name">
               <td><?=__('Cég neve')?></td>
               <td><strong>{{project.user_requester.data.company_name}}</strong></td>
             </tr>
-            <tr>
+            <tr ng-if="project.user_requester.data.company_adoszam">
               <td><?=__('Adószám')?></td>
               <td><strong>{{project.user_requester.data.company_adoszam}}</strong></td>
             </tr>
@@ -84,7 +84,7 @@
               <td><?=__('E-mail cím')?></td>
               <td><strong>{{project.user_requester.data.email}}</strong></td>
             </tr>
-            <tr>
+            <tr ng-if="project.user_requester.data.szallitas_phone">
               <td><?=__('Telefonszám')?></td>
               <td><strong>{{project.user_requester.data.szallitas_phone}}</strong></td>
             </tr>
@@ -132,11 +132,11 @@
               <td><?=__('Név / Kapcsolattartó')?></td>
               <td><strong>{{project.user_servicer.data.nev}}</strong></td>
             </tr>
-            <tr>
+            <tr ng-if="project.user_servicer.data.company_name">
               <td><?=__('Cég neve')?></td>
               <td><strong>{{project.user_servicer.data.company_name}}</strong></td>
             </tr>
-            <tr>
+            <tr ng-if="project.user_servicer.data.company_adoszam">
               <td><?=__('Adószám')?></td>
               <td><strong>{{project.user_servicer.data.company_adoszam}}</strong></td>
             </tr>
@@ -144,7 +144,7 @@
               <td><?=__('E-mail cím')?></td>
               <td><strong>{{project.user_servicer.data.email}}</strong></td>
             </tr>
-            <tr>
+            <tr ng-if="project.user_servicer.data.szallitas_phone">
               <td><?=__('Telefonszám')?></td>
               <td><strong>{{project.user_servicer.data.szallitas_phone}}</strong></td>
             </tr>

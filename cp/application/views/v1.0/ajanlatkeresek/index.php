@@ -60,3 +60,4 @@
     </div>
   </div>
 </div>
+<pre><?php print_r($this->badges); ?></pre>

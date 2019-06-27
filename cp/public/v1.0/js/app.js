@@ -1,4 +1,4 @@
-var a = angular.module('App', ['ngMaterial']);
+var a = angular.module('App', ['ngMaterial', 'ngCookies']);
 
 a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sce', '$filter', function($scope, $http, $mdToast, $mdDialog, $sce, $filter)
 {
@@ -155,7 +155,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 	}
 }]);
 
-a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', function($scope, $http, $mdToast, $sce, $filter)
+a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', '$cookies', function($scope, $http, $mdToast, $sce, $filter, $cookies)
 {
 	$scope.quicksearch = '';
 	$scope.relation = 'to';
@@ -188,8 +188,12 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	}
 
 	$scope.loadEverything = function() {
-		$scope.loadLists(function( data ){
-
+		$scope.loadLists(function( data )
+		{
+			var storerelation = $cookies.get('relation');
+			if (typeof storerelation !== 'undefined') {
+				$scope.relation = storerelation;
+			}
 		});
 	}
 
@@ -206,6 +210,8 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 		} else {
 			$scope.relation = what;
 		}
+
+		$cookies.put('relation', $scope.relation);
 	}
 
 	$scope.pickRequest = function( request )
@@ -398,7 +404,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	}
 }]);
 
-a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function($scope, $http, $mdToast, $sce)
+a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window', function($scope, $http, $mdToast, $sce, $window)
 {
 	$scope.quicksearch = '';
 	$scope.requests = [];
@@ -531,6 +537,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 	$scope.sendServicesRequest = function()
 	{
 		$scope.servicesrequestprogress = true;
+
 		$http({
 			method: 'POST',
 			url: '/ajax/post',
@@ -542,7 +549,9 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', function(
 				request: $scope.request.hashkey,
 			})
 		}).success(function(r){
-			console.log(r);
+			if (r.success == 1) {
+				$window.location.reload();
+			}
 			$scope.servicesrequestprogress = false;
 		});
 	}

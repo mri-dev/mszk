@@ -132,7 +132,7 @@
               </div>
             </div>
             <div class="next-btn">
-              <div class="" ng-show="selected_subservices.length > 0" >
+              <div class="" ng-show="selected_subservices_items.length > 0" >
                 <div class="row justify-content-between align-items-center">
                   <div class="col text-left">
                       <button type="button" ng-click="prevStep()" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza: Szolgáltatások')?> </button>
@@ -143,7 +143,7 @@
                 </div>
               </div>
               <div class="info-next">
-                <div ng-hide="selected_subservices.length > 0" class="text-right">
+                <div ng-hide="selected_subservices_items.length > 0" class="text-right">
                   <div class="text-error">
                     <?=__('Válassza ki, hogy milyen alszolgáltatásokkal kapcsolatban kér ajánlatot!')?>
                   </div>

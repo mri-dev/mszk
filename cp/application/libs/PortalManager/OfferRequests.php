@@ -84,7 +84,7 @@ class OfferRequests
 			// Lehetséges szolgáltatók betöltése
 			if (isset($arg['loadpossibleservices']) && $arg['loadpossibleservices'] == 1)
 			{
-				$d['services_hints'] = $this->possibleRequestServices( $d['services'], $d['subservices'], $d['subservices_items'] );
+				$d['services_hints'] = $this->possibleRequestServices( $d['services'], $d['subservices'], $d['subservices_items'], $d['user_id'] );
 				$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
 			}
 			if ( isset($arg['bindIDToList']) && $arg['bindIDToList'] == 1 ) {
@@ -401,7 +401,7 @@ class OfferRequests
 		}
 
 
-		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, r.requested ASC";
+		$q .= " ORDER BY r.closed ASC, r.requested DESC, ro.recepient_declined ASC, ro.recepient_visited_at ASC";
 
 		$qry = $this->db->squery($q, $qarg);
 
@@ -668,7 +668,7 @@ class OfferRequests
 		return $list;
 	}
 
-	public function possibleRequestServices( $services, $subservices, $items )
+	public function possibleRequestServices( $services, $subservices, $items, $exclude_user = false )
 	{
 		$list = array();
 		$itemids = array();
@@ -709,6 +709,11 @@ class OfferRequests
 		LEFT OUTER JOIN lists as l3 ON l3.ID = s.subservice_id
 		WHERE 1=1 and f.user_group = '".\PortalManager\Users::USERGROUP_SERVICES."' and  f.engedelyezve = 1 and f.aktivalva IS NOT NULL and f.mukodik = 1 ";
 		$q .= " and s.item_id IN (".implode(",", $itemids).")";
+
+		if ($exclude_user && !empty($exclude_user) ) {
+			$q .= " and s.user_id != :uid";
+			$qarg['uid'] = $exclude_user;
+		}
 
 		$qry = $this->db->squery($q, $qarg);
 

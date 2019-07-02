@@ -65,7 +65,10 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12 right">
+          <div class="col-md-6 left">
+            <a href="/dokumentumok/delete/<?=$this->doc['hashkey']?>" class="btn btn-danger"><?=__('Dokumentum törlése')?> <i class="fas fa-trash"></i></a>
+          </div>
+          <div class="col-md-6 right">
             <button type="submit" class="btn btn-success" name="editFile" value="1"><?=__('Változások módosítása')?> <i class="fas fa-save"></i></button>
           </div>
         </div>

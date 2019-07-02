@@ -138,7 +138,9 @@
                       <?=$doc['created_at']?>
                     </td>
                     <td class="center actions">
+                      <?php if ($doc['user_id'] == $this->_USERDATA['data']['ID'] || $this->is_admin_logged ): ?>
                       <a href="/dokumentumok/szerkeszt/<?=$doc['hashkey']?>" title="<?=__('Szerkesztés')?>"><i class="fas fa-pencil-alt"></i></a>
+                      <?php endif; ?>
                     </td>
                   </tr>
                   <?php endforeach; ?>

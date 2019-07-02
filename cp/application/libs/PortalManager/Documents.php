@@ -180,13 +180,37 @@ class Documents
     return false;
   }
 
+  public function reAddFileToFolder( $doc_id, $folder_id )
+  {
+    // remove prev folder
+    $this->db->squery("DELETE FROM ".self::DBXREF_FOLDER." WHERE doc_id = :did", array('did' => $doc_id));
+
+    // add to new
+    $this->db->insert(
+      self::DBXREF_FOLDER,
+      array(
+        'doc_id' => $doc_id,
+        'folder_id' => $folder_id
+      )
+    );
+  }
+
   // TODO: Fájlok átcsatolása a ketegorizálatlan mappába
   public function deleteFolder( $hashkey )
   {
     // fájlok átcsatolása
+    $folderinfo = $this->getFolderData( $hashkey );
+    $docs = $this->getList(array(
+      'folder' => $folderinfo['ID']
+    ));
+    if ($docs['data']) {
+      foreach ( (array)$docs['data'] as $doc  ) {
+        $this->reAddFileToFolder( $doc['ID'], 1 );
+      }
+    }
 
     // törlés
-    $this->db->squery("DELETE FROM ".self::DBFOLDERS." WHERE hashkey = :hash", array('hash' => $hashkey));
+    //$this->db->squery("DELETE FROM ".self::DBFOLDERS." WHERE hashkey = :hash", array('hash' => $hashkey));
   }
 
   public function addFile( $uid, $post )
@@ -233,6 +257,28 @@ class Documents
         )
       );
     }
+  }
+
+  public function deleteFile( $uid, $post)
+  {
+    $hash = $post['hashkey'];
+
+    if (empty($hash)) {
+      throw new \Exception(__('A dokumentum azonosítója (hashkey) hiányzik!'));
+    }
+
+    $users = new Users( array('db' => $this->db ));
+
+    if ($uid) {
+      $controll_user =  $users->get( array('user' => $uid, 'userby' => 'ID', 'alerts' => false) );
+      $controll_user_admin = ($controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN) ? true : false;
+    }
+
+    if ( !$controll_user_admin && $controll_user['data']['ID'] != $uid ) {
+      throw new \Exception(__('Önnek nincs jogosultsága törölni ezt a dokumentumot.'));
+    }
+
+    $this->db->squery("DELETE FROM ".self::DBTABLE." WHERE hashkey = :hash", array('hash'  => $hash));
   }
 
   public function editFile( $uid, $post )
@@ -414,9 +460,29 @@ class Documents
 			$qarg['hashkey'] =$arg['hashkey'];
 		}
 
+    if ( isset($arg['from_user']) && !empty($arg['from_user']) ) {
+      $q .= " and d.user_id = :fuserid";
+      $qarg['fuserid'] = (int)$arg['from_user'];
+    }
+
 		if ( isset($arg['ids']) && !empty($arg['ids']) ) {
 			$q .= " and FIND_IN_SET(d.ID, :idslist)";
 			$qarg['idslist'] = implode(",", (array)$arg['ids']);
+		}
+
+    if ( isset($arg['not_in_project']) && !empty($arg['not_in_project']) ) {
+			$q .= " and :not_in_project NOT IN (SELECT project_id FROM ".self::DBXREF_PROJECT." WHERE doc_id = d.ID)";
+			$qarg['not_in_project'] = $arg['not_in_project'];
+		}
+
+    if ( isset($arg['in_project']) && !empty($arg['in_project']) ) {
+      $q .= " and :in_project IN (SELECT project_id FROM ".self::DBXREF_PROJECT." WHERE doc_id = d.ID)";
+      $qarg['in_project'] = $arg['in_project'];
+    }
+
+    if ( isset($arg['not_ids']) && !empty($arg['not_ids']) ) {
+			$q .= " and !FIND_IN_SET(d.ID, :not_ids)";
+			$qarg['not_ids'] = implode(",", (array)$arg['not_ids']);
 		}
 
     if ( isset($arg['folder']) && !empty($arg['folder']) ) {

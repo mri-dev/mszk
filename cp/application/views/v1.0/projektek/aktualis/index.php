@@ -55,5 +55,3 @@
   </div>
   </div>
 </div>
-
-<pre><?php print_r($this->projects); ?></pre>

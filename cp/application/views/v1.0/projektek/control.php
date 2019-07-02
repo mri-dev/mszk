@@ -179,6 +179,13 @@
 <br>
 <div class="row">
   <div class="col-md-5">
+    <div class="action-buttons">
+      <div class="d-flex">
+        <div class="adddocs">
+          <button type="button" class="btn btn-sm btn-primary" ng-click="projectDocsAdder()"><i class="fas fa-file-medical"></i> <?=__('Dokumentum hozzáadása')?></button>
+        </div>
+      </div>
+    </div>
     <div class="wblock color-red">
       <div class="data-container">
         <div class="no-data-view">

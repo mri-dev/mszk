@@ -1619,6 +1619,28 @@ footer {
 	}
 }
 
+
+.action-buttons{
+	margin: 0 0 15px 0;
+}
+
+.dialog-option-infos{
+	font-size: 0.7rem;
+	span + span {
+		margin: 0 0 0 4px;
+	}
+	.docs-folder{
+		color: $color-blue-light;
+	}
+	.created{
+		color: #7c7c7c;
+	}
+	.ertek{
+		color: $color-red-light;
+	}
+}
+
+
 .services-config-settings{
 	border: 0.5px solid #d7d7d7;
   padding: 0.5px;

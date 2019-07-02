@@ -36,6 +36,11 @@ class Projects
 			$qarg['getproject'] =$arg['getproject'];
 		}
 
+		if (isset($arg['getprojectbyid'])) {
+			$q .= " and p.ID  = :getprojectbyid";
+			$qarg['getprojectbyid'] =$arg['getprojectbyid'];
+		}
+
     if (isset($arg['hashkey'])) {
 			$q .= " and p.hashkey  = :hashkey";
 			$qarg['hashkey'] =$arg['hashkey'];
@@ -94,6 +99,23 @@ class Projects
 		}
 
 		return $list;
+	}
+
+	public function addDocument( $project_id, $doc_id, $adder_user_id )
+	{
+		// register
+		$this->db->insert(
+			\PortalManager\Documents::DBXREF_PROJECT,
+			array(
+				'doc_id' => $doc_id,
+				'project_id' => $project_id,
+				'adder_user_id' => $adder_user_id
+			)
+		);
+
+		// get partner id from project
+
+		// email alert other partner
 	}
 
 	public function userModifyProject( $project, $uid = false )
@@ -202,7 +224,7 @@ class Projects
 	// TODO: Számlák alapján összevetni
 	public function getProjectPaymentProgress( $project_id )
 	{
-		return 75;
+		return 0;
 	}
 
 	public function getOffer( $id)

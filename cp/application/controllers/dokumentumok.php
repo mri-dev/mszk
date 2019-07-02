@@ -13,7 +13,7 @@ class dokumentumok extends Controller{
 			));
 
 			// Ha nincs belépve, akkor átirányít a bejelentkezésre
-			if ( !$this->Users->user && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio') {
+			if ( !$this->Users->user && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio'  && $this->gets[0] != 'delete') {
 				Helper::reload('/belepes');
 			}
 
@@ -22,7 +22,7 @@ class dokumentumok extends Controller{
         parent::$pageTitle = $doc_type . ' | ' . parent::$pageTitle;
       }
 
-      if ($doc_type && $doc_type != 'folders' && $doc_type != 'hozzaad' && $doc_type != 'szerkeszt') {
+      if ($doc_type && $doc_type != 'folders' && $doc_type != 'hozzaad' && $doc_type != 'szerkeszt' && $doc_type != 'delete') {
         $this->addPagePagination(array(
   				'link' => '/'.__CLASS__.'/'.$doc_type,
   				'title' => $doc_type
@@ -214,6 +214,10 @@ class dokumentumok extends Controller{
 			$docs = $this->docs->getList( $arg );
 			$this->out('doc', $docs);
 
+			if ( !$this->view->is_admin_logged && $docs['user_id'] != $uid ) {
+				Helper::reload('/dokumentumok');
+			}
+
 			parent::$pageTitle =$docs['name']. ' | '. __('Dokumentum szerkesztés');
 			$this->addPagePagination(array(
 				'link' => false,
@@ -237,6 +241,46 @@ class dokumentumok extends Controller{
 			}
 
 		}
+
+		public function delete()
+		{
+			$uid = $this->view->_USERDATA['data']['ID'];
+
+			$arg = array();
+			$arg['uid'] = $uid;
+			$arg['get'] = $this->gets[2];
+
+			$docs = $this->docs->getList( $arg );
+			$this->out('doc', $docs);
+
+			if ( !$this->view->is_admin_logged && $docs['user_id'] != $uid ) {
+				Helper::reload('/dokumentumok');
+			}
+
+			parent::$pageTitle =$docs['name']. ' | '. __('Dokumentum törlése');
+			$this->addPagePagination(array(
+				'link' => false,
+				'title' =>__('Törlés')
+			));
+
+			$this->addPagePagination(array(
+				'link' => false,
+				'title' => $docs['name']
+			));
+
+			if( isset($_POST['deleteFile']) )
+			{
+				try {
+					$this->docs->deleteFile( $uid, $_POST );
+					Helper::reload('/dokumentumok');
+				} catch ( Exception $e ) {
+					$this->view->err = true;
+					$this->view->bmsg = Helper::makeAlertMsg('pError', $e->getMessage());
+				}
+			}
+
+		}
+
 
 		function __destruct(){
 			// RENDER OUTPUT

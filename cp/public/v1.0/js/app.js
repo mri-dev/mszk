@@ -81,10 +81,94 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 		});
 	}
 
+	$scope.loadMyDocs = function( callback ) {
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "Documents",
+				mode: 'getList',
+				params: {
+					not_in_project: $scope.project.ID
+				}
+			})
+		}).success(function(r){
+			console.log(r);
+			if (typeof callback !== 'undefined') {
+				callback(r.data);
+			}
+		});
+	}
+
+	$scope.projectDocsAdder = function()
+	{
+		$scope.loadMyDocs(function(docs){
+			var confirm = $mdDialog.confirm({
+				controller: ProjectDOCSAdderController,
+				templateUrl: '/ajax/modal/projectdocsadder',
+				parent: angular.element(document.body),
+				scope: $scope,
+				preserveScope:true,
+				locals: {
+	        config: $scope.loadconfig,
+					project: $scope.project,
+					docs: docs
+				}
+			});
+
+			$mdDialog.show(confirm)
+			.then(function() {
+	      $scope.status = 'You decided to get rid of your debt.';
+	    }, function() {
+	      $scope.status = 'You decided to keep your debt.';
+	    });
+		});
+
+
+		function ProjectDOCSAdderController( $scope, $mdDialog, config, project, docs) {
+      $scope.saving = false;
+      $scope.loadconfig = config;
+      $scope.project = project;
+      $scope.docs = docs;
+			$scope.selected_doc_to_add = false;
+			$scope.closeDialog = function(){
+				$mdDialog.hide();
+			}
+
+      $scope.addDocToroject = function( type ){
+        if (!$scope.saving) {
+          $scope.saving = true;
+
+          $http({
+      			method: 'POST',
+      			url: '/ajax/post',
+      			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      			data: $.param({
+      				type: "Projects",
+              mode: 'addDocument',
+							project: $scope.project.ID,
+							doc: $scope.selected_doc_to_add
+      			})
+      		}).success(function(r){
+            console.log(r);
+      			$scope.saving = false;
+						if (r.success == 1) {
+							$scope.toast(r.msg, 'success', 10000);
+							$scope.closeDialog();
+						} else {
+							$scope.toast(r.msg, 'alert', 10000);
+						}
+	        });
+      	}
+			}
+		}
+	}
+
 	$scope.projectEditor = function()
 	{
 		var confirm = $mdDialog.confirm({
-			controller: ProjectEditorDialigController,
+			controller: ProjectEditorDialogController,
 			templateUrl: '/ajax/modal/usereditproject',
 			parent: angular.element(document.body),
 			scope: $scope,
@@ -102,7 +186,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
       $scope.status = 'You decided to keep your debt.';
     });
 
-		function ProjectEditorDialigController( $scope, $mdDialog, config, project) {
+		function ProjectEditorDialogController( $scope, $mdDialog, config, project) {
       $scope.saving = false;
       $scope.loadconfig = config;
       $scope.project = project;

@@ -2,6 +2,7 @@
 use PortalManager\Template;
 use PortalManager\OfferRequests;
 use PortalManager\Projects;
+use PortalManager\Documents;
 
 class ajax extends Controller
 {
@@ -19,6 +20,32 @@ class ajax extends Controller
 
 			switch($type)
 			{
+				case 'Documents':
+					$ret['data'] = array();
+					$ret['pass'] = $_POST;
+
+					$this->docs = new Documents(array('db' => $this->db));
+
+					switch ( $mode )
+					{
+						case 'getList':
+							$arg = array();
+							$arg['uid'] = $this->view->_USERDATA['data']['ID'];
+							$arg['from_user'] = $arg['uid'];
+							$arg['limit'] = 99999;
+							if (isset($_POST['params']['not_in_project'])) {
+								$arg['not_in_project'] = $_POST['params']['not_in_project'];
+							}
+							$docs = $this->docs->getList($arg);
+							$ret['data'] = $docs['data'];
+							$ret['pparams'] = $arg;
+							$this->setSuccess(__('Dokumentumok betöltve'), $ret);
+						break;
+					}
+
+					unset($this->docs);
+					echo json_encode($ret);
+				break;
 				case 'Projects':
 					$ret['data'] = array();
 					$ret['pass'] = $_POST;
@@ -57,9 +84,18 @@ class ajax extends Controller
 							}
 
 						break;
+						case 'addDocument':
+							try {
+								$projects->addDocument( $project, $doc, $this->view->_USERDATA['data']['ID'] );
+								$this->setSuccess(__('Dokumentum hozzáadásra került a projekthez.'), $ret);
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
 					}
+						unset($projects);
 					echo json_encode($ret);
-					break;
+				break;
 				case 'Requests':
 					$ret['data'] = array();
 					$ret['pass'] = $_POST;

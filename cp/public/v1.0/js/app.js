@@ -131,7 +131,6 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
       $scope.loadconfig = config;
       $scope.project = project;
       $scope.docs = docs;
-			$scope.selected_doc_to_add = false;
 			$scope.closeDialog = function(){
 				$mdDialog.hide();
 			}
@@ -139,6 +138,8 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
       $scope.addDocToroject = function( type ){
         if (!$scope.saving) {
           $scope.saving = true;
+
+						console.log($scope);
 
           $http({
       			method: 'POST',
@@ -148,7 +149,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
       				type: "Projects",
               mode: 'addDocument',
 							project: $scope.project.ID,
-							doc: $scope.selected_doc_to_add
+							doc: $scope.project.selected_doc_to_add
       			})
       		}).success(function(r){
             console.log(r);

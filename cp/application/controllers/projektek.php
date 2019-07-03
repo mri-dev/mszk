@@ -1,5 +1,6 @@
 <?php
 use PortalManager\Projects;
+use PortalManager\Documents;
 
 class projektek extends Controller
 {
@@ -33,6 +34,7 @@ class projektek extends Controller
       ));
 
       $hashkey = $this->gets[2];
+			$uid = $this->view->_USERDATA['data']['ID'];
 
 			// Hozzáfárás ellenőrzése
 			$projects = new Projects(array('db' => $this->db));
@@ -42,6 +44,45 @@ class projektek extends Controller
 			{
 				\Helper::reload('/'.__CLASS__.'/aktualis');
 			}
+
+			$projectdata = $projects->getProjectData( $hashkey );
+
+			$outputdocs = array();
+			$docs = new Documents(array('db' => $this->db));
+
+			// Díjbekérők
+			$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
+			$folderinfo = $docs->getFolderData($folderhash);
+
+			$outputdocs['dijbekero'] = $docs->getList(array(
+				'limit' => 9999,
+				'in_project' => $projectdata['ID'],
+				'order' => 'xp.added_at DESC',
+				'folder' => $folderinfo['ID'],
+				'expire_qry' => '<= now()',
+				'teljesites_qry' => 'IS NULL'
+			));
+
+			// Számlák
+			$folderhash = $docs->findFolderHashkey('szamla', $uid);
+			$folderinfo = $docs->getFolderData($folderhash);
+
+			$outputdocs['szamla'] = $docs->getList(array(
+				'limit' => 9999,
+				'in_project' => $projectdata['ID'],
+				'order' => 'xp.added_at DESC',
+				'folder' => $folderinfo['ID']
+			));
+
+			// Dokumentumok
+			$outputdocs['all'] = $docs->getList(array(
+				'limit' => 10,
+				'in_project' => $projectdata['ID'],
+				'order' => 'xp.added_at DESC'
+			));
+
+
+			$this->out('doc', $outputdocs);
     }
 
     public function aktualis()

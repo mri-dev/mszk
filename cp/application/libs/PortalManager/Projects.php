@@ -8,12 +8,36 @@ namespace PortalManager;
 */
 class Projects
 {
+	const DBPROJECTS = 'projects';
+
 	private $db = null;
 
 	function __construct( $arg = array() )
 	{
 		$this->db = $arg[db];
 		return $this;
+	}
+
+	public function getProjectData( $key )
+	{
+		$arg = array();
+		$where = '';
+
+		if (is_numeric($key)) {
+			$where = 'p.ID = :id';
+			$arg['id'] = $key;
+		} else {
+			$where = 'p.hashkey = :hash';
+			$arg['hash'] = $key;
+		}
+
+		$db = $this->db->squery($iq = "SELECT p.* FROM ".self::DBPROJECTS." as p WHERE ".$where, $arg);
+
+		if ($db->rowCount() == 0) {
+			return false;
+		} else {
+			return $db->fetch(\PDO::FETCH_ASSOC);
+		}
 	}
 
 	public function getList( $arg = array() )
@@ -85,6 +109,7 @@ class Projects
 			$d['user_servicer'] = $users->get( array('user' => $d['servicer_id'], 'userby' => 'ID', 'alerts' => false) );
 			$d['partner'] = ($d['my_relation'] == 'requester') ? $d['user_servicer'] : $d['user_requester'];
 			$d['offer'] = $this->getOffer( $d['offer_id'] );
+			$d['paidamount'] = $this->getProjectPaidAmount( $d['ID'] );
 			$d['status_percent'] = $this->getProjectProgress( $d );
 			$d['status_percent_class'] = \Helper::progressBarColor($d['status_percent']);
 			$d['paying_percent'] = $this->getProjectPaymentProgress( $d['ID'] );
@@ -103,19 +128,52 @@ class Projects
 
 	public function addDocument( $project_id, $doc_id, $adder_user_id )
 	{
-		// register
-		$this->db->insert(
-			\PortalManager\Documents::DBXREF_PROJECT,
-			array(
-				'doc_id' => $doc_id,
-				'project_id' => $project_id,
-				'adder_user_id' => $adder_user_id
-			)
-		);
+		$check = $this->db->squery("SELECT ID FROM ".\PortalManager\Documents::DBXREF_PROJECT." WHERE project_id = :pid and doc_id = :did", array('pid' => $project_id, 'did' => $doc_id));
 
-		// get partner id from project
+		if ($check->rowCount() == 0) {
+			// register
+			$this->db->insert(
+				\PortalManager\Documents::DBXREF_PROJECT,
+				array(
+					'doc_id' => $doc_id,
+					'project_id' => $project_id,
+					'adder_user_id' => $adder_user_id
+				)
+			);
 
-		// email alert other partner
+			$xrefid = $this->db->lastInsertId();
+
+			// get partner id from project
+			$partner_id = false;
+			$partner_relation = false;
+			$project = $this->db->squery("SELECT p.requester_id, p.servicer_id FROM ".self::DBPROJECTS." as p WHERE p.ID = :pid", array('pid' => $project_id));
+			$projectdata = $project->fetch(\PDO::FETCH_ASSOC);
+
+			if ( $projectdata['requester_id'] == $adder_user_id )
+			{
+				$partner_id = $projectdata['servicer_id'];
+				$partner_relation = 'servicer';
+			}
+			else if( $projectdata['servicer_id'] == $adder_user_id )
+			{
+				$partner_id = $projectdata['requester_id'];
+				$partner_relation = 'requester';
+			}
+
+			// update partner id on xref
+			$this->db->update(
+				\PortalManager\Documents::DBXREF_PROJECT,
+				array(
+					'partner_id' => $partner_id,
+					'adder_relation' => ($partner_relation == 'servicer') ? 'requester' : 'servicer'
+				),
+				sprintf("ID = %d", (int)$xrefid)
+			);
+
+			// email alert other partner
+		} else{
+			throw new \Exception(__("A dokumentum korábban már be lett csatolva."));
+		}
 	}
 
 	public function userModifyProject( $project, $uid = false )
@@ -215,6 +273,17 @@ class Projects
 		return $ret;
 	}
 
+	public function getProjectPaidAmount( $project_id )
+	{
+		$paid_amount = (float)$this->db->squery("SELECT
+			SUM(d.ertek)
+		FROM ".\PortalManager\Documents::DBXREF_PROJECT." as xp
+		LEFT OUTER JOIN ".\PortalManager\Documents::DBTABLE." as d ON d.ID = xp.doc_id
+		WHERE xp.project_id = :project and d.teljesites_at IS NOT NULL and 3 IN (SELECT folder_id FROM ".\PortalManager\Documents::DBXREF_FOLDER."  WHERE doc_id = xp.doc_id)",array('project' => $project_id))->fetchColumn();
+
+		return $paid_amount;
+	}
+
 	public function getProjectProgress( $project_raw )
 	{
 		$p = (int)$project_raw['status_percent'];
@@ -224,7 +293,19 @@ class Projects
 	// TODO: Számlák alapján összevetni
 	public function getProjectPaymentProgress( $project_id )
 	{
-		return 0;
+		$paid_amount = $this->getProjectPaidAmount( $project_id );
+
+		$project = $this->getProjectData( $project_id );
+		$offer_id = $project['offer_id'];
+		$offer = $this->getOffer( $offer_id );
+
+		$offer_price  = (float)$offer['price'];
+
+		$amount = $paid_amount / $offer_price * 100;
+
+		$amount = number_format($amount, 2, ".", "");
+
+		return $amount;
 	}
 
 	public function getOffer( $id)

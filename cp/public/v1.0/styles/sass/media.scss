@@ -1497,6 +1497,19 @@ footer {
 	a:hover{
 		text-decoration: none;
 	}
+	.paid-info{
+		margin: 10px 0 0 0;
+
+		.paidprice{
+			font-weight: bold;
+		}
+
+		.allpaid{
+			font-weight: bold;
+			color: $color-green;
+			margin: 0 0 0 10px;
+		}
+	}
 	h2{
 		color: black;
 		font-size: 1.4rem;
@@ -1797,6 +1810,70 @@ footer {
 }
 .ajaxdialog.saveproject{
 	min-width: 650px;
+}
+
+.data-list{
+	font-size: 0.85rem;
+	.list-item{
+		& > .holder{
+			display: -webkit-box;
+		  display: -ms-flexbox;
+		  display: flex;
+			align-items: center;
+			& > div {
+				padding: 10px 15px;
+			}
+		}
+		&:nth-child(odd){
+			background: #f5f5f5;
+		}
+	}
+	.header{
+		text-transform: uppercase;
+    background: #efefef;
+    color: black;
+    font-size: 0.6rem;
+    font-weight: bold;
+    border-bottom: 2px solid #c9c9c9;
+
+		& > .holder{
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			align-items: center;
+			& > div {
+				padding: 10px 15px;
+			}
+		}
+	}
+
+	.list-item > .holder .data,
+	.header > .holder .data{
+		flex: 1;
+		.subtitle{
+			font-size: 0.75rem;
+			span + span {
+				margin: 0 0 0 10px;
+			}
+			.infolder{
+				color: $color-red-light;
+			}
+			.teljesitve {
+				font-weight: bold;
+				color: $color-green;
+			}
+		}
+	}
+	.list-item > .holder .add-at,
+	.header > .holder .add-at{
+		flex-basis: 120px;
+		text-align: center;
+	}
+	.list-item > .holder .relation,
+	.header > .holder .relation{
+		flex-basis: 100px;
+		text-align: center;
+	}
 }
 
 md-dialog{

@@ -12,6 +12,7 @@ class Documents
   const DBFOLDERS = 'docs_folders';
   const DBXREF_FOLDER = 'documents_x_folder';
   const DBXREF_PROJECT = 'documents_x_project';
+  const DBLOG_VIEWS = 'documents_view';
 
 	private $db = null;
 
@@ -440,11 +441,22 @@ class Documents
 		$q = "SELECT SQL_CALC_FOUND_ROWS
 			d.*,
       f.nev as user_nev,
-      fa.ertek as user_company
-		FROM ".self::DBTABLE." as d
+      fa.ertek as user_company";
+
+      if ( isset($arg['in_project']) && !empty($arg['in_project']) ) {
+        $q .= ",xp.added_at as xproject_added_at";
+      }
+
+
+		$q .= " FROM ".self::DBTABLE." as d
     LEFT OUTER JOIN felhasznalok as f ON f.ID = d.user_id
-    LEFT OUTER JOIN felhasznalo_adatok as fa ON fa.fiok_id = d.user_id and fa.nev = 'company_name'
-		WHERE 1=1 ";
+    LEFT OUTER JOIN felhasznalo_adatok as fa ON fa.fiok_id = d.user_id and fa.nev = 'company_name' ";
+
+    if ( isset($arg['in_project']) && !empty($arg['in_project']) ) {
+      $q .= " LEFT OUTER JOIN ".self::DBXREF_PROJECT." as xp ON xp.doc_id = d.ID and xp.project_id = ".$arg['in_project'];
+    }
+
+    $q .= " WHERE 1=1 ";
 
     if (!isset($arg['exclude_unavaiable'])) {
 			$q .= " and (d.avaiable_to IS NULL or d.avaiable_to >= now())";
@@ -490,6 +502,14 @@ class Documents
       $qarg['folder'] = (int)$arg['folder'];
 		}
 
+    if (isset($arg['expire_qry']) && !empty($arg['expire_qry']) ) {
+      $q .= " and d.expire_at ".$arg['expire_qry'];
+    }
+
+    if (isset($arg['teljesites_qry']) && !empty($arg['teljesites_qry']) ) {
+      $q .= " and d.teljesites_at ".$arg['teljesites_qry'];
+    }
+
     // Searches
     if (isset($arg['search'])) {
       foreach ((array)$arg['search'] as $sk => $s ) {
@@ -500,7 +520,13 @@ class Documents
       }
     }
 
-		$q .= " ORDER BY d.created_at DESC";
+
+
+    if (!isset($arg['order'])) {
+      $q .= " ORDER BY d.created_at DESC";
+    } else {
+      $q .= " ORDER BY ".$arg['order'];
+    }
 
     if($arg[limit]){
 			$q = rtrim($q,";");
@@ -529,6 +555,11 @@ class Documents
       $d['folders'] = $this->getDocFolders( $d['ID'] );
       $d['is_me'] = ($uid && $uid == $d['user_id']) ? true : false;
 
+      // Ha projekt kapcsán lett szűrve
+      if ( isset($arg['in_project']) && !empty($arg['in_project']) )
+      {
+        $d['xrefproject'] = $this->db->squery("SELECT xp.ID, xp.adder_user_id, xp.partner_id, xp.adder_relation, xp.added_at FROM ".self::DBXREF_PROJECT." as xp WHERE xp.project_id = :pid and xp.doc_id = :did", array('pid' => $arg['in_project'], 'did' => $d['ID']))->fetch(\PDO::FETCH_ASSOC);
+      }
 			$list[] = $d;
 		}
 
@@ -544,6 +575,33 @@ class Documents
       );
     }
 	}
+
+  public function logDocumentView( $doc_hashkey )
+  {
+    $date = date('Y-m-d');
+    $check = $this->db->squery("SELECT ID, visited FROM ".self::DBLOG_VIEWS." WHERE visit_date = :date and hashkey = :hash", array('date' => $date, 'hash' => $doc_hashkey));
+
+    if ($check->rowCount() == 0) {
+      $this->db->insert(
+        self::DBLOG_VIEWS,
+        array(
+          'hashkey' => $doc_hashkey,
+          'visit_date' => $date,
+          'visited' => 1
+        )
+      );
+    } else {
+      $checkd = $check->fetch(\PDO::FETCH_ASSOC);
+      $visited = (int)$checkd['visited'];
+      $this->db->update(
+        self::DBLOG_VIEWS,
+        array(
+          'visited' => $visited+1
+        ),
+        sprintf("hashkey = '%s' and visit_date = '%s'", $doc_hashkey, $date)
+      );
+    }
+  }
 
 	public function __destruct()
 	{

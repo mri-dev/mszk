@@ -54,7 +54,7 @@ class Controller {
         if ($this->view->_USERDATA) {
           $owndir = 'src/uploads/byusers/'.$this->view->_USERDATA['data']['ID'];
           if ( !file_exists($owndir) ) {
-            mkdir($owndir, 0766);
+            mkdir($owndir, 0755);
           }
           $_SESSION['RF']['subfolder'] = 'byusers/'.$this->view->_USERDATA['data']['ID'].'/';
       		define('FILE_BROWSER_IMAGE', JS.'tinymce/plugins/filemanager/dialog.php?lang=hu_HU');

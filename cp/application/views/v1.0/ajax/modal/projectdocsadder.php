@@ -17,7 +17,8 @@
         </div>
         <md-input-container ng-if="docs">
           <label><?=__('Dokumentum kiválasztása')?></label>
-          <md-select ng-model="selected_doc_to_add">
+          {{selected_doc_to_add}}
+          <md-select ng-model="project.selected_doc_to_add">
             <md-option ng-value="doc.ID" ng-repeat="doc in docs">
               {{doc.name}}
               <div class="dialog-option-infos">

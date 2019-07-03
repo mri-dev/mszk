@@ -16,13 +16,15 @@ class doc extends Controller{
 			$arg['get'] = $hashkey;
 			$docs = $this->docs->getList( $arg );
 
-      print_r($docs);
-
       $file = rtrim(ADMROOT,'/') . $docs['docfile'];
 
-      echo $file;
+			if ($docs) {
+				$this->docs->logDocumentView($docs['hashkey']);
+			}
 
-
+			header("HTTP/1.1 301 Moved Permanently");
+			header("Location: ".$file);
+			exit();
 
 		}
 

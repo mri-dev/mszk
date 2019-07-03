@@ -38,6 +38,10 @@
                 <div class="progress">
                   <div class="progress-bar" ng-class="project.paying_percent_class" role="progressbar" style="width: {{project.paying_percent}}%;" aria-valuenow="{{project.paying_percent}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project.paying_percent!=0">{{project.paying_percent}}%</span></div>
                 </div>
+                <div class="paid-info">
+                  <span class="allprice">{{project.offer.price}}</span> / <span class="paidprice">{{project.paidamount}}</span>
+                  <span class="allpaid" ng-if="project.offer.price!=0&&project.paidamount>=project.offer.price"><?=__('Pénzügyileg teljesítve')?> <i class="fas fa-check"></i></span>
+                </div>
               </td>
             </tr>
             <tr>
@@ -188,57 +192,195 @@
     </div>
     <div class="wblock color-red">
       <div class="data-container">
+        <?php $doc = $this->doc['dijbekero']; ?>
+        <?php if ($doc['return_num'] != 0): ?>
+        <div class="data-list">
+          <div class="wrapper">
+            <div class="header">
+              <div class="holder">
+                <div class="data"><?=__('Dokumentum adatok')?></div>
+                <div class="relation"><?=__('Hozzáadta')?></div>
+                <div class="add-at"><?=__('Időpont')?></div>
+              </div>
+            </div>
+            <?php foreach ((array)$doc['data'] as $d): ?>
+            <div class="list-item">
+              <div class="holder">
+                <div class="data">
+                  <div class="title">
+                    <a href="/doc/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['name']?></strong></a>
+                  </div>
+                  <div class="subtitle">
+                    <?php if ($d['folders'][0]): ?>
+                    <span class="infolder"><?=$d['folders'][0]['folder_name']?></span>
+                    <?php endif; ?>
+                    <?php if ($d['ertek'] != 0): ?>
+                    <span class="doc-ertek"><strong><?=\Helper::cashFormat($d['ertek'])?></strong> <?=__('Ft + ÁFA')?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($d['expire_at'])): ?>
+                    <span class="expire"><?=__('Határidő')?>: <strong><?=$d['expire_at']?></strong></span>
+                    <?php endif; ?>
+                    <?php if (!empty($d['teljesites_at'])): ?>
+                    <span class="teljesitve" title="<?=$d['teljesites_at']?>"><?=__('Teljesítve')?> <i class="fas fa-check"></i></span>
+                    <?php endif; ?>
+                  </div>
+                </div>
+                <div class="relation">
+                  <?=($d['xrefproject'] && $d['xrefproject']['adder_user_id'] == $this->_USERDATA['data']['ID'])?__('Én'):__('Partner')?>
+                </div>
+                <div class="add-at">
+                  <?=date('Y/m/d H:i', strtotime($d['xproject_added_at']))?>
+                </div>
+              </div>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <?php else: ?>
         <div class="no-data-view">
           <div class="ico"><i class="far fa-check-circle"></i></div>
-          <div class="text"><?=__('Nincsenek díjbekérők!')?></div>
+          <div class="text"><?=__('Nincsenek lejárt díjbekérők!')?></div>
         </div>
+        <?php endif; ?>
       </div>
       <div class="data-footer">
         <div class="d-flex align-items-center">
           <div class="title">
             <h3><?=__('Lejárt díjbekérők')?></h3>
-            <a href="/dokumentumok/dijbekero"><?=__('Tovább az összes díjbekérőhöz')?></a>
+            <a href="/dokumentumok/dijbekero?resetproject=1"><?=__('Tovább az összes díjbekérőhöz')?></a>
           </div>
           <div class="count">
-            <div class="count-wrapper"><div class="num"><?=$this->badges['docs']['dijbekero']['aktualis']?></div></div>
+            <div class="count-wrapper"><div class="num"><?=(int)$doc['total_num']?></div></div>
           </div>
         </div>
       </div>
     </div>
     <div class="wblock color-green">
       <div class="data-container">
+        <?php $doc = $this->doc['szamla']; ?>
+        <?php if ($doc['return_num'] != 0): ?>
+        <div class="data-list">
+          <div class="wrapper">
+            <div class="header">
+              <div class="holder">
+                <div class="data"><?=__('Dokumentum adatok')?></div>
+                <div class="relation"><?=__('Hozzáadta')?></div>
+                <div class="add-at"><?=__('Időpont')?></div>
+              </div>
+            </div>
+            <?php foreach ((array)$doc['data'] as $d): ?>
+            <div class="list-item">
+              <div class="holder">
+                <div class="data">
+                  <div class="title">
+                    <a href="/doc/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['name']?></strong></a>
+                  </div>
+                  <div class="subtitle">
+                    <?php if ($d['folders'][0]): ?>
+                    <span class="infolder"><?=$d['folders'][0]['folder_name']?></span>
+                    <?php endif; ?>
+                    <?php if ($d['ertek'] != 0): ?>
+                    <span class="doc-ertek"><strong><?=\Helper::cashFormat($d['ertek'])?></strong> <?=__('Ft + ÁFA')?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($d['expire_at'])): ?>
+                    <span class="expire"><?=__('Határidő')?>: <strong><?=$d['expire_at']?></strong></span>
+                    <?php endif; ?>
+                    <?php if (!empty($d['teljesites_at'])): ?>
+                    <span class="teljesitve" title="<?=$d['teljesites_at']?>"><?=__('Teljesítve')?> <i class="fas fa-check"></i></span>
+                    <?php endif; ?>
+                  </div>
+                </div>
+                <div class="relation">
+                  <?=($d['xrefproject'] && $d['xrefproject']['adder_user_id'] == $this->_USERDATA['data']['ID'])?__('Én'):__('Partner')?>
+                </div>
+                <div class="add-at">
+                  <?=date('Y/m/d H:i', strtotime($d['xproject_added_at']))?>
+                </div>
+              </div>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <?php else: ?>
         <div class="no-data-view">
           <div class="ico"><i class="far fa-check-circle"></i></div>
           <div class="text"><?=__('Nincsenek számlák!')?></div>
         </div>
+        <?php endif; ?>
       </div>
       <div class="data-footer">
         <div class="d-flex align-items-center">
           <div class="title">
             <h3><?=__('Számlák')?></h3>
-            <a href="/dokumentumok/szamla"><?=__('Tovább az összes számlához')?></a>
+            <a href="/dokumentumok/szamla?resetproject=1"><?=__('Tovább az összes számlához')?></a>
           </div>
           <div class="count">
-            <div class="count-wrapper"><div class="num"><?=$this->badges['docs']['dijbekero']['aktualis']?></div></div>
+            <div class="count-wrapper"><div class="num"><?=(int)$doc['total_num']?></div></div>
           </div>
         </div>
       </div>
     </div>
     <div class="wblock color-blue">
       <div class="data-container">
+        <?php $doc = $this->doc['all']; ?>
+        <?php if ($doc['return_num'] != 0): ?>
+        <div class="data-list">
+          <div class="wrapper">
+            <div class="header">
+              <div class="holder">
+                <div class="data"><?=__('Dokumentum adatok')?></div>
+                <div class="relation"><?=__('Hozzáadta')?></div>
+                <div class="add-at"><?=__('Időpont')?></div>
+              </div>
+            </div>
+            <?php foreach ((array)$doc['data'] as $d): ?>
+            <div class="list-item">
+              <div class="holder">
+                <div class="data">
+                  <div class="title">
+                    <a href="/doc/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['name']?></strong></a>
+                  </div>
+                  <div class="subtitle">
+                    <?php if ($d['folders'][0]): ?>
+                    <span class="infolder"><?=$d['folders'][0]['folder_name']?></span>
+                    <?php endif; ?>
+                    <?php if ($d['ertek'] != 0): ?>
+                    <span class="doc-ertek"><strong><?=\Helper::cashFormat($d['ertek'])?></strong> <?=__('Ft + ÁFA')?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($d['expire_at'])): ?>
+                    <span class="expire"><?=__('Határidő')?>: <strong><?=$d['expire_at']?></strong></span>
+                    <?php endif; ?>
+                    <?php if (!empty($d['teljesites_at'])): ?>
+                    <span class="teljesitve" title="<?=$d['teljesites_at']?>"><?=__('Teljesítve')?> <i class="fas fa-check"></i></span>
+                    <?php endif; ?>
+                  </div>
+                </div>
+                <div class="relation">
+                  <?=($d['xrefproject'] && $d['xrefproject']['adder_user_id'] == $this->_USERDATA['data']['ID'])?__('Én'):__('Partner')?>
+                </div>
+                <div class="add-at">
+                  <?=date('Y/m/d H:i', strtotime($d['xproject_added_at']))?>
+                </div>
+              </div>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <?php else: ?>
         <div class="no-data-view">
           <div class="ico"><i class="far fa-check-circle"></i></div>
           <div class="text"><?=__('Nincsenek dokumentumok!')?></div>
         </div>
+        <?php endif; ?>
       </div>
       <div class="data-footer">
         <div class="d-flex align-items-center">
           <div class="title">
             <h3><?=__('Legfrissebb dokumentumok')?></h3>
-            <a href="/dokumentumok/"><?=__('Tovább az összes dokumentumhoz')?></a>
+            <a href="/dokumentumok/?setproject=<?=$this->gets[2]?>"><?=__('Tovább az összes dokumentumhoz')?>: <strong><?=$doc['total_num']?> <?=__('darab')?></strong> </a>
           </div>
           <div class="count">
-            <div class="count-wrapper"><div class="num"><?=$this->badges['docs']['dijbekero']['aktualis']?></div></div>
+            <div class="count-wrapper"><div class="num"><?=(int)$doc['return_num']?></div></div>
           </div>
         </div>
       </div>

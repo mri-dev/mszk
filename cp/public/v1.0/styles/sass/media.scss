@@ -984,6 +984,34 @@ footer {
 
 .documents-controll{
 	margin: -25px;
+	.project-doc-filter{
+		background: #c62d3a;
+		color: #f1e1e3;
+		padding: 15px;
+		font-size: 1.2rem;
+
+		a, a:visited, a:link {
+			color: white;
+		}
+
+		.head {
+			font-weight: 300;
+			text-transform: uppercase;
+			margin: 0 0 5px 0;
+			font-size: 0.65rem;
+		}
+
+		.title{
+			font-weight: bold;
+			flex: 1;
+		}
+
+		.d-flex {
+			& > div + div {
+				padding: 0 10px;
+			}
+		}
+	}
 
 	.doctitle{
 		a{
@@ -995,6 +1023,15 @@ footer {
 		margin: 5px 0 0 0;
 		font-size: 0.7rem;
 		color: #5e5e5e;
+
+		.unvisible{
+			background: $color-red;
+			color: white;
+	    font-weight: 400;
+	    padding: 1px 5px;
+	    margin: 0 4px;
+			border-radius: 2px;
+		}
 
 		strong {
 			color: black;
@@ -1131,8 +1168,14 @@ footer {
 					margin: -5px;
 
 					.name{
-
 						flex: 1;
+					}
+					.owndoc{
+						label {
+							line-height: 30px;
+							margin: 0;
+							cursor: pointer;
+						}
 					}
 				}
 				.d-flex > div {
@@ -1631,7 +1674,6 @@ footer {
 		}
 	}
 }
-
 
 .action-buttons{
 	margin: 0 0 15px 0;

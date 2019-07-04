@@ -1,5 +1,6 @@
 <?php
 use PortalManager\Documents;
+use PortalManager\Projects;
 use PortalManager\Pagination;
 
 class dokumentumok extends Controller{
@@ -15,6 +16,17 @@ class dokumentumok extends Controller{
 			// Ha nincs belépve, akkor átirányít a bejelentkezésre
 			if ( !$this->Users->user && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio'  && $this->gets[0] != 'delete') {
 				Helper::reload('/belepes');
+			}
+
+			if (isset($_GET['resetproject']))
+			{
+				setcookie('projecthash', false, time() - 3600, '/'.__CLASS__);
+				Helper::reload(\Helper::removeGETParamFromURL('resetproject'));
+			}
+
+			if (isset($_GET['setproject'])) {
+				setcookie('projecthash', $_GET['setproject'], time() + 3600 * 24, '/'.__CLASS__);
+				Helper::reload(\Helper::removeGETParamFromURL('setproject'));
 			}
 
       if ($this->gets[1] != '' && !is_numeric($this->gets[1])) {
@@ -34,9 +46,9 @@ class dokumentumok extends Controller{
 
 			$this->docs = new Documents(array('db' => $this->db));
 			$folderhash = $this->docs->findFolderHashkey($this->gets[1], $uid);
-			$docs_folders = $this->docs->getAvaiableFolders( $uid );
+			$docs_folders = $this->docs->getAvaiableFolders( $uid, false, $_COOKIE['projecthash'] );
 			$this->out('folders', $docs_folders);
-			$this->out('folderinfo', $this->docs->getFolderData($folderhash));
+			$this->out('folderinfo', $this->docs->getFolderData( $folderhash ));
 
 			// Dokumentum lista
 			$arg = array();
@@ -52,6 +64,18 @@ class dokumentumok extends Controller{
 			if (isset($_GET['name']) && !empty($_GET['name']))
 			{
 				$arg['search']['name'] = $_GET['name'];
+			}
+
+			if (isset($_GET['own']) && !empty($_GET['own']))
+			{
+				$arg['search']['own'] = (int)$_GET['own'];
+			}
+
+			if ( isset($_COOKIE['projecthash']) && !empty($_COOKIE['projecthash']) ) {
+				$projects = new Projects(array('db' => $this->db));
+				$project = $projects->getProjectData( $_COOKIE['projecthash'], $uid );
+				$arg['in_project'] = $project['ID'];
+				$this->out('project_filtered', $project);
 			}
 
 			$docs = $this->docs->getList( $arg );

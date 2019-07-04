@@ -1,4 +1,16 @@
 <div class="documents-controll">
+  <?php if ($this->project_filtered): ?>
+  <div class="project-doc-filter">
+    <div class="head">
+      <?=__('Projekt dokumentumok')?>:
+    </div>
+    <div class="d-flex">
+      <div class="ico"><i class="fas fa-filter"></i></div>
+      <div class="title"><?=$this->project_filtered['title']?></div>
+      <div class="closer"><a title="<?=__('Projekt szűrő eltávolítása')?>" href="/dokumentumok/?resetproject=1"><i class="far fa-times-circle"></i></a></div>
+    </div>
+  </div>
+  <?php endif; ?>
   <div class="wblock">
     <div class="data-container">
       <div class="d-flex">
@@ -59,20 +71,16 @@
             </div>
           </div>
           <div class="filters">
-            <form class="" action="" method="get">
+            <form id="docfilter" class="" action="" method="get">
               <div class="d-flex">
                 <div class="ftext"><div class="col-form-label-sm"><i class="fas fa-filter"></i> <?=__('Szűrés')?></div> </div>
                 <div class="name">
                   <input type="text" class="form-control form-control-sm<?=(!empty($_GET['name'])?' is-valid':'')?>" name="name" value="<?=$_GET['name']?>" placeholder="<?=__('Keresés: címben...')?>">
                 </div>
-                <div class="folder">
-                  <select class="form-control form-control-sm<?=(!empty($_GET['folder'])?' is-valid':'')?>" name="folder">
-                    <option value="" selected="selected"><?=__('Mappa: összes')?></option>
-                    <option value="" disabled="disabled"></option>
-                    <?php foreach ((array)$this->folders as $folder): ?>
-                    <option value="<?=$folder['hashkey']?>" <?=($folder['hashkey'] == $_GET['folder']||$folder['hashkey'] == $_GET['topfolder'])?'selected="selected"':''?>><?=$folder['name']?></option>
-                    <?php endforeach; ?>
-                  </select>
+                <div class="owndoc">
+                  <div>
+                  <input type="checkbox" name="own" class="form-control ccb" id="own_doc" <?=(isset($_GET['own']))?'checked="checked"':''?> value="1" onclick="$('#docfilter').submit()"><label for="own_doc"><?=__('Saját dokumentumaim')?></label>
+                  </div>
                 </div>
                 <div class="button">
                   <button type="submit" class="btn btn-default btn-sm"><i class="fas fa-search"></i></button>
@@ -110,7 +118,7 @@
                       </div>
                       <div class="sub-datas">
                         <?php if (!empty($doc['avaiable_to'])): ?>
-                          <span><i class="fas fa-history"></i> <?=__('Elérhető')?>: <strong><?=date('Y/m/d', strtotime($doc['avaiable_to']))?>-<?=__('ig')?></strong></span>
+                          <span><i class="fas fa-history"></i> <?=__('Elérhető')?>: <strong><?=date('Y/m/d', strtotime($doc['avaiable_to']))?>-<?=__('ig')?> <? if(time() >= strtotime($doc['avaiable_to'])): ?><span class="unvisible" title="<?=__('Partnerek számára rejtve. Csak a fájl tulajdonosa láthatja.')?>"><?=__('Rejtve')?> <i class="fas fa-eye-slash"></i></span><? endif; ?></strong></span>
                         <?php endif; ?>
                         <?php if (!empty($doc['expire_at'])): ?>
                           <span><i class="far fa-calendar"></i> <?=__('Lejárat')?>: <strong><?=date('Y/m/d', strtotime($doc['expire_at']))?></strong></span>
@@ -127,7 +135,11 @@
                       <a class="folder-link" href="/dokumentumok/<?=$doc['folders'][0]['folder_slug']?>"><?=$doc['folders'][0]['folder_name']?></a>
                     </td>
                     <td class="center user-author">
-                      <strong><?=$doc['user_nev']?></strong> <?=($doc['is_me'])?'(<span class="isme">'.__('Én').'</span>)':''?>
+                      <?php if ($this->is_admin_logged): ?>
+                        <a href="/account/?t=edit&ID=<?=$doc['user_id']?>" target="_blank"><strong><?=$doc['user_nev']?></strong></a>
+                      <?php else: ?>
+                        <strong><?=$doc['user_nev']?></strong> <?=($doc['is_me'])?'(<span class="isme">'.__('Én').'</span>)':''?>
+                      <?php endif; ?>
                       <?php if ($doc['user_company'] != ''): ?>
                       <div class="company">
                         <?=$doc['user_company']?>

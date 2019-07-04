@@ -247,7 +247,7 @@
         <div class="d-flex align-items-center">
           <div class="title">
             <h3><?=__('Lejárt díjbekérők')?></h3>
-            <a href="/dokumentumok/dijbekero?resetproject=1"><?=__('Tovább az összes díjbekérőhöz')?></a>
+            <a href="/dokumentumok/dijbekero?setproject=<?=$this->gets[2]?>"><?=__('Tovább az összes díjbekérőhöz')?></a>
           </div>
           <div class="count">
             <div class="count-wrapper"><div class="num"><?=(int)$doc['total_num']?></div></div>
@@ -312,7 +312,7 @@
         <div class="d-flex align-items-center">
           <div class="title">
             <h3><?=__('Számlák')?></h3>
-            <a href="/dokumentumok/szamla?resetproject=1"><?=__('Tovább az összes számlához')?></a>
+            <a href="/dokumentumok/szamla?setproject=<?=$this->gets[2]?>"><?=__('Tovább az összes számlához')?></a>
           </div>
           <div class="count">
             <div class="count-wrapper"><div class="num"><?=(int)$doc['total_num']?></div></div>

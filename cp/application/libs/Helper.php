@@ -17,6 +17,7 @@
 
 			return $return;
 		}
+
 		static function currentPageNum(){
 		  $num 	= 0;
 		  $last = self::getLastParam();
@@ -24,6 +25,33 @@
 		  $num 	= (is_numeric($last)) ? $last : 1;
 
 		  return $num;
+		}
+
+		static function removeGETParamFromURL( $param )
+		{
+			if (isset($_SERVER['HTTPS']) &&
+			    ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+			    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+			    $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+			  $protocol = 'https://';
+			}
+			else {
+			  $protocol = 'http://';
+			}
+
+			$url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+			$xurl = explode("?", $url);
+			$url = $xurl[0];
+
+			$get = $_GET;
+			unset($get['tag']);
+			unset($get[$param]);
+
+			if ( !empty($get) ) {
+				$url .= '?'.http_build_query($get);
+			}
+
+			return $url;
 		}
 
 		static function formatSizeUnits($bytes)

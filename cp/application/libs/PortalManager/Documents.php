@@ -22,7 +22,7 @@ class Documents
 		return $this;
 	}
 
-  public function getAvaiableFolders( $uid = false, $szulo_id = false )
+  public function getAvaiableFolders( $uid = false, $szulo_id = false, $projecthash = false )
   {
     $list = array();
     $qarg = array();
@@ -59,7 +59,7 @@ class Documents
     foreach ((array)$data as $d)
     {
       $child = $this->getAvaiableFolders( $uid, (int)$d['ID']);
-      $d['filecnt'] = $this->getFolderFileCount( $uid, (int)$d['ID'] );
+      $d['filecnt'] = $this->getFolderFileCount( $uid, (int)$d['ID'], $projecthash );
       $d['child'] = $child;
       $list[] = $d;
     }
@@ -67,21 +67,40 @@ class Documents
     return $list;
   }
 
-  public function getFolderFileCount( $uid, $folder_id )
+  public function getFolderFileCount( $uid, $folder_id, $projecthash = false )
   {
     $qarg = array('folder' => $folder_id);
 
     if ($uid) {
       $user = $this->db->squery("SELECT user_group FROM felhasznalok WHERE ID = :id", array('id' => $uid))->fetch(\PDO::FETCH_ASSOC);
+      $controll_user_admin = ($user['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $user['user_group'] == \PortalManager\Users::USERGROUP_ADMIN) ? true : false;
     }
 
-    $qry = "SELECT count(d.ID) FROM ".self::DBTABLE." as d WHERE 1=1 and (d.avaiable_to IS NULL or d.avaiable_to >= now())";
+    if ( $projecthash ) {
+      $project_id = (int)$this->db->squery("SELECT ID FROM ".\PortalManager\Projects::DBPROJECTS." WHERE hashkey = :hash", array('hash' => $projecthash))->fetchColumn();
+    }
+
+    $qry = "SELECT d.ID FROM ".self::DBTABLE." as d WHERE 1=1 ";
+
+    if (!$controll_user_admin) {
+      $qry .= "and (d.avaiable_to IS NULL or (d.avaiable_to >= now() or :auid = d.user_id))";
+      $qarg['auid'] = $uid;
+    }
+
     if ($user && !in_array($user['user_group'], array(\PortalManager\Users::USERGROUP_ADMIN, \PortalManager\Users::USERGROUP_SUPERADMIN)) ) {
-      $qry .= " and d.user_id = :uid";
+      $qry .= " and (d.user_id = :uid or :uid IN (SELECT partner_id FROM ".self::DBXREF_PROJECT." WHERE doc_id = d.ID))";
       $qarg['uid'] = $uid;
     }
     $qry .= " and FIND_IN_SET(:folder, (SELECT folder_id FROM ".self::DBXREF_FOLDER." WHERE doc_id = d.ID))";
-    $cnt = $this->db->squery( $qry, $qarg )->fetchColumn();
+
+    if ( $projecthash && $project_id != 0 ) {
+      $qry .= " and FIND_IN_SET(:pid, (SELECT project_id FROM ".self::DBXREF_PROJECT." WHERE doc_id = d.ID))";
+      $qarg['pid'] = $project_id;
+    }
+    $cnt = 0;
+    $qry = $this->db->squery( $qry, $qarg );
+
+    $cnt = $qry->rowCount();
 
     return $cnt;
   }
@@ -458,13 +477,26 @@ class Documents
 
     $q .= " WHERE 1=1 ";
 
+    if ( isset($arg['uid']) && !$controll_user_admin ) {
+			$q .= " and (d.user_id = :uid or :uid IN (SELECT partner_id FROM ".self::DBXREF_PROJECT." WHERE adder_user_id != :uid and doc_id = d.ID))";
+      $qarg['uid'] = $uid;
+		}
+
     if (!isset($arg['exclude_unavaiable'])) {
-			$q .= " and (d.avaiable_to IS NULL or d.avaiable_to >= now())";
+      if (!$controll_user_admin) {
+        $q .= " and (d.avaiable_to IS NULL or (d.avaiable_to >= now() or :auid = d.user_id))";
+        $qarg['auid'] = $uid;
+      }
 		}
 
 		if (isset($arg['get'])) {
 			$q .= " and d.hashkey  = :get";
 			$qarg['get'] =$arg['get'];
+		}
+
+    if (isset($arg['getid'])) {
+			$q .= " and d.ID  = :id";
+			$qarg['id'] = $arg['getid'];
 		}
 
     if (isset($arg['hashkey'])) {
@@ -517,16 +549,19 @@ class Documents
           $q .= " and d.name LIKE :src_name";
           $qarg['src_name'] = "%".trim($s)."%";
         }
+        if ($sk == 'own') {
+          $q .= " and d.user_id = :ownuserid";
+          $qarg['ownuserid'] = $uid;
+        }
       }
     }
-
-
 
     if (!isset($arg['order'])) {
       $q .= " ORDER BY d.created_at DESC";
     } else {
       $q .= " ORDER BY ".$arg['order'];
     }
+
 
     if($arg[limit]){
 			$q = rtrim($q,";");
@@ -563,7 +598,7 @@ class Documents
 			$list[] = $d;
 		}
 
-		if (isset($arg['get'])) {
+		if (isset($arg['get']) || isset($arg['getid'])) {
 			$list = $list[0];
       return $list;
 		} else {

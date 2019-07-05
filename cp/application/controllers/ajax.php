@@ -3,6 +3,7 @@ use PortalManager\Template;
 use PortalManager\OfferRequests;
 use PortalManager\Projects;
 use PortalManager\Documents;
+use MessageManager\Messanger;
 
 class ajax extends Controller
 {
@@ -20,6 +21,71 @@ class ajax extends Controller
 
 			switch($type)
 			{
+				case 'Messanger':
+					$ret['data'] = array();
+					$ret['pass'] = $_POST;
+
+					// Messanger
+					$this->MESSANGER = new Messanger(array(
+						'controller' => $this
+					));
+
+					switch ( $mode ) {
+						case 'messanger_messages':
+							$arg = array();
+							$group = $by;
+							$uid = (int)$this->view->_USERDATA['data']['ID'];
+							parse_str($_REQUEST[getstr], $getstr);
+
+							if (isset($getstr['ad']) && !empty($getstr['ad'])) {
+								$arg['onlybyad'] = (int)$getstr['ad'];
+							}
+
+							if (isset($getstr['byadmin']) && !empty($getstr['byadmin'])) {
+								$arg['onlybyadmin'] = (int)$getstr['byadmin'];
+							}
+
+							if (isset($getstr['touser']) && !empty($getstr['touser'])) {
+								$arg['touser'] = (int)$getstr['touser'];
+							}
+
+							if (isset($getstr['toemail']) && !empty($getstr['toemail'])) {
+								$arg['useremail'] = $getstr['toemail'];
+							}
+
+							if (isset($params['for']) && $params['for'] == 'admin') {
+								$arg['admin'] = true;
+							}
+
+							switch ($group) {
+								case 'msg':
+									$arg['controll_by'] = 'msg';
+								break;
+								case 'inbox':
+									$arg['controll_by'] = $group;
+								break;
+								case 'outbox':
+									$arg['controll_by'] = $group;
+								break;
+								case 'archiv':
+									$arg['show_archiv'] = true;
+								break;
+							}
+
+							$messages = $this->MESSANGER->loadMessages($uid, $arg);
+							$unreaded = $messages['unreaded_group'];
+
+							$data['uid'] = $uid;
+							$data['str'] = $getstr;
+							$data['unreaded'] = $unreaded;
+							$data['messages'] = $messages;
+
+							$ret['data'] = $data;
+						break;
+					}
+
+					echo json_encode($ret);
+				break;
 				case 'Documents':
 					$ret['data'] = array();
 					$ret['pass'] = $_POST;

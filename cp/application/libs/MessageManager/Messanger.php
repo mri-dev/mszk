@@ -130,73 +130,142 @@ class Messanger
   public function loadMessages( $uid, $arg = array() )
   {
     $datas = array();
+    $datas['unreaded'] = 0;
     $this->admin = (isset($arg['admin'])) ? true : false;
 
-    $qry = "SELECT
-      m.*
-    FROM ".self::DBTABLE_MESSAGES." as m
-    LEFT OUTER JOIN ".self::DBTABLE." as ms ON ms.sessionid = m.sessionid
-    WHERE 1=1";
+    // Load sessions
+    $sess = $this->db->squery("SELECT
+      m.sessionid,
+      m.requester_id,
+      m.servicer_id,
+      m.project_id,
+      p.requester_title,
+      p.servicer_title,
+      IF(:uid = m.requester_id,'requester','servicer') as my_relation,
+      IF(:uid = m.requester_id, p.requester_title, p.servicer_title) as project_title,
+      (SELECT COUNT(ms.ID) FROM ".self::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = m.sessionid) as message_total,
+      IF(
+        :uid = m.requester_id,
+        (SELECT COUNT(msunre.ID) FROM ".self::DBTABLE_MESSAGES." as msunre WHERE msunre.sessionid = m.sessionid and (msunre.user_from_id != 0 and msunre.user_to_id) and msunre.user_from_id != :uid and msunre.requester_readed_at IS NULL),
+        (SELECT COUNT(msunse.ID) FROM ".self::DBTABLE_MESSAGES." as msunse WHERE msunse.sessionid = m.sessionid and (msunse.user_from_id != 0 and msunse.user_to_id) and msunse.user_from_id != :uid and msunse.servicer_readed_at IS NULL)) as message_unreaded,
+      m.created_at
+    FROM ".self::DBTABLE." as m
+    LEFT OUTER JOIN ".\PortalManager\Projects::DBPROJECTS." as p ON p.ID = m.project_id
+    WHERE 1=1 and (m.requester_id = :uid or m.servicer_id = :uid)", array('uid' => $uid));
 
-    if ($this->admin) {
-      $qry .= " ORDER BY m.send_at DESC";
-    } else {
-      $qry .= " ORDER BY m.send_at DESC";
+    if ( $sess->rowCount() == 0 ) {
+      return $datas;
     }
 
-    $arg = array();
-    $arg['multi'] = true;
-    extract($this->db->q($qry, $arg));
+    $sessdata = $sess->fetchAll(\PDO::FETCH_ASSOC);
 
-    $datas['list'] = array();
-
-    foreach ((array)$data as $d)
+    foreach ( (array)$sessdata as $s )
     {
-      if (!isset($datas['list'][$d['sessionid']]['ID']))
-      {
-        $datas['list'][$d['sessionid']]['session'] = $d['sessionid'];
+      if ( $s['message_unreaded'] != 0 ) {
+        $datas['unreaded'] += (int)$s['message_unreaded'] ;
+      }
+      $datas['sessions'][$s['sessionid']] = $s;
+    }
+
+    // Message
+    if (isset($arg['load_session']))
+    {
+
+      // Log visit
+      $my_relation = $datas['sessions'][$arg['load_session']]['my_relation'];
+
+      if (!empty($my_relation)) {
+        $this->db->update(
+          self::DBTABLE_MESSAGES,
+          array(
+            $my_relation.'_readed_at' => NOW
+          ),
+          sprintf("sessionid = '%s' and ".$my_relation."_readed_at IS NULL and user_from_id != %d and (user_from_id = %d or user_to_id = %d)", $arg['load_session'], (int)$uid, (int)$uid, (int)$uid)
+        );
       }
 
-      $is_today = (date('Ymd') == date('Ymd', strtotime($d['send_at']))) ? true : false;
+      $qry = "SELECT
+        m.*,
+        IF('".(int)$uid."' = ms.requester_id,'requester','servicer') as my_relation,
+        IF(m.user_from_id = ms.requester_id, 'requester', 'servicer') as user_from_relation,
+        IF('".(int)$uid."' != ms.requester_id, m.requester_readed_at, m.servicer_readed_at) as user_readed_at,
+        IF(m.user_from_id = 0 and m.user_to_id = 0, 1, 0) as system_msg,
+        f.nev as from_name
+      FROM ".self::DBTABLE_MESSAGES." as m
+      LEFT OUTER JOIN ".self::DBTABLE." as ms ON ms.sessionid = m.sessionid
+      LEFT OUTER JOIN felhasznalok as f ON f.ID = m.user_from_id
+      WHERE 1=1";
 
-      $datas['list'][$d['sessionid']]['msg'][] = array(
-        'ID' => (int)$d['ID'],
-        'msg' => $d['message'],
-        'admin_readed_at' => $d['admin_readed_at'],
-        'user_readed_at' => $d['user_readed_at'],
-        'send_at' => ($is_today) ? date('H:i', strtotime($d['send_at'])) : date('Y. m. d. H:i', strtotime($d['send_at'])),
-        'from_admin' => ($d['from_admin'] == 1) ? true : false,
-        'from_id' => $d['user_from_id'],
-        'to_id' => $d['user_to_id'],
-        'unreaded' => $unreaded,
-        'from' => array(
-          'name' => $d['from_name'],
-          'ID' => $d['user_from_id']
-        )
-      );
+      $qry .= " and m.sessionid = '".$arg['load_session']."'";
+
+      if ($this->admin) {
+        $qry .= " ORDER BY m.send_at DESC";
+      } else {
+        $qry .= " ORDER BY m.send_at DESC";
+      }
+
+      $arg = array();
+      $arg['multi'] = true;
+      extract($this->db->q($qry, $arg));
+
+      $datas['messages'] = array();
+
+      foreach ((array)$data as $d)
+      {
+        if (!isset($datas['messages'][$d['sessionid']]['ID']))
+        {
+          $datas['messages']['session'] = $d['sessionid'];
+        }
+
+        $is_today = (date('Ymd') == date('Ymd', strtotime($d['send_at']))) ? true : false;
+
+        $datas['messages']['msg'][] = array(
+          'ID' => (int)$d['ID'],
+          'msg' => nl2br($d['message']),
+          'user_from_relation' => $d['user_from_relation'],
+          'system_msg' => ($d['system_msg'] == 1) ? true : false,
+          'my_relation' => $d['my_relation'],
+          'user_readed_at' => $d['user_readed_at'],
+          'send_at' => ($is_today) ? date('H:i', strtotime($d['send_at'])) : date('Y. m. d. H:i', strtotime($d['send_at'])),
+          'from_id' => $d['user_from_id'],
+          'to_id' => $d['user_to_id'],
+          'unreaded' => $unreaded,
+          'from_me' => ($d['user_from_id'] == $uid) ? true : false,
+          'from' => array(
+            'name' => $d['from_name'],
+            'ID' => $d['user_from_id']
+          )
+        );
+      }
+    } else {
+      $datas['messages'] = array();
     }
 
     return $datas;
   }
 
-  public function addMessage($session, $from, $to, $msg, $admin)
+  public function addMessage( $uid, $msg, $sessionid)
   {
     if ($this->isMessageSessionClosed($session)) {
-      throw new \Exception($this->controller->lang('Ez a beszélgetés időközben lezárásra került.'));
+      throw new \Exception(__('Ez a beszélgetés időközben lezárásra került.'));
     }
+
+    $sessiondata = $this->db->squery("SELECT m.* FROM ".self::DBTABLE." as m WHERE m.sessionid = :sid", array('sid' => $sessionid));
+
+    if ($sessiondata->rowCount() == 0) {
+      throw new \Exception(sprintf(__('Hibás üzenet session (%s)!'), $sessionid));
+    }
+
+    $sessiondata = $sessiondata->fetch(\PDO::FETCH_ASSOC);
+    $to = ($sessiondata['requester_id'] == $uid) ? (int)$sessiondata['servicer_id'] : (int)$sessiondata['requester_id'];
 
     $this->db->insert(
       self::DBTABLE_MESSAGES,
       array(
-        'sessionid' => $session,
+        'sessionid' => $sessionid,
         'message' => $msg,
-        'from_admin' => ($admin) ? 1 : 0,
-        'user_from_id' => $from,
-        'user_to_id' => $to,
-        'user_readed_at' => ($admin) ? NULL : NOW,
-        'admin_readed_at' => ($admin) ? NOW : NULL,
-        'user_alerted' => ($admin) ? 0 : 1,
-        'admin_alerted' => ($admin) ? 1 : 0,
+        'user_from_id' => $uid,
+        'user_to_id' => $to
       )
     );
 
@@ -265,19 +334,6 @@ class Messanger
     }
 
     return $createdSession;
-  }
-
-  public function setReadedMessage($by, $session)
-  {
-    $aby = ($by == 'user_readed_at') ? 'user_alerted' : 'admin_alerted';
-    $this->db->update(
-      self::DBTABLE_MESSAGES,
-      array(
-        $by => NOW,
-        $aby => 1
-      ),
-      sprintf($by." IS NULL and sessionid = '%s'", $session)
-    );
   }
 
   public function isMessageSessionClosed($session)

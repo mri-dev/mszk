@@ -1446,6 +1446,163 @@ footer {
 	color: $color-red-light;
 }
 
+.message-controller{
+	& > .wblock{
+		margin: -25px;
+	}
+	.data-container{
+		.session-list{
+			flex-basis: 380px;
+			.sess-list{
+				.session{
+					outline: none !important;
+					& > .wrapper{
+						padding: 10px;
+						cursor: pointer;
+						font-size: 0.8rem;
+
+						.project{
+							font-weight: bold;
+							line-height: 1.1;
+							color: $color-red-light;
+							margin: 0 0 5px 0;
+						}
+
+						.info{
+							.msg-unreaded{
+								background: $color-red;
+								color: white;
+								padding: 2px 5px;
+								border-radius: 3px;
+							}
+						}
+					}
+
+					&.current{
+						& > .wrapper{
+							background: $color-blue-light;
+							color: white;
+							.project{
+								font-weight: bold;
+								color: white;
+							}
+						}
+					}
+				}
+				.session + .session{
+					border-top: 0.5px solid #dedede;
+				}
+			}
+		}
+		.session-data{
+			flex: 1;
+			font-size: 0.9rem;
+	    background: #f5f6f6;
+	    box-shadow: inset 5px 0 20px -10px silver;
+
+			.no-data{
+				padding: 50px;
+				h4{
+					color: black;
+				}
+
+				.unreaded-msg{
+					color: $color-red;
+					font-weight: bold;
+				}
+			}
+
+			.messages{
+				.new-msg{
+					background: #ececec;
+    			border-bottom: 5px solid #cdcdcd;
+
+					& > .wrapper{
+						padding: 15px;
+						label{
+							color: black;
+							font-weight: bold;
+						}
+					}
+				}
+				.msg{
+					padding: 10px;
+
+					.author{
+						font-size: 0.7rem;
+						color: #7c7c7c;
+						padding: 0 10px;
+
+						.name {
+							font-weight: bold;
+							color: black;
+						}
+
+						.time {
+							float: right;
+						}
+					}
+
+					& > .wrapper{
+						.message-text{
+							background: white;
+							border-radius: 10px;
+							padding: 10px;
+							line-height: 1.2;
+							color: black;
+							margin: 0 0 5px 0;
+						}
+					}
+					&.from_me{
+						padding-left: 50px;
+
+						& > .wrapper{
+							.message-text{
+								background: $color-blue;
+								color: white;
+							}
+						}
+
+						.author{
+							text-align: right;
+							.time {
+								float: left;
+							}
+						}
+
+						&.unreaded{
+							& > .wrapper{
+								.message-text{
+									background: $color-blue-light;
+								}
+							}
+						}
+					}
+
+					&.systemmsg{
+						& > .wrapper{
+							.message-text{
+								background: transparent;
+								color: $color-blue-light;
+								font-weight: bold;
+								text-align: center;
+								padding: 5px;
+							}
+
+							.system-msg-head{
+								text-align: center;
+								text-transform: uppercase;
+								color: $color-red-light;
+								font-size: 0.75rem;
+								font-weight: 300;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 .services-hints{
 	margin: 20px 0;

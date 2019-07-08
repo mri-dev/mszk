@@ -31,54 +31,35 @@ class ajax extends Controller
 					));
 
 					switch ( $mode ) {
+							case 'sendMessage':
+							$arg = array();
+							$uid = (int)$this->view->_USERDATA['data']['ID'];
+
+							try {
+								$this->MESSANGER->addMessage( $uid, $text, $session );
+								$this->setSuccess(__('Az üzenet sikeresen elküldve partnerének!'), $ret);
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+
+						break;
 						case 'messanger_messages':
 							$arg = array();
-							$group = $by;
 							$uid = (int)$this->view->_USERDATA['data']['ID'];
-							parse_str($_REQUEST[getstr], $getstr);
 
-							if (isset($getstr['ad']) && !empty($getstr['ad'])) {
-								$arg['onlybyad'] = (int)$getstr['ad'];
-							}
-
-							if (isset($getstr['byadmin']) && !empty($getstr['byadmin'])) {
-								$arg['onlybyadmin'] = (int)$getstr['byadmin'];
-							}
-
-							if (isset($getstr['touser']) && !empty($getstr['touser'])) {
-								$arg['touser'] = (int)$getstr['touser'];
-							}
-
-							if (isset($getstr['toemail']) && !empty($getstr['toemail'])) {
-								$arg['useremail'] = $getstr['toemail'];
-							}
-
-							if (isset($params['for']) && $params['for'] == 'admin') {
-								$arg['admin'] = true;
-							}
-
-							switch ($group) {
-								case 'msg':
-									$arg['controll_by'] = 'msg';
-								break;
-								case 'inbox':
-									$arg['controll_by'] = $group;
-								break;
-								case 'outbox':
-									$arg['controll_by'] = $group;
-								break;
-								case 'archiv':
-									$arg['show_archiv'] = true;
-								break;
+							if (isset($session) && !empty($session))
+							{
+								$arg['load_session'] = $session;
 							}
 
 							$messages = $this->MESSANGER->loadMessages($uid, $arg);
-							$unreaded = $messages['unreaded_group'];
+							$unreaded = $messages['unreaded'];
 
 							$data['uid'] = $uid;
-							$data['str'] = $getstr;
 							$data['unreaded'] = $unreaded;
-							$data['messages'] = $messages;
+							$data['sessions'] = $messages['sessions'];
+							$data['messages'] = $messages['messages'];
+
 
 							$ret['data'] = $data;
 						break;

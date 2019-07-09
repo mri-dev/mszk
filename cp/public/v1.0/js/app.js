@@ -9,6 +9,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 		text: ''
 	};
 	$scope.project = {};
+	$scope.newmsg_send_progress = false;
 
 	$scope.init = function( conf )
 	{
@@ -46,7 +47,31 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 	}
 
 	$scope.sendQuickMessage = function( project_hashkey ) {
+		if ( !$scope.newmsg_send_progress ) {
+			$scope.newmsg_send_progress = true;
 
+			$http({
+				method: 'POST',
+				url: '/ajax/post',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				data: $.param({
+					type: 'Messanger',
+					mode: 'sendMessage',
+					session: project_hashkey,
+					text: $scope.messanger.text
+				})
+			}).success(function(r){
+				$scope.newmsg_send_progress = false;
+				if (r.success == 1) {
+					$('#messanger_text').focus();
+					$scope.messanger.text='';
+					$scope.toast(r.msg, 'success', 5000);
+				} else {
+					$scope.toast(r.msg, 'alert', 5000);
+				}
+				console.log(r);
+			});
+		}
 	}
 
 	$scope.loadLists = function( callback )
@@ -669,7 +694,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 	}
 }]);
 
-a.controller( "MessagesList", ['$scope', '$http', '$timeout', function($scope, $http, $timeout)
+a.controller( "MessagesList", ['$scope', '$http', '$timeout', '$mdToast', '$mdDialog', function($scope, $http, $timeout, $mdToast, $mdDialog)
 {
   $scope.is_msg = false;
   $scope.unreaded_messages = {
@@ -685,7 +710,7 @@ a.controller( "MessagesList", ['$scope', '$http', '$timeout', function($scope, $
   $scope.newnoticemsg = {};
   $scope.msgtgl = {};
   $scope.messanger = {text:''};
-  $scope.newmsg_left_length = 1000;
+  $scope.newmsg_left_length = 2000;
   $scope.newmsg = '';
   $scope.newmsg_focused = false;
   $scope.newmsg_send_progress = false;
@@ -697,11 +722,12 @@ a.controller( "MessagesList", ['$scope', '$http', '$timeout', function($scope, $
   // Init messanger
   $scope.init = function(group, is_msg, uid, session){
     $scope.is_msg = is_msg;
-    $scope.loadMessages(group);
 
-    if (is_msg) {
-      $scope.MessageSessionActions(session);
-    }
+		if (typeof session !== 'undefined' && session != '') {
+			$scope.current_session = session;
+		}
+
+    $scope.loadMessages(group);
   }
 
 	$scope.changeSession = function( sessionid )
@@ -709,20 +735,6 @@ a.controller( "MessagesList", ['$scope', '$http', '$timeout', function($scope, $
 		$scope.current_session = sessionid;
 		$scope.syncMessages();
 	}
-
-  $scope.MessageSessionActions = function(session){
-    $http({
-      method: 'POST',
-      url: '/ajax/data',
-      params: {
-        type: 'messanger_message_viewed',
-        session: session,
-        by: 'user_readed_at'
-      }
-    }).then(
-      function successCallback(response) {},
-      function errorCallback(response) {});
-  }
 
   $scope.archiveMessageSession = function(session, admin){
     if (admin) {
@@ -780,20 +792,11 @@ a.controller( "MessagesList", ['$scope', '$http', '$timeout', function($scope, $
 					$('#messanger_text').focus();
 					$scope.messanger.text='';
 					$scope.syncMessages();
+				} else {
+					$scope.toast(r.msg, 'alert', 5000);
 				}
-				console.log(r);
 			});
 		}
-
-		/*
-
-		$scope.newmsg_left_length = 1000;
-	  $scope.newmsg = null;
-	  $scope.newmsg_focused = false;
-	  $scope.newmsg_send_progress = false;
-	  $scope.newmsgerrmsg=false;
-
-		*/
 	}
 
   $scope.loadMessages = function(type){
@@ -825,7 +828,6 @@ a.controller( "MessagesList", ['$scope', '$http', '$timeout', function($scope, $
 			}
 
 			$scope.unreaded = d.unreaded;
-
 			$scope.data_loaded = true;
 
 			if ($scope.syncCount <= 1000) {
@@ -836,8 +838,138 @@ a.controller( "MessagesList", ['$scope', '$http', '$timeout', function($scope, $
 				}, $scope.syncdelay);
 			}
 		});
-
   }
+
+	// Comment editor
+	$scope.openCommentEditor = function()
+	{
+		var confirm = $mdDialog.confirm({
+			controller: MessangerCommentDialogController,
+			templateUrl: '/ajax/modal/messanger_comment_edit',
+			parent: angular.element(document.body),
+			scope: $scope,
+			preserveScope:true,
+			locals: {
+				message: $scope.sessions[$scope.current_session]
+			}
+		});
+
+		$mdDialog.show(confirm)
+		.then(function() {
+      $scope.status = 'You decided to get rid of your debt.';
+    }, function() {
+      $scope.status = 'You decided to keep your debt.';
+    });
+
+		function MessangerCommentDialogController( $scope, $mdDialog, message)
+		{
+      $scope.saving = false;
+      $scope.message = message;
+
+			$scope.closeDialog = function(){
+				$mdDialog.hide();
+			}
+
+      $scope.editComment = function() {
+        if (!$scope.saving) {
+          $scope.saving = true;
+          $http({
+      			method: 'POST',
+      			url: '/ajax/post',
+      			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      			data: $.param({
+      				type: "Messanger",
+              mode: 'editComment',
+							message: $scope.message
+      			})
+      		}).success(function(r){
+      			$scope.saving = false;
+						if (r.success == 1) {
+							$scope.toast(r.msg, 'success', 10000);
+							$scope.closeDialog();
+						} else {
+							$scope.toast(r.msg, 'alert', 10000);
+						}
+	        });
+      	}
+			}
+		}
+	}
+
+	// Archive editor
+	$scope.openArchiver = function()
+	{
+		var confirm = $mdDialog.confirm({
+			controller: MessangerArchiveDialogController,
+			templateUrl: '/ajax/modal/messanger_archiver',
+			parent: angular.element(document.body),
+			scope: $scope,
+			preserveScope:true,
+			locals: {
+				message: $scope.sessions[$scope.current_session]
+			}
+		});
+
+		$mdDialog.show(confirm)
+		.then(function() {
+      $scope.status = 'You decided to get rid of your debt.';
+    }, function() {
+      $scope.status = 'You decided to keep your debt.';
+    });
+
+		function MessangerArchiveDialogController( $scope, $mdDialog, message)
+		{
+      $scope.saving = false;
+      $scope.message = message;
+
+			$scope.closeDialog = function(){
+				$mdDialog.hide();
+			}
+
+      $scope.changeArchive = function() {
+        if (!$scope.saving) {
+          $scope.saving = true;
+
+					console.log($scope.message);
+
+          $http({
+      			method: 'POST',
+      			url: '/ajax/post',
+      			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      			data: $.param({
+      				type: "Messanger",
+              mode: 'archiver',
+							message: $scope.message
+      			})
+      		}).success(function(r){
+            console.log(r);
+      			$scope.saving = false;
+						if (r.success == 1) {
+							$scope.toast(r.msg, 'success', 10000);
+							$scope.closeDialog();
+						} else {
+							$scope.toast(r.msg, 'alert', 10000);
+						}
+	        });
+      	}
+			}
+		}
+	}
+
+	$scope.toast = function( text, mode, delay ){
+		mode = (typeof mode === 'undefined') ? 'simple' : mode;
+		delay = (typeof delay === 'undefined') ? 5000 : delay;
+
+		if (typeof text !== 'undefined') {
+			$mdToast.show(
+				$mdToast.simple()
+				.textContent(text)
+				.position('top')
+				.toastClass('alert-toast mode-'+mode)
+				.hideDelay(delay)
+			);
+		}
+	}
 }]);
 
 a.directive('focusMe', function($timeout) {

@@ -139,11 +139,16 @@ class Messanger
       m.requester_id,
       m.servicer_id,
       m.project_id,
+      m.closed,
+      m.closed_at,
       p.requester_title,
       p.servicer_title,
       IF(:uid = m.requester_id,'requester','servicer') as my_relation,
       IF(:uid = m.requester_id, p.requester_title, p.servicer_title) as project_title,
+      IF(:uid = m.requester_id, m.notice_by_requester, m.notice_by_servicer) as notice,
+      IF(:uid = m.requester_id, m.archived_by_requester, m.archived_by_servicer) as archived,
       (SELECT COUNT(ms.ID) FROM ".self::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = m.sessionid) as message_total,
+      f.nev as partner_nev,
       IF(
         :uid = m.requester_id,
         (SELECT COUNT(msunre.ID) FROM ".self::DBTABLE_MESSAGES." as msunre WHERE msunre.sessionid = m.sessionid and (msunre.user_from_id != 0 and msunre.user_to_id) and msunre.user_from_id != :uid and msunre.requester_readed_at IS NULL),
@@ -151,7 +156,9 @@ class Messanger
       m.created_at
     FROM ".self::DBTABLE." as m
     LEFT OUTER JOIN ".\PortalManager\Projects::DBPROJECTS." as p ON p.ID = m.project_id
-    WHERE 1=1 and (m.requester_id = :uid or m.servicer_id = :uid)", array('uid' => $uid));
+    LEFT OUTER JOIN felhasznalok as f ON f.id = IF(:uid = m.requester_id, m.servicer_id, m.requester_id)
+    WHERE 1=1 and (m.requester_id = :uid or m.servicer_id = :uid)
+    ORDER BY m.closed ASC, archived ASC", array('uid' => $uid));
 
     if ( $sess->rowCount() == 0 ) {
       return $datas;
@@ -164,13 +171,14 @@ class Messanger
       if ( $s['message_unreaded'] != 0 ) {
         $datas['unreaded'] += (int)$s['message_unreaded'] ;
       }
+      $s['archived'] = (int)$s['archived'];
+      $s['notice'] = nl2br($s['notice']);
       $datas['sessions'][$s['sessionid']] = $s;
     }
 
     // Message
     if (isset($arg['load_session']))
     {
-
       // Log visit
       $my_relation = $datas['sessions'][$arg['load_session']]['my_relation'];
 
@@ -242,6 +250,36 @@ class Messanger
     }
 
     return $datas;
+  }
+
+  public function editMessangerComment( $session, $relation, $new_notice )
+  {
+    if (!in_array($relation, array('servicer','requester'))) {
+      return false;
+    }
+
+    $this->db->update(
+      self::DBTABLE,
+      array(
+        'notice_by_'.$relation => ($new_notice == '') ? NULL : $new_notice
+      ),
+      sprintf("sessionid = '%s'", $session)
+    );
+  }
+
+  public function archiveSession( $session, $relation, $archive )
+  {
+    if (!in_array($relation, array('servicer','requester'))) {
+      return false;
+    }
+
+    $this->db->update(
+      self::DBTABLE,
+      array(
+        'archived_by_'.$relation => $archive
+      ),
+      sprintf("sessionid = '%s'", $session)
+    );
   }
 
   public function addMessage( $uid, $msg, $sessionid)

@@ -60,7 +60,7 @@ class Projects
 			}
 
 			$d['title'] = $d[$d['my_relation'].'_title'];
-		
+
 			return $d;
 		}
 	}
@@ -139,7 +139,7 @@ class Projects
 			$d['status_percent_class'] = \Helper::progressBarColor($d['status_percent']);
 			$d['paying_percent'] = $this->getProjectPaymentProgress( $d['ID'] );
 			$d['paying_percent_class'] = \Helper::progressBarColor($d['paying_percent']);
-			$d['messages'] = $this->getProjectMessagesInfo( $d['ID']  );
+			$d['messages'] = $this->getProjectMessagesInfo( $d['ID'], $uid, $d['my_relation'] );
 
 			$list[] = $d;
 		}
@@ -263,9 +263,57 @@ class Projects
 
 			if ($check_close == 0) {
 				$updates['closed_by'] = $uid;
+
+				// Messanger close
+				$this->db->update(
+					\MessageManager\Messanger::DBTABLE,
+					array(
+						'closed' => 1,
+						'closed_at' => NOW
+					),
+					sprintf("sessionid = '%s' and closed = 0", $project['hashkey'])
+				);
+
+				// Push system message
+				$this->db->insert(
+					\MessageManager\Messanger::DBTABLE_MESSAGES,
+					array(
+						'sessionid' => $project['hashkey'],
+						'message' => __('Az üzenetváltás lezárásra került a projekt inaktív állapot változása végett.'),
+						'user_from_id' => 0,
+						'user_to_id' => 0,
+						'requester_alerted' => 1,
+						'servicer_alerted' => 1
+					)
+				);
 			}
 		} else {
-				$updates['closed_by'] = NULL;
+			$check_close = (int)$this->db->squery("SELECT closed FROM projects WHERE hashkey = :hash", array('hash' => $project['hashkey']))->fetchColumn();
+			$updates['closed_by'] = NULL;
+			if ($check_close == 1) {
+				// Messanger close
+				$this->db->update(
+					\MessageManager\Messanger::DBTABLE,
+					array(
+						'closed' => 0,
+						'closed_at' => NULL
+					),
+					sprintf("sessionid = '%s' and closed = 1", $project['hashkey'])
+				);
+
+				// Push system message
+				$this->db->insert(
+					\MessageManager\Messanger::DBTABLE_MESSAGES,
+					array(
+						'sessionid' => $project['hashkey'],
+						'message' => __('Az üzenetváltás megnyitásra került a projekt aktív állapot változása végett.'),
+						'user_from_id' => 0,
+						'user_to_id' => 0,
+						'requester_alerted' => 1,
+						'servicer_alerted' => 1
+					)
+				);
+			}
 		}
 
 		if ($relation != 'admin') {
@@ -321,11 +369,42 @@ class Projects
 	}
 
 	// TODO: Megcsinálni
-	public function getProjectMessagesInfo( $project_id )
+	public function getProjectMessagesInfo( $project_id, $uid, $relation )
 	{
 		$ret = array(
-			'unreaded' => 0
+			'unreaded' => 0,
+			'closed' => false
 		);
+
+		$projectdata = $this->getProjectData( $project_id, $uid );
+
+		$message = $this->db->squery("SELECT m.closed, m.closed_at FROM ".\MessageManager\Messanger::DBTABLE." as m WHERE m.sessionid = :session", array('session' => $projectdata['hashkey']))->fetch(\PDO::FETCH_ASSOC);
+
+		if ($message && $message['closed']) {
+			$ret['closed'] = $message['closed_at'];
+		}
+
+		switch ($relation)
+		{
+			case 'admin':
+			break;
+			case 'requester':
+				$qry = "SELECT COUNT(ms.ID) FROM ".\MessageManager\Messanger::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = :session and (ms.user_from_id != 0 and ms.user_to_id) and ms.user_from_id != :uid and ms.requester_readed_at IS NULL";
+			break;
+			case 'servicer':
+				$qry = "SELECT COUNT(ms.ID) FROM ".\MessageManager\Messanger::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = :session and (ms.user_from_id != 0 and ms.user_to_id) and ms.user_from_id != :uid and ms.servicer_readed_at IS NULL";
+			break;
+		}
+
+		if ($qry) {
+			$data = $this->db->squery($qry, array('uid' => $uid, 'session' => $projectdata['hashkey']));
+
+			if ($data->rowCount() == 0) {
+				return $ret;
+			}
+			$unreaded = $data->fetchColumn();
+			$ret['unreaded'] = $unreaded;
+		}
 
 		return $ret;
 	}

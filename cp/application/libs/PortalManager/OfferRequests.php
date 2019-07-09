@@ -218,9 +218,7 @@ class OfferRequests
 			throw new \Exception(__('A megadott jelszó hibás! Kérjük, hogy adja meg a fiók jelszavát a projekt létrehozásához.'));
 		}
 
-		// TODO: project generálása
 		$hashkey = md5(uniqid());
-
 		$this->db->insert(
 			"projects",
 			array(
@@ -236,7 +234,6 @@ class OfferRequests
 
 		$inserted_project_id = $this->db->lastInsertId();
 
-		// TODO: request lekezelés: flag, állapot, project_id, close
 		$req_id = (int)$this->db->squery("SELECT request_id FROM requests_offerouts WHERE ID = :id", array('id' => $request_id))->fetchColumn();
 
 		// update requests_offerouts
@@ -260,12 +257,10 @@ class OfferRequests
 			sprintf("ID = %d", (int)$offer_id)
 		);
 
-		// TODO: e-mail értesítés
-
 		$offer_data = $this->getOfferData( $offer_id );
 
 		// e-mail értesítő az igénylőnek (requester)
-		$requester_data = $this->db->squery("SELECT nev, email FROM felhasznalok WHERE ID = :id", array('id' => $requester_id))->fetch(\PDO::FETCH_ASSOC);
+		$requester_data = $this->db->squery("SELECT ID, nev, email FROM felhasznalok WHERE ID = :id", array('id' => $requester_id))->fetch(\PDO::FETCH_ASSOC);
 
 		if (true)
 		{
@@ -288,7 +283,7 @@ class OfferRequests
 		}
 
 		// e-mail értesítő a szolgáltatónak (servicer)
-		$servicer_data = $this->db->squery("SELECT nev, email FROM felhasznalok WHERE ID = :id", array('id' => $servicer_id))->fetch(\PDO::FETCH_ASSOC);
+		$servicer_data = $this->db->squery("SELECT ID, nev, email FROM felhasznalok WHERE ID = :id", array('id' => $servicer_id))->fetch(\PDO::FETCH_ASSOC);
 
 		if (true)
 		{
@@ -309,6 +304,30 @@ class OfferRequests
 			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'offers_accept_to_servicer', $arg ) );
 			$re = $mail->sendMail();
 		}
+
+		// Messanger create
+		$this->db->insert(
+			\MessageManager\Messanger::DBTABLE,
+			array(
+				'sessionid' => $hashkey,
+				'project_id' => $inserted_project_id,
+				'requester_id' => $requester_data['ID'],
+				'servicer_id' => $servicer_data['ID']
+			)
+		);
+
+		// Messanger system message
+		$this->db->insert(
+			\MessageManager\Messanger::DBTABLE_MESSAGES,
+			array(
+				'sessionid' => $hashkey,
+				'message' => __('Üzenetváltás automatikusan létrejött a projekt létrejöttével. Mostantól ezen a felületen tarthatja partnerével a kapcsolatot!'),
+				'user_from_id' => 0,
+				'user_to_id' => 0,
+				'requester_alerted' => 1,
+				'servicer_alerted' => 1
+			)
+		);
 
 		return $hashkey;
 	}

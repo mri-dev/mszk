@@ -1453,6 +1453,7 @@ footer {
 	.data-container{
 		.session-list{
 			flex-basis: 380px;
+			border-right: 0.5px solid white;
 			.sess-list{
 				.session{
 					outline: none !important;
@@ -1460,6 +1461,15 @@ footer {
 						padding: 10px;
 						cursor: pointer;
 						font-size: 0.8rem;
+						/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,ffffff+39,eaeaea+100 */
+background: #ffffff; /* Old browsers */
+background: -moz-linear-gradient(45deg,  #ffffff 0%, #ffffff 39%, #eaeaea 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(45deg,  #ffffff 0%,#ffffff 39%,#eaeaea 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(45deg,  #ffffff 0%,#ffffff 39%,#eaeaea 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eaeaea',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+
+
 
 						.project{
 							font-weight: bold;
@@ -1513,6 +1523,60 @@ footer {
 			}
 
 			.messages{
+				.msg-controlls{
+					display: -webkit-box;
+				  display: -ms-flexbox;
+				  display: flex;
+					flex-wrap: nowrap;
+					background: $color-blue;
+
+					button {
+						background: darken($color-blue, 5%);
+						color: white;
+						border: none;
+						padding: 15px;
+
+						&.btn-danger{
+							background: $color-red-light;
+						}
+					}
+
+					& > div + div button {
+						border-left: 0.5px solid lighten($color-blue, 5%);
+					}
+				}
+				.msg-text{
+					.alert{
+						margin: 0 !important;
+						border-radius: 0 !important;
+						padding: 15px !important;
+						i{
+							margin: 0 5px 0 0;
+						}
+					}
+				}
+				.no-msg{
+					text-align: center;
+					padding: 20px;
+					color: #484848;
+
+					i{
+						color: $color-red-light;
+						font-size: 48px;
+						margin: 0 0 10px 0;
+					}
+				}
+				.msg-notice{
+					padding: 15px;
+					label{
+						color: black;
+						font-weight: bold;
+					}
+
+					.text {
+
+					}
+				}
 				.new-msg{
 					background: #ececec;
     			border-bottom: 5px solid #cdcdcd;
@@ -1522,6 +1586,10 @@ footer {
 						label{
 							color: black;
 							font-weight: bold;
+
+							strong {
+								color: $color-blue-light;
+							}
 						}
 					}
 				}
@@ -1595,6 +1663,11 @@ footer {
 								color: $color-red-light;
 								font-size: 0.75rem;
 								font-weight: 300;
+								.time{
+									color: #8c8c8c;
+									font-size: 0.6rem;
+									font-weight: 400;
+								}
 							}
 						}
 					}

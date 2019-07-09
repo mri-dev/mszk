@@ -159,7 +159,7 @@
   </div>
 </div>
 <br>
-<div class="row" ng-if="project.my_relation!='admin'">
+<div class="row" ng-if="project.my_relation!='admin' && !project.messages.closed">
   <div class="col-md-12">
     <h2><?=__('Üzenetküldés')?></h2>
     <div class="messenger-quick-msg">
@@ -177,6 +177,14 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="project.my_relation!='admin'&&project.messages.closed">
+  <div class="col-md-12">
+    <h2><?=__('Üzenetküldés')?></h2>
+    <div class="alert alert-warning">
+      <?=__('A gyors üzenetküldés nem elérhető a lezárt üzenetváltás esetében. Az üzenetváltást {{project.messages.closed}} időponttal lezárták!')?>
     </div>
   </div>
 </div>

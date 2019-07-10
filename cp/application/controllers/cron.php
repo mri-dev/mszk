@@ -35,7 +35,7 @@ class cron extends Controller
 
 			$unreadeds = $messangers->collectAllUnreadedMessagesForEmailAlert();
 
-			/* * /
+			/* */
 			if ($unreadeds && count($unreadeds['user_ids']) > 0)
 			{
 				$send_loop = 0;
@@ -44,6 +44,7 @@ class cron extends Controller
 					if($send_loop > self::MSG_SEND_LIMIT) break;
 
 					$email = $user['user']['email'];
+					$relation = $user['user']['relation'];
 
 					if (!empty($email))
 					{
@@ -56,30 +57,44 @@ class cron extends Controller
 							'settings' => $this->db->settings,
 							'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
 						);
-						$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('messanger_alert_unreadedmsg', $arg);
-						$mail->setSubject(sprintf(__('%d db olvasatlan üzenete van!'), 1));
-						$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
-						//$re = $mail->sendMail();
 
-						if(!empty($re['success'])) {
+						// Üzenetek
+						$uzenetek = '';
+						$uzenetek .= '<h4>'.count($user['items']).' '.__('projekt üzenetváltásánál található olvasatlan üzenet').':</h4>';
+						foreach ((array)$user['items'] as $projekt) {
+							if ($projekt['project']['title'] != '') {
+								$uzenetek .= '<div><a href="'.$this->db->settings['page_url'].'/belepes?return=/uzenetek/session/'.$projekt['project']['session'].'"><strong style="color:#02a0e3;">'.$projekt['project']['title'].'</strong></a> &mdash; <strong style="color:#f75656;">'.count($projekt['items']).' '.__('olvasatlan üzenet').'</strong></div>';
+							} else {
+								$uzenetek .= '<div><a href="'.$this->db->settings['page_url'].'/belepes?return=/uzenetek/session/'.$projekt['project']['session'].'"><strong style="color:#02a0e3;"><u style="color:#d99d9d;">'.__('Névtelen projekt').'</u> ('.$projekt['project']['session'].')</strong></a> &mdash; <strong style="color:#f75656;">>'.count($projekt['items']).' '.__('olvasatlan üzenet').'</strong></div>';
+							}
+						}
+
+						$arg['uzenetek'] = $uzenetek;
+
+						$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('messanger_alert_unreadedmsg', $arg);
+						$mail->setSubject(sprintf(__('%d db olvasatlan üzenete van!'), $user['total_unreaded']));
+						$mailbody = (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) ;
+						$mail->setMsg( $mailbody );
+						$re = $mail->sendMail();
+
+						if ($re) {
 							foreach ((array)$user['items'] as $s) {
 								foreach ((array)$s['items'] as $m) {
-									//$this->db->query("UPDATE ".\PortalManager\Messanger::DBTABLE_MESSAGES." SET user_alerted = 1 WHERE ID = ".$m['ID']);
+									if(!empty($re['success'])) {
+										$this->db->query("UPDATE ".\MessageManager\Messanger::DBTABLE_MESSAGES." SET ".$relation."_alerted = 1 WHERE ID = ".$m['ID']);
+									} else {
+										$this->db->query("UPDATE ".\MessageManager\Messanger::DBTABLE_MESSAGES." SET ".$relation."_alerted_fail = 1 WHERE ID = ".$m['ID']);
+									}
 								}
 							}
 						}
+
 					}
 					$send_loop++;
 				 	usleep(self::MSG_SEND_WAITING_MS);
 				}
 			}
 			/* */
-
-			/* */
-			echo '<pre>';
-			print_r($unreadeds);
-			echo '</pre>';
-			/*  */
 		}
 
     public function emailSendOfferouts()

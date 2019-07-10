@@ -45,6 +45,7 @@ class Messanger
       m.user_to_id as user_id,
       m.message,
       IF(m.user_to_id = mg.requester_id, p.requester_title, p.servicer_title) as project_title,
+      IF(m.user_to_id = mg.requester_id, 'requester', 'servicer') as my_relation,
       TIMESTAMPDIFF(MINUTE, m.send_at, now()) as minafter
     FROM ".self::DBTABLE_MESSAGES." as m
     LEFT OUTER JOIN ".self::DBTABLE." as mg ON mg.sessionid = m.sessionid
@@ -66,6 +67,7 @@ class Messanger
 
           $user = $this->db->squery("SELECT nev, email FROM felhasznalok WHERE ID = :id", array('id' => $d['user_id']))->fetch(\PDO::FETCH_ASSOC);
           $datas['data'][$d['user_id']]['user'] = $user;
+          $datas['data'][$d['user_id']]['user']['relation'] = $d['my_relation'];
         }
 
         if (!in_array($d['user_id'], $datas['user_ids'])) {

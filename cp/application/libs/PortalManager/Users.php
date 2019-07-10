@@ -126,7 +126,7 @@ class Users
 
 		$this->user_data 	= $ret;
 
-		$ret['alerts'] 		= $this->getAlerts( false, $ret['data']['user_group'] );
+		$ret['alerts'] = $this->getAlerts( false, $ret['data']['user_group'] );
 
 		return $ret;
 	}

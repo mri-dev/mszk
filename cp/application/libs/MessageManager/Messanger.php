@@ -1,7 +1,7 @@
 <?php
 namespace MessageManager;
 
-use PortalManager\User;
+use PortalManager\Users;
 use MailManager\Mailer;
 use MailManager\Mails;
 
@@ -28,29 +28,34 @@ class Messanger
 		return $this;
   }
 
-  public function collectAllUnreadedMessagesForEmailAlert( $useradmin = 'user', $delay_in_min = 60 )
+  public function collectAllUnreadedMessagesForEmailAlert( )
   {
+    $delay_in_min = 60;
     $datas = array(
       'total_items' => 0,
       'user_ids' => array(),
       'data' => false
     );
 
-    $gets = $this->db->query("
+    $gets = $this->db->query($qry = "
     SELECT
       m.ID,
       m.sessionid,
       m.send_at,
       m.user_to_id as user_id,
-      m.from_admin,
       m.message,
-      mg.subject,
-      mg.allas_id,
+      IF(m.user_to_id = mg.requester_id, p.requester_title, p.servicer_title) as project_title,
       TIMESTAMPDIFF(MINUTE, m.send_at, now()) as minafter
     FROM ".self::DBTABLE_MESSAGES." as m
     LEFT OUTER JOIN ".self::DBTABLE." as mg ON mg.sessionid = m.sessionid
+    LEFT OUTER JOIN ".\PortalManager\Projects::DBPROJECTS." as p ON p.hashkey = m.sessionid
     WHERE 1=1 and
-    {$useradmin}_alerted = 0 and {$useradmin}_readed_at IS NULL and TIMESTAMPDIFF(MINUTE, m.send_at, now()) > {$delay_in_min}");
+    m.user_from_id != 0 and
+    m.user_to_id != 0 and
+    ((m.requester_readed_at IS NULL and m.requester_alerted = 0 and m.user_to_id = mg.requester_id) or (m.servicer_readed_at IS NULL and m.servicer_alerted = 0 and m.user_to_id = mg.servicer_id))
+    and TIMESTAMPDIFF(MINUTE, m.send_at, now()) > {$delay_in_min} ORDER BY m.send_at ASC");
+
+    //echo $qry; exit;
 
     if ($gets->rowCount() != 0) {
       $gets = $gets->fetchAll(\PDO::FETCH_ASSOC);
@@ -58,21 +63,17 @@ class Messanger
       foreach ((array)$gets as $d) {
         if (!isset($datas['data'][$d['user_id']]['userid'])) {
           $datas['data'][$d['user_id']]['user_id'] = $d['user_id'];
-          $user = new User($d['user_id'], array('controller' => $this->controller));
-          $datas['data'][$d['user_id']]['user'] = array(
-            'name' => $user->getName(),
-            'email' => $user->getEmail()
-          );
-        }
 
-        if (!isset($datas['data'][$d['user_id']][items][$d['sessionid']])) {
-          $datas['data'][$d['user_id']][items][$d['sessionid']]['allas_id'] = $d['allas_id'];
-          $datas['data'][$d['user_id']][items][$d['sessionid']]['subject'] = $d['subject'];
+          $user = $this->db->squery("SELECT nev, email FROM felhasznalok WHERE ID = :id", array('id' => $d['user_id']))->fetch(\PDO::FETCH_ASSOC);
+          $datas['data'][$d['user_id']]['user'] = $user;
         }
 
         if (!in_array($d['user_id'], $datas['user_ids'])) {
           $datas['user_ids'][] = $d['user_id'];
         }
+
+        $datas['data'][$d['user_id']][items][$d['sessionid']]['project']['title'] = $d['project_title'];
+        $datas['data'][$d['user_id']][items][$d['sessionid']]['project']['session'] = $d['sessionid'];
 
         $datas['data'][$d['user_id']][items][$d['sessionid']]['items'][] = $d;
         $datas['data'][$d['user_id']]['total_unreaded']++;
@@ -80,6 +81,7 @@ class Messanger
         $datas['total_items']++;
       }
     }
+
     return $datas;
   }
 
@@ -308,70 +310,6 @@ class Messanger
     );
 
     return $this->db->lastInsertId();
-  }
-
-  public function createSession( $data, $by = 'admin' )
-  {
-    extract($data);
-    $createdSession = false;
-
-    $lang = $this->controller->LANGUAGES->getCurrentLang();
-
-    if (empty($msg)) {
-      throw new \Exception($this->controller->lang("Első üzenet tartalmát kötelező megadni."));
-    }
-
-    if (empty($subject)) {
-      throw new \Exception($this->controller->lang("A beszélgetés létrehozásához adja meg a témát."));
-    }
-    $createdSession = uniqid();
-
-    $this->db->insert(
-      self::DBTABLE,
-      array(
-        'sessionid' => $createdSession,
-        'subject' => $subject,
-        'allas_requester_user_id' => (isset($user_id) && !empty($user_id)) ? (int)$user_id : NULL,
-        'start_by' => $by,
-        'start_by_id' => ($by == 'admin') ? $admin_id : $user_id,
-        'to_id' => ($by == 'admin') ? $user_id : NULL
-      )
-    );
-
-    // Üzenet beszúrása
-    $this->addMessage(
-      $createdSession,
-      $admin_id,
-      $user_id,
-      $msg,
-      ($by == 'admin') ? true : false
-    );
-
-    // E-mail alert
-    if (isset($user_id) && !empty($user_id))
-    {
-      $requestedUser = new User($user_id, array('controller' => $this->controller));
-
-      $mail = new Mailer(
-        $this->settings['page_title'],
-        $this->settings['email_noreply_address'],
-        $this->settings['mail_sender_mode']
-      );
-  		$mail->add( $requestedUser->getEmail() );
-
-      $this->smarty->assign( 'subject', $subject );
-      $this->smarty->assign( 'msg', $msg );
-      $this->smarty->assign( 'settings', $this->controller->settings );
-      $this->smarty->assign( 'user', $requestedUser );
-      $this->smarty->assign( 'msgurl', '/ugyfelkapu/uzenetek/msg/'.$createdSession.'/?rel=email-alert' );
-
-      $mail->setSubject( $this->controller->lang('MAIL_CP_MESSANGER_UJ_UZENET_BESZELGETES', array('tema' => $subject)));
-
-  		$mail->setMsg( $this->smarty->fetch( 'mails/'.$lang.'/messanger_new_sesssion_user.tpl' ) );
-  		$re = $mail->sendMail();
-    }
-
-    return $createdSession;
   }
 
   public function isMessageSessionClosed($session)

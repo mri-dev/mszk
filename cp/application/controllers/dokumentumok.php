@@ -138,7 +138,8 @@ class dokumentumok extends Controller{
 				if( isset($_POST['addFolder']) )
 				{
 					try {
-						$this->docs->addFolder( $uid, $_POST );
+						$fold = $this->docs->addFolder( $uid, $_POST );
+						$this->ALERTS->add( $uid, 'documents_folder_add', $fold['id'], $fold);
 						Helper::reload('/dokumentumok');
 					} catch ( Exception $e ) {
 						$this->view->err	= true;
@@ -195,6 +196,7 @@ class dokumentumok extends Controller{
 				{
 					try {
 						$this->docs->deleteFolder( $folder['hashkey'] );
+						$this->ALERTS->add( $uid, 'documents_folder_delete', $folder['ID'], array('name' => $folder['name']));
 						Helper::reload('/dokumentumok');
 					} catch ( Exception $e ) {
 						$this->view->err = true;
@@ -217,14 +219,14 @@ class dokumentumok extends Controller{
 			if( isset($_POST['addFile']) )
 			{
 				try {
-					$this->docs->addFile( $uid, $_POST );
+					$doc = $this->docs->addFile( $uid, $_POST );
+					$this->ALERTS->add( $uid, 'documents_add', $doc['id'], $doc);
 					Helper::reload('/dokumentumok');
 				} catch ( Exception $e ) {
 					$this->view->err = true;
 					$this->view->bmsg = Helper::makeAlertMsg('pError', $e->getMessage());
 				}
 			}
-
 		}
 
 		public function szerkeszt()

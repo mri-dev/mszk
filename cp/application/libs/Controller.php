@@ -4,6 +4,7 @@ use PortalManager\Template;
 use PortalManager\AdminUser;
 use PortalManager\Users;
 use PortalManager\Installer;
+use AlertsManager\Alerts;
 
 class Controller {
     public $db = null;
@@ -32,6 +33,7 @@ class Controller {
         $this->view = new View();
         $this->db = new Database();
         $this->installer = new Installer(array('db'=> $this->db));
+        $this->ALERTS = new Alerts(array('controller'=> $this));
 
         //////////////////////////////////////////////////////
         // Beállítások változók
@@ -90,6 +92,26 @@ class Controller {
         $this->out( 'kozterulet_jellege', $this->kozterulet_jellege() );
 
         if(!$arg[hidePatern]){ $this->hidePatern = false; }
+    }
+
+    public function lang( $key, $sprinf_params = array() )
+    {
+      $key = \Lang::content($key);
+
+      $params = $sprinf_params;
+
+  		preg_match_all('/%(.*?)%/', $key, $match);
+
+  		if(!empty($match[0])) {
+  			foreach((array)$match[1] as $m) {
+  				if(isset($params[$m]) && !empty($params[$m])) {
+  					$key = str_replace('%'.$m.'%', $params[$m], $key);
+  				}
+  			}
+
+  		}
+
+      return $key;
     }
 
     public function getBadges()

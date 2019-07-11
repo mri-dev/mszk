@@ -545,6 +545,9 @@ class Users
 		$re[pw] 	= base64_encode( $data[pw] );
 		$re[remember] = ($data[remember_me] == 'on') ? true : false;
 
+		$userdata = $this->getData($data[email], 'email');
+		$re['ID'] = $userdata['ID'];
+
 		\Session::set('user_email',$data[email]);
 
 		return $re;

@@ -1,5 +1,34 @@
 var a = angular.module('App', ['ngMaterial', 'ngCookies', 'ngSanitize', 'nl2br']);
 
+a.controller("AlertsWatcher", ['$scope', '$http', '$timeout', function($scope, $http, $timeout)
+{
+	$scope.syncdelay = 2000;
+	$scope.unreaded = 0;
+
+	$scope.init = function()
+	{
+		$scope.watchAlerts();
+	}
+
+	$scope.watchAlerts = function(){
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: 'Alerts',
+				mode: 'watch'
+			})
+		}).success(function(r){
+			$scope.unreaded = r.data.unreaded;
+			$timeout.cancel($scope.syncMsgTimeout);
+			$scope.syncMsgTimeout = $timeout(function() {
+				$scope.watchAlerts();
+			}, $scope.syncdelay);
+		});
+	}
+}]);
+
 a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sce', '$filter', function($scope, $http, $mdToast, $mdDialog, $sce, $filter)
 {
 	$scope.partner = {

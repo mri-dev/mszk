@@ -178,10 +178,17 @@ class Documents
       array(
         'name' => $name,
         'slug' => $slug,
-        'szulo_id' => $szulo_id,
+        'szulo_id' => ($szulo_id) ? $szulo_id : NULL,
         'hashkey' => $hash,
         'user_id' => $uid
       )
+    );
+    $folder_id = $this->db->lastInsertId();
+
+    return array(
+      'id' => $folder_id,
+      'hashkey' => $hash,
+      'name' => $name
     );
   }
 
@@ -277,6 +284,12 @@ class Documents
         )
       );
     }
+
+    return array(
+      'id' => $doc_id,
+      'name' => $post['name'],
+      'hashkey' => $hash
+    );
   }
 
   public function deleteFile( $uid, $post)

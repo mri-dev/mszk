@@ -121,20 +121,20 @@
 <div id="top">
 	<div class="control-bar">
     <div class="d-flex __justify-content-between align-items-center">
-      <div class="message-alerts">
+      <div class="message-alerts" ng-controller="AlertsWatcher" ng-init="init()">
         <div class="d-flex align-items-center">
           <div class="ico">
-            <div class="has-msg"><i class="far fa-dot-circle"></i></div>
-            <a href="/ertesitesek"><i class="far fa-bell"></i></a>
+            <div class="has-msg" ng-show="unreaded!=0"><i class="far fa-dot-circle"></i></div>
+            <a href="/ertesitesek" title="<?=__('Értesítési központ')?>"><i class="far fa-bell"></i></a>
           </div>
-          <div class="alert-message"><?=end(explode(" ", $this->_USERDATA['data']['nev']))?>, <?=sprintf(__('%d db olvasatlan értesítése van!'), 0)?> <a href="/ertesitesek"><?=__('Megnézem')?></a>  </div>
+          <div class="alert-message" ng-show="unreaded!=0"><?=end(explode(" ", $this->_USERDATA['data']['nev']))?>, <?=__('{{unreaded}} db olvasatlan értesítése van!')?></div>
         </div>
       </div>
       <div class="user-group">
         <span><?=$this->_USERDATA['data']['user_group_name']?></span>
       </div>
       <div class="user-block">
-        <a href="/profil"><i class="far fa-user-circle"></i> <?=$this->_USERDATA['data']['nev']?> <i class="fas fa-angle-down"></i></a>
+        <a href="/profil"><i class="far fa-user-circle"></i> <?=$this->_USERDATA['data']['nev']?> <i style="display: none;" class="fas fa-angle-down"></i></a>
       </div>
     </div>
   </div>

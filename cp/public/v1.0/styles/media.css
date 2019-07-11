@@ -1874,25 +1874,99 @@ footer a, footer a:visited, footer a:hover {
   margin: 10px 0 0 0;
 }
 
-/* line 1770, sass/media.scss */
+/* line 1771, sass/media.scss */
+.alerts-controller .alert-list .alert {
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #c0dbeb;
+  padding: 0;
+}
+/* line 1777, sass/media.scss */
+.alerts-controller .alert-list .alert > .wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  padding: 15px 15px 15px 10px;
+}
+/* line 1784, sass/media.scss */
+.alerts-controller .alert-list .alert > .wrapper > div.ico {
+  flex-basis: 50px;
+  position: relative;
+}
+/* line 1788, sass/media.scss */
+.alerts-controller .alert-list .alert > .wrapper > div.ico .unreaded {
+  background: #e31e24;
+  border-radius: 20px;
+  width: 20px;
+  height: 20px;
+  display: block;
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+/* line 1801, sass/media.scss */
+.alerts-controller .alert-list .alert > .wrapper > div.ico i {
+  font-size: 32px;
+  color: #ff7676;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+/* line 1812, sass/media.scss */
+.alerts-controller .alert-list .alert > .wrapper > div.message {
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  padding-left: 10px;
+}
+/* line 1817, sass/media.scss */
+.alerts-controller .alert-list .alert > .wrapper > div.message .msg {
+  color: black;
+}
+/* line 1820, sass/media.scss */
+.alerts-controller .alert-list .alert > .wrapper > div.message .submsg {
+  font-size: 0.75rem;
+  margin: 5px 0 0 0;
+}
+/* line 1824, sass/media.scss */
+.alerts-controller .alert-list .alert > .wrapper > div.message .submsg span + span {
+  margin-left: 8px;
+}
+/* line 1831, sass/media.scss */
+.alerts-controller .alert-list .alert.unwatched {
+  background: #fff8e6;
+  border-radius: 4px;
+  border: 1px solid #ecd6bf;
+}
+/* line 1837, sass/media.scss */
+.alerts-controller .alert-list .alert + .alert {
+  margin: 10px 0 0 0;
+}
+
+/* line 1844, sass/media.scss */
 .project-controller a:hover {
   text-decoration: none;
 }
-/* line 1773, sass/media.scss */
+/* line 1847, sass/media.scss */
 .project-controller .paid-info {
   margin: 10px 0 0 0;
 }
-/* line 1776, sass/media.scss */
+/* line 1850, sass/media.scss */
 .project-controller .paid-info .paidprice {
   font-weight: bold;
 }
-/* line 1780, sass/media.scss */
+/* line 1854, sass/media.scss */
 .project-controller .paid-info .allpaid {
   font-weight: bold;
   color: #52b684;
   margin: 0 0 0 10px;
 }
-/* line 1786, sass/media.scss */
+/* line 1860, sass/media.scss */
 .project-controller h2 {
   color: black;
   font-size: 1.4rem;
@@ -1900,28 +1974,28 @@ footer a, footer a:visited, footer a:hover {
   text-transform: uppercase;
   margin: 0 0 12px 0;
 }
-/* line 1794, sass/media.scss */
+/* line 1868, sass/media.scss */
 .project-controller .messenger-quick-msg .unreaded-txt {
   font-weight: bold;
   color: #ff7676;
   margin-left: 10px;
   font-size: 0.85rem;
 }
-/* line 1800, sass/media.scss */
+/* line 1874, sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper {
   background: white;
   border-radius: 5px;
   padding: 15px;
   border: 2px solid #e3e5e6;
 }
-/* line 1805, sass/media.scss */
+/* line 1879, sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper textarea {
   min-height: 80px;
   border: 1px solid #e6e6e6;
   background: #fbfbfc;
   box-shadow: inset 0 -5px 19px -6px #e4e4e4;
 }
-/* line 1811, sass/media.scss */
+/* line 1885, sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper label {
   font-weight: bold;
   margin: 0 0 12px 0;
@@ -1929,28 +2003,28 @@ footer a, footer a:visited, footer a:hover {
   color: #3c3c3c;
   font-size: 1rem;
 }
-/* line 1817, sass/media.scss */
+/* line 1891, sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper label strong {
   color: #3d98e2;
 }
-/* line 1823, sass/media.scss */
+/* line 1897, sass/media.scss */
 .project-controller .overview {
   margin: -25px -25px 0 -25px;
   background: white;
 }
-/* line 1827, sass/media.scss */
+/* line 1901, sass/media.scss */
 .project-controller .overview table.table {
   margin: 0 !important;
 }
-/* line 1831, sass/media.scss */
+/* line 1905, sass/media.scss */
 .project-controller .overview > .d-flex > div {
   border-right: 1px solid #d5d9dc;
 }
-/* line 1834, sass/media.scss */
+/* line 1908, sass/media.scss */
 .project-controller .overview > .d-flex > div:last-child {
   border-right: none !important;
 }
-/* line 1838, sass/media.scss */
+/* line 1912, sass/media.scss */
 .project-controller .overview .head {
   text-align: center;
   padding: 15px;
@@ -1960,7 +2034,7 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   position: relative;
 }
-/* line 1847, sass/media.scss */
+/* line 1921, sass/media.scss */
 .project-controller .overview .head .own-data {
   color: white;
   text-transform: uppercase;
@@ -1976,70 +2050,70 @@ footer a, footer a:visited, footer a:hover {
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-/* line 1862, sass/media.scss */
+/* line 1936, sass/media.scss */
 .project-controller .overview .head .own-data.edit {
   cursor: pointer;
   outline: none;
 }
-/* line 1871, sass/media.scss */
+/* line 1945, sass/media.scss */
 .project-controller .overview .project .head .own-data {
   background: #6aad63;
   text-transform: none;
 }
-/* line 1879, sass/media.scss */
+/* line 1953, sass/media.scss */
 .project-controller .overview .requester .head {
   background: #1f7fcd;
   color: white;
 }
-/* line 1883, sass/media.scss */
+/* line 1957, sass/media.scss */
 .project-controller .overview .requester .head .own-data {
   background: #3d98e2;
 }
-/* line 1889, sass/media.scss */
+/* line 1963, sass/media.scss */
 .project-controller .overview .servicer .head {
   background: #40a292;
   color: white;
 }
-/* line 1892, sass/media.scss */
+/* line 1966, sass/media.scss */
 .project-controller .overview .servicer .head .own-data {
   background: #58bdad;
 }
-/* line 1898, sass/media.scss */
+/* line 1972, sass/media.scss */
 .project-controller .overview .project {
   flex-basis: 30%;
 }
-/* line 1902, sass/media.scss */
+/* line 1976, sass/media.scss */
 .project-controller .overview .requester, .project-controller .overview .servicer {
   flex-basis: calc(70% / 2);
 }
 
-/* line 1908, sass/media.scss */
+/* line 1982, sass/media.scss */
 .action-buttons {
   margin: 0 0 15px 0;
 }
 
-/* line 1912, sass/media.scss */
+/* line 1986, sass/media.scss */
 .dialog-option-infos {
   font-size: 0.7rem;
 }
-/* line 1914, sass/media.scss */
+/* line 1988, sass/media.scss */
 .dialog-option-infos span + span {
   margin: 0 0 0 4px;
 }
-/* line 1917, sass/media.scss */
+/* line 1991, sass/media.scss */
 .dialog-option-infos .docs-folder {
   color: #3d98e2;
 }
-/* line 1920, sass/media.scss */
+/* line 1994, sass/media.scss */
 .dialog-option-infos .created {
   color: #7c7c7c;
 }
-/* line 1923, sass/media.scss */
+/* line 1997, sass/media.scss */
 .dialog-option-infos .ertek {
   color: #ff7676;
 }
 
-/* line 1929, sass/media.scss */
+/* line 2003, sass/media.scss */
 .services-config-settings {
   border: 0.5px solid #d7d7d7;
   padding: 0.5px;
@@ -2047,11 +2121,11 @@ footer a, footer a:visited, footer a:hover {
   border-radius: 8px;
   margin: 10px 0 0 0;
 }
-/* line 1936, sass/media.scss */
+/* line 2010, sass/media.scss */
 .services-config-settings .service:first-child {
   border-top: none;
 }
-/* line 1939, sass/media.scss */
+/* line 2013, sass/media.scss */
 .services-config-settings .service > .head {
   background: #1f4da3;
   padding: 10px 0;
@@ -2061,7 +2135,7 @@ footer a, footer a:visited, footer a:hover {
   color: white;
   font-size: 1.2rem;
 }
-/* line 1948, sass/media.scss */
+/* line 2022, sass/media.scss */
 .services-config-settings .service > .head .active-label {
   font-size: 0.6rem;
   font-weight: normal;
@@ -2071,23 +2145,23 @@ footer a, footer a:visited, footer a:hover {
   vertical-align: middle;
   color: white;
 }
-/* line 1958, sass/media.scss */
+/* line 2032, sass/media.scss */
 .services-config-settings .service .servicesubs {
   display: none;
 }
-/* line 1961, sass/media.scss */
+/* line 2035, sass/media.scss */
 .services-config-settings .service .subservice {
   border-bottom: 0.5px dashed #eaeaea;
   padding: 0;
 }
-/* line 1964, sass/media.scss */
+/* line 2038, sass/media.scss */
 .services-config-settings .service .subservice > .head {
   color: #e31e24;
   padding: 10px 15px;
   font-size: 1.1rem;
   font-weight: bold;
 }
-/* line 1969, sass/media.scss */
+/* line 2043, sass/media.scss */
 .services-config-settings .service .subservice > .head .active-label {
   font-size: 0.6rem;
   font-weight: normal;
@@ -2098,11 +2172,11 @@ footer a, footer a:visited, footer a:hover {
   text-transform: uppercase;
   color: white;
 }
-/* line 1981, sass/media.scss */
+/* line 2055, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems {
   font-size: 0.9rem;
 }
-/* line 1985, sass/media.scss */
+/* line 2059, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem label {
   display: block;
   width: 100%;
@@ -2113,16 +2187,16 @@ footer a, footer a:visited, footer a:hover {
   color: black;
   cursor: pointer;
 }
-/* line 1995, sass/media.scss */
+/* line 2069, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem input[type=checkbox] + label:before {
   margin: 0 8px 0 0;
 }
-/* line 1999, sass/media.scss */
+/* line 2073, sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem input[type=checkbox]:checked + label {
   background: #52b684;
   color: white;
 }
-/* line 2009, sass/media.scss */
+/* line 2083, sass/media.scss */
 .services-config-settings .listtoggler a {
   color: #cddbf7;
   font-size: 0.8rem;
@@ -2130,7 +2204,7 @@ footer a, footer a:visited, footer a:hover {
   text-decoration: none;
   text-transform: none;
 }
-/* line 2016, sass/media.scss */
+/* line 2090, sass/media.scss */
 .services-config-settings .listtoggler a i {
   color: white;
   margin: 0 0 0 10px;
@@ -2138,91 +2212,91 @@ footer a, footer a:visited, footer a:hover {
   vertical-align: text-bottom;
 }
 
-/* line 2027, sass/media.scss */
+/* line 2101, sass/media.scss */
 .send-offer-holder {
   border: 5px solid #3f966b;
 }
-/* line 2029, sass/media.scss */
+/* line 2103, sass/media.scss */
 .send-offer-holder .row-header {
   background: #52b684 !important;
 }
-/* line 2031, sass/media.scss */
+/* line 2105, sass/media.scss */
 .send-offer-holder .row-header h3 {
   color: white !important;
 }
-/* line 2036, sass/media.scss */
+/* line 2110, sass/media.scss */
 .send-offer-holder .dpad {
   background: #f1f9f5 !important;
 }
-/* line 2039, sass/media.scss */
+/* line 2113, sass/media.scss */
 .send-offer-holder .dpad .row + .row {
   margin-top: 10px;
 }
-/* line 2043, sass/media.scss */
+/* line 2117, sass/media.scss */
 .send-offer-holder .dpad label {
   color: black;
   font-weight: bold;
 }
-/* line 2049, sass/media.scss */
+/* line 2123, sass/media.scss */
 .send-offer-holder .offer-accepter {
   background: white;
 }
-/* line 2052, sass/media.scss */
+/* line 2126, sass/media.scss */
 .send-offer-holder .offer-accepter .head {
   background: #f3c538;
   padding: 10px;
   color: #201e15;
   font-weight: bold;
 }
-/* line 2059, sass/media.scss */
+/* line 2133, sass/media.scss */
 .send-offer-holder .offer-accepter .dpad {
   color: #3c3c3c;
   background: white !important;
 }
 
-/* line 2066, sass/media.scss */
+/* line 2140, sass/media.scss */
 .service-info, .offer-info {
   margin: 0 0 25px 0;
 }
-/* line 2069, sass/media.scss */
+/* line 2143, sass/media.scss */
 .service-info h4, .offer-info h4 {
   font-size: 1.1rem;
   font-weight: bold;
   color: #3296e7;
 }
 
-/* line 2077, sass/media.scss */
+/* line 2151, sass/media.scss */
 .service-info .service-offered {
   background: #58bdad;
   padding: 10px;
   color: white;
 }
 
-/* line 2083, sass/media.scss */
+/* line 2157, sass/media.scss */
 .ajaxdialog.saveproject {
   min-width: 650px;
 }
 
-/* line 2087, sass/media.scss */
+/* line 2161, sass/media.scss */
 .data-list {
   font-size: 0.85rem;
 }
-/* line 2090, sass/media.scss */
+/* line 2164, sass/media.scss */
 .data-list .list-item > .holder {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   align-items: center;
 }
-/* line 2095, sass/media.scss */
+/* line 2169, sass/media.scss */
 .data-list .list-item > .holder > div {
   padding: 10px 15px;
 }
-/* line 2099, sass/media.scss */
+/* line 2173, sass/media.scss */
 .data-list .list-item:nth-child(odd) {
   background: #f5f5f5;
 }
-/* line 2103, sass/media.scss */
+/* line 2177, sass/media.scss */
 .data-list .header {
   text-transform: uppercase;
   background: #efefef;
@@ -2231,64 +2305,64 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   border-bottom: 2px solid #c9c9c9;
 }
-/* line 2111, sass/media.scss */
+/* line 2185, sass/media.scss */
 .data-list .header > .holder {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   align-items: center;
 }
-/* line 2116, sass/media.scss */
+/* line 2190, sass/media.scss */
 .data-list .header > .holder > div {
   padding: 10px 15px;
 }
-/* line 2123, sass/media.scss */
+/* line 2197, sass/media.scss */
 .data-list .list-item > .holder .data,
 .data-list .header > .holder .data {
   flex: 1;
 }
-/* line 2125, sass/media.scss */
+/* line 2199, sass/media.scss */
 .data-list .list-item > .holder .data .subtitle,
 .data-list .header > .holder .data .subtitle {
   font-size: 0.75rem;
 }
-/* line 2127, sass/media.scss */
+/* line 2201, sass/media.scss */
 .data-list .list-item > .holder .data .subtitle span + span,
 .data-list .header > .holder .data .subtitle span + span {
   margin: 0 0 0 10px;
 }
-/* line 2130, sass/media.scss */
+/* line 2204, sass/media.scss */
 .data-list .list-item > .holder .data .subtitle .infolder,
 .data-list .header > .holder .data .subtitle .infolder {
   color: #ff7676;
 }
-/* line 2133, sass/media.scss */
+/* line 2207, sass/media.scss */
 .data-list .list-item > .holder .data .subtitle .teljesitve,
 .data-list .header > .holder .data .subtitle .teljesitve {
   font-weight: bold;
   color: #52b684;
 }
-/* line 2140, sass/media.scss */
+/* line 2214, sass/media.scss */
 .data-list .list-item > .holder .add-at,
 .data-list .header > .holder .add-at {
   flex-basis: 120px;
   text-align: center;
 }
-/* line 2145, sass/media.scss */
+/* line 2219, sass/media.scss */
 .data-list .list-item > .holder .relation,
 .data-list .header > .holder .relation {
   flex-basis: 100px;
   text-align: center;
 }
 
-/* line 2152, sass/media.scss */
+/* line 2226, sass/media.scss */
 md-dialog h4 {
   font-size: 1rem;
   marign: 0 0 5px 0;
   font-weight: bold;
 }
 
-/* line 2160, sass/media.scss */
+/* line 2234, sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -2303,7 +2377,7 @@ body.user-group-user #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 2170, sass/media.scss */
+/* line 2244, sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -2318,7 +2392,7 @@ body.user-group-superadmin #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 2180, sass/media.scss */
+/* line 2254, sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;

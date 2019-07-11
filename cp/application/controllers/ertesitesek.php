@@ -1,27 +1,25 @@
 <?php
 
-class belepes extends Controller{
+class ertesitesek extends Controller{
 		function __construct(){
 			parent::__construct();
-			parent::$pageTitle = 'Belépés';
+			parent::$pageTitle = __('Értesítésési központ');
+			$this->addPagePagination(array(
+				'link' => '/',
+				'title' => parent::$pageTitle
+			));
 
-			$this->out( 'bodyclass', 'login');
-
-			// Ha be van belépve, akkor átirányítja
-			if ( $this->Users->user ) {
-				Helper::reload('/');
+			// Ha nincs belépve, akkor átirányít a bejelentkezésre
+			if ( !$this->Users->user && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio') {
+				Helper::reload('/belepes');
 			}
 
-			if(isset($_POST['login'])){
-				try{
-						$user = $this->Users->login($_POST);
-						$this->ALERTS->add( $user['ID'], 'user_login_success');
-						Helper::reload($_GET['return']);
-				}catch(Exception $e){
-						$this->view->err    = true;
-						$this->view->bmsg   = Helper::makeAlertMsg('pError', $e->getMessage());
-				}
-			}
+      $arg = array();
+      $alerts = $this->ALERTS->getTree( $arg );
+      $this->out( 'alerts', $alerts );
+
+      // Olvasottá tétel
+      $this->ALERTS->setWatchedAllUnwatched( $this->view->_USERDATA['data']['ID'] );
 
 			// SEO Információk
 			$SEO = null;

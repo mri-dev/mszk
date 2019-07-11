@@ -1,9 +1,6 @@
 <?
 namespace AlertsManager;
 
-use FlexTimeResort\Allasok;
-use PortalManager\User;
-
 class Alerts
 {
 	const DB_TABLE = 'alerts';
@@ -12,7 +9,6 @@ class Alerts
 
 	public $db = null;
 	public $controller = null;
-	public $smarty = null;
 	private $admin = false;
 	public $settings = array();
 
@@ -31,7 +27,6 @@ class Alerts
 			$this->controller = $arg['controller'];
 			$this->db = $arg['controller']->db;
 			$this->settings = $arg['controller']->settings;
-			$this->smarty = $arg['controller']->smarty;
 		}
 	}
 
@@ -216,20 +211,31 @@ class Alerts
     }
 	}
 
+	public function prepareOutput()
+	{
+		$this->current_category['vars'] = json_decode($this->current_category['vars'], true);
+	}
+
 	public function getIcon()
 	{
 		return $this->current_category['fa_ico'];
 	}
 
-	public function getVars()
+	public function getVars( $key = false )
 	{
-		return json_decode($this->current_category['vars'], true);
+		if ($key) {
+			$vars =  json_decode($this->current_category['vars'], true);
+			return $vars[$key];
+		} else {
+			return json_decode($this->current_category['vars'], true);
+		}
 	}
 
 	public function getMessage()
 	{
 		$vars = array();
 		$store_vars = $this->getVars();
+		$vars = array_merge($vars, $store_vars);
 		switch ($this->current_category['groupkey']) {
 			case 'allas_jelentkezes_hozzaferes_engedelyezes_tulajnak':
 				if ($store_vars['uid']) {
@@ -239,6 +245,7 @@ class Alerts
 				}
 			break;
 		}
+
 		$msg = $this->controller->lang('ALERTMANAGER_MSG_'.$this->current_category['groupkey'], $vars);
 
 		return $msg;
@@ -261,35 +268,26 @@ class Alerts
 		$itemid = (int)$this->current_category['itemid'];
 
 		switch ($group) {
-			// Hirdetés gomb
-			case 'allas_jelentkezes_sikeres':
-			case 'allas_jelentkezes_hozzaferes_engedelyezes':
-			case 'allas_letrehozas_sikeres':
-				if($itemid != 0){
-					$allas = (new Allasok(array('controller' => $this->controller)))->load($itemid);
-					$button = array(
-						'text' => $this->controller->lang('Hirdetés adatlap'),
-						'url' => $allas->getURL(),
-						'msg' => $allas->shortDesc()
-					);
-				}
-			break;
-			case 'allas_request_to_own':
-			if($itemid != 0){
-				$user = new User($itemid, array('controller' => $this->controller));
+			case 'test':
 				$button = array(
-					'text' => $this->controller->lang('%name% munkavállaló önéletrajza',array('name' => $user->getName())),
-					'url' => $this->settings['page_url'].$user->getCVUrl(),
-					'msg' => $this->controller->lang('%name% jelentkezett az Ön egyik állásajánlatára', array('name' => $user->getName()))
+					'text' => 'Demo',
+					'url' => '/',
+					'msg' => 'teszt desc'
 				);
-			}
 			break;
-			case 'allas_jelentkezes_hozzaferes_engedelyezes_tulajnak':
-				$allas = (new Allasok(array('controller' => $this->controller)))->load($itemid);
+			case 'documents_add':
 				$button = array(
-					'text' => $this->controller->lang('Kérelem lista mutatása'),
-					'url' => $this->settings['page_url'].'/ugyfelkapu/hirdetesek?hlad='.$itemid.'&requestsShow=1',
-					'msg' => $allas->shortDesc()
+					'text' => __('Dokumentum megtekintése'),
+					'url' => '/doc/'.$this->getVars('hashkey'),
+					'msg' => $this->getVars('name').' '.__('dokumentum fájl megtekintése.')
+				);
+			break;
+
+			case 'documents_folder_add':
+				$button = array(
+					'text' => __('Mappa megtekintése'),
+					'url' => '/dokumentumok/?folder='.$this->getVars('hashkey'),
+					'msg' => $this->getVars('name').' '.__('mappa fájlok megtekintése.')
 				);
 			break;
 
@@ -303,7 +301,6 @@ class Alerts
 	{
 		$this->db 		= null;
 		$this->arg 		= null;
-		$this->smarty 	= null;
 		$this->settings = null;
 
 		$this->tree = false;

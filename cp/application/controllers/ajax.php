@@ -21,6 +21,22 @@ class ajax extends Controller
 
 			switch($type)
 			{
+				case 'Alerts':
+					$ret['data'] = array();
+					$ret['pass'] = $_POST;
+
+					switch ( $mode ) {
+						case 'watch':
+							$unreaded = 0;
+							if ($this->view->_USERDATA['data']['ID']) {
+								$unreaded = (int)$this->ALERTS->getUnwatchedNum($this->view->_USERDATA['data']['ID']);
+							}
+							$ret['data']['unreaded'] = $unreaded;
+						break;
+					}
+
+					echo json_encode($ret);
+				break;
 				case 'Messanger':
 					$ret['data'] = array();
 					$ret['pass'] = $_POST;

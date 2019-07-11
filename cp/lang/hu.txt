@@ -1,0 +1,4 @@
+ALERTMANAGER_MSG_user_login_success::Sikeresen bejelentkezett a rendszerbe.;;
+ALERTMANAGER_MSG_documents_add::Új dokumentum hozzáadva: <strong>%name%</strong>.;;
+ALERTMANAGER_MSG_documents_folder_add::Új dokumentum mappa hozzáadva: <strong>%name%</strong>.;;
+ALERTMANAGER_MSG_documents_folder_delete::Dokumentum mappa törlésre került: <strong>%name%</strong>.;;

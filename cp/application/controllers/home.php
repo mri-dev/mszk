@@ -1,4 +1,8 @@
 <?php
+use PortalManager\Projects;
+use PortalManager\Documents;
+use MessageManager\Messanger;
+use PortalManager\OfferRequests;
 
 class home extends Controller{
 		function __construct(){
@@ -22,6 +26,61 @@ class home extends Controller{
 			if($this->gets[1] == 'exit'){
 				$this->Users->logout();
 			}
+
+			$uid = $this->view->_USERDATA['data']['ID'];
+
+			if (!$this->is_admin_logged)
+			{
+				$docs = new Documents(array('db' => $this->db));
+				$projects = new Projects(array('db' => $this->db));
+				$messanger = new Messanger(array(
+					'controller' => $this
+				));
+
+				// Díjbekérők - Lejárt
+				$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
+				$folderinfo = $docs->getFolderData($folderhash);
+
+				$dashboard['dijbekero']['expired'] = $docs->getList(array(
+					'uid' => $uid,
+					'limit' => 10,
+					'folder' => $folderinfo['ID'],
+					'order' => 'd.expire_at DESC',
+					'expire_qry' => '<= now()',
+					'teljesites_qry' => 'IS NULL'
+				));
+
+				// Díjbekérők - Összes
+				$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
+				$folderinfo = $docs->getFolderData($folderhash);
+
+				$dashboard['dijbekero']['all'] = $docs->getList(array(
+					'uid' => $uid,
+					'limit' => 1,
+					'folder' => $folderinfo['ID'],
+					'order' => 'd.expire_at DESC'
+				));
+
+				// Messangers
+				$arg = array();
+				$messages = $messanger->loadMessages($uid, $arg);
+				$dashboard['messanger'] = $messages;
+
+				// Projektek
+				$listarg = array();
+				$listarg['uid'] = $uid;
+				$listarg['closed'] = 0;
+	      $dashboard['projects'] = $projects->getList( $listarg );
+
+				// Ajánlatkérések
+				$offerrequests = new OfferRequests(array('db' => $this->db));
+				$arg = array('offerout' => 1, 'elutasitva' => 0, 'servicetree' => false, 'shortlist' => true);
+				$arg['user'] = $uid;
+				$requests = $offerrequests->getList( $arg );
+				$dashboard['requests'] = $requests;
+			}
+			$this->out('dashboard', $dashboard);
+
 
 			// SEO Információk
 			$SEO = null;

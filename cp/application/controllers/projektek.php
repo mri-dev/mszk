@@ -117,8 +117,6 @@ class projektek extends Controller
 			$this->out( 'projects', $projects->getList( $listarg ));
     }
 
-
-
 		function __destruct(){
 			// RENDER OUTPUT
 				parent::bodyHead();					# HEADER

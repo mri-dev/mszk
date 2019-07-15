@@ -208,7 +208,7 @@
               <div class="holder">
                 <div class="data"><?=__('Dokumentum adatok')?></div>
                 <div class="relation"><?=__('Hozzáadta')?></div>
-                <div class="add-at"><?=__('Határidő')?></div>
+                <div class="add-at"><?=__('Időpont')?></div>
               </div>
             </div>
             <?php foreach ((array)$doc['data'] as $d): ?>
@@ -219,8 +219,14 @@
                     <a href="/doc/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['name']?></strong></a>
                   </div>
                   <div class="subtitle">
+                    <?php if ($d['folders'][0]): ?>
+                    <span class="infolder"><?=$d['folders'][0]['folder_name']?></span>
+                    <?php endif; ?>
                     <?php if ($d['ertek'] != 0): ?>
                     <span class="doc-ertek"><strong><?=\Helper::cashFormat($d['ertek'])?></strong> <?=__('Ft + ÁFA')?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($d['expire_at'])): ?>
+                    <span class="expire"><?=__('Határidő')?>: <strong><?=$d['expire_at']?></strong></span>
                     <?php endif; ?>
                     <?php if (!empty($d['teljesites_at'])): ?>
                     <span class="teljesitve" title="<?=$d['teljesites_at']?>"><?=__('Teljesítve')?> <i class="fas fa-check"></i></span>
@@ -231,7 +237,7 @@
                   <?=($d['xrefproject'] && $d['xrefproject']['adder_user_id'] == $this->_USERDATA['data']['ID'])?__('Én'):__('Partner')?>
                 </div>
                 <div class="add-at">
-                  <?=date('Y/m/d', strtotime($d['expire_at']))?>
+                  <?=date('Y/m/d H:i', strtotime($d['xproject_added_at']))?>
                 </div>
               </div>
             </div>

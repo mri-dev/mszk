@@ -214,7 +214,6 @@ input, textarea{
     height: $top-control-height+$top-title-height;
     position: relative;
 
-
 		.slideMenuToggle{
 			position: absolute;
 			right: 28px;
@@ -245,7 +244,35 @@ input, textarea{
       left: 50%;
       transform:translate(-50%,-50%);
     }
+		img.closedlogo{
+			display: none;
+			right: 21px;
+			top: 10px;
+			left: inherit;
+			transform: inherit;
+			max-height: inherit;
+			height: inherit;
+			width: 32px;
+			max-width: inherit;
+		}
   }
+
+	&.closed{
+		img:not(.closedlogo){
+			display: none;
+		}
+
+		img.closedlogo{
+			display: block;
+		}
+
+		.menu{
+			i{
+				position: absolute;
+				right: 12px;
+			}
+		}
+	}
 }
 #top{
   position: fixed;
@@ -415,7 +442,6 @@ body:not(.login) .innerContent{
     margin: 0;
   }
 
-
   & > ul > li > a {
     color: #818e9d;
     text-decoration: none;
@@ -457,6 +483,11 @@ body:not(.login) .innerContent{
 	& > ul > li:hover a{
 		background: #f5f5f5;
 		color: #484848;
+	}
+
+	& > ul > li.homepage > a {
+		background: #23427b;
+    color: #8197bf;
 	}
 
 	& > ul > li.has-more a:after{
@@ -2212,6 +2243,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	}
 	.list-item > .holder .add-at,
 	.header > .holder .add-at{
+		flex-basis: 120px;
+		text-align: center;
+	}
+	.list-item > .holder .progress-status,
+	.header > .holder .progress-status{
+		flex-basis: 150px;
+		text-align: center;
+	}
+	.list-item > .holder .unreaded-msg,
+	.header > .holder .unreaded-msg{
 		flex-basis: 120px;
 		text-align: center;
 	}

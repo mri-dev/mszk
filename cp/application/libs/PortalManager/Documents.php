@@ -471,14 +471,13 @@ class Documents
     }
 
 		$q = "SELECT SQL_CALC_FOUND_ROWS
-			d.*,
-      f.nev as user_nev,
-      fa.ertek as user_company";
+		d.*,
+    f.nev as user_nev,
+    fa.ertek as user_company";
 
-      if ( isset($arg['in_project']) && !empty($arg['in_project']) ) {
-        $q .= ",xp.added_at as xproject_added_at";
-      }
-
+    if ( isset($arg['in_project']) && !empty($arg['in_project']) ) {
+      $q .= ",xp.added_at as xproject_added_at";
+    }
 
 		$q .= " FROM ".self::DBTABLE." as d
     LEFT OUTER JOIN felhasznalok as f ON f.ID = d.user_id
@@ -574,7 +573,6 @@ class Documents
     } else {
       $q .= " ORDER BY ".$arg['order'];
     }
-
 
     if($arg[limit]){
 			$q = rtrim($q,";");

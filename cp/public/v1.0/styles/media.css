@@ -1,10 +1,10 @@
 @import url(//fonts.googleapis.com/css?family=PT+Sans);
-/* line 4, sass/media.scss */
+/* line 4, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 input[type=checkbox] {
   margin: 0;
 }
 
-/* line 7, sass/media.scss */
+/* line 7, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body {
   background: #f4f4f4;
   font-family: 'PT Sans', sans-serif;
@@ -20,17 +20,17 @@ body {
   /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(45deg, #41b7f2 14%, #41b7f2 14%, #2a78dd 66%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#41b7f2', endColorstr='#2a78dd',GradientType=1 );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#41b7f2', endColorstr='#2a78dd',GradientType=1 );
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 21, sass/media.scss */
+/* line 21, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body, html {
   position: relative;
   font-size: 1rem;
 }
 
-/* line 25, sass/media.scss */
+/* line 25, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body.blured > * {
   -webkit-filter: blur(3px);
   -moz-filter: blur(3px);
@@ -39,13 +39,13 @@ body.blured > * {
   filter: blur(3px);
 }
 
-/* line 32, sass/media.scss */
+/* line 32, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body.logged-in {
   background: #edf1f5;
   color: #818e9d;
 }
 
-/* line 36, sass/media.scss */
+/* line 36, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 md-toast {
   z-index: 99999;
   position: fixed;
@@ -53,20 +53,23 @@ md-toast {
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-/* line 44, sass/media.scss */
+
+/* line 44, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 md-toast.mode-alert .md-toast-content {
   background: #e31e24 !important;
 }
-/* line 49, sass/media.scss */
+
+/* line 49, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 md-toast.mode-warning .md-toast-content {
   background: #ff9723 !important;
 }
-/* line 54, sass/media.scss */
+
+/* line 54, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 md-toast.mode-success .md-toast-content {
   background: #52b684 !important;
 }
 
-/* line 59, sass/media.scss */
+/* line 59, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 input, textarea {
   -webkit-transition: all 0.30s ease-in-out;
   -moz-transition: all 0.30s ease-in-out;
@@ -75,33 +78,33 @@ input, textarea {
   outline: none;
 }
 
-/* line 66, sass/media.scss */
+/* line 66, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .left {
   text-align: left;
 }
 
-/* line 69, sass/media.scss */
+/* line 69, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .right {
   text-align: right;
 }
 
-/* line 72, sass/media.scss */
+/* line 72, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .center {
   text-align: center;
 }
 
-/* line 75, sass/media.scss */
+/* line 75, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .form-control:focus {
   border: 1px solid #a2c2ff !important;
   box-shadow: 0 0 0 0.2rem rgba(9, 127, 189, 0.28) !important;
 }
 
-/* line 79, sass/media.scss */
+/* line 79, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .form-control {
   border: 1px solid #e5e5e5;
 }
 
-/* line 82, sass/media.scss */
+/* line 82, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login {
   z-index: 10;
   position: relative;
@@ -111,18 +114,18 @@ input, textarea {
   padding: 5rem 0 0 0;
 }
 
-/* line 90, sass/media.scss */
+/* line 90, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .login-box-holder {
   background: black;
 }
 
-/* line 93, sass/media.scss */
+/* line 93, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .logo img {
   width: 50%;
   max-width: 50%;
 }
 
-/* line 97, sass/media.scss */
+/* line 97, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .input-group-text {
   background-color: transparent;
   border: 1px solid #e5e5e5;
@@ -130,7 +133,7 @@ input, textarea {
   color: #676767;
 }
 
-/* line 104, sass/media.scss */
+/* line 103, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login input[type=text],
 #login input[type=password] {
   padding: 0 15px;
@@ -140,7 +143,7 @@ input, textarea {
   font-weight: bold;
 }
 
-/* line 112, sass/media.scss */
+/* line 111, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login input[type=password]::placeholder,
 #login input[type=text]::placeholder {
   color: #a4a4a4;
@@ -149,7 +152,7 @@ input, textarea {
   opacity: 1;
 }
 
-/* line 120, sass/media.scss */
+/* line 119, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login input[type=password]:-ms-input-placeholder,
 #login input[type=text]:-ms-input-placeholder {
   color: #a4a4a4;
@@ -157,7 +160,7 @@ input, textarea {
   font-weight: 400;
 }
 
-/* line 128, sass/media.scss */
+/* line 126, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login input[type=password]::-ms-input-placeholder,
 #login input[type=text]::-ms-input-placeholder {
   color: #a4a4a4;
@@ -165,7 +168,7 @@ input, textarea {
   font-weight: 400;
 }
 
-/* line 134, sass/media.scss */
+/* line 134, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login h3 {
   margin-bottom: 25px;
   text-align: center;
@@ -176,7 +179,7 @@ input, textarea {
   margin: 15px 0;
 }
 
-/* line 143, sass/media.scss */
+/* line 143, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .bg {
   background-color: #ffffff !important;
   padding: 30px;
@@ -184,88 +187,88 @@ input, textarea {
   box-shadow: 0 5px 30px -10px #828282;
 }
 
-/* line 149, sass/media.scss */
+/* line 149, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .login-box-holder {
   border-radius: 10px;
   background: #4fb3ff;
   box-shadow: 0 5px 24px -15px black;
 }
 
-/* line 154, sass/media.scss */
+/* line 154, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .copyright {
   color: white;
   font-size: 0.68rem;
   margin: 25px 0 0 0;
 }
 
-/* line 159, sass/media.scss */
+/* line 159, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .copyright a {
   color: white;
 }
 
-/* line 162, sass/media.scss */
+/* line 162, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .copyright .devby {
   margin-left: 20px;
 }
 
-/* line 166, sass/media.scss */
+/* line 165, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .reset-password a,
 #login .login-box-holder a:not(.btn) {
   color: #5c5c5c;
 }
 
-/* line 169, sass/media.scss */
+/* line 169, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .reset-password a {
   font-size: 0.9rem;
   color: #acacac;
 }
 
-/* line 173, sass/media.scss */
+/* line 173, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .aszf a {
   color: #3e8ff7;
 }
 
-/* line 176, sass/media.scss */
+/* line 176, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #login .aszf label {
   cursor: pointer;
 }
 
-/* line 179, sass/media.scss */
+/* line 179, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #content {
   position: relative;
   height: 100%;
 }
 
-/* line 183, sass/media.scss */
+/* line 183, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .activation-status {
   text-align: center;
 }
 
-/* line 186, sass/media.scss */
+/* line 186, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .activation-status h2 {
   font-size: 1.7rem;
   color: black;
   margin: 0 0 8px 0;
 }
 
-/* line 191, sass/media.scss */
+/* line 191, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .activation-status i {
   margin: 0 0 10px 0;
   color: #5bd98e;
 }
 
-/* line 195, sass/media.scss */
+/* line 195, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .activation-status .sub {
   margin: 5px 0;
   color: #5c5c5c;
 }
 
-/* line 199, sass/media.scss */
+/* line 199, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .badge {
   border-radius: 1rem;
 }
 
-/* line 202, sass/media.scss */
+/* line 202, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .slideMenu {
   position: fixed;
   left: 0;
@@ -276,13 +279,15 @@ input, textarea {
   width: 280px;
   box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0.72);
 }
-/* line 212, sass/media.scss */
+
+/* line 212, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .slideMenu .headerlogo {
   background: #1f4da3;
   height: 105px;
   position: relative;
 }
-/* line 218, sass/media.scss */
+
+/* line 217, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .slideMenu .headerlogo .slideMenuToggle {
   position: absolute;
   right: 28px;
@@ -292,17 +297,20 @@ input, textarea {
   opacity: 0.5;
   filter: alpha(opacity=50);
 }
-/* line 227, sass/media.scss */
+
+/* line 226, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .slideMenu .headerlogo .slideMenuToggle:hover {
   opacity: 1;
   filter: alpha(opacity=100);
 }
-/* line 232, sass/media.scss */
+
+/* line 231, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .slideMenu .headerlogo .slideMenuToggle i {
   color: white;
   font-size: 1.4rem;
 }
-/* line 238, sass/media.scss */
+
+/* line 237, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .slideMenu .headerlogo img {
   position: absolute;
   width: auto;
@@ -314,7 +322,36 @@ input, textarea {
   transform: translate(-50%, -50%);
 }
 
-/* line 250, sass/media.scss */
+/* line 247, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.slideMenu .headerlogo img.closedlogo {
+  display: none;
+  right: 21px;
+  top: 10px;
+  left: inherit;
+  transform: inherit;
+  max-height: inherit;
+  height: inherit;
+  width: 32px;
+  max-width: inherit;
+}
+
+/* line 261, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.slideMenu.closed img:not(.closedlogo) {
+  display: none;
+}
+
+/* line 265, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.slideMenu.closed img.closedlogo {
+  display: block;
+}
+
+/* line 270, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.slideMenu.closed .menu i {
+  position: absolute;
+  right: 12px;
+}
+
+/* line 277, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top {
   position: fixed;
   left: 0;
@@ -326,41 +363,49 @@ input, textarea {
   color: white;
   font-size: 1rem;
 }
-/* line 261, sass/media.scss */
+
+/* line 288, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar {
   background: black;
   height: 60px;
   font-size: 0.85rem;
   padding: 0 20px;
 }
-/* line 266, sass/media.scss */
+
+/* line 293, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar a, #top .control-bar a:hover, #top .control-bar a:visited {
   color: white;
   text-decoration: none;
 }
-/* line 271, sass/media.scss */
+
+/* line 298, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar > div.d-flex {
   height: 60px;
 }
-/* line 273, sass/media.scss */
+
+/* line 300, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar > div.d-flex > div {
   padding: 0 5px;
 }
-/* line 277, sass/media.scss */
+
+/* line 304, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts {
   flex: 1;
 }
-/* line 279, sass/media.scss */
+
+/* line 306, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts .ico {
   padding-right: 20px;
   position: relative;
 }
-/* line 283, sass/media.scss */
+
+/* line 310, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts .ico i {
   font-size: 20px;
   vertical-align: middle;
 }
-/* line 287, sass/media.scss */
+
+/* line 314, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts .ico .has-msg {
   position: absolute;
   right: 11px;
@@ -368,15 +413,18 @@ input, textarea {
   color: #ff4444;
   pointer-events: none;
 }
-/* line 293, sass/media.scss */
+
+/* line 320, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts .ico .has-msg i {
   font-size: 16px;
 }
-/* line 297, sass/media.scss */
+
+/* line 324, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts .ico a, #top .control-bar .message-alerts .ico a:hover, #top .control-bar .message-alerts .ico a:visited {
   color: white;
 }
-/* line 301, sass/media.scss */
+
+/* line 328, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts .alert-message {
   background: #f7f6d1;
   color: #4a4a4a;
@@ -385,7 +433,8 @@ input, textarea {
   padding: 5px;
   position: relative;
 }
-/* line 309, sass/media.scss */
+
+/* line 336, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts .alert-message a {
   background: #656565;
   color: white;
@@ -396,7 +445,8 @@ input, textarea {
   font-size: 0.6rem;
   vertical-align: text-top;
 }
-/* line 320, sass/media.scss */
+
+/* line 347, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .message-alerts .alert-message:before {
   content: "";
   border-style: solid;
@@ -408,36 +458,42 @@ input, textarea {
   -moz-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-/* line 333, sass/media.scss */
+
+/* line 360, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .user-block {
   flex-basis: 150px;
   font-size: 1rem;
   font-weight: 300;
   text-align: right;
 }
-/* line 338, sass/media.scss */
+
+/* line 365, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .user-block i.fa-user-circle {
   font-size: 1.54rem;
   margin-right: 5px;
   vertical-align: sub;
 }
-/* line 344, sass/media.scss */
+
+/* line 371, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .user-block a {
   white-space: nowrap;
 }
-/* line 348, sass/media.scss */
+
+/* line 375, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .user-group {
   flex-basis: 150px;
   text-align: right;
 }
-/* line 351, sass/media.scss */
+
+/* line 378, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .control-bar .user-group span {
   background: #2f2f2f;
   padding: 5px 8px;
   border-radius: 10px;
   font-size: 0.7rem;
 }
-/* line 359, sass/media.scss */
+
+/* line 386, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .title-bar {
   background: white;
   height: 45px;
@@ -447,32 +503,34 @@ input, textarea {
   border-bottom: 0.5px solid white;
   box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.29);
 }
-/* line 367, sass/media.scss */
+
+/* line 394, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .title-bar .page-title {
   text-transform: uppercase;
 }
-/* line 370, sass/media.scss */
+
+/* line 397, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 #top .title-bar > div.d-flex {
   height: 45px;
 }
 
-/* line 375, sass/media.scss */
+/* line 402, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct {
   padding-top: 105px;
   padding-bottom: 40px;
 }
 
-/* line 379, sass/media.scss */
+/* line 406, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body:not(.login) .innerContent {
   background: #edf1f5;
 }
 
-/* line 382, sass/media.scss */
+/* line 409, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .innerContent {
   padding: 25px;
 }
 
-/* line 385, sass/media.scss */
+/* line 412, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .nosetdata {
   font-style: italic;
   font-size: 0.65rem;
@@ -481,36 +539,41 @@ body:not(.login) .innerContent {
   text-decoration: underline;
 }
 
-/* line 392, sass/media.scss */
+/* line 419, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page-pagination {
   font-size: 0.8rem;
   margin-right: 15px;
   color: #d7d7d7;
 }
-/* line 397, sass/media.scss */
+
+/* line 424, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page-pagination span.no-link {
   color: #989898;
 }
-/* line 400, sass/media.scss */
+
+/* line 427, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page-pagination a {
   margin: 0 3px;
 }
-/* line 403, sass/media.scss */
+
+/* line 430, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page-pagination a, .page-pagination a:visited {
   color: #818e9d;
 }
-/* line 407, sass/media.scss */
+
+/* line 434, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page-pagination a:last-child {
   color: #3d98e2;
 }
 
-/* line 412, sass/media.scss */
+/* line 439, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu ul, .menu li {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-/* line 419, sass/media.scss */
+
+/* line 445, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li > a {
   color: #818e9d;
   text-decoration: none;
@@ -519,7 +582,8 @@ body:not(.login) .innerContent {
   padding: 20px 15px;
   position: relative;
 }
-/* line 427, sass/media.scss */
+
+/* line 453, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li > a i {
   width: 25px;
   margin-right: 15px;
@@ -527,7 +591,8 @@ body:not(.login) .innerContent {
   font-size: 1.1rem;
   vertical-align: middle;
 }
-/* line 435, sass/media.scss */
+
+/* line 461, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li > a .badge {
   border-radius: .8rem;
   padding: 4px 7px;
@@ -538,24 +603,35 @@ body:not(.login) .innerContent {
   -moz-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-/* line 445, sass/media.scss */
+
+/* line 471, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li > a .badge.badge-danger {
   background: #ff7676;
 }
-/* line 450, sass/media.scss */
+
+/* line 476, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li.shortcut > a {
   padding: 15px 15px;
 }
-/* line 452, sass/media.scss */
+
+/* line 478, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li.shortcut > a i {
   font-size: 1rem;
 }
-/* line 457, sass/media.scss */
+
+/* line 483, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li:hover a {
   background: #f5f5f5;
   color: #484848;
 }
-/* line 462, sass/media.scss */
+
+/* line 488, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.menu > ul > li.homepage > a {
+  background: #23427b;
+  color: #8197bf;
+}
+
+/* line 493, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li.has-more a:after {
   content: "\f105";
   font-family: "Font Awesome 5 Free";
@@ -567,38 +643,45 @@ body:not(.login) .innerContent {
   -moz-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-/* line 473, sass/media.scss */
+
+/* line 504, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li.has-more.on a:after {
   content: "\f107";
   color: white;
 }
-/* line 478, sass/media.scss */
+
+/* line 509, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li.on a {
   background: #3d98e2;
   color: white;
   font-weight: bold;
 }
-/* line 482, sass/media.scss */
+
+/* line 513, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu > ul > li.on a .badge {
   background: #444444;
 }
-/* line 487, sass/media.scss */
+
+/* line 518, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu li.sub > a {
   font-size: 0.84rem;
   background: #f1f1f1;
   padding: 15px 15px;
 }
-/* line 492, sass/media.scss */
+
+/* line 523, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu li.sub > a > i {
   font-size: 1rem;
   margin-right: 5px;
   margin-left: 10px;
 }
-/* line 498, sass/media.scss */
+
+/* line 529, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu li.sub.on > a {
   background: #768188;
 }
-/* line 502, sass/media.scss */
+
+/* line 533, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu li.head {
   background: #eff2f5;
   padding: 8px 15px;
@@ -608,17 +691,19 @@ body:not(.login) .innerContent {
   letter-spacing: 1px;
   font-size: 0.6rem;
 }
-/* line 512, sass/media.scss */
+
+/* line 543, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu li.div {
   background: #edeff0;
   height: 1px;
 }
-/* line 516, sass/media.scss */
+
+/* line 547, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .menu .ni {
   display: none;
 }
 
-/* line 522, sass/media.scss */
+/* line 551, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .logout a,
 .logout a:visited,
 .logout a:hover {
@@ -630,47 +715,51 @@ body:not(.login) .innerContent {
   border-radius: 5px;
 }
 
-/* line 532, sass/media.scss */
+/* line 563, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 table.table {
   font-size: 0.82rem;
 }
 
-/* line 536, sass/media.scss */
+/* line 567, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 i.info {
   font-size: 10px;
   cursor: help;
   color: #3d98e2;
 }
 
-/* line 542, sass/media.scss */
+/* line 573, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .row + .row {
   margin-top: 15px;
 }
 
-/* line 547, sass/media.scss */
+/* line 578, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .actions a > i {
   font-size: 0.65rem;
 }
-/* line 550, sass/media.scss */
+
+/* line 581, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .actions a > i.fa-pencil-alt {
   color: #52b684;
 }
-/* line 553, sass/media.scss */
+
+/* line 584, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .actions a > i.fa-trash-alt {
   color: #e31e24;
 }
 
-/* line 557, sass/media.scss */
+/* line 588, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .filter-block {
   margin: 0 0 15px 0;
 }
-/* line 559, sass/media.scss */
+
+/* line 590, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .filter-block fieldset {
   background: white;
   border-radius: 3px;
   border: 0.5px solid #d8e2ec;
 }
-/* line 564, sass/media.scss */
+
+/* line 595, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .filter-block fieldset > legend {
   font-size: 0.6rem;
   color: black;
@@ -682,12 +771,13 @@ i.info {
   text-align: left;
   padding: 3px 10px;
 }
-/* line 576, sass/media.scss */
+
+/* line 607, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .filter-block fieldset > .wrapper {
   font-size: 0.8rem;
 }
 
-/* line 581, sass/media.scss */
+/* line 612, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock {
   background: white;
   border-radius: 3px;
@@ -695,72 +785,86 @@ i.info {
   border: 0.5px solid #d8e2ec;
   overflow: hidden;
 }
-/* line 588, sass/media.scss */
+
+/* line 619, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-header {
   padding: 15px 0;
   background: #e3e8ec;
   border-bottom: 0.5px solid #a6aaad;
 }
-/* line 593, sass/media.scss */
+
+/* line 624, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-header .list-info {
   color: black;
   font-size: 0.8rem;
 }
-/* line 599, sass/media.scss */
+
+/* line 630, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-header .closer a, .wblock .data-header .closer a:visited, .wblock .data-header .closer a:hover {
   color: white;
 }
-/* line 602, sass/media.scss */
+
+/* line 633, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-header .title {
   font-size: 1.1rem;
   text-transform: uppercase;
   color: #333333;
   font-weight: bold;
 }
-/* line 609, sass/media.scss */
+
+/* line 640, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-header .btn {
   text-transform: none;
 }
-/* line 613, sass/media.scss */
+
+/* line 644, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-header i.ico {
   margin-right: 8px;
 }
-/* line 619, sass/media.scss */
+
+/* line 650, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-container .dc-padding {
   padding: 15px;
 }
-/* line 622, sass/media.scss */
+
+/* line 653, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-container table.table {
   margin: 0;
   background: white;
 }
-/* line 628, sass/media.scss */
+
+/* line 659, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-footer {
   padding: 25px;
   border-top: 0.5px solid #e0e9f3;
 }
-/* line 631, sass/media.scss */
+
+/* line 662, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-footer .title {
   line-height: 1;
   flex: 1;
 }
-/* line 634, sass/media.scss */
+
+/* line 665, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-footer .title h3 {
   color: black;
   font-weight: bold;
   font-size: 1.3rem;
   margin: 0 0 4px 0;
 }
-/* line 640, sass/media.scss */
+
+/* line 671, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-footer .title a {
   color: #818e9d;
   font-size: 0.8rem;
 }
-/* line 645, sass/media.scss */
+
+/* line 676, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-footer .count {
   flex-basis: 65px;
 }
-/* line 647, sass/media.scss */
+
+/* line 678, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-footer .count .count-wrapper {
   background: #4c4c4c;
   width: 65px;
@@ -768,7 +872,8 @@ i.info {
   border-radius: 65px;
   position: relative;
 }
-/* line 653, sass/media.scss */
+
+/* line 684, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .data-footer .count .count-wrapper .num {
   position: absolute;
   top: 50%;
@@ -778,7 +883,8 @@ i.info {
   font-size: 1.8rem;
   color: white;
 }
-/* line 666, sass/media.scss */
+
+/* line 697, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .no-data-view {
   text-align: center;
   font-size: 1.1rem;
@@ -787,61 +893,72 @@ i.info {
   padding: 2rem 1rem;
   background: #fafcfe;
 }
-/* line 674, sass/media.scss */
+
+/* line 705, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock .no-data-view i {
   font-size: 2rem;
   color: #a1aeba;
 }
-/* line 681, sass/media.scss */
+
+/* line 712, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-green .data-header {
   background: #53e69d;
 }
-/* line 683, sass/media.scss */
+
+/* line 714, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-green .data-header .title {
   color: white;
 }
-/* line 689, sass/media.scss */
+
+/* line 720, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-green .data-footer .count .count-wrapper {
   background: #53e69d;
 }
-/* line 697, sass/media.scss */
+
+/* line 728, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-red .data-header {
   background: #ff7676;
 }
-/* line 699, sass/media.scss */
+
+/* line 730, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-red .data-header .title {
   color: white;
 }
-/* line 705, sass/media.scss */
+
+/* line 736, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-red .data-footer .count .count-wrapper {
   background: #ff7676;
 }
-/* line 713, sass/media.scss */
+
+/* line 744, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-blue .data-header {
   background: #3d98e2;
 }
-/* line 715, sass/media.scss */
+
+/* line 746, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-blue .data-header .title {
   color: white;
 }
-/* line 721, sass/media.scss */
+
+/* line 752, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.color-blue .data-footer .count .count-wrapper {
   background: #3d98e2;
 }
 
-/* line 728, sass/media.scss */
+/* line 759, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .wblock.overview-services {
   padding-top: 15px !important;
   padding-bottom: 15px !important;
 }
 
-/* line 732, sass/media.scss */
+/* line 763, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .table thead th.filtered {
   position: relative;
   border-bottom: 2px solid #45b35e;
   background: #eef6f1;
 }
-/* line 736, sass/media.scss */
+
+/* line 767, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .table thead th.filtered:after {
   position: absolute;
   right: 10px;
@@ -849,27 +966,29 @@ i.info {
   font-family: "Font Awesome 5 Free";
 }
 
-/* line 743, sass/media.scss */
+/* line 774, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .table tbody td.filtered {
   background: #eef6f1;
   color: #558766;
 }
 
-/* line 747, sass/media.scss */
+/* line 778, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .table-striped tbody tr:nth-of-type(odd) td.filtered {
   background: #e3efe7;
 }
 
-/* line 750, sass/media.scss */
+/* line 781, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info {
   font-size: 1rem;
   line-height: 1;
 }
-/* line 753, sass/media.scss */
+
+/* line 784, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info > div > div {
   padding: 0 10px;
 }
-/* line 757, sass/media.scss */
+
+/* line 788, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info .ico .ico-wrapper {
   background: #4c4c4c;
   width: 50px;
@@ -877,7 +996,8 @@ i.info {
   border-radius: 50px;
   position: relative;
 }
-/* line 763, sass/media.scss */
+
+/* line 794, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info .ico .ico-wrapper i {
   position: absolute;
   top: 50%;
@@ -887,76 +1007,90 @@ i.info {
   font-size: 2rem;
   color: white;
 }
-/* line 774, sass/media.scss */
+
+/* line 805, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info .title {
   white-space: nowrap;
 }
-/* line 776, sass/media.scss */
+
+/* line 807, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info .title .line {
   height: 4px;
   background: #4c4c4c;
   margin-top: 10px;
 }
-/* line 782, sass/media.scss */
+
+/* line 813, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info .count {
   font-size: 2rem;
   color: black;
 }
-/* line 789, sass/media.scss */
+
+/* line 820, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info.color-blue .ico .ico-wrapper {
   background: #1f4da3;
 }
-/* line 794, sass/media.scss */
+
+/* line 825, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info.color-blue .title .line {
   background: #1f4da3;
 }
-/* line 801, sass/media.scss */
+
+/* line 832, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info.color-blue-light .ico .ico-wrapper {
   background: #3d98e2;
 }
-/* line 806, sass/media.scss */
+
+/* line 837, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info.color-blue-light .title .line {
   background: #3d98e2;
 }
-/* line 813, sass/media.scss */
+
+/* line 844, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info.color-red .ico .ico-wrapper {
   background: #ff7676;
 }
-/* line 818, sass/media.scss */
+
+/* line 849, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info.color-red .title .line {
   background: #ff7676;
 }
-/* line 825, sass/media.scss */
+
+/* line 856, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info.color-green .ico .ico-wrapper {
   background: #53e69d;
 }
-/* line 830, sass/media.scss */
+
+/* line 861, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ct-info.color-green .title .line {
   background: #53e69d;
 }
 
-/* line 837, sass/media.scss */
+/* line 868, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page404-content {
   text-align: center;
 }
-/* line 840, sass/media.scss */
+
+/* line 871, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page404-content h1 {
   color: black;
   text-transform: uppercase;
   font-weight: bold;
 }
-/* line 844, sass/media.scss */
+
+/* line 875, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page404-content h1 i {
   font-size: 8vw;
   margin: 0 0 30px 0;
   color: #ff7676;
 }
-/* line 851, sass/media.scss */
+
+/* line 882, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page404-content table {
   margin: 0 auto;
 }
 
-/* line 856, sass/media.scss */
+/* line 887, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 footer {
   position: fixed;
   bottom: 0;
@@ -970,12 +1104,13 @@ footer {
   height: 40px;
   background: #d6dbe0;
 }
-/* line 869, sass/media.scss */
+
+/* line 900, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 footer a, footer a:visited, footer a:hover {
   color: #4a5f79;
 }
 
-/* line 874, sass/media.scss */
+/* line 905, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page-desc {
   position: relative;
   padding: 0 0 0 100px;
@@ -984,7 +1119,8 @@ footer a, footer a:visited, footer a:hover {
   min-height: 60px;
   margin: 10px 0 35px 0;
 }
-/* line 882, sass/media.scss */
+
+/* line 913, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .page-desc:before {
   content: "\f1cd";
   font-family: "Font Awesome 5 Free";
@@ -998,7 +1134,7 @@ footer a, footer a:visited, footer a:hover {
   color: #ff7676;
 }
 
-/* line 896, sass/media.scss */
+/* line 927, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-info {
   font-size: 1.05rem;
   color: #ff7676;
@@ -1006,15 +1142,17 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
 }
 
-/* line 903, sass/media.scss */
+/* line 934, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview {
   margin: 10px 0 25px 0;
 }
-/* line 905, sass/media.scss */
+
+/* line 936, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service + .service {
   margin: 15px 0 0 0;
 }
-/* line 909, sass/media.scss */
+
+/* line 940, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .header {
   font-weight: bold;
   text-transform: uppercase;
@@ -1022,15 +1160,18 @@ footer a, footer a:visited, footer a:hover {
   color: white;
   padding: 10px;
 }
-/* line 917, sass/media.scss */
+
+/* line 948, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .subservices {
   padding-left: 15px;
 }
-/* line 919, sass/media.scss */
+
+/* line 950, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .subservices > .subservice + .subservice {
   margin: 10px 0 0 0;
 }
-/* line 923, sass/media.scss */
+
+/* line 954, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .subservices > .subservice > .header {
   font-weight: bold;
   text-transform: uppercase;
@@ -1038,7 +1179,8 @@ footer a, footer a:visited, footer a:hover {
   color: #e31e24;
   padding: 10px;
 }
-/* line 931, sass/media.scss */
+
+/* line 962, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .subservices > .subservice > .header .sub-cash {
   float: right;
   background: #ff7676;
@@ -1048,14 +1190,16 @@ footer a, footer a:visited, footer a:hover {
   padding: 6px;
   line-height: 1;
 }
-/* line 943, sass/media.scss */
+
+/* line 974, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .subservices > .subservice > .subservicesitems > .subservice-item {
   margin: 5px 0;
   background: #e6e6e6;
   color: black;
   padding: 8px 10px;
 }
-/* line 949, sass/media.scss */
+
+/* line 980, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .subservices > .subservice > .subservicesitems > .subservice-item .cash {
   float: right;
   background: #52b684;
@@ -1065,73 +1209,84 @@ footer a, footer a:visited, footer a:hover {
   padding: 6px;
   line-height: 1;
 }
-/* line 960, sass/media.scss */
+
+/* line 991, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .subservices > .subservice .subservice-comment {
   margin: 15px 0;
   padding-left: 10px;
   color: black;
   line-height: 1.2;
 }
-/* line 965, sass/media.scss */
+
+/* line 996, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .selected-services-overview > .service > .subservices > .subservice .subservice-comment .head {
   font-weight: bold;
   margin: 0 0 5px 0;
 }
 
-/* line 975, sass/media.scss */
+/* line 1006, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .nav-container {
   text-align: center;
   padding: 25px;
 }
-/* line 978, sass/media.scss */
+
+/* line 1009, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .nav-container .pagination {
   align-items: center;
   justify-content: center;
   margin: 0;
 }
 
-/* line 985, sass/media.scss */
+/* line 1016, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll {
   margin: -25px;
 }
-/* line 987, sass/media.scss */
+
+/* line 1018, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .project-doc-filter {
   background: #c62d3a;
   color: #f1e1e3;
   padding: 15px;
   font-size: 1.2rem;
 }
-/* line 993, sass/media.scss */
+
+/* line 1024, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .project-doc-filter a, .documents-controll .project-doc-filter a:visited, .documents-controll .project-doc-filter a:link {
   color: white;
 }
-/* line 997, sass/media.scss */
+
+/* line 1028, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .project-doc-filter .head {
   font-weight: 300;
   text-transform: uppercase;
   margin: 0 0 5px 0;
   font-size: 0.65rem;
 }
-/* line 1004, sass/media.scss */
+
+/* line 1035, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .project-doc-filter .title {
   font-weight: bold;
   flex: 1;
 }
-/* line 1010, sass/media.scss */
+
+/* line 1041, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .project-doc-filter .d-flex > div + div {
   padding: 0 10px;
 }
-/* line 1017, sass/media.scss */
+
+/* line 1048, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .doctitle a {
   color: #e31e24;
 }
-/* line 1022, sass/media.scss */
+
+/* line 1053, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .sub-datas {
   margin: 5px 0 0 0;
   font-size: 0.7rem;
   color: #5e5e5e;
 }
-/* line 1027, sass/media.scss */
+
+/* line 1058, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .sub-datas .unvisible {
   background: #e31e24;
   color: white;
@@ -1140,23 +1295,28 @@ footer a, footer a:visited, footer a:hover {
   margin: 0 4px;
   border-radius: 2px;
 }
-/* line 1036, sass/media.scss */
+
+/* line 1067, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .sub-datas strong {
   color: black;
 }
-/* line 1039, sass/media.scss */
+
+/* line 1070, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .sub-datas span + span {
   margin: 0 0 0 5px;
 }
-/* line 1045, sass/media.scss */
+
+/* line 1076, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll .folder-link {
   color: #3d98e2;
 }
-/* line 1050, sass/media.scss */
+
+/* line 1081, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar {
   flex-basis: 280px;
 }
-/* line 1053, sass/media.scss */
+
+/* line 1084, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .head {
   background: #3d98e2;
   color: white;
@@ -1164,93 +1324,111 @@ footer a, footer a:visited, footer a:hover {
   padding: 0 15px;
   line-height: 51px;
 }
-/* line 1060, sass/media.scss */
+
+/* line 1091, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .head .adderbtn {
   font-size: 0.7rem;
   font-weight: 300;
   text-transform: none;
 }
-/* line 1065, sass/media.scss */
+
+/* line 1096, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .head .adderbtn a {
   color: white;
   text-decoration: none;
 }
-/* line 1069, sass/media.scss */
+
+/* line 1100, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .head .adderbtn a i {
   vertical-align: middle;
 }
-/* line 1075, sass/media.scss */
+
+/* line 1106, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders {
   padding: 8px 0;
 }
-/* line 1078, sass/media.scss */
+
+/* line 1109, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder a {
   display: block;
   padding: 4px 15px;
   color: #acacac;
   text-decoration: none;
 }
-/* line 1084, sass/media.scss */
+
+/* line 1115, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder a span.edit {
   float: right;
 }
-/* line 1088, sass/media.scss */
+
+/* line 1119, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder a .badge {
   float: right;
 }
-/* line 1094, sass/media.scss */
+
+/* line 1125, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder.opened > a {
   font-weight: bold;
   color: #3d98e2;
 }
-/* line 1100, sass/media.scss */
+
+/* line 1131, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder.sub {
   padding-left: 18px;
 }
-/* line 1102, sass/media.scss */
+
+/* line 1133, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .sidebar .folders .folder.sub a {
   font-size: 0.8rem;
 }
-/* line 1109, sass/media.scss */
+
+/* line 1140, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs {
   font-size: 0.9rem;
   flex: 1;
   background: #f5f6f6;
   box-shadow: inset 5px 0 20px -10px silver;
 }
-/* line 1114, sass/media.scss */
+
+/* line 1145, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head {
   padding: 0 15px;
   line-height: 49px;
   background: #1f4da3;
   color: white;
 }
-/* line 1119, sass/media.scss */
+
+/* line 1150, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head .title {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 1.2rem;
   flex: 1;
 }
-/* line 1126, sass/media.scss */
+
+/* line 1157, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head .info {
   padding-right: 15px;
 }
-/* line 1130, sass/media.scss */
+
+/* line 1161, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head .docsnum {
   vertical-align: middle;
 }
-/* line 1133, sass/media.scss */
+
+/* line 1164, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head .edit-folder {
   margin-right: 10px;
   color: #dfeaff;
   background: #212731;
 }
-/* line 1137, sass/media.scss */
+
+/* line 1168, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head .edit-folder:hover {
   background: #ff7676;
 }
-/* line 1147, sass/media.scss */
+
+/* line 1178, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head .adder a {
   display: block;
   background: #58bdad;
@@ -1263,119 +1441,138 @@ footer a, footer a:visited, footer a:hover {
   font-size: 0.8rem;
   line-height: 50px;
 }
-/* line 1162, sass/media.scss */
+
+/* line 1193, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters {
   background: #e6e6e6;
   color: black;
   padding: 10px 15px;
 }
-/* line 1167, sass/media.scss */
+
+/* line 1198, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters .d-flex {
   margin: -5px;
 }
-/* line 1170, sass/media.scss */
+
+/* line 1201, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters .d-flex .name {
   flex: 1;
 }
-/* line 1174, sass/media.scss */
+
+/* line 1205, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters .d-flex .owndoc label {
   line-height: 30px;
   margin: 0;
   cursor: pointer;
 }
-/* line 1181, sass/media.scss */
+
+/* line 1212, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .documents-controll > .wblock > .data-container .docs > .head + .filters .d-flex > div {
   padding: 5px;
 }
 
-/* line 1189, sass/media.scss */
+/* line 1220, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .no-data {
   text-align: center;
   padding: 25px;
   font-size: 1.2rem;
 }
-/* line 1193, sass/media.scss */
+
+/* line 1224, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .no-data i {
   display: block;
   margin: 0 0 15px 0;
   font-size: 4rem;
 }
 
-/* line 1202, sass/media.scss */
+/* line 1233, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .no-requests > .wrapper {
   padding: 25px;
   text-align: center;
   color: black;
 }
-/* line 1206, sass/media.scss */
+
+/* line 1237, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .no-requests > .wrapper i {
   display: block;
   font-size: 3rem;
   margin: 0 0 10px 0;
 }
-/* line 1213, sass/media.scss */
+
+/* line 1244, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list {
   flex-basis: 280px;
   background: #ffffff;
   border-right: 0.5px solid #d8e2ec;
   padding-right: 0.5px;
 }
-/* line 1218, sass/media.scss */
+
+/* line 1249, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list > .head {
   padding: 10px;
   background: #e8e8e8;
   border-bottom: 0.5px solid #d8e2ec;
 }
-/* line 1225, sass/media.scss */
+
+/* line 1256, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list .req-list .request {
   border-bottom: 2px solid #ececec;
   outline: none;
   background: white;
 }
-/* line 1229, sass/media.scss */
+
+/* line 1260, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper {
   padding: 10px;
   font-size: 0.9em;
   color: #515151;
 }
-/* line 1234, sass/media.scss */
+
+/* line 1265, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .name {
   font-size: 1rem;
   font-weight: bold;
   color: #3d98e2;
 }
-/* line 1239, sass/media.scss */
+
+/* line 1270, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .company {
   color: #ff7676;
 }
-/* line 1243, sass/media.scss */
+
+/* line 1274, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .contacts {
   font-size: 0.85em;
 }
-/* line 1245, sass/media.scss */
+
+/* line 1276, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .contacts span + span {
   margin: 0 0 0 10px;
 }
-/* line 1249, sass/media.scss */
+
+/* line 1280, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list .req-list .request > .wrapper .time {
   font-size: 0.6rem;
   margin: 5px 0 0 0;
   color: #707070;
 }
-/* line 1257, sass/media.scss */
+
+/* line 1287, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-list .req-list .request:hover, .request-controller .request-list .req-list .request.active {
   background-color: #f5f6f6;
   cursor: pointer;
   color: black;
 }
-/* line 1265, sass/media.scss */
+
+/* line 1296, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data {
   font-size: 0.9rem;
   flex: 1;
   background: #f5f6f6;
-  box-shadow: inset 5px 0 20px -10px silver;
+  box-shadow: inset 5px 0 20px -10px #c0c0c0;
 }
-/* line 1271, sass/media.scss */
+
+/* line 1302, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .iteractive-infos {
   text-align: center;
   font-size: 1.2rem;
@@ -1383,18 +1580,21 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   color: black;
 }
-/* line 1278, sass/media.scss */
+
+/* line 1309, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .row-header {
   background: #eaeaea;
   padding: 15px;
   border-bottom: 0.5px solid #d5d5d5;
 }
-/* line 1283, sass/media.scss */
+
+/* line 1314, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .row-header .desc {
   margin: 5px 0 0 0;
   font-size: 0.85em;
 }
-/* line 1287, sass/media.scss */
+
+/* line 1318, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .row-header h3 {
   color: #000000;
   text-transform: uppercase;
@@ -1402,52 +1602,63 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   margin: 0 !important;
 }
-/* line 1295, sass/media.scss */
+
+/* line 1326, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .row + .row {
   margin-top: 5px;
 }
-/* line 1299, sass/media.scss */
+
+/* line 1330, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .row > .col + .col {
   font-weight: bold;
   color: black;
 }
-/* line 1303, sass/media.scss */
+
+/* line 1334, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .row > .col {
   flex-basis: 70%;
 }
-/* line 1306, sass/media.scss */
+
+/* line 1337, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .row > .col:first-child {
   flex-basis: 30%;
 }
-/* line 1309, sass/media.scss */
+
+/* line 1340, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .dpad {
   padding: 15px;
 }
-/* line 1312, sass/media.scss */
+
+/* line 1343, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .divider {
   height: 1px;
   background: #d9d9d9;
 }
-/* line 1316, sass/media.scss */
+
+/* line 1347, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller .request-data .total-cash {
   font-weight: bold;
   font-size: 1.1rem;
   color: #52b684;
 }
-/* line 1323, sass/media.scss */
+
+/* line 1354, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller {
   margin: -25px;
 }
-/* line 1325, sass/media.scss */
+
+/* line 1356, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-list {
   flex-basis: 380px;
 }
-/* line 1327, sass/media.scss */
+
+/* line 1358, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-list > .head {
   padding: 0;
   border-bottom: none;
 }
-/* line 1331, sass/media.scss */
+
+/* line 1362, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher {
   isplay: -webkit-box;
   display: -ms-flexbox;
@@ -1455,12 +1666,14 @@ footer a, footer a:visited, footer a:hover {
   flex-wrap: nowrap;
   align-items: center;
 }
-/* line 1337, sass/media.scss */
+
+/* line 1368, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher > div {
   flex-basis: 50%;
   position: relative;
 }
-/* line 1341, sass/media.scss */
+
+/* line 1372, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher > div .badge {
   position: absolute;
   z-index: 1;
@@ -1474,7 +1687,8 @@ footer a, footer a:visited, footer a:hover {
   right: 30px;
   top: 7px;
 }
-/* line 1355, sass/media.scss */
+
+/* line 1386, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher > div button {
   display: block;
   width: 100%;
@@ -1489,31 +1703,36 @@ footer a, footer a:visited, footer a:hover {
   color: #a7aaad;
   outline: none;
 }
-/* line 1370, sass/media.scss */
+
+/* line 1401, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-list > .head .switcher > div.active button {
   background: #1b438e;
   color: #53e69d;
 }
-/* line 1381, sass/media.scss */
+
+/* line 1412, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-service > .wrapper > .head {
   background: #1f4da3;
   color: white;
   padding: 10px;
 }
-/* line 1388, sass/media.scss */
+
+/* line 1419, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request-subservice > .head {
   background: #e0e0e0;
   color: #e31e24;
   padding: 10px;
   font-weight: bold;
 }
-/* line 1396, sass/media.scss */
+
+/* line 1427, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .requestgroup {
   background: #fbfbd6;
   padding-left: 5px;
   border-top: 5px solid #707070;
 }
-/* line 1400, sass/media.scss */
+
+/* line 1431, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .requestgroup > .head {
   background: #fbfbd6;
   color: black;
@@ -1521,22 +1740,26 @@ footer a, footer a:visited, footer a:hover {
   padding: 10px 4px;
   color: black;
 }
-/* line 1406, sass/media.scss */
+
+/* line 1437, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .requestgroup > .head i {
   width: 20px;
   text-align: center;
 }
-/* line 1413, sass/media.scss */
+
+/* line 1444, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request {
   padding: 15px;
   font-size: 0.7rem;
 }
-/* line 1416, sass/media.scss */
+
+/* line 1447, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request .head {
   font-size: 0.85rem;
   margin: 0 0 4px 0;
 }
-/* line 1421, sass/media.scss */
+
+/* line 1452, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request .cashinfo .cash {
   padding: 2px 4px;
   border-radius: 4px;
@@ -1544,41 +1767,47 @@ footer a, footer a:visited, footer a:hover {
   color: white;
   margin: 0 8px;
 }
-/* line 1429, sass/media.scss */
+
+/* line 1460, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request.closed {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8OP0aQZGZEGQAIepKUIQJgDSBFaJLAAW/H7q1H+QFmQAAGuiH4AWiuhWAAAAAElFTkSuQmCC) repeat;
   color: red;
 }
-/* line 1433, sass/media.scss */
+
+/* line 1464, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request.declined {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8O3uFgZGZEGQAJeyD0IQJgDSBFaJLAAW/Hpn83+QFmQAAGjmH3lXAuK1AAAAAElFTkSuQmCC) repeat;
   color: orange;
 }
-/* line 1437, sass/media.scss */
+
+/* line 1468, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .request-controller.user-controller .request.accepted {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYkcO3NFQZGZEGQgJaIDkIQJgDSBFaJLAAWvPr68n+QFmQAAG6vH4i4eHMaAAAAAElFTkSuQmCC) repeat;
   color: #2f682f;
 }
 
-/* line 1445, sass/media.scss */
+/* line 1476, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .red-txt {
   color: #ff7676;
 }
 
-/* line 1450, sass/media.scss */
+/* line 1481, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller > .wblock {
   margin: -25px;
 }
-/* line 1454, sass/media.scss */
+
+/* line 1485, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-list {
   flex-basis: 380px;
   border-right: 0.5px solid white;
 }
-/* line 1458, sass/media.scss */
+
+/* line 1489, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-list .sess-list .session {
   outline: none !important;
 }
-/* line 1460, sass/media.scss */
+
+/* line 1491, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-list .sess-list .session > .wrapper {
   padding: 10px;
   cursor: pointer;
@@ -1586,64 +1815,74 @@ footer a, footer a:visited, footer a:hover {
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,ffffff+39,eaeaea+100 */
   background: #ffffff;
   /* Old browsers */
-  background: -moz-linear-gradient(45deg, white 0%, white 39%, #eaeaea 100%);
+  background: -moz-linear-gradient(45deg, #ffffff 0%, #ffffff 39%, #eaeaea 100%);
   /* FF3.6-15 */
-  background: -webkit-linear-gradient(45deg, white 0%, white 39%, #eaeaea 100%);
+  background: -webkit-linear-gradient(45deg, #ffffff 0%, #ffffff 39%, #eaeaea 100%);
   /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(45deg, #ffffff 0%, #ffffff 39%, #eaeaea 100%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eaeaea',GradientType=1 );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eaeaea',GradientType=1 );
   /* IE6-9 fallback on horizontal gradient */
 }
-/* line 1474, sass/media.scss */
+
+/* line 1505, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-list .sess-list .session > .wrapper .project {
   font-weight: bold;
   line-height: 1.1;
   color: #ff7676;
   margin: 0 0 5px 0;
 }
-/* line 1482, sass/media.scss */
+
+/* line 1513, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-list .sess-list .session > .wrapper .info .msg-unreaded {
   background: #e31e24;
   color: white;
   padding: 2px 5px;
   border-radius: 3px;
 }
-/* line 1492, sass/media.scss */
+
+/* line 1523, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-list .sess-list .session.current > .wrapper {
   background: #3d98e2;
   color: white;
 }
-/* line 1495, sass/media.scss */
+
+/* line 1526, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-list .sess-list .session.current > .wrapper .project {
   font-weight: bold;
   color: white;
 }
-/* line 1502, sass/media.scss */
+
+/* line 1533, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-list .sess-list .session + .session {
   border-top: 0.5px solid #dedede;
 }
-/* line 1507, sass/media.scss */
+
+/* line 1538, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data {
   flex: 1;
   font-size: 0.9rem;
   background: #f5f6f6;
   box-shadow: inset 5px 0 20px -10px silver;
 }
-/* line 1513, sass/media.scss */
+
+/* line 1544, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .no-data {
   padding: 50px;
 }
-/* line 1515, sass/media.scss */
+
+/* line 1546, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .no-data h4 {
   color: black;
 }
-/* line 1519, sass/media.scss */
+
+/* line 1550, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .no-data .unreaded-msg {
   color: #e31e24;
   font-weight: bold;
 }
-/* line 1526, sass/media.scss */
+
+/* line 1557, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg-controlls {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1651,90 +1890,108 @@ footer a, footer a:visited, footer a:hover {
   flex-wrap: nowrap;
   background: #1f4da3;
 }
-/* line 1533, sass/media.scss */
+
+/* line 1564, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg-controlls button {
   background: #1b438e;
   color: white;
   border: none;
   padding: 15px;
 }
-/* line 1539, sass/media.scss */
+
+/* line 1570, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg-controlls button.btn-danger {
   background: #ff7676;
 }
-/* line 1544, sass/media.scss */
+
+/* line 1575, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg-controlls > div + div button {
   border-left: 0.5px solid #2357b8;
 }
-/* line 1549, sass/media.scss */
+
+/* line 1580, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg-text .alert {
   margin: 0 !important;
   border-radius: 0 !important;
   padding: 15px !important;
 }
-/* line 1553, sass/media.scss */
+
+/* line 1584, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg-text .alert i {
   margin: 0 5px 0 0;
 }
-/* line 1558, sass/media.scss */
+
+/* line 1589, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .no-msg {
   text-align: center;
   padding: 20px;
   color: #484848;
 }
-/* line 1563, sass/media.scss */
+
+/* line 1594, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .no-msg i {
   color: #ff7676;
   font-size: 48px;
   margin: 0 0 10px 0;
 }
-/* line 1569, sass/media.scss */
+
+/* line 1600, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg-notice {
   padding: 15px;
 }
-/* line 1571, sass/media.scss */
+
+/* line 1602, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg-notice label {
   color: black;
   font-weight: bold;
 }
-/* line 1580, sass/media.scss */
+
+/* line 1611, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .new-msg {
   background: #ececec;
   border-bottom: 5px solid #cdcdcd;
 }
-/* line 1584, sass/media.scss */
+
+/* line 1615, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .new-msg > .wrapper {
   padding: 15px;
 }
-/* line 1586, sass/media.scss */
+
+/* line 1617, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .new-msg > .wrapper label {
   color: black;
   font-weight: bold;
 }
-/* line 1590, sass/media.scss */
+
+/* line 1621, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .new-msg > .wrapper label strong {
   color: #3d98e2;
 }
-/* line 1596, sass/media.scss */
+
+/* line 1627, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg {
   padding: 10px;
 }
-/* line 1599, sass/media.scss */
+
+/* line 1630, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg .author {
   font-size: 0.7rem;
   color: #7c7c7c;
   padding: 0 10px;
 }
-/* line 1604, sass/media.scss */
+
+/* line 1635, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg .author .name {
   font-weight: bold;
   color: black;
 }
-/* line 1609, sass/media.scss */
+
+/* line 1640, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg .author .time {
   float: right;
 }
-/* line 1615, sass/media.scss */
+
+/* line 1646, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg > .wrapper .message-text {
   background: white;
   border-radius: 10px;
@@ -1743,28 +2000,34 @@ footer a, footer a:visited, footer a:hover {
   color: black;
   margin: 0 0 5px 0;
 }
-/* line 1624, sass/media.scss */
+
+/* line 1655, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg.from_me {
   padding-left: 50px;
 }
-/* line 1628, sass/media.scss */
+
+/* line 1659, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg.from_me > .wrapper .message-text {
   background: #1f4da3;
   color: white;
 }
-/* line 1634, sass/media.scss */
+
+/* line 1665, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg.from_me .author {
   text-align: right;
 }
-/* line 1636, sass/media.scss */
+
+/* line 1667, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg.from_me .author .time {
   float: left;
 }
-/* line 1643, sass/media.scss */
+
+/* line 1674, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg.from_me.unreaded > .wrapper .message-text {
   background: #3d98e2;
 }
-/* line 1652, sass/media.scss */
+
+/* line 1683, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg.systemmsg > .wrapper .message-text {
   background: transparent;
   color: #3d98e2;
@@ -1772,7 +2035,8 @@ footer a, footer a:visited, footer a:hover {
   text-align: center;
   padding: 5px;
 }
-/* line 1660, sass/media.scss */
+
+/* line 1691, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg.systemmsg > .wrapper .system-msg-head {
   text-align: center;
   text-transform: uppercase;
@@ -1780,18 +2044,20 @@ footer a, footer a:visited, footer a:hover {
   font-size: 0.75rem;
   font-weight: 300;
 }
-/* line 1666, sass/media.scss */
+
+/* line 1697, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .message-controller .data-container .session-data .messages .msg.systemmsg > .wrapper .system-msg-head .time {
   color: #8c8c8c;
   font-size: 0.6rem;
   font-weight: 400;
 }
 
-/* line 1680, sass/media.scss */
+/* line 1711, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints {
   margin: 20px 0;
 }
-/* line 1685, sass/media.scss */
+
+/* line 1716, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1801,7 +2067,8 @@ footer a, footer a:visited, footer a:hover {
   padding: 0 8px;
   box-shadow: inset 20px 0 #307251;
 }
-/* line 1693, sass/media.scss */
+
+/* line 1724, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div {
   background: #52b684;
   color: white;
@@ -1810,28 +2077,34 @@ footer a, footer a:visited, footer a:hover {
   transform: skewX(-20deg);
   text-transform: uppercase;
 }
-/* line 1700, sass/media.scss */
+
+/* line 1731, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div > .txt {
   transform: skewX(20deg);
 }
-/* line 1704, sass/media.scss */
+
+/* line 1735, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(1) {
   padding-left: 10px;
   background: #307251;
 }
-/* line 1708, sass/media.scss */
+
+/* line 1739, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(2) {
   background: #3f966b;
 }
-/* line 1712, sass/media.scss */
+
+/* line 1743, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group > .header > .wrapper > div:nth-child(3) {
   padding-right: 10px;
 }
-/* line 1718, sass/media.scss */
+
+/* line 1749, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group .servicers {
   padding: 5px;
 }
-/* line 1723, sass/media.scss */
+
+/* line 1754, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper label {
   display: block;
   background: #ececec;
@@ -1841,47 +2114,55 @@ footer a, footer a:visited, footer a:hover {
   cursor: pointer;
   color: black;
 }
-/* line 1734, sass/media.scss */
+
+/* line 1765, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .company {
   color: #ff7676;
   margin: 0 5px 0 0;
 }
-/* line 1739, sass/media.scss */
+
+/* line 1770, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox]:checked + label {
   background: #3d98e2;
   color: white;
 }
-/* line 1744, sass/media.scss */
+
+/* line 1775, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox].offered + label {
   background: #3a8e1f;
   color: white;
 }
-/* line 1747, sass/media.scss */
+
+/* line 1778, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper input[type=checkbox].offered + label:before {
   content: "\f058";
 }
-/* line 1752, sass/media.scss */
+
+/* line 1783, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .infos {
   float: right;
   font-size: 0.68rem;
 }
-/* line 1755, sass/media.scss */
+
+/* line 1786, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group .servicers .user > .wrapper .infos span {
   margin-left: 5px;
 }
-/* line 1763, sass/media.scss */
+
+/* line 1794, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-hints .service-user-list .service-group + .service-group {
   margin: 10px 0 0 0;
 }
 
-/* line 1771, sass/media.scss */
+/* line 1802, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert {
   background: white;
   border-radius: 4px;
   border: 1px solid #c0dbeb;
   padding: 0;
 }
-/* line 1777, sass/media.scss */
+
+/* line 1808, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert > .wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1889,12 +2170,14 @@ footer a, footer a:visited, footer a:hover {
   align-items: center;
   padding: 15px 15px 15px 10px;
 }
-/* line 1784, sass/media.scss */
+
+/* line 1815, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert > .wrapper > div.ico {
   flex-basis: 50px;
   position: relative;
 }
-/* line 1788, sass/media.scss */
+
+/* line 1819, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert > .wrapper > div.ico .unreaded {
   background: #e31e24;
   border-radius: 20px;
@@ -1907,7 +2190,8 @@ footer a, footer a:visited, footer a:hover {
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-/* line 1801, sass/media.scss */
+
+/* line 1832, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert > .wrapper > div.ico i {
   font-size: 32px;
   color: #ff7676;
@@ -1917,56 +2201,66 @@ footer a, footer a:visited, footer a:hover {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 1812, sass/media.scss */
+
+/* line 1843, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert > .wrapper > div.message {
   flex: 1;
   font-size: 0.9rem;
   line-height: 1.2;
   padding-left: 10px;
 }
-/* line 1817, sass/media.scss */
+
+/* line 1848, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert > .wrapper > div.message .msg {
   color: black;
 }
-/* line 1820, sass/media.scss */
+
+/* line 1851, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert > .wrapper > div.message .submsg {
   font-size: 0.75rem;
   margin: 5px 0 0 0;
 }
-/* line 1824, sass/media.scss */
+
+/* line 1855, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert > .wrapper > div.message .submsg span + span {
   margin-left: 8px;
 }
-/* line 1831, sass/media.scss */
+
+/* line 1862, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert.unwatched {
   background: #fff8e6;
   border-radius: 4px;
   border: 1px solid #ecd6bf;
 }
-/* line 1837, sass/media.scss */
+
+/* line 1868, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .alerts-controller .alert-list .alert + .alert {
   margin: 10px 0 0 0;
 }
 
-/* line 1844, sass/media.scss */
+/* line 1875, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller a:hover {
   text-decoration: none;
 }
-/* line 1847, sass/media.scss */
+
+/* line 1878, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .paid-info {
   margin: 10px 0 0 0;
 }
-/* line 1850, sass/media.scss */
+
+/* line 1881, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .paid-info .paidprice {
   font-weight: bold;
 }
-/* line 1854, sass/media.scss */
+
+/* line 1885, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .paid-info .allpaid {
   font-weight: bold;
   color: #52b684;
   margin: 0 0 0 10px;
 }
-/* line 1860, sass/media.scss */
+
+/* line 1891, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller h2 {
   color: black;
   font-size: 1.4rem;
@@ -1974,28 +2268,32 @@ footer a, footer a:visited, footer a:hover {
   text-transform: uppercase;
   margin: 0 0 12px 0;
 }
-/* line 1868, sass/media.scss */
+
+/* line 1899, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .messenger-quick-msg .unreaded-txt {
   font-weight: bold;
   color: #ff7676;
   margin-left: 10px;
   font-size: 0.85rem;
 }
-/* line 1874, sass/media.scss */
+
+/* line 1905, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper {
   background: white;
   border-radius: 5px;
   padding: 15px;
   border: 2px solid #e3e5e6;
 }
-/* line 1879, sass/media.scss */
+
+/* line 1910, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper textarea {
   min-height: 80px;
   border: 1px solid #e6e6e6;
   background: #fbfbfc;
   box-shadow: inset 0 -5px 19px -6px #e4e4e4;
 }
-/* line 1885, sass/media.scss */
+
+/* line 1916, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper label {
   font-weight: bold;
   margin: 0 0 12px 0;
@@ -2003,28 +2301,34 @@ footer a, footer a:visited, footer a:hover {
   color: #3c3c3c;
   font-size: 1rem;
 }
-/* line 1891, sass/media.scss */
+
+/* line 1922, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .messenger-quick-msg > .wrapper label strong {
   color: #3d98e2;
 }
-/* line 1897, sass/media.scss */
+
+/* line 1928, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview {
   margin: -25px -25px 0 -25px;
   background: white;
 }
-/* line 1901, sass/media.scss */
+
+/* line 1932, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview table.table {
   margin: 0 !important;
 }
-/* line 1905, sass/media.scss */
+
+/* line 1936, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview > .d-flex > div {
   border-right: 1px solid #d5d9dc;
 }
-/* line 1908, sass/media.scss */
+
+/* line 1939, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview > .d-flex > div:last-child {
   border-right: none !important;
 }
-/* line 1912, sass/media.scss */
+
+/* line 1943, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .head {
   text-align: center;
   padding: 15px;
@@ -2034,7 +2338,8 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   position: relative;
 }
-/* line 1921, sass/media.scss */
+
+/* line 1952, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .head .own-data {
   color: white;
   text-transform: uppercase;
@@ -2050,70 +2355,82 @@ footer a, footer a:visited, footer a:hover {
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-/* line 1936, sass/media.scss */
+
+/* line 1967, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .head .own-data.edit {
   cursor: pointer;
   outline: none;
 }
-/* line 1945, sass/media.scss */
+
+/* line 1976, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .project .head .own-data {
   background: #6aad63;
   text-transform: none;
 }
-/* line 1953, sass/media.scss */
+
+/* line 1984, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .requester .head {
   background: #1f7fcd;
   color: white;
 }
-/* line 1957, sass/media.scss */
+
+/* line 1988, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .requester .head .own-data {
   background: #3d98e2;
 }
-/* line 1963, sass/media.scss */
+
+/* line 1994, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .servicer .head {
   background: #40a292;
   color: white;
 }
-/* line 1966, sass/media.scss */
+
+/* line 1997, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .servicer .head .own-data {
   background: #58bdad;
 }
-/* line 1972, sass/media.scss */
+
+/* line 2003, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .project {
   flex-basis: 30%;
 }
-/* line 1976, sass/media.scss */
+
+/* line 2007, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .project-controller .overview .requester, .project-controller .overview .servicer {
   flex-basis: calc(70% / 2);
 }
 
-/* line 1982, sass/media.scss */
+/* line 2013, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .action-buttons {
   margin: 0 0 15px 0;
 }
 
-/* line 1986, sass/media.scss */
+/* line 2017, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .dialog-option-infos {
   font-size: 0.7rem;
 }
-/* line 1988, sass/media.scss */
+
+/* line 2019, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .dialog-option-infos span + span {
   margin: 0 0 0 4px;
 }
-/* line 1991, sass/media.scss */
+
+/* line 2022, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .dialog-option-infos .docs-folder {
   color: #3d98e2;
 }
-/* line 1994, sass/media.scss */
+
+/* line 2025, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .dialog-option-infos .created {
   color: #7c7c7c;
 }
-/* line 1997, sass/media.scss */
+
+/* line 2028, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .dialog-option-infos .ertek {
   color: #ff7676;
 }
 
-/* line 2003, sass/media.scss */
+/* line 2034, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings {
   border: 0.5px solid #d7d7d7;
   padding: 0.5px;
@@ -2121,11 +2438,13 @@ footer a, footer a:visited, footer a:hover {
   border-radius: 8px;
   margin: 10px 0 0 0;
 }
-/* line 2010, sass/media.scss */
+
+/* line 2041, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service:first-child {
   border-top: none;
 }
-/* line 2013, sass/media.scss */
+
+/* line 2044, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service > .head {
   background: #1f4da3;
   padding: 10px 0;
@@ -2135,7 +2454,8 @@ footer a, footer a:visited, footer a:hover {
   color: white;
   font-size: 1.2rem;
 }
-/* line 2022, sass/media.scss */
+
+/* line 2053, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service > .head .active-label {
   font-size: 0.6rem;
   font-weight: normal;
@@ -2145,23 +2465,27 @@ footer a, footer a:visited, footer a:hover {
   vertical-align: middle;
   color: white;
 }
-/* line 2032, sass/media.scss */
+
+/* line 2063, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service .servicesubs {
   display: none;
 }
-/* line 2035, sass/media.scss */
+
+/* line 2066, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service .subservice {
   border-bottom: 0.5px dashed #eaeaea;
   padding: 0;
 }
-/* line 2038, sass/media.scss */
+
+/* line 2069, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service .subservice > .head {
   color: #e31e24;
   padding: 10px 15px;
   font-size: 1.1rem;
   font-weight: bold;
 }
-/* line 2043, sass/media.scss */
+
+/* line 2074, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service .subservice > .head .active-label {
   font-size: 0.6rem;
   font-weight: normal;
@@ -2172,11 +2496,13 @@ footer a, footer a:visited, footer a:hover {
   text-transform: uppercase;
   color: white;
 }
-/* line 2055, sass/media.scss */
+
+/* line 2086, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems {
   font-size: 0.9rem;
 }
-/* line 2059, sass/media.scss */
+
+/* line 2090, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem label {
   display: block;
   width: 100%;
@@ -2187,16 +2513,19 @@ footer a, footer a:visited, footer a:hover {
   color: black;
   cursor: pointer;
 }
-/* line 2069, sass/media.scss */
+
+/* line 2100, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem input[type=checkbox] + label:before {
   margin: 0 8px 0 0;
 }
-/* line 2073, sass/media.scss */
+
+/* line 2104, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .service .subservice .subserviceitems .serviceitem input[type=checkbox]:checked + label {
   background: #52b684;
   color: white;
 }
-/* line 2083, sass/media.scss */
+
+/* line 2114, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .listtoggler a {
   color: #cddbf7;
   font-size: 0.8rem;
@@ -2204,7 +2533,8 @@ footer a, footer a:visited, footer a:hover {
   text-decoration: none;
   text-transform: none;
 }
-/* line 2090, sass/media.scss */
+
+/* line 2121, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .services-config-settings .listtoggler a i {
   color: white;
   margin: 0 0 0 10px;
@@ -2212,91 +2542,104 @@ footer a, footer a:visited, footer a:hover {
   vertical-align: text-bottom;
 }
 
-/* line 2101, sass/media.scss */
+/* line 2132, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder {
   border: 5px solid #3f966b;
 }
-/* line 2103, sass/media.scss */
+
+/* line 2134, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder .row-header {
   background: #52b684 !important;
 }
-/* line 2105, sass/media.scss */
+
+/* line 2136, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder .row-header h3 {
   color: white !important;
 }
-/* line 2110, sass/media.scss */
+
+/* line 2141, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder .dpad {
   background: #f1f9f5 !important;
 }
-/* line 2113, sass/media.scss */
+
+/* line 2144, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder .dpad .row + .row {
   margin-top: 10px;
 }
-/* line 2117, sass/media.scss */
+
+/* line 2148, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder .dpad label {
   color: black;
   font-weight: bold;
 }
-/* line 2123, sass/media.scss */
+
+/* line 2154, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder .offer-accepter {
   background: white;
 }
-/* line 2126, sass/media.scss */
+
+/* line 2157, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder .offer-accepter .head {
   background: #f3c538;
   padding: 10px;
   color: #201e15;
   font-weight: bold;
 }
-/* line 2133, sass/media.scss */
+
+/* line 2164, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .send-offer-holder .offer-accepter .dpad {
   color: #3c3c3c;
   background: white !important;
 }
 
-/* line 2140, sass/media.scss */
+/* line 2171, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .service-info, .offer-info {
   margin: 0 0 25px 0;
 }
-/* line 2143, sass/media.scss */
+
+/* line 2174, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .service-info h4, .offer-info h4 {
   font-size: 1.1rem;
   font-weight: bold;
   color: #3296e7;
 }
 
-/* line 2151, sass/media.scss */
+/* line 2182, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .service-info .service-offered {
   background: #58bdad;
   padding: 10px;
   color: white;
 }
 
-/* line 2157, sass/media.scss */
+/* line 2188, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .ajaxdialog.saveproject {
   min-width: 650px;
 }
 
-/* line 2161, sass/media.scss */
+/* line 2192, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list {
   font-size: 0.85rem;
 }
-/* line 2164, sass/media.scss */
+
+/* line 2195, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   align-items: center;
 }
-/* line 2169, sass/media.scss */
+
+/* line 2200, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder > div {
   padding: 10px 15px;
 }
-/* line 2173, sass/media.scss */
+
+/* line 2204, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item:nth-child(odd) {
   background: #f5f5f5;
 }
-/* line 2177, sass/media.scss */
+
+/* line 2208, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .header {
   text-transform: uppercase;
   background: #efefef;
@@ -2305,64 +2648,87 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   border-bottom: 2px solid #c9c9c9;
 }
-/* line 2185, sass/media.scss */
+
+/* line 2216, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .header > .holder {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   align-items: center;
 }
-/* line 2190, sass/media.scss */
+
+/* line 2221, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .header > .holder > div {
   padding: 10px 15px;
 }
-/* line 2197, sass/media.scss */
+
+/* line 2227, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder .data,
 .data-list .header > .holder .data {
   flex: 1;
 }
-/* line 2199, sass/media.scss */
+
+/* line 2230, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder .data .subtitle,
 .data-list .header > .holder .data .subtitle {
   font-size: 0.75rem;
 }
-/* line 2201, sass/media.scss */
+
+/* line 2232, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder .data .subtitle span + span,
 .data-list .header > .holder .data .subtitle span + span {
   margin: 0 0 0 10px;
 }
-/* line 2204, sass/media.scss */
+
+/* line 2235, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder .data .subtitle .infolder,
 .data-list .header > .holder .data .subtitle .infolder {
   color: #ff7676;
 }
-/* line 2207, sass/media.scss */
+
+/* line 2238, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder .data .subtitle .teljesitve,
 .data-list .header > .holder .data .subtitle .teljesitve {
   font-weight: bold;
   color: #52b684;
 }
-/* line 2214, sass/media.scss */
+
+/* line 2244, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder .add-at,
 .data-list .header > .holder .add-at {
   flex-basis: 120px;
   text-align: center;
 }
-/* line 2219, sass/media.scss */
+
+/* line 2249, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.data-list .list-item > .holder .progress-status,
+.data-list .header > .holder .progress-status {
+  flex-basis: 150px;
+  text-align: center;
+}
+
+/* line 2254, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.data-list .list-item > .holder .unreaded-msg,
+.data-list .header > .holder .unreaded-msg {
+  flex-basis: 120px;
+  text-align: center;
+}
+
+/* line 2259, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder .relation,
 .data-list .header > .holder .relation {
   flex-basis: 100px;
   text-align: center;
 }
 
-/* line 2226, sass/media.scss */
+/* line 2267, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 md-dialog h4 {
   font-size: 1rem;
   marign: 0 0 5px 0;
   font-weight: bold;
 }
 
-/* line 2234, sass/media.scss */
+/* line 2275, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -2373,11 +2739,11 @@ body.user-group-user #top .control-bar {
   /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(45deg, #3d98e2 15%, #2a78dd 66%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d98e2', endColorstr='#2a78dd',GradientType=1 );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3d98e2', endColorstr='#2a78dd',GradientType=1 );
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 2244, sass/media.scss */
+/* line 2285, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -2388,11 +2754,11 @@ body.user-group-superadmin #top .control-bar {
   /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(45deg, #8d6093 15%, #6b3d73 66%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8d6093', endColorstr='#6b3d73',GradientType=1 );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8d6093', endColorstr='#6b3d73',GradientType=1 );
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 2254, sass/media.scss */
+/* line 2295, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;
@@ -2403,6 +2769,8 @@ body.user-group-szolgaltato #top .control-bar {
   /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(45deg, #76c1b8 15%, #53ab9f 66%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#76c1b8', endColorstr='#53ab9f',GradientType=1 );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#76c1b8', endColorstr='#53ab9f',GradientType=1 );
   /* IE6-9 fallback on horizontal gradient */
 }
+
+/*# sourceMappingURL=../media.map */

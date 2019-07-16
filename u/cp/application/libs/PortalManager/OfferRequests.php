@@ -40,6 +40,16 @@ class OfferRequests
 			$qarg['offerout'] = (int)$arg['offerout'];
 		}
 
+		if (isset($arg['elutasitva'])) {
+			$q .= " and r.elutasitva  = :elutasitva";
+			$qarg['elutasitva'] = (int)$arg['elutasitva'];
+		}
+
+		if (isset($arg['user'])) {
+			$q .= " and r.user_id  = :uid";
+			$qarg['uid'] = (int)$arg['user'];
+		}
+
 		$q .= " ORDER BY r.visited ASC, r.requested ASC";
 
 		$data = $this->db->squery($q, $qarg);
@@ -51,20 +61,30 @@ class OfferRequests
 
 		$users = new Users( array('db' => $this->db ));
 
-		foreach ((array)$data as $d) {
-			$d['cash'] = json_decode($d['cash'], true);
-			$d['cash_config'] = json_decode($d['cash_config'], true);
-			$d['services'] = $this->findServicesItems(json_decode($d['services'], true));
-			$d['subservices'] = $this->findServicesItems(json_decode($d['subservices'], true));
+		foreach ((array)$data as $d)
+		{
+			if (!isset($arg['shortlist']))
+			{
+				$d['cash'] = json_decode($d['cash'], true);
+				$d['cash_config'] = json_decode($d['cash_config'], true);
+				$d['services'] = $this->findServicesItems(json_decode($d['services'], true));
+				$d['subservices'] = $this->findServicesItems(json_decode($d['subservices'], true));
+				$d['service_description'] = json_decode($d['service_description'], true);
+				$d['user'] = $users->get( array('user' => $d['user_id'], 'userby' => 'ID') );
+			}
+
 			$d['subservices_items'] = $this->findServicesItems(json_decode($d['subservices_items'], true));
-			$d['service_description'] = json_decode($d['service_description'], true);
-			$d['user'] = $users->get( array('user' => $d['user_id'], 'userby' => 'ID') );
 			$d['requested_at'] = \Helper::distanceDate($d['requested']);
+
+			if (isset($arg['servicetree']))
+			{
+				$d['services_list'] = $this->getServicesList( $d['subservices_items'] );
+			}
 
 			// Lehetséges szolgáltatók betöltése
 			if (isset($arg['loadpossibleservices']) && $arg['loadpossibleservices'] == 1)
 			{
-				$d['services_hints'] = $this->possibleRequestServices( $d['services'], $d['subservices'], $d['subservices_items'] );
+				$d['services_hints'] = $this->possibleRequestServices( $d['services'], $d['subservices'], $d['subservices_items'], $d['user_id'] );
 				$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
 			}
 			if ( isset($arg['bindIDToList']) && $arg['bindIDToList'] == 1 ) {
@@ -75,6 +95,82 @@ class OfferRequests
 		}
 
 		return $list;
+	}
+
+	public function getServicesList( $items )
+	{
+		$back = array();
+
+		if (empty($items))
+		{
+			return $back;
+		}
+
+		foreach ((array)$items as $i )
+		{
+			$parent = $i['szulo_id'];
+			$parents = array();
+			$fullname = '';
+
+			while( $parent ) {
+				$p = $this->getCatData( $parent );
+				$parents[] = array(
+					'ID' => $p['ID'],
+					'neve' => $p['neve'],
+					'szulo_id' => $p['szulo_id']
+				);
+
+				if ($p['szulo_id'] == '0') {
+					$parent = false;
+				} else {
+					$parent = $p['szulo_id'];
+				}
+			}
+
+			$parents = array_reverse($parents);
+
+			foreach ((array)$parents as $pa) {
+				$fullname .= $pa['neve'] . ' / ';
+			}
+
+			$fullname .= $i['neve'];
+
+			$dat = array(
+				'ID' => $i['ID'],
+				'neve' => $i['neve'],
+				'fullneve' => $fullname,
+				'szulo_id' => $i['szulo_id'],
+				'parents' => $parents
+			);
+
+			$back[] = $dat;
+		}
+
+
+		return $back;
+	}
+
+	public function getCatData( $id )
+	{
+		$qarg = array();
+		$q = "SELECT
+			l.*
+		FROM lists as l
+		WHERE 1=1 ";
+
+		$q .= " and l.group_id = 1";
+
+		$q .= " and l.ID = :id";
+		$qarg['id'] = (int)$id;
+
+		$data = $this->db->squery($q, $qarg);
+		if ($data->rowCount() == 0) {
+			return false;
+		}
+
+		$data = $data->fetch(\PDO::FETCH_ASSOC);
+
+		return $data;
 	}
 
 	public function registerOffer( $user_id, $request, $offer )
@@ -111,10 +207,136 @@ class OfferRequests
 
 	}
 
+	public function acceptOffer( $user_id, $requester_id, $servicer_id, $request_id, $offer_id, $projectdata, $relation )
+	{
+		// jelszó ellenőrzés
+		$pass = \Hash::jelszo( trim($projectdata['password']) );
+
+		$uv = $this->db->squery("SELECT ID FROM felhasznalok WHERE ID = :id and jelszo = :pw", array('id' => $user_id, 'pw' => $pass));
+
+		if ( $uv->rowCount() == 0 ) {
+			throw new \Exception(__('A megadott jelszó hibás! Kérjük, hogy adja meg a fiók jelszavát a projekt létrehozásához.'));
+		}
+
+		$hashkey = md5(uniqid());
+		$this->db->insert(
+			"projects",
+			array(
+				'hashkey' => $hashkey,
+				'requester_id' => $requester_id,
+				'servicer_id' => $servicer_id,
+				'request_id' => $request_id,
+				'offer_id' => $offer_id,
+				'requester_title' => ($relation == 'from') ? $projectdata['project'] : NULL,
+				'servicer_title' => ($relation == 'to') ? $projectdata['project'] : NULL
+			)
+		);
+
+		$inserted_project_id = $this->db->lastInsertId();
+
+		$req_id = (int)$this->db->squery("SELECT request_id FROM requests_offerouts WHERE ID = :id", array('id' => $request_id))->fetchColumn();
+
+		// update requests_offerouts
+		$this->db->update(
+			"requests_offerouts",
+			array(
+				'project_id' => $inserted_project_id,
+				'requester_accepted' => 1
+			),
+			sprintf("ID = %d", (int)$request_id)
+		);
+
+		// update offer
+		$this->db->update(
+			"offers",
+			array(
+				'accepted' => 1,
+				'project_id' => $inserted_project_id,
+				'accepted_at' => NOW
+			),
+			sprintf("ID = %d", (int)$offer_id)
+		);
+
+		$offer_data = $this->getOfferData( $offer_id );
+
+		// e-mail értesítő az igénylőnek (requester)
+		$requester_data = $this->db->squery("SELECT ID, nev, email FROM felhasznalok WHERE ID = :id", array('id' => $requester_id))->fetch(\PDO::FETCH_ASSOC);
+
+		if (true)
+		{
+			$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+			$mail->add( trim($requester_data['email']) );
+			$arg = array(
+				'nev' => trim($requester_data['nev']),
+				'projekt_hashkey' => $hashkey,
+				'projekt_szolgaltatas' => $offer_data['szolgaltatas']['fullneve'],
+				'projekt_price' => $offer_data['price'],
+				'projekt_idotartam' => $offer_data['offer_project_idotartam'],
+				'projekt_start' => $offer_data['project_start_at'],
+				'projekt_elfogadva' => $offer_data['accepted_at'],
+				'settings' => $this->db->settings,
+				'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+			);
+			$mail->setSubject( __('Elfogadott egy ajánlatot. Új projekt létrehozva!') );
+			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'offers_accept_to_requester', $arg ) );
+			$re = $mail->sendMail();
+		}
+
+		// e-mail értesítő a szolgáltatónak (servicer)
+		$servicer_data = $this->db->squery("SELECT ID, nev, email FROM felhasznalok WHERE ID = :id", array('id' => $servicer_id))->fetch(\PDO::FETCH_ASSOC);
+
+		if (true)
+		{
+			$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+			$mail->add( trim($servicer_data['email']) );
+			$arg = array(
+				'nev' => trim($servicer_data['nev']),
+				'projekt_hashkey' => $hashkey,
+				'projekt_szolgaltatas' => $offer_data['szolgaltatas']['fullneve'],
+				'projekt_price' => $offer_data['price'],
+				'projekt_idotartam' => $offer_data['offer_project_idotartam'],
+				'projekt_start' => $offer_data['project_start_at'],
+				'projekt_elfogadva' => $offer_data['accepted_at'],
+				'settings' => $this->db->settings,
+				'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+			);
+			$mail->setSubject( __('Elfogadták az egyik ajánlatát. Új projekt létrehozva!') );
+			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'offers_accept_to_servicer', $arg ) );
+			$re = $mail->sendMail();
+		}
+
+		// Messanger create
+		$this->db->insert(
+			\MessageManager\Messanger::DBTABLE,
+			array(
+				'sessionid' => $hashkey,
+				'project_id' => $inserted_project_id,
+				'requester_id' => $requester_data['ID'],
+				'servicer_id' => $servicer_data['ID']
+			)
+		);
+
+		// Messanger system message
+		$this->db->insert(
+			\MessageManager\Messanger::DBTABLE_MESSAGES,
+			array(
+				'sessionid' => $hashkey,
+				'message' => __('Üzenetváltás automatikusan létrejött a projekt létrejöttével. Mostantól ezen a felületen tarthatja partnerével a kapcsolatot!'),
+				'user_from_id' => 0,
+				'user_to_id' => 0,
+				'requester_alerted' => 1,
+				'servicer_alerted' => 1
+			)
+		);
+
+		return $hashkey;
+	}
+
 	public function getUserOfferRequests( $uid, $user_group, $arg = array() )
 	{
 		$re = array();
 		$qarg = array();
+		$format = (isset($arg['format'])) ? $arg['format'] : 'grouped';
 
 		$q = "SELECT
 			ro.ID,
@@ -139,6 +361,7 @@ class OfferRequests
 			r.message as requester_form_message,
 			r.service_description,
 			r.requested,
+			r.offerout,
 			r.closed as request_closed,
 			IF(ro.user_id = :uid, 'to', 'from') as my_relation
 		FROM `requests_offerouts` as ro
@@ -184,7 +407,20 @@ class OfferRequests
 			}
 		}
 
-		$q .= " ORDER BY r.closed ASC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, r.requested ASC";
+		if (isset($arg['progressed']))
+		{
+			if ( $arg['progressed'] == 1 )
+			{
+				$q .= " and ((ro.recepient_accepted = 1 and ro.requester_accepted IS NULL) or ro.recepient_declined = 1)";
+			}
+		}
+
+		if ($format == 'list') {
+			//$q .= " GROUP BY r.hashkey ";
+		}
+
+
+		$q .= " ORDER BY r.closed ASC, r.requested DESC, ro.recepient_declined ASC, ro.recepient_visited_at ASC";
 
 		$qry = $this->db->squery($q, $qarg);
 
@@ -195,34 +431,74 @@ class OfferRequests
 		$users = new Users( array('db' => $this->db ));
 
 		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+		$from_num = 0;
+		$from_users_num = 0;
+		$to_num = 0;
+		$to_users_num = 0;
+		$from_hashes = array();
+		$to_hashes = array();
+
 		foreach ( (array)$data as $d )
 		{
 			$xserv = explode("_",$d['configval']);
 			$servicegroup = $xserv[0].'_'.$xserv[1];
-			$d['servicegroup'] = $servicegroup;
-			$d['service'] = $this->findServicesItems((array)$xserv[0])[0];
-			$d['subservice'] = $this->findServicesItems((array)$xserv[1])[0];
-			$d['item'] = $this->findServicesItems((array)$d['item_id'])[0];
-			$d['servicegroup_name'] = $d['service']['neve']. ' / '.$d['subservice']['neve'];
-			$d['cash'] = json_decode($d['cash'], true);
-			$d['cash_config'] = json_decode($d['cash_config'], true);
-			$d['service_description'] = json_decode($d['service_description'], true);
-			$d['offer'] = $this->getOfferData($d['user_offer_id']);
-			$d['offers'] = $this->getOfferDatas($d['ID']);
 
-			$d['user_to'] = $users->get( array('user' => $d['user_to_id'], 'userby' => 'ID') );
-			$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID') );
-			$d['requested_dist'] = \Helper::distanceDate($d['requested']);
+			if ($d['my_relation'] == 'from') {
+				$from_users_num += 1;
+				if (!in_array($d['request_hashkey'], $from_hashes)) {
+					$from_hashes[] = $d['request_hashkey'];
+				}
+			}
+			if ($d['my_relation'] == 'to') {
+				$to_users_num += 1;
+				if (!in_array($d['request_hashkey'], $to_hashes)) {
+					$to_hashes[] = $d['request_hashkey'];
+				}
+			}
 
-			$re[$d['my_relation']][$d['servicegroup']]['serviceID'] = (int)$xserv[0];
-			$re[$d['my_relation']][$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
-			$re[$d['my_relation']][$d['servicegroup']]['name'] = $d['servicegroup_name'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['idopont'] = $d['requested'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['hashkey'] = $d['request_hashkey'];
-			$re[$d['my_relation']][$d['servicegroup']]['items'][$d['item_id']]['requests'][$d['request_hashkey']]['users'][] = $d;
+			if ($format == 'grouped') {
+				$d['servicegroup'] = $servicegroup;
+				$d['service'] = $this->findServicesItems((array)$xserv[0])[0];
+				$d['subservice'] = $this->findServicesItems((array)$xserv[1])[0];
+				$d['item'] = $this->findServicesItems((array)$d['item_id'])[0];
+				$d['servicegroup_name'] = $d['service']['neve']. ' / '.$d['subservice']['neve'];
+				$d['cash'] = json_decode($d['cash'], true);
+				$d['cash_config'] = json_decode($d['cash_config'], true);
+				$d['service_description'] = json_decode($d['service_description'], true);
+				$d['offer'] = $this->getOfferData($d['user_offer_id']);
+				$d['offers'] = $this->getOfferDatas($d['ID']);
+
+				$d['user_to'] = $users->get( array('user' => $d['user_to_id'], 'userby' => 'ID') );
+				$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID') );
+				$d['requested_dist'] = \Helper::distanceDate($d['requested']);
+
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['serviceID'] = (int)$xserv[0];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['subserviceID'] = (int)$xserv[1];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['name'] = $d['servicegroup_name'];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['name'] = $d['item']['neve'];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['ID'] = (int)$d['item_id'];
+				$re[$d['my_relation']][$d['request_hashkey']]['services'][$d['servicegroup']]['items'][$d['item_id']]['users'][] = $d;
+				$re[$d['my_relation']][$d['request_hashkey']]['idopont'] = $d['requested'];
+				$re[$d['my_relation']][$d['request_hashkey']]['hashkey'] = $d['request_hashkey'];
+				$re[$d['my_relation']][$d['request_hashkey']]['user_name'] = $d['requester_form_name'];
+			} else
+			if( $format == 'list' )
+			{
+				$re['data'][] = $d;
+			}
+
 		}
+
+		if ($format == 'grouped') {
+			// code...
+		}
+
+		$re['from_users_num'] = $from_users_num;
+		$re['to_users_num'] = $to_users_num;
+		$re['from_num'] = count($from_hashes);
+		$re['to_num'] = count($to_hashes);
+		$re['from_hashes'] = $from_hashes;
+		$re['to_hashes'] = $to_hashes;
 
 		return $re;
 	}
@@ -232,6 +508,7 @@ class OfferRequests
 		$row['ID'] = (int)$row['ID'];
 		$row['from_user_id'] = (int)$row['from_user_id'];
 		$row['sended_at_dist'] = \Helper::distanceDate($row['sended_at']);
+		$row['szolgaltatas'] = $this->getServiceItemData( $row['service_item_id'] );
 
 		return $row;
 	}
@@ -241,8 +518,10 @@ class OfferRequests
 		$list = array();
 		$qarg = array();
 		$q = "SELECT
-			o.*
+			o.*,
+			ro.item_id as service_item_id
 		FROM offers as o
+		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
 		WHERE 1=1 and o.ID = :id";
 
 		$qarg['id'] = (int)$id;
@@ -260,6 +539,46 @@ class OfferRequests
 		return $data;
 	}
 
+	public function getServiceItemData( $id )
+	{
+		$top = $this->getCatData( $id );
+		$parent = $top['szulo_id'];
+		$parents = array();
+		$fullname = '';
+
+		while( $parent ) {
+			$p = $this->getCatData( $parent );
+			$parents[] = array(
+				'ID' => $p['ID'],
+				'neve' => $p['neve'],
+				'szulo_id' => $p['szulo_id']
+			);
+
+			if ($p['szulo_id'] == '0') {
+				$parent = false;
+			} else {
+				$parent = $p['szulo_id'];
+			}
+		}
+
+		$parents = array_reverse($parents);
+
+		foreach ((array)$parents as $pa) {
+			$fullname .= $pa['neve'] . ' / ';
+		}
+
+		$fullname .= $top['neve'];
+
+		$dat = array(
+			'ID' => $top['ID'],
+			'neve' => $top['neve'],
+			'fullneve' => $fullname,
+			'szulo_id' => $top['szulo_id'],
+			'parents' => $parents
+		);
+
+		return $dat;
+	}
 
 	public function getOfferDatas( $offerout_id)
 	{
@@ -267,7 +586,9 @@ class OfferRequests
 		$qarg = array();
 		$q = "SELECT
 			o.*
+			ro.item_id as service_item_id
 		FROM offers as o
+		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
 		WHERE 1=1 and o.offerout_id = :oid";
 
 		$qarg['oid'] = (int)$offerout_id;
@@ -366,7 +687,7 @@ class OfferRequests
 		return $list;
 	}
 
-	public function possibleRequestServices( $services, $subservices, $items )
+	public function possibleRequestServices( $services, $subservices, $items, $exclude_user = false )
 	{
 		$list = array();
 		$itemids = array();
@@ -407,6 +728,11 @@ class OfferRequests
 		LEFT OUTER JOIN lists as l3 ON l3.ID = s.subservice_id
 		WHERE 1=1 and f.user_group = '".\PortalManager\Users::USERGROUP_SERVICES."' and  f.engedelyezve = 1 and f.aktivalva IS NOT NULL and f.mukodik = 1 ";
 		$q .= " and s.item_id IN (".implode(",", $itemids).")";
+
+		if ($exclude_user && !empty($exclude_user) ) {
+			$q .= " and s.user_id != :uid";
+			$qarg['uid'] = $exclude_user;
+		}
 
 		$qry = $this->db->squery($q, $qarg);
 

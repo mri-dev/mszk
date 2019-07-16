@@ -28,6 +28,7 @@ class home extends Controller{
 			}
 
 			$uid = $this->view->_USERDATA['data']['ID'];
+			$user_group = $this->view->_USERDATA['data']['user_group'];
 
 			if (!$this->is_admin_logged)
 			{
@@ -74,9 +75,29 @@ class home extends Controller{
 
 				// Ajánlatkérések
 				$offerrequests = new OfferRequests(array('db' => $this->db));
-				$arg = array('offerout' => 1, 'elutasitva' => 0, 'servicetree' => false, 'shortlist' => true);
-				$arg['user'] = $uid;
-				$requests = $offerrequests->getList( $arg );
+				$arg = array(
+					'format' => 'list'
+				);
+				$requestoffers = $offerrequests->getUserOfferRequests( $uid, $user_group, $arg );
+				$requests = $requestoffers;
+				unset($requests['data']);
+
+				foreach ((array)$requestoffers['data'] as $d) {
+					$requests['data'][$d['request_hashkey']]['my_relation'] = $d['my_relation'];
+					$requests['data'][$d['request_hashkey']]['offerout_at'] = $d['offerout_at'];
+					$requests['data'][$d['request_hashkey']]['services'][$d['configval']] = $d['services_name'];
+
+					if (!isset($requests['data'][$d['request_hashkey']]['total_cash'])) {
+						foreach ((array)$d['cash'] as $cash)
+						{
+							$requests['data'][$d['request_hashkey']]['total_cash'] += $cash;
+						}
+					}
+
+					$requests['data'][$d['request_hashkey']]['data'][] = $d;
+				}
+
+				unset($requestoffers);
 				$dashboard['requests'] = $requests;
 			}
 			$this->out('dashboard', $dashboard);

@@ -419,7 +419,6 @@ class OfferRequests
 			//$q .= " GROUP BY r.hashkey ";
 		}
 
-
 		$q .= " ORDER BY r.closed ASC, r.requested DESC, ro.recepient_declined ASC, ro.recepient_visited_at ASC";
 
 		$qry = $this->db->squery($q, $qarg);
@@ -484,6 +483,14 @@ class OfferRequests
 			} else
 			if( $format == 'list' )
 			{
+				$d['service'] = $this->findServicesItems((array)$xserv[0])[0];
+				$d['subservice'] = $this->findServicesItems((array)$xserv[1])[0];
+				$d['item'] = $this->findServicesItems((array)$d['item_id'])[0];
+				$d['services_name'] = $d['service']['neve']. ' / '.$d['subservice']['neve']. ' / '.$d['item']['neve'];
+				$d['cash'] = json_decode($d['cash'], true);
+				$d['cash_config'] = json_decode($d['cash_config'], true);
+				$d['user_to'] = $users->get( array('user' => $d['user_to_id'], 'userby' => 'ID', 'alerts' => false) );
+				$d['user_from'] = $users->get( array('user' => $d['user_from_id'], 'userby' => 'ID', 'alerts' => false) );
 				$re['data'][] = $d;
 			}
 

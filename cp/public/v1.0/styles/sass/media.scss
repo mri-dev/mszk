@@ -2256,10 +2256,50 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 		flex-basis: 120px;
 		text-align: center;
 	}
+	.list-item > .holder .status,
+	.header > .holder .status{
+		flex-basis: 85px;
+		text-align: center;
+	}
+	.list-item > .holder .cash,
+	.header > .holder .cash{
+		flex-basis: 125px;
+		text-align: center;
+	}
 	.list-item > .holder .relation,
 	.header > .holder .relation{
 		flex-basis: 100px;
 		text-align: center;
+	}
+}
+
+.requests-dashboard{
+	.req-services{
+		position: relative;
+
+		strong {
+			cursor: help;
+		}
+
+		.serv-tooltip{
+			display: none;
+			position: absolute;
+			background: white;
+			border-radius: 5px;
+			padding: 10px;
+			border: 1px solid #e0e0e0;
+			z-index: 1;
+			box-shadow: 0 5px 15px -10px #545454;
+			.serv{
+				white-space: nowrap;
+			}
+		}
+
+		&:hover{
+			.serv-tooltip{
+				display: block;
+			}
+		}
 	}
 }
 

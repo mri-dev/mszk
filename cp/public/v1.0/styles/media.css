@@ -2715,20 +2715,66 @@ footer a, footer a:visited, footer a:hover {
 }
 
 /* line 2259, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.data-list .list-item > .holder .status,
+.data-list .header > .holder .status {
+  flex-basis: 85px;
+  text-align: center;
+}
+
+/* line 2264, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.data-list .list-item > .holder .cash,
+.data-list .header > .holder .cash {
+  flex-basis: 125px;
+  text-align: center;
+}
+
+/* line 2269, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 .data-list .list-item > .holder .relation,
 .data-list .header > .holder .relation {
   flex-basis: 100px;
   text-align: center;
 }
 
-/* line 2267, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+/* line 2277, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.requests-dashboard .req-services {
+  position: relative;
+}
+
+/* line 2280, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.requests-dashboard .req-services strong {
+  cursor: help;
+}
+
+/* line 2284, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.requests-dashboard .req-services .serv-tooltip {
+  display: none;
+  position: absolute;
+  background: white;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  z-index: 1;
+  box-shadow: 0 5px 15px -10px #545454;
+}
+
+/* line 2293, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.requests-dashboard .req-services .serv-tooltip .serv {
+  white-space: nowrap;
+}
+
+/* line 2299, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+.requests-dashboard .req-services:hover .serv-tooltip {
+  display: block;
+}
+
+/* line 2307, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 md-dialog h4 {
   font-size: 1rem;
   marign: 0 0 5px 0;
   font-weight: bold;
 }
 
-/* line 2275, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+/* line 2315, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -2743,7 +2789,7 @@ body.user-group-user #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 2285, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+/* line 2325, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -2758,7 +2804,7 @@ body.user-group-superadmin #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 2295, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
+/* line 2335, /Users/MolnarIstvan/Documents/Munka/mszk/cp/public/v1.0/styles/sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;

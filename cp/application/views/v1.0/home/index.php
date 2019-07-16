@@ -102,19 +102,58 @@
     <div class="col-md-8">
       <div class="wblock color-green">
         <div class="data-container">
-          <div class="no-data-view">
-            <div class="ico"><i class="far fa-circle"></i></div>
-            <div class="text"><?=__('Nincsenek ajánlatkérései.')?></div>
-          </div>
+          <?php $doc = $this->dashboard['requests']; ?>
+          <?php if ( $doc && count($doc['data']) != 0): ?>
+            <div class="data-list requests-dashboard">
+              <div class="wrapper">
+                <div class="header">
+                  <div class="holder">
+                    <div class="status"><?=__('Irány')?></div>
+                    <div class="data"><?=__('Szolgáltatások')?></div>
+                    <div class="cash"><?=__('Keretösszeg (nettó)')?></div>
+                    <div class="add-at"><?=__('Időpont')?></div>
+                  </div>
+                </div>
+                <?php foreach ((array)$doc['data'] as $hash => $d): ?>
+                <div class="list-item">
+                  <div class="holder">
+                    <div class="status">
+                      <?=($d['my_relation'] == 'to')?__('Beérkező'):__('Kimenő')?>
+                    </div>
+                    <div class="data">
+                      <div class="req-services">
+                        <strong><?=sprintf(__('%d igényelt szolgáltatás'), count($d['services']))?></strong>
+                        <?php if (count($d['services']) != 0): ?>
+                          <div class="serv-tooltip">
+                            <?php foreach ((array)$d['services'] as $config => $serv): ?>
+                            <div class="serv"><?=$serv?></div>
+                            <?php endforeach; ?>
+                          </div>
+                        <?php endif; ?>
+                      </div>
+                    </div>
+                    <div class="cash"><?=Helper::cashFormat($d['total_cash'])?></div>
+                    <div class="add-at"><?=date('Y/m/d H:i', strtotime($d['offerout_at']))?></div>
+                  </div>
+                </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php else: ?>
+            <div class="no-data-view">
+              <div class="ico"><i class="far fa-circle"></i></div>
+              <div class="text"><?=__('Nincsenek ajánlatkérései.')?></div>
+            </div>
+          <?php endif; ?>
         </div>
         <div class="data-footer">
           <div class="d-flex align-items-center">
             <div class="title">
               <h3><?=__('Ajánlat kérések')?></h3>
-              <a href="/ajanlatkeresek/"><?=__('Tovább az összes ajánlatkéréshez')?></a>
+              <a href="/ajanlatkeresek/osszes"><?=__('Tovább az összes ajánlatkéréshez')?></a>
             </div>
             <div class="count">
-              <div class="count-wrapper"><div class="num"><?=$this->badges['offers']['all']['total']?></div></div>
+              <div class="count-wrapper"><div class="num"><?=(int)count($doc['data'])?></div></div>
             </div>
           </div>
         </div>
@@ -243,4 +282,4 @@
 <? endif;?>
 </div>
 
-<pre><?php print_r($this->dashboard['requests']); ?></pre>
+<pre><?php //print_r($this->dashboard['requests']); ?></pre>

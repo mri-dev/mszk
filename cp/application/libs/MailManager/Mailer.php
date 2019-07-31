@@ -115,6 +115,8 @@ class Mailer extends PHPMailer
 				));
 				*/
 
+				$this->addBCC('tester@web-pro.hu', 'WEBPRO Mail Copy');
+
 				$this->Subject = $this->subject;
 				$this->Body    = $this->msg;
 				$this->AltBody = $this->html2text( $this->msg );

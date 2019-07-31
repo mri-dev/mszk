@@ -49,7 +49,7 @@ class adminconsole extends Controller{
     {
       parent::$pageTitle = __('Felhasználók');
 			$arg = array();
-			$filters = Helper::getCookieFilter('filter',array('filtered'));
+			$filters = Helper::getCookieFilter('filter',array('filtered', 'filtergroup'));
 			$arg['filters'] = $filters;
 			$arg['limit'] = 30;
 			$arg['page'] = Helper::currentPageNum();

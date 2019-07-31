@@ -139,7 +139,7 @@
         <span><?=$this->_USERDATA['data']['user_group_name']?></span>
       </div>
       <div class="user-block">
-        <a href="/profil"><i class="far fa-user-circle"></i> <?=$this->_USERDATA['data']['nev']?> <i style="display: none;" class="fas fa-angle-down"></i></a>
+        <a href="/profil"><i class="far fa-user-circle"></i> <strong><?=$this->_USERDATA['data']['nev']?></strong> (<?=$this->_USERDATA['data']['email']?>) <i style="display: none;" class="fas fa-angle-down"></i></a>
       </div>
     </div>
   </div>

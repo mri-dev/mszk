@@ -30,10 +30,10 @@ class Projects
 		$where = '';
 
 		$uid = 0;
+		$users = new Users( array('db' => $this->db ));
 
 		if ( $user_id ) {
 			$uid = $user_id;
-			$users = new Users( array('db' => $this->db ));
 			$controll_user =  $users->get( array('user' => $uid, 'userby' => 'ID', 'alerts' => false) );
 			$controll_user_admin = ($controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN) ? true : false;
 		}
@@ -61,6 +61,27 @@ class Projects
 
 			$d['title'] = $d[$d['my_relation'].'_title'];
 
+			if ($d['my_relation'] == 'admin') {
+				$d['user_requester'] = $users->get( array('user' => $d['requester_id'], 'userby' => 'ID', 'alerts' => false) );
+				$d['user_servicer'] = $users->get( array('user' => $d['servicer_id'], 'userby' => 'ID', 'alerts' => false) );
+
+				$title = '';
+				$title .= __('Project hash').': '.$d['hashkey']."<br>";
+				$title .= __('Ajánlatkérő')." (".$d['user_requester']['data']['nev'].")".': ';
+				if ($d['requester_title'] != '') {
+					$title .= $d['requester_title'];
+				} else {
+					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
+				}
+				$title .= '<br>'.__('Szolgáltató')." (".$d['user_servicer']['data']['nev'].")".': ';
+				if ($d['servicer_title'] != '') {
+					$title .= $d['servicer_title'];
+				} else {
+					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
+				}
+				$d['title'] = $title;
+			}
+
 			return $d;
 		}
 	}
@@ -71,9 +92,11 @@ class Projects
 		$qarg = array();
 
 		$uid = (int)$arg['uid'];
-		$users = new Users( array('db' => $this->db ));
-		$controll_user =  $users->get( array('user' => $uid, 'userby' => 'ID', 'alerts' => false) );
-		$controll_user_admin = ($controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN) ? true : false;
+		if ($uid != 0) {
+			$users = new Users( array('db' => $this->db ));
+			$controll_user =  $users->get( array('user' => $uid, 'userby' => 'ID', 'alerts' => false) );
+			$controll_user_admin = ($controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN) ? true : false;
+		}
 
 		$q = "SELECT
 			p.*
@@ -105,7 +128,7 @@ class Projects
 			$qarg['closed'] = (int)$arg['closed'];
 		}
 
-		if (isset($arg['uid'])) {
+		if (isset($arg['uid']) && !$controll_user_admin) {
 			$q .= " and (p.requester_id = :uid or p.servicer_id = :uid)";
 			$qarg['uid'] = (int)$arg['uid'];
 		}
@@ -140,6 +163,24 @@ class Projects
 			$d['paying_percent'] = $this->getProjectPaymentProgress( $d['ID'] );
 			$d['paying_percent_class'] = \Helper::progressBarColor($d['paying_percent']);
 			$d['messages'] = $this->getProjectMessagesInfo( $d['ID'], $uid, $d['my_relation'] );
+
+			if ($d['my_relation'] == 'admin') {
+				$title = '';
+				$title .= __('Project hash').': '.$d['hashkey']."<br>";
+				$title .= __('Ajánlatkérő')." (".$d['user_requester']['data']['nev'].")".': ';
+				if ($d['requester_title'] != '') {
+					$title .= $d['requester_title'];
+				} else {
+					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
+				}
+				$title .= '<br>'.__('Szolgáltató')." (".$d['user_servicer']['data']['nev'].")".': ';
+				if ($d['servicer_title'] != '') {
+					$title .= $d['servicer_title'];
+				} else {
+					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
+				}
+				$d['title'] = $title;
+			}
 
 			$list[] = $d;
 		}

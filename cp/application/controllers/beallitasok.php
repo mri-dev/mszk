@@ -10,17 +10,12 @@ class beallitasok extends Controller {
 			$this->view->adm = $this->AdminUser;
 			$this->view->adm->logged = $this->AdminUser->isLogged();
 
-			// Load Admin
-			$admin_id = false;
-			if ($this->view->gets[1] == 'admin_torles' || $this->view->gets[1] == 'admin_szerkesztes') {
-				$admin_id = $this->view->gets[2];
+			if (
+				$this->view->_USERDATA &&
+				($this->view->_USERDATA['data']['user_group'] != \PortalManager\Users::USERGROUP_SUPERADMIN)
+			) {
+					Helper::reload('/');
 			}
-
-			$admin = new Admin($admin_id, array( 'db' => $this->db ));
-			$admins = $admin->getAdminList();
-			$this->out( 'admins', $admins );
-			$this->out( 'admin', $admin );
-
 
 			if ( ( isset($_POST['addAdmin']) || isset($_POST['saveAdmin']) || isset($_POST['delAdmin']) ) && $this->AdminUser->admin_jog != \PortalManager\Admin::SUPER_ADMIN_PRIV_INDEX ) {
 				$this->view->err			= true;

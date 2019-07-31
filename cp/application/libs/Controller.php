@@ -179,14 +179,22 @@ class Controller {
       * Projektek
       **/
       // Futó
-      $badges['projects']['inprogress'] = $this->db->squery("SELECT p.ID FROM projects as p WHERE p.closed = 0 and (p.requester_id = :uid or p.servicer_id = :uid)", array(
-        'uid' => $uid
-      ))->rowCount();
+      $q = "SELECT p.ID FROM projects as p WHERE p.closed = 0";
+      $arg = array();
+      if (!$this->view->is_admin_logged) {
+        $q .= " and (p.requester_id = :uid or p.servicer_id = :uid)";
+        $arg['uid'] = $uid;
+      }
+      $badges['projects']['inprogress'] = $this->db->squery($q, $arg)->rowCount();
 
       // Lezárt
-      $badges['projects']['closed'] = $this->db->squery("SELECT p.ID FROM projects as p WHERE p.closed = 1 and (p.requester_id = :uid or p.servicer_id = :uid)", array(
-        'uid' => $uid
-      ))->rowCount();
+      $q = "SELECT p.ID FROM projects as p WHERE p.closed = 1";
+      $arg = array();
+      if (!$this->view->is_admin_logged) {
+        $q .= " and (p.requester_id = :uid or p.servicer_id = :uid)";
+        $arg['uid'] = $uid;
+      }
+      $badges['projects']['closed'] = $this->db->squery($q, $arg)->rowCount();
 
       $badges['projects']['all'] = $badges['projects']['inprogress'] + $badges['projects']['closed'];
 

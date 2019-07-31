@@ -74,10 +74,14 @@
                       </div>
                     </div>
                     <div class="relation">
-                      <?=($d['is_me'])?__('Én'):__('Partner')?>
+                      <?php if ($this->is_admin_logged): ?>
+                        <strong><a href="/account/?t=edit&ID=<?=$d['user_id']?>&ret=/"><?=$d['user_nev']?></a></strong>
+                      <?php else: ?>
+                        <?=($d['is_me'])?__('Én'):__('Partner')?>
+                      <?php endif; ?>
                     </div>
                     <div class="add-at">
-                      <?=date('Y/m/d', strtotime($d['expire_at']))?>
+                      <?=($d['expire_at'] != '') ? date('Y/m/d', strtotime($d['expire_at'])) : '<em>N/A</em>'?>
                     </div>
                   </div>
                 </div>
@@ -162,6 +166,7 @@
   </div>
   <div class="row">
     <div class="col-md-4">
+    <?php if (!$this->is_admin_logged): ?>
       <div class="wblock color-blue">
         <div class="data-container">
           <?php $doc = $this->dashboard['messanger']; ?>
@@ -212,6 +217,69 @@
           </div>
         </div>
       </div>
+    <?php endif; ?>
+    <?php if ($this->is_admin_logged): ?>
+      <div class="wblock color-blue">
+        <div class="data-container">
+          <?php $doc = $this->dashboard['szamla']['all']; ?>
+          <?php if ((int)$doc['total_num'] == 0): ?>
+          <div class="no-data-view">
+            <div class="ico"><i class="far fa-check-circle"></i></div>
+            <div class="text"><?=__('Jelenleg nincs számla.')?></div>
+          </div>
+          <?php else: ?>
+            <div class="data-list">
+              <div class="wrapper">
+                <div class="header">
+                  <div class="holder">
+                    <div class="data"><?=__('Adatok')?></div>
+                    <div class="relation"><?=__('Hozzáadta')?></div>
+                    <div class="add-at"><?=__('Határidő')?></div>
+                  </div>
+                </div>
+                <?php foreach ((array)$doc['data'] as $d): ?>
+                <div class="list-item">
+                  <div class="holder">
+                    <div class="data">
+                      <div class="title">
+                        <a href="/doc/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['name']?></strong></a>
+                      </div>
+                      <div class="subtitle">
+                        <?php if ($d['ertek'] != 0): ?>
+                        <span class="doc-ertek"><strong><?=\Helper::cashFormat($d['ertek'])?></strong> <?=__('Ft + ÁFA')?></span>
+                        <?php endif; ?>
+                      </div>
+                    </div>
+                    <div class="relation">
+                      <?php if ($this->is_admin_logged): ?>
+                        <strong><a href="/account/?t=edit&ID=<?=$d['user_id']?>&ret=/"><?=$d['user_nev']?></a></strong>
+                      <?php else: ?>
+                        <?=($d['is_me'])?__('Én'):__('Partner')?>
+                      <?php endif; ?>
+                    </div>
+                    <div class="add-at">
+                      <?=($d['expire_at'] != '') ? date('Y/m/d', strtotime($d['expire_at'])) : '<em>N/A</em>'?>
+                    </div>
+                  </div>
+                </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php endif; ?>
+        </div>
+        <div class="data-footer">
+          <div class="d-flex align-items-center">
+            <div class="title">
+              <h3><?=__('Számlák')?></h3>
+              <a href="/dokumentumok/szamla"><?=__('Tovább az összes számlára')?></a>
+            </div>
+            <div class="count">
+              <div class="count-wrapper"><div class="num"><?=(int)$doc['total_num']?></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endif; ?>
     </div>
     <div class="col-md-8">
       <div class="wblock color-blue">
@@ -241,7 +309,11 @@
                         <a href="/projektek/projekt/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['title']?></strong></a>
                       </div>
                       <div class="subtitle">
-                        <span><strong><?=$d['partner']['data']['nev']?></strong></span>
+                        <?php if ($this->is_admin_logged): ?>
+                          <span><strong><?=$d['user_requester']['data']['nev']?></strong> <-> <strong><?=$d['user_servicer']['data']['nev']?></strong></span>
+                        <?php else: ?>
+                          <span><strong><?=$d['partner']['data']['nev']?></strong></span>
+                        <?php endif; ?>
                         <span><?=__('Fizetve (nettó)')?>: <strong><span class="allprice"><?=\Helper::cashFormat($d['offer']['price'])?></span> /<span class="paidprice"><?=\Helper::cashFormat($d['paidamount'])?></span></strong></span>
                       </div>
                     </div>

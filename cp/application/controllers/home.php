@@ -30,48 +30,51 @@ class home extends Controller{
 			$uid = $this->view->_USERDATA['data']['ID'];
 			$user_group = $this->view->_USERDATA['data']['user_group'];
 
-			if (!$this->is_admin_logged)
+			$docs = new Documents(array('db' => $this->db));
+			$projects = new Projects(array('db' => $this->db));
+			$messanger = new Messanger(array(
+				'controller' => $this
+			));
+
+			// Díjbekérők - Lejárt
+			$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
+			$folderinfo = $docs->getFolderData($folderhash);
+
+			$dashboard['dijbekero']['expired'] = $docs->getList(array(
+				'uid' => $uid,
+				'limit' => 10,
+				'folder' => $folderinfo['ID'],
+				'order' => 'd.expire_at DESC',
+				'expire_qry' => '<= now()',
+				'teljesites_qry' => 'IS NULL'
+			));
+
+			// Díjbekérők - Összes
+			$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
+			$folderinfo = $docs->getFolderData($folderhash);
+
+			$dashboard['dijbekero']['all'] = $docs->getList(array(
+				'uid' => $uid,
+				'limit' => 1,
+				'folder' => $folderinfo['ID'],
+				'order' => 'd.expire_at DESC'
+			));
+
+			// Projektek
+			$listarg = array();
+			$listarg['uid'] = $uid;
+			$listarg['closed'] = 0;
+			$dashboard['projects'] = $projects->getList( $listarg );
+
+
+			if ( !$this->view->is_admin_logged )
 			{
-				$docs = new Documents(array('db' => $this->db));
-				$projects = new Projects(array('db' => $this->db));
-				$messanger = new Messanger(array(
-					'controller' => $this
-				));
-
-				// Díjbekérők - Lejárt
-				$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
-				$folderinfo = $docs->getFolderData($folderhash);
-
-				$dashboard['dijbekero']['expired'] = $docs->getList(array(
-					'uid' => $uid,
-					'limit' => 10,
-					'folder' => $folderinfo['ID'],
-					'order' => 'd.expire_at DESC',
-					'expire_qry' => '<= now()',
-					'teljesites_qry' => 'IS NULL'
-				));
-
-				// Díjbekérők - Összes
-				$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
-				$folderinfo = $docs->getFolderData($folderhash);
-
-				$dashboard['dijbekero']['all'] = $docs->getList(array(
-					'uid' => $uid,
-					'limit' => 1,
-					'folder' => $folderinfo['ID'],
-					'order' => 'd.expire_at DESC'
-				));
-
 				// Messangers
 				$arg = array();
 				$messages = $messanger->loadMessages($uid, $arg);
 				$dashboard['messanger'] = $messages;
 
-				// Projektek
-				$listarg = array();
-				$listarg['uid'] = $uid;
-				$listarg['closed'] = 0;
-	      $dashboard['projects'] = $projects->getList( $listarg );
+
 
 				// Ajánlatkérések
 				$offerrequests = new OfferRequests(array('db' => $this->db));
@@ -99,6 +102,19 @@ class home extends Controller{
 
 				unset($requestoffers);
 				$dashboard['requests'] = $requests;
+			}
+			else
+			{
+				// Számla
+				$folderhash = $docs->findFolderHashkey('szamla', $uid);
+				$folderinfo = $docs->getFolderData($folderhash);
+
+				$dashboard['szamla']['all'] = $docs->getList(array(
+					'uid' => $uid,
+					'limit' => 10,
+					'folder' => $folderinfo['ID']
+				));
+
 			}
 			$this->out('dashboard', $dashboard);
 

@@ -52,6 +52,7 @@
           $('#top').css({
   					'paddingLeft' : '280px'
   				});
+          $('.slideMenu').removeClass('closed');
   			}else{
   				slideMenu.css({
   					'left' : '-'+closeNum+'px'
@@ -62,6 +63,8 @@
           $('#top').css({
   					'paddingLeft' : '75px'
   				});
+
+          $('.slideMenu').addClass('closed');
   			}
 
   			$('.slideMenuToggle').click(function(){
@@ -76,6 +79,7 @@
             $('#top').animate({
   						'paddingLeft' : '75px'
   					},200);
+            $('.slideMenu').addClass('closed');
   					saveState('closed');
   				}else{
   					isSlideOut = true;
@@ -88,6 +92,7 @@
             $('#top').animate({
   						'paddingLeft' : '280px'
   					},200);
+            $('.slideMenu').removeClass('closed');
   					saveState('opened');
   				}
   			});
@@ -161,11 +166,14 @@
   <div class="slideMenu">
     <div class="headerlogo">
   	  <div class="slideMenuToggle" title="Kinyit/Becsuk"><i class="fas fa-bars"></i></div>
-      <img src="<?=IMG?>logo-white.svg" alt="<?=$this->settings['page_title']?>">
+      <a href="/"><img src="<?=IMG?>logo-white.svg" alt="<?=$this->settings['page_title']?>"></a>
+      <a href="/"><img src="<?=IMG?>logo-white-small.svg" class="closedlogo" alt="<?=$this->settings['page_title']?>"></a>
     </div>
     <div class="clr"></div>
  		<div class="menu">
       	<ul>
+            <li class="homepage"><a href="<?=$this->settings['page_url']?>" target="_blank"><span class="ni">1</span><i class="fas fa-home"></i> <?=__('Főoldal')?></a></li>
+            <li class="div double"></li>
           	<li class="<?=($this->gets[0] == 'home')?'on':''?>"><a href="/" title="Dashboard"><span class="ni">1</span><i class="fas fa-tachometer-alt"></i> <?=__('Gépház')?></a></li>
             <?php if (false): ?>
               <li class="<?=($this->gets[0] == 'emails')?'on':''?>"><a href="/emails" title="<?=__('E-mail sablonok')?>"><span class="ni">8</span><i class="fa fa-envelope"></i> <?=__('E-mail sablonok')?></a></li>

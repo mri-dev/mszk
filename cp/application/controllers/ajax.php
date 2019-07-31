@@ -141,6 +141,9 @@ class ajax extends Controller
 					{
 						case 'get':
 							$listarg = array();
+							if (!$this->view->is_admin_logged) {
+
+							}
 							$listarg['uid'] = $this->view->_USERDATA['data']['ID'];
 							$listarg['getproject'] = $hashkey;
 

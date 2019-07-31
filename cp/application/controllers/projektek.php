@@ -95,8 +95,8 @@ class projektek extends Controller
       ));
 
       $projects = new Projects(array('db' => $this->db));
-      $listarg = array();
 			$listarg['uid'] = $this->view->_USERDATA['data']['ID'];
+
 			$listarg['closed'] = 0;
       $this->out( 'projects', $projects->getList( $listarg ));
     }

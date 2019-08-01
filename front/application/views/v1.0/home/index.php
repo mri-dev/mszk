@@ -275,7 +275,7 @@
                         </div>
                         <div class="saved-config-date" ng-show="savedconfigtime">
                           <strong><?=__('Utoljára mentve')?>:</strong>
-                          <div class="datetime">{{savedconfigtime|date:'yyyy. MM. dd. hh:mm'}}</div>
+                          <div class="datetime">{{savedconfigtime|date:'yyyy. MM. dd. HH:mm'}}</div>
                         </div>
                       </div>
                     </div>

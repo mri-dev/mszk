@@ -229,6 +229,7 @@ class Controller {
             $subfolder  = $this->getThemeFolder().'/';
         }
 
+
         # Oldal címe
         if(self::$pageTitle != null){
           $this->view->title = self::$pageTitle . ' | ' . $this->view->settings['page_title'];
@@ -237,14 +238,18 @@ class Controller {
           $this->view->title = $this->view->settings['page_title'] . " &mdash; ".$this->view->settings['page_description'];
         }
 
+
         # Oldal léptetés
         $this->view->_PAGEPAGINATION = $this->getPagePagination();
 
+
         # Render HEADER
         if(!$this->hidePatern){
-            $this->view->render($subfolder.$this->theme_wire.'header'.( (isset($_GET['header'])) ? '-'.$_GET['header'] : '' ),$mode);
+            $this->view->render(
+              $subfolder.$this->theme_wire.'header'.( (isset($_GET['header'])) ? '-'.$_GET['header'] : '' ),
+              $mode
+            );
         }
-
         # Aloldal átadása a VIEW-nek
         $this->view->called = $this->fnTemp;
     }

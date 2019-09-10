@@ -14,7 +14,9 @@ class View {
               require $f;
               return true;
           }
+
       }
+
 
 			if(strpos($item,"::") !== false){
 				$ext 	= explode("::",$item);
@@ -29,34 +31,39 @@ class View {
 				VIEW . $item . '.php'
 			);
 
+
+
 			if($this->called != null){
-				 $call = VIEW . $item . '/' . $this->called . '.php';
-                    if(!file_exists($call)){
-                        $call = VIEW . $item . '/' . $this->called . '/index.php';
-                    }
-				 $vw[] = $call;
+				$call = VIEW . $item . '/' . $this->called . '.php';
+	      if(!file_exists($call)){
+	      	$call = VIEW . $item . '/' . $this->called . '/index.php';
+	      }
+			 	$vw[] = $call;
 			}
+
+
 
 			$target = (file_exists($vw[2])) ? $vw[2] : false ;
 
 			if(!$target){
-                $step++;
+        $step++;
 				$target = (file_exists($vw[0])) ? $vw[0] : false ;
 			}
 
 			if(!$target){
-                $step++;
+        $step++;
 				$target = (file_exists($vw[1])) ? $vw[1] : false ;
 			}
 
+
+
 			if($target){
 				if(!$this->clear){
-                    if($step == 0){
-                        $this->openSubPage($target);
-                    }else{
-                        require $target;
-                    }
-
+          if($step == 0){
+            $this->openSubPage($target);
+          }else{
+            require $target;
+          }
 				}
 			}
 		}

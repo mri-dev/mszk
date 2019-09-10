@@ -2,7 +2,7 @@
 	/*
 	* Könyvtárak
 	*/
-	session_cache_limiter('none');
+	//session_cache_limiter('none');
 	//die('Az oldal átmenetileg nem elérhető!');
 	error_reporting(E_ALL & ~(E_STRICT|E_NOTICE));
 	ini_set('display_errors', 0);
@@ -12,6 +12,8 @@
 	if( $_GET[dev] ){
 		require 'devautoload.php';
 	}else require 'autoload.php';
+
+
 
    /* $file       = __FILE__;
     $timestamp  = filemtime($file);
@@ -30,10 +32,9 @@
         }
     }
     */
-
 	$start = new Start();
 
 	function __( $text){
-		return Lang::content($text);
+		return $text;
 	}
 ?>

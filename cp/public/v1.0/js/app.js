@@ -547,6 +547,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 {
 	$scope.quicksearch = '';
 	$scope.requests = [];
+	$scope.servicerAccounts = [];
 	$scope.request = false;
 	$scope.request_offerouts = {};
 	$scope.readrequest = 0;
@@ -565,11 +566,57 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 		});
 	}
 
+	$scope.saac = {
+		searchText: '',
+		isDisabled: false,
+		noCache: true,
+		querySearch: function(query){
+
+			var results = query ? $scope.servicerAccounts.filter(createFilterFor(query)) : $scope.servicerAccounts.filter(checkPickedUsers());
+			return results;
+		},
+		selectedItem: null,
+		selectedItemChange: function(request, user) {
+			if (typeof request.passed_user_offer_id === 'undefined') {
+				request.passed_user_offer_id = [];
+			}
+
+			if (user && request.passed_user_offer_id.indexOf(user) === -1) {
+				request.passed_user_offer_id.push(user);
+			}
+
+			this.selectedItem = null;
+		}
+	};
+
+	function checkPickedUsers() {
+		var current_picked = [];
+		if ($scope.request && typeof $scope.request.passed_user_offer_id !== 'undefined') {
+			current_picked = $scope.request.passed_user_offer_id;
+		}
+		return function filterFn(item) {
+      return (current_picked.indexOf(item.ID) === -1);
+    };
+	}
+
+	function createFilterFor( query ) {
+    var lowercaseQuery = query.toLowerCase();
+
+    return function filterFn(item) {
+      return (
+				(item.nev_value.indexOf(lowercaseQuery) !== -1) ||
+				(item.company_value && item.company_value.indexOf(lowercaseQuery) !== -1) ||
+				(item.email_value && item.email_value.indexOf(lowercaseQuery) !== -1)
+			);
+    };
+  }
+
 	$scope.pickRequest = function( request ) {
 		$scope.readrequest = request.ID;
 		$scope.request = request;
 		$scope.servuser = {};
 		$scope.request_offerouts = {};
+		console.log(request);
 
 		if (request.services_hints) {
 			angular.forEach(request.services_hints, function(requester,itemid){
@@ -615,27 +662,59 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 	}
 
 	$scope.loadLists = function( callback ) {
+		$scope.loadServicerAccounts(function( servicers )
+		{
+			$scope.servicerAccounts = servicers;
+
+			$scope.servicerAccounts.map(function (user) {
+        user.nev_value = user.nev.toLowerCase();
+				user.email_value = user.email.toLowerCase();
+
+				if (user.total_data.data.company_name) {
+					user.company_value = user.total_data.data.company_name.toLowerCase();
+				}
+
+				return user;
+      });
+
+			$http({
+				method: 'POST',
+				url: '/ajax/post',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				data: $.param({
+					type: "Requests",
+					mode: 'List',
+					filter: {
+						offerout: ($scope.loadconfig && $scope.loadconfig.offerout) ? $scope.loadconfig.offerout : 0,
+						loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0,
+						bindIDToList: 0
+					}
+				})
+			}).success(function(r){
+				console.log(r);
+				if (r.data && r.data.length != 0) {
+					$scope.requests = r.data;
+				}
+				if (typeof callback !== 'undefined') {
+					callback(r.data);
+				}
+			});
+		});
+	}
+
+	$scope.loadServicerAccounts = function( callback ) {
 		$http({
 			method: 'POST',
 			url: '/ajax/post',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			data: $.param({
 				type: "Requests",
-				mode: 'List',
-				filter: {
-					offerout: ($scope.loadconfig && $scope.loadconfig.offerout) ? $scope.loadconfig.offerout : 0,
-					loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0,
-					bindIDToList: 0
-				}
+				mode: 'ServicerAccounts',
+				filter: {}
 			})
 		}).success(function(r){
 			console.log(r);
-			if (r.data && r.data.length != 0) {
-				$scope.requests = r.data;
-			}
-			if (typeof callback !== 'undefined') {
-				callback(r.data);
-			}
+			callback(r.data);
 		});
 	}
 

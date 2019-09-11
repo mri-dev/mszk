@@ -178,39 +178,49 @@
             <div class="row-header">
               <h3><?=__('Igénylés elküldése a szolgáltatók felé')?></h3>
               <div class="desc">
-                <?=__('Jelölje ki a szolgáltató felhasználókat ahova a rendszer küldje ki az ajánlatkérést!')?>
+                <?=__('Itt adhatja hozzá a lehetséges szolgáltatókat, akiknek ki szeretné küldeni az ajánlást!')?>
               </div>
             </div>
             <div class="dpad">
               <div class="services-hints">
-                <div class="no-hints" ng-if="request.services_hints.length==0">
+                <div class="no-hints" ng-if="servicerAccounts.length==0">
                   <div class="alert alert-danger">
-                    <?=__('Erre az ajánlatkérésre jelenleg nincs szolgáltató partner rögzítve a rendszerben!')?>
+                    <?=__('Jelenleg nincs szolgáltató rögzítve a rendszerben!')?>
                   </div>
                 </div>
-                <div class="service-user-list" ng-if="request.services_hints.length!=0">
-                  <div class="text-right" ng-if="request.elutasitva==0">
-                    <button type="button" ng-if="!servicesrequestprogress" class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
-                    <div class="" ng-if="servicesrequestprogress">
-                      <div class="alert alert-primary text-left">
-                        <?=__('Ajánlatkérés kiajánlása folyamatban van...')?> <i class="fas fa-spinner fa-spin"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <br>
-                  <div class="service-group" ng-repeat="service in request.services_hints">
-                    <div class="header">
-                      <div class="wrapper">
-                        <div class="serv"><div class="txt">{{service.service.nev}}</div></div>
-                        <div class="subserv"><div class="txt">{{service.subservice.nev}}</div></div>
-                        <div class="item"><div class="txt">{{service.item.nev}}</div></div>
-                      </div>
-                      <div class="clr"></div>
+                <div class="service-user-list" ng-if="servicerAccounts.length!=0">
+                  <div class="service-group">
+                    <div class="listfilters">
+                      <md-autocomplete
+                        id="custom-template"
+                        ng-disabled="saac.isDisabled"
+                        md-no-cache="saac.noCache"
+                        md-selected-item="saac.selectedItem"
+                        md-search-text-change="saac.searchTextChange(saac.searchText)"
+                        md-search-text="saac.searchText"
+                        md-selected-item-change="saac.selectedItemChange(request, user.ID)"
+                        md-items="user in saac.querySearch(saac.searchText)"
+                        md-item-text="user.nev"
+                        md-min-length="0"
+                        input-aria-label="<?=__('Szolgáltató')?>"
+                        placeholder="<?=__('Szolgáltatók keresése')?>"
+                        md-menu-class="autocomplete-custom-template"
+                        md-menu-container-class="custom-container">
+                        <md-item-template>
+                          <div class="item-wrapper">
+                            <div class="name">
+                              <strong>{{user.nev}}</strong>
+                              <span class="company" ng-if="user.total_data.data.company_name">// {{user.total_data.data.company_name}}</span>
+                              <span class="email">({{user.email}})</span>
+                            </div>
+                          </div>
+                        </md-item-template>
+                    </md-autocomplete>
                     </div>
                     <div class="servicers">
-                      <div class="user" ng-repeat="user in service.users">
+                      <div class="user" ng-repeat="user in servicerAccounts" ng-if="request.passed_user_offer_id && request.passed_user_offer_id.indexOf(user.ID) !== -1">
                         <div class="wrapper">
-                          <input type="checkbox" ng-disabled="(request_offerouts && request_offerouts[service.configval][user.ID])" checked="checked" ng-model="servuser['item_'+service.item.ID][user.ID]" class="ccb" ng-class="{'offered': (request_offerouts && request_offerouts[service.configval][user.ID])}" id="servu{{service.item.ID}}_us{{user.ID}}"> <label for="servu{{service.item.ID}}_us{{user.ID}}"> <strong><span class="company" ng-if="user.company">{{user.company}}</span>{{user.nev}} (#{{user.ID}})</strong> {{user.email}}
+                          <label for="servu{{service.item.ID}}_us{{user.ID}}"> <strong><span class="company" ng-if="user.total_data.data.company_name">{{user.total_data.data.company_name}}</span>{{user.nev}} (#{{user.ID}})</strong> {{user.email}}
                             <div class="infos" ng-hide="(request_offerouts && request_offerouts[service.configval][user.ID])">
                               <span title="{{user.utoljara_belepett}}"><?=__('Belépett:')?> {{user.utoljara_belepett_dist}}</span>  <span title="{{user.regisztralt}}"><?=__('Regisztrált:')?> {{user.regisztralt_dist}}</span>
                             </div>
@@ -219,6 +229,14 @@
                             </div>
                           </label>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-right" ng-if="request.elutasitva==0">
+                    <button type="button" ng-if="!servicesrequestprogress" class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
+                    <div class="" ng-if="servicesrequestprogress">
+                      <div class="alert alert-primary text-left">
+                        <?=__('Ajánlatkérés kiajánlása folyamatban van...')?> <i class="fas fa-spinner fa-spin"></i>
                       </div>
                     </div>
                   </div>

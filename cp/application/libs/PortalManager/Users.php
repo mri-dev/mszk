@@ -915,6 +915,8 @@ class Users
 
 		$B = array();
 		foreach($data as $d){
+			$d['regisztralt_dist'] = \Helper::distanceDate($d['regisztralt'], NOW );
+			$d['utoljara_belepett_dist'] = \Helper::distanceDate($d['utoljara_belepett'], NOW );			
 			$d[total_data] = $this->get(array( 'user' => $d['email'] ));
 			$B[] = $d;
 		}

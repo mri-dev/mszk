@@ -82,11 +82,17 @@ class OfferRequests
 			}
 
 			// Lehetséges szolgáltatók betöltése
-			if (isset($arg['loadpossibleservices']) && $arg['loadpossibleservices'] == 1)
+			/*	Kikapcsolva
+			if ( isset($arg['loadpossibleservices']) && $arg['loadpossibleservices'] == 1 )
 			{
 				$d['services_hints'] = $this->possibleRequestServices( $d['services'], $d['subservices'], $d['subservices_items'], $d['user_id'] );
 				$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
 			}
+			*/
+
+			$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
+
+
 			if ( isset($arg['bindIDToList']) && $arg['bindIDToList'] == 1 ) {
 				$list[$d['ID']] = $d;
 			} else {

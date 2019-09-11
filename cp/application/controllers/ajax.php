@@ -190,6 +190,19 @@ class ajax extends Controller
 
 					switch ( $mode )
 					{
+						case 'ServicerAccounts':
+							$userlist = $this->Users->getUserList(array(
+								'filters' => array(
+									'user_group' => \PortalManager\Users::USERGROUP_SERVICES,
+									'engedelyezve' => 1,
+									'mukodik' => 1
+								),
+								'order' => 'nev ASC',
+								'alerts' => 0
+							));
+							$ret['data'] = $userlist['data'];
+							$this->setSuccess(null, $ret);
+						break;
 						case 'List':
 							$requests = new OfferRequests( array('db' => $this->db) );
 							$arg = array();

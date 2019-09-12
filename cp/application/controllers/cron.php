@@ -143,14 +143,14 @@ class cron extends Controller
 						'request' => $es
 					);
 					$arg['request'] = (new Template( VIEW . 'templates/mail/' ))->get( 'offerouts_request_overview', $request_arg );
-
+				
 					$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('services_users_offerouts', $arg);
 
 					$mailmsg = (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg );
       		$mail->setSubject( sprintf(__('Új ajánlatkérései vannak: %d darab szolgáltatás.'), count($es['parameters']['offers'])) );
       		$mail->setMsg( $mailmsg );
-					//echo $mailmsg;
-      		$re = $mail->sendMail();
+					echo $mailmsg;
+      		//$re = $mail->sendMail();
 
 					if ($re) {
 						if ( !empty($re['success'][0]) ) {

@@ -21,37 +21,37 @@ foreach ( (array)$offers as $o ) {
 }
 
 $cash_total = 0;
+//echo '<pre>';
+//print_R($configuration);
 ?>
 <div class="selected-services">
-  <?php foreach ((array)$configuration['services'] as $service): if(!in_array($service['ID'], $offerids['service'])) continue; ?>
+  <?php foreach ((array)$configuration['services'] as $service): /*if(!in_array($service['ID'], $offerids['service'])) continue;*/ ?>
   <div class="service">
     <div class="head"><?php echo $service['neve']; ?></div>
     <?php foreach ((array)$configuration['subservices'] as $subservice):
       if($subservice['szulo_id'] != $service['ID']) continue;
-      if(!in_array($subservice['ID'], $offerids['subservices'])) continue;
+      //if(!in_array($subservice['ID'], $offerids['subservices'])) continue;
       ?>
     <div class="subservice">
-      <div class="head"><?php echo $subservice['neve']; ?></div>
+      <div class="head">
+        <?php echo $subservice['neve']; ?>
+        <?php if (!empty($configuration['cash'][$subservice['ID']])): ?>
+          <span class="cash"><?php echo number_format($configuration['cash'][$subservice['ID']], 0, '.', ' '); ?> Ft + ÁFA</span>
+        <?php endif; ?>
+      </div>
       <?php
         $cash_row = 0;
         foreach ((array)$configuration['subservices_items'] as $subserviceitem):
           if($subserviceitem['szulo_id'] != $subservice['ID']) continue;
-          if(!in_array($subserviceitem['ID'], $offerids['subservices_items'])) continue;
-          $cash_row += (float)$configuration['cash_config'][$subservice['ID']][$subserviceitem['ID']];
+          //if(!in_array($subserviceitem['ID'], $offerids['subservices_items'])) continue;
       ?>
       <div class="subserviceitem">
         &mdash; <?php echo $subserviceitem['neve']; ?>
-        <?php if (!empty($configuration['cash_config'][$subservice['ID']][$subserviceitem['ID']])): ?>
-          <span class="cash"><?php echo number_format($configuration['cash_config'][$subservice['ID']][$subserviceitem['ID']], 0, '.', ' '); ?> Ft + ÁFA</span>
+        <?php if (!empty($configuration['cash'][$subserviceitem['ID']])): ?>
+          <span class="cash"><?php echo number_format($configuration['cash'][$subserviceitem['ID']], 0, '.', ' '); ?> Ft + ÁFA</span>
         <?php endif; ?>
       </div>
       <?php endforeach; ?>
-      <?php if ($cash_row != 0): $cash_total+= (float)$cash_row; ?>
-        <div class="cashall">
-          <div class="cashall-header">Költségkeret:</div>
-          <?php echo number_format($cash_row, 0, '.', ' '); ?> Ft + ÁFA
-        </div>
-      <?php endif; ?>
       <?php if (!empty($configuration['service_description'][$subservice['ID']])): ?>
         <div class="comment">
           <div class="comment-header">Megjegyzés / Igények:</div>
@@ -63,7 +63,7 @@ $cash_total = 0;
   </div>
   <?php endforeach; ?>
   <div class=serv-footer>
-    Teljes költségkeret: <strong><?php echo number_format($cash_total, 0, '.', ' '); ?> Ft + ÁFA</strong>
+    Teljes költségkeret: <strong><?php echo number_format($configuration['cash_total'], 0, '.', ' '); ?> Ft + ÁFA</strong>
   </div>
 </div>
 

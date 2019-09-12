@@ -557,7 +557,6 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 		$scope.loadconfig = conf;
 		$scope.loadEverything();
 	}
-	$scope.servuser = {};
 	$scope.servicesrequestprogress = false;
 
 	$scope.loadEverything = function() {
@@ -614,31 +613,13 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 	$scope.pickRequest = function( request ) {
 		$scope.readrequest = request.ID;
 		$scope.request = request;
-		$scope.servuser = {};
-		$scope.request_offerouts = {};
-		console.log(request);
 
-		if (request.services_hints) {
-			angular.forEach(request.services_hints, function(requester,itemid){
-				$scope.servuser['item_'+itemid] = {};
-				angular.forEach(requester.users, function(user,i){
-					if (typeof $scope.servuser['item_'+itemid][user.ID] === 'undefined') {
-						var already_offered = $scope.checkOfferOuts( request.ID, user.ID, requester);
-
-						if (typeof $scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] === 'undefined') {
-							$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID] = {};
-						}
-
-						$scope.request_offerouts[requester.service.ID+'_'+requester.subservice.ID+'_'+requester.item.ID][user.ID] = already_offered;
-
-						if ( !already_offered ) {
-							$scope.servuser['item_'+itemid][user.ID] = true;
-						}
-					}
-				});
-			});
+		if (request.offerout == 1) {
+			if (request.offerouts.user_ids && request.offerouts.user_ids.length != 0) {
+				$scope.request.passed_user_offer_id = request.offerouts.user_ids+"";
+			}
 		}
-		console.log($scope.request_offerouts);
+		console.log($scope.request);
 	}
 
 	$scope.checkOfferOuts = function( request_id, user, request ) {
@@ -763,12 +744,13 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 			data: $.param({
 				type: "Requests",
 				mode: 'sendServiceRequest',
-				servicesus: $scope.servuser,
+				servicesus: $scope.request.passed_user_offer_id,
 				request: $scope.request.hashkey,
 			})
 		}).success(function(r){
+			console.log(r);
 			if (r.success == 1) {
-				$window.location.reload();
+				//$window.location.reload();
 			}
 			$scope.servicesrequestprogress = false;
 		});

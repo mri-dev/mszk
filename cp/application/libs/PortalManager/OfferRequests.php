@@ -630,9 +630,7 @@ class OfferRequests
 			ro.ID,
 			ro.user_id,
 			ro.offerout_at,
-			ro.item_id,
-			ro.requester_accepted,
-			ro.configval
+			ro.requester_accepted
 		FROM requests_offerouts as ro
 		WHERE 1=1 and ro.request_id = :rid";
 
@@ -654,11 +652,9 @@ class OfferRequests
 			$d['offerout_at_dist'] = \Helper::distanceDate($d['offerout_at']);
 			if (!in_array($uid, (array)$list['user_ids'])) {
 				$list['user_ids'][] = $uid;
+				$list['users'][$d['user_id']] = $d;
 			}
 			$list['data'][$d['ID']] = $d;
-			$list['users'][$uid][$d['item_id']] = $d;
-
-			$list['configval_users'][$d['configval']][] = $uid;
 		}
 
 		return $list;
@@ -822,20 +818,13 @@ class OfferRequests
 		// prepare users
 		if ($tousers)
 		{
-			foreach ( (array)$tousers as $itemstr => $us )
+			foreach ( (array)$tousers as $u )
 			{
-				$serv_item_id = (int)str_replace("item_", "", $itemstr);
+				// user check
+				$uch = $this->db->squery("SELECT ro.ID FROM requests_offerouts as ro WHERE ro.user_id = :uid and ro.request_id = :rid", array('uid' => $u, 'rid' => $request_id));
 
-				foreach ( (array)$us as $u => $bool )
-				{
-					if ($bool == "true") {
-						// user check
-						$uch = $this->db->squery("SELECT ro.ID FROM requests_offerouts as ro WHERE ro.user_id = :uid and ro.request_id = :rid and ro.item_id = :item", array('uid' => $u, 'rid' => $request_id, 'item' => $serv_item_id));
-
-						if ($uch->rowCount() == 0) {
-							$to_servicers[$serv_item_id][] = (int)$u;
-						}
-					}
+				if ($uch->rowCount() == 0) {
+					$to_servicers[] = (int)$u;
 				}
 			}
 		}
@@ -846,31 +835,23 @@ class OfferRequests
 		if ( $to_servicers )
 		{
 			$outgo_emails = array();
-			foreach ( (array)$to_servicers as $iid => $users )
+			foreach ( (array)$to_servicers as $u )
 			{
-				foreach ( (array)$users as $u )
-				{
-					$user_email = $this->db->squery("SELECT email FROM felhasznalok WHERE ID = :id", array('id' => $u))->fetchColumn();
-					$configval = $this->getConfigvalUserByRequest( $iid, $u );
-					$this->db->insert(
-						"requests_offerouts",
-						array(
-							'user_id' => (int)$u,
-							'request_id' => $request_id,
-							'item_id' => $iid,
-							'configval' => $configval
-						)
-					);
+				$user_email = $this->db->squery("SELECT email FROM felhasznalok WHERE ID = :id", array('id' => $u))->fetchColumn();
+				$this->db->insert(
+					"requests_offerouts",
+					array(
+						'user_id' => (int)$u,
+						'request_id' => $request_id
+					)
+				);
 
-					$offerout_id = $this->db->lastInsertId();
-					$outgo_emails[$u]['email'] = $user_email;
-					$outgo_emails[$u]['ID'] = $u;
-					$outgo_emails[$u]['stack'][] = array(
-						'ID' => $offerout_id,
-						'configval' => $configval,
-						'item_id' => $iid
-					);
-				}
+				$offerout_id = $this->db->lastInsertId();
+				$outgo_emails[$u]['email'] = $user_email;
+				$outgo_emails[$u]['ID'] = $u;
+				$outgo_emails[$u]['stack'][] = array(
+					'ID' => $offerout_id
+				);
 			}
 
 			/**

@@ -188,22 +188,24 @@
             <?php endforeach; ?>
             <?php endif; ?>
             <!-- End of MODULS-->
-            <li class="has-more <?=($this->gets[0] == 'ajanlatkeresek')?'on':''?>"><a href="/ajanlatkeresek" title="<?=__('Árajánlat kérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Árajánlat kérések')?> <? if($this->badges['offers']['all']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['all']['total']?></span><? endif; ?></a></li>
-            <?php if ($this->gets[0] == 'ajanlatkeresek'): ?>
-              <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
-                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'feldolgozatlan')?'on':''?>"><a href="/ajanlatkeresek/feldolgozatlan" title="<?=__('Feldolgozatlan')?>"><span class="ni">8</span><i class="fas fa-minus"></i> <?=__('Feldolgozatlan')?><? if($this->badges['offers']['admin']['progress']!=0): ?><span class="badge badge-danger"><?=$this->badges['offers']['admin']['progress']?></span><? endif; ?></a></li>
-              <?php endif; ?>
-              <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
-                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'feldolgozott')?'on':''?>"><a href="/ajanlatkeresek/feldolgozott" title="<?=__('Feldolgozott')?>"><span class="ni">8</span><i class="fas fa-plus"></i> <?=__('Feldolgozott')?><? if($this->badges['offers']['admin']['progressed']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['admin']['progressed']?></span><? endif; ?></a></li>
-              <?php endif; ?>
-              <?php if ($this->_USERDATA['data']['user_group'] != 'superadmin' && $this->_USERDATA['data']['user_group'] != 'admin'): ?>
-                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'osszes')?'on':''?>"><a href="/ajanlatkeresek/osszes" title="<?=__('Összes')?>"><span class="ni">8</span><i class="fas fa-minus"></i> <?=__('Összes')?><? if($this->badges['offers']['all']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['all']['total']?></span><? endif; ?></a></li>
-                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'fuggoben')?'on':''?>"><a href="/ajanlatkeresek/fuggoben" title="<?=__('Függőben')?>"><span class="ni">8</span><i class="fas fa-question"></i> <?=__('Függőben')?><? if($this->badges['offers']['inprogress']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['inprogress']['total']?></span><? endif; ?></a></li>
-                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'ajanlat_elkuldve')?'on':''?>"><a href="/ajanlatkeresek/ajanlat_elkuldve" title="<?=__('Feldolgozott')?>"><span class="ni">8</span><i class="fas fa-plus"></i> <?=__('Feldolgozott')?><? if($this->badges['offers']['progressed']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['progressed']['total']?></span><? endif; ?></a></li>
-                <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'elfogadott')?'on':''?>"><a href="/ajanlatkeresek/elfogadott" title="<?=__('Elfogadott')?>"><span class="ni">8</span><i class="fas fa-check"></i> <?=__('Elfogadott')?><? if($this->badges['offers']['accepted']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['accepted']['total']?></span><? endif; ?></a></li>
 
+            <?php if ( !$this->is_admin_logged ): ?>
+              <li class="<?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'bejovo')?'on':''?>"><a href="/ajanlatkeresek/bejovo" title="<?=__('Bejövő ajánlatkérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Bejövő ajánlatkérések')?> <? if($this->badges['offers']['in']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['in']?></span><? endif; ?></a></li>
+              <li class="<?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'kimeno')?'on':''?>"><a href="/ajanlatkeresek/kimeno" title="<?=__('Kimenő ajánlatkérések')?>"><span class="ni">8</span><i class="fas fa-file-export"></i> <?=__('Kimenő ajánlatkérések')?> <? if($this->badges['offers']['out']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['out']?></span><? endif; ?></a></li>
+            <?php endif; ?>
+
+            <?php if ( $this->is_admin_logged ): ?>
+              <li class="has-more <?=($this->gets[0] == 'ajanlatkeresek')?'on':''?>"><a href="/ajanlatkeresek" title="<?=__('Árajánlat kérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Árajánlat kérések')?> <? if($this->badges['offers']['all']['total']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['all']['total']?></span><? endif; ?></a></li>
+              <?php if ($this->gets[0] == 'ajanlatkeresek' && $this->is_admin_logged): ?>
+                <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
+                  <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'feldolgozatlan')?'on':''?>"><a href="/ajanlatkeresek/feldolgozatlan" title="<?=__('Feldolgozatlan')?>"><span class="ni">8</span><i class="fas fa-minus"></i> <?=__('Feldolgozatlan')?><? if($this->badges['offers']['admin']['progress']!=0): ?><span class="badge badge-danger"><?=$this->badges['offers']['admin']['progress']?></span><? endif; ?></a></li>
+                <?php endif; ?>
+                <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
+                  <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'feldolgozott')?'on':''?>"><a href="/ajanlatkeresek/feldolgozott" title="<?=__('Feldolgozott')?>"><span class="ni">8</span><i class="fas fa-plus"></i> <?=__('Feldolgozott')?><? if($this->badges['offers']['admin']['progressed']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['admin']['progressed']?></span><? endif; ?></a></li>
+                <?php endif; ?>
               <?php endif; ?>
             <?php endif; ?>
+
             <li class="has-more <?=($this->gets[0] == 'projektek')?'on':''?>"><a href="/projektek" title="<?=__('Projektek')?>"><span class="ni">8</span><i class="far fa-lightbulb"></i> <?=__('Projektek')?> <? if($this->badges['projects']['inprogress']!=0): ?><span class="badge badge-danger"><?=$this->badges['projects']['inprogress']?></span><? endif; ?></a></li>
             <?php if ($this->gets[0] == 'projektek'): ?>
               <li class="sub <?=($this->gets[0] == 'projektek' && $this->gets[1] == 'aktualis')?'on':''?>"><a href="/projektek/aktualis" title="<?=__('Aktív projektek')?>"><span class="ni">8</span><i class="far fa-folder-open"></i> <?=__('Aktív projektek')?> <? if($this->badges['projects']['inprogress']!=0): ?><span class="badge badge-primary"><?=$this->badges['projects']['inprogress']?></span><? endif; ?></a></li>

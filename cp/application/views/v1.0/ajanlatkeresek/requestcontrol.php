@@ -124,7 +124,7 @@
               </div>
               <div class="dpad">
                 <div class="row">
-                  <div class="col-md-12" ng-bind-html="request.message|unsafe"></div>
+                  <div class="col-md-12" ng-bind-html="request.message|unsafe" style="white-space: pre-line;"></div>
                 </div>
               </div>
             </div>
@@ -141,18 +141,18 @@
                     <div class="subservice" ng-if="(subserv.szulo_id == serv.ID)" ng-repeat="subserv in request.subservices">
                       <div class="header">
                          {{subserv.neve}}
-                         <span class="sub-cash" title="<?=__('Szolgáltatás összesített költségkeret')?>"  ng-if="request.cash[subserv.ID]">{{request.cash[subserv.ID]}} <?=__('Ft + ÁFA')?></span>
+                         <span class="sub-cash" title="<?=__('Szolgáltatás összesített költségkeret')?>"  ng-if="request.cash[subserv.ID]">{{request.cash[subserv.ID] | cash}}</span>
                       </div>
                       <div class="subservicesitems">
                         <div class="subservice-item" ng-if="(subserv.szulo_id == serv.ID && subservitem.szulo_id == subserv.ID)" ng-repeat="subservitem in request.subservices_items">
                           <div class="header">
-                             {{subservitem.neve}} <span class="cash" title="<?=__('Költségkeret')?>" ng-if="request.cash_config[subserv.ID][subservitem.ID]">{{request.cash_config[subserv.ID][subservitem.ID]}}  <?=__('Ft + ÁFA')?></span>
+                             {{subservitem.neve}} <span class="cash" title="<?=__('Költségkeret')?>" ng-if="request.cash_config[subserv.ID][subservitem.ID]">{{request.cash_config[subserv.ID][subservitem.ID] | cash}}</span>
                           </div>
                         </div>
                       </div>
                       <div class="subservice-comment" ng-if="request.service_description[subserv.ID]">
                         <div class="head"><?=__('Ajánlatkérő igénye:')?></div>
-                        <div class="comment" ng-bind-html="request.service_description[subserv.ID]|unsafe"></div>
+                        <div class="comment" ng-bind-html="request.service_description[subserv.ID]|unsafe" style="white-space: pre-line;"></div>
                       </div>
                     </div>
                   </div>
@@ -168,7 +168,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="value">
-                      {{request.cash_total}} <?=__('Ft + ÁFA')?>
+                      {{request.cash_total | cash}}
                     </div>
                   </div>
                 </div>

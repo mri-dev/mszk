@@ -40,6 +40,24 @@ class ajanlatkeresek extends Controller {
 
 		}
 
+		public function bejovo()
+		{
+			parent::$pageTitle = __('Bejövő ajánlatkérések');
+			$this->addPagePagination(array(
+				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
+				'title' => parent::$pageTitle
+			));
+		}
+
+		public function kimeno()
+		{
+			parent::$pageTitle = __('Feldolgozott ajánlat kérések');
+			$this->addPagePagination(array(
+				'link' => '/'.__CLASS__.'/'.__FUNCTION__,
+				'title' => parent::$pageTitle
+			));
+		}
+
     public function feldolgozatlan()
     {
       // Jogkör vizsgálat - Csak admin szintűek

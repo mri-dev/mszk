@@ -323,16 +323,22 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 			$scope.loadconfig = {};
 		}
 
+		if ( typeof $scope.loadconfig.relation !== 'undefined' ) {
+			$scope.relation = $scope.loadconfig.relation;
+		}
+
 		$scope.loadEverything();
 	}
 
 	$scope.loadEverything = function() {
 		$scope.loadLists(function( data )
 		{
+			/*
 			var storerelation = $cookies.get('relation');
 			if (typeof storerelation !== 'undefined') {
 				$scope.relation = storerelation;
 			}
+			*/
 		});
 	}
 
@@ -355,15 +361,11 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 
 	$scope.pickRequest = function( request )
 	{
-		$scope.acceptofferdata = {};
 		$scope.readrequest = request.ID;
 		$scope.request = request;
-		var price = request.cash_config[request.subservice.ID][request.item_id];
-		if (price) {
-			$scope.offer.price = parseFloat(price);
-		}
 		$scope.showOfferSending(false);
-		console.log($scope.request);
+
+		console.log(request);
 	}
 
 	$scope.acceptOffer = function()
@@ -461,6 +463,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			data: $.param({
 				type: "RequestOffers",
+				relation: $scope.relation,
 				mode: 'List',
 				filter: filters
 			})
@@ -469,12 +472,6 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 
 			if (r.data && r.data.length != 0) {
 				$scope.requests = r.data;
-				if (r.data.from_num) {
-					$scope.badges.out = r.data.from_num;
-				}
-				if (r.data.to_num) {
-					$scope.badges.in = r.data.to_num;
-				}
 			}
 			if (typeof callback !== 'undefined') {
 				callback(r.data);
@@ -500,7 +497,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 			} else if(r.success == 1){
 				$scope.toast( r.msg, 'success', 5000);
 				$scope.loadLists(function( data ){
-					$scope.reloadRequestObject(data[$scope.relation], request_id );
+					$scope.reloadRequestObject(data, request_id );
 				});
 			}
 		});
@@ -509,15 +506,9 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	$scope.reloadRequestObject = function( data, id ) {
 		if (data) {
 			angular.forEach(data, function(e,i){
-				angular.forEach(e.services, function(a,i){
-					angular.forEach(a.items, function(b,i){
-						angular.forEach(b.users, function(c,i){
-							if(c.ID == id) {
-								$scope.pickRequest( c );
-							}
-						});
-					});
-				});
+				if(e.ID == id) {
+					$scope.pickRequest( e );
+				}
 			});
 		}
 	}
@@ -1080,6 +1071,19 @@ a.directive('focusMe', function($timeout) {
 });
 
 a.filter('unsafe', function($sce){ return $sce.trustAsHtml; });
+a.filter('cash', function(){
+	return function(cash, text, aftertext){
+		cash = cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+		if (typeof text === 'undefined' || text == 1) {
+			if (typeof aftertext === 'undefined') {
+				cash += " Ft + ÁFA";
+			} else {
+				cash += " "+aftertext;
+			}
+		}
+		return cash;
+	};
+});
 
 $(function(){
 	$('*[data-list-searcher]').keyup(function(ev){

@@ -338,7 +338,73 @@ class OfferRequests
 		return $hashkey;
 	}
 
-	public function getUserOfferRequests( $uid, $user_group, $arg = array() )
+	public function getUserOfferRequests($uid, $user_group, $relation, $arg = array())
+	{
+		$re = array();
+
+		// Beérkező ajánlatok
+		if ($relation == 'to') {
+			$re = $this->getINBOXOffers($uid, $user_group, $arg);
+		}
+
+		// Kimenő ajánlatok
+		if ($relation == 'from') {
+			$re = $this->getOUTBOXOffers($uid, $user_group, $arg);
+		}
+
+		return $re;
+	}
+
+	public function getINBOXOffers( $uid, $user_group, $arg = array())
+	{
+		$re = array();
+		$qarg = array();
+
+		$q = "SELECT
+			r.hashkey,
+			r.services,
+			r.message,
+			r.closed as request_closed,
+			ro.ID,
+			ro.offerout_at,
+			ro.user_offer_id,
+			ro.recepient_visited_at,
+			ro.recepient_declined,
+			ro.recepient_accepted
+		FROM requests_offerouts as ro
+		LEFT OUTER JOIN requests as r ON r.ID = ro.request_id
+		WHERE 1=1";
+		$q .= " and ro.user_id = :uid";
+		$qarg['uid'] = $uid;
+
+		$q .= " ORDER BY ro.user_offer_id ASC, ro.recepient_visited_at ASC, ro.offerout_at DESC";
+
+		$qry = $this->db->squery($q, $qarg);
+
+		if ($qry->rowCount() == 0) {
+			return $re;
+		}
+
+		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+
+		foreach ( (array)$data as $d ) {
+			$d['services'] =  $this->findServicesItems((array)json_decode($d['services'], true));
+			$d['offerout_dist'] = \Helper::distanceDate($d['offerout_at']);
+			$re[] = $d;
+		}
+
+		return $re;
+	}
+
+	public function getOUTBOXOffers( $uid, $user_group, $arg = array())
+	{
+		$re = array();
+
+		return $re;
+	}
+
+	// TODO: Törölni majd, ha kész az új
+	public function old_getUserOfferRequests( $uid, $user_group, $arg = array() )
 	{
 		$re = array();
 		$qarg = array();
@@ -346,8 +412,6 @@ class OfferRequests
 
 		$q = "SELECT
 			ro.ID,
-			ro.item_id,
-			ro.configval,
 			ro.offerout_at,
 			ro.request_id,
 			ro.user_id as user_to_id,
@@ -489,6 +553,7 @@ class OfferRequests
 			} else
 			if( $format == 'list' )
 			{
+
 				$d['service'] = $this->findServicesItems((array)$xserv[0])[0];
 				$d['subservice'] = $this->findServicesItems((array)$xserv[1])[0];
 				$d['item'] = $this->findServicesItems((array)$d['item_id'])[0];

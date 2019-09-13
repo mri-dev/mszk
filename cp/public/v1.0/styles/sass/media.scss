@@ -1341,6 +1341,7 @@ footer {
 		}
 		.dpad{
 			padding: 15px;
+			color: #464646;
 		}
 		.divider{
 			height: 1px;
@@ -1408,69 +1409,59 @@ footer {
 					}
 				}
 			}
-		}
 
-		.request-service{
-			& > .wrapper > .head{
-				background: $color-blue;
-				color: white;
-				padding: 10px;
-			}
-		}
-		.request-subservice{
-			& > .head{
-				background: #e0e0e0;
-				color: $color-red;
-				padding: 10px;
-				font-weight: bold;
-			}
-		}
+			.requestgroup{
+				cursor: pointer;
+				outline: none;
+				color: #4c4c4c;
+				border-left: 10px solid orange;
 
-		.requestgroup{
-			background: #fbfbd6;
-			padding-left: 5px;
-			border-top: 5px solid #707070;
-			& > .head{
-				background: #fbfbd6;
-				color: black;
-				font-size: 0.85rem;
-				padding: 10px 4px;
-				color: black;
-				i{
-					width: 20px;
-					text-align: center;
+				.head{
+					padding: 15px;
+					line-height: 1.4;
+					font-size: 0.9rem;
+
+					.name {
+						color: black;
+						font-size: 1.1rem;
+						margin: 0 0 10px 0;
+						line-height: 1.1;
+						color: orange;
+					}
+				}
+
+
+				&.visited{
+					border-left: 10px solid  #fcd96f;
+					color: #4c4c4c;
+					.head {
+						.name {
+							color: #f0bf2a;
+						}
+					}
+				}
+
+				&.offered{
+					border-left: 10px solid  $color-green;
+					color: #4c4c4c;
+					.head {
+						.name {
+							color: $color-green;
+						}
+					}
+				}
+
+
+				&.opened{
+					background: #f5f5f5;
 				}
 			}
-		}
 
-		.request{
-			padding: 15px;
-			font-size: 0.7rem;
-			.head{
-				font-size: 0.85rem;
-				margin: 0 0 4px 0;
+			.requestgroup + .requestgroup{
+				border-top: 2px solid #e6e6e6;
 			}
 
-			.cashinfo .cash{
-				padding: 2px 4px;
-				border-radius: 4px;
-				background: #4c4c4c;
-				color: white;
-				margin: 0 8px;
-			}
 
-			&.closed{
-				background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8OP0aQZGZEGQAIepKUIQJgDSBFaJLAAW/H7q1H+QFmQAAGuiH4AWiuhWAAAAAElFTkSuQmCC) repeat;
-				color: red;
-			}
-			&.declined{
-				background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYk8O3uFgZGZEGQAJeyD0IQJgDSBFaJLAAW/Hpn83+QFmQAAGjmH3lXAuK1AAAAAElFTkSuQmCC) repeat;
-				color: orange;
-			}
-			&.accepted{
-				background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAMElEQVQYV2P8////fwYkcO3NFQZGZEGQgJaIDkIQJgDSBFaJLAAWvPr68n+QFmQAAG6vH4i4eHMaAAAAAElFTkSuQmCC) repeat;
-				color: #2f682f;
-			}
 		}
 	}
 }
@@ -1500,10 +1491,6 @@ background: -moz-linear-gradient(45deg,  #ffffff 0%, #ffffff 39%, #eaeaea 100%);
 background: -webkit-linear-gradient(45deg,  #ffffff 0%,#ffffff 39%,#eaeaea 100%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(45deg,  #ffffff 0%,#ffffff 39%,#eaeaea 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eaeaea',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
-
-
-
 						.project{
 							font-weight: bold;
 							line-height: 1.1;

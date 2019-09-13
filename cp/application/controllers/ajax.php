@@ -292,7 +292,7 @@ class ajax extends Controller
 							$requests = new OfferRequests( array('db' => $this->db) );
 							try {
 								$arg = $filter;
-								$requestoffers = $requests->getUserOfferRequests( $uid, $user_group, $arg );
+								$requestoffers = $requests->getUserOfferRequests( $uid, $user_group, $relation, $arg );
 								$ret['data'] = $requestoffers;
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);

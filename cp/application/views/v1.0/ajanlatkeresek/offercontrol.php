@@ -17,10 +17,13 @@
           <?php endif; ?>
         </div>
         <div class="req-list">
-          <div class="requestgroup" ng-click="pickRequest(r)" ng-class="{offered: (r.user_offer_id), opened: (r.ID == readrequest), visited: (r.recepient_visited_at)}" ng-repeat="r in requests">
+          <div class="requestgroup" ng-click="pickRequest(r)" ng-class="{offered: (r.user_offer_id), opened: (r.ID == readrequest), visited: (r.recepient_visited_at), 'declined': (r.recepient_declined==1)}" ng-repeat="r in requests">
             <div class="head">
-              <div class="name" ng-if="!r.user_offer_id"><strong><?=__('Új feldolgozatlan ajánlatkérés {{r.services.length}} db szolgáltatásra!')?></strong></div>
-              <div class="name" ng-if="r.user_offer_id"><strong><?=__('Ajánlat elküldve: {{r.services.length}} db szolgáltatásra!')?></strong></div>
+              <div class="" ng-if="r.recepient_declined==0">
+                <div class="name" ng-if="!r.user_offer_id"><strong><?=__('Új feldolgozatlan ajánlatkérés {{r.services.length}} db szolgáltatásra!')?></strong></div>
+                <div class="name" ng-if="r.user_offer_id"><strong><?=__('Ajánlat elküldve: {{r.services.length}} db szolgáltatásra!')?></strong></div>
+              </div>
+              <div class="name" ng-if="r.recepient_declined==1"><strong><?=__('Ajánlatkérés elutasítva: {{r.services.length}} db szolgáltatásra!')?></strong></div>
               <div class="reqdate" title="<?=__('Ajánlatkérés ideje')?>"><i class="far fa-clock"></i> {{r.offerout_at}}</div>
               <div class="hashkey" title="<?=__('Ajánlatkérés hashkey')?>"><i class="fas fa-database"></i> {{r.hashkey}}</div>
             </div>
@@ -93,7 +96,7 @@
                   <label for="" ng-if="relation=='from'"><?=__('Tárgytalan')?></label>
                 </div>
                 <div class="col">
-                  <span class="badge badge-warning"><?=__('IGEN')?></span>
+                  <span class="badge badge-danger"><?=__('IGEN')?></span>
                 </div>
               </div>
               <div class="row" ng-if="(request && request.requester_accepted == '1')" >
@@ -111,7 +114,41 @@
               <h3><?=__('Igényelt szolgáltatások')?></h3>
             </div>
             <div class="dpad">
-              sd
+              <div class="selected-services-overview">
+                <div class="service" ng-repeat="serv in request.services">
+                  <div class="header">
+                    {{serv.neve}}
+                  </div>
+                  <div class="subservices">
+                    <div class="subservice" ng-if="(subserv.szulo_id == serv.ID)" ng-repeat="subserv in request.subservices">
+                      <div class="header">
+                         {{subserv.neve}}
+                         <span class="sub-cash" title="<?=__('Szolgáltatás összesített költségkeret')?>"  ng-if="request.cash[subserv.ID]">{{request.cash[subserv.ID] | cash}}</span>
+                      </div>
+                      <div class="subservicesitems">
+                        <div class="subservice-item" ng-if="(subserv.szulo_id == serv.ID && subservitem.szulo_id == subserv.ID)" ng-repeat="subservitem in request.subservices_items">
+                          <div class="header">
+                             {{subservitem.neve}} <span class="cash" title="<?=__('Költségkeret')?>" ng-if="request.cash_config[subserv.ID][subservitem.ID]">{{request.cash_config[subserv.ID][subservitem.ID] | cash}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="subservice-comment" ng-if="request.service_description[subserv.ID]">
+                        <div class="head"><?=__('Ajánlatkérő igénye:')?></div>
+                        <div class="comment" ng-bind-html="request.service_description[subserv.ID]|unsafe" style="white-space: pre-line;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row-header" ng-if="request.cash_total">
+                <h3><?=__('Költségvetés keret')?></h3>
+            </div>
+            <div class="dpad" ng-if="request.cash_total">
+              <div class="total-cash">
+                {{request.cash_total|cash}}
+              </div>
             </div>
 
             <div class="row-header">
@@ -144,7 +181,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="send-offer-holder" ng-if="showoffersend && (!request.user_offer_id)">
               <div class="row-header">
                 <h3><?=__('Ajánlat küldése erre az ajánlat kérésre')?></h3>
@@ -231,7 +268,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <?=__('Ajánlat tartalma')?>:<br>
-                    <div style="color:black; line-height: 1.4;" ng-bind-html="request.offer.message|unsafe"></div>
+                    <div style="white-space: pre-line; color:black; line-height: 1.4; margin: 10px 0 10px 0;" ng-bind-html="request.offer.message|unsafe"></div>
                   </div>
                 </div>
 

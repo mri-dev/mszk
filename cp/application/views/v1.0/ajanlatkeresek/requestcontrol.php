@@ -11,6 +11,7 @@
               <div class="head">
                 <div class="name">{{request.name}}</div>
                 <div class="badges">
+                  <span ng-if="request.unwatched_offers!=0" class="badge badge-danger badge-sm"><i class="far fa-eye-slash"></i> <?=__('{{request.unwatched_offers}} olvasatlan ajánlat')?></span>
                   <span ng-if="request.visited==1" class="badge badge-success badge-sm"><i class="far fa-eye"></i> <?=__('láttam')?></span>
                   <span ng-if="request.offerout==1 && request.elutasitva==0" class="badge badge-success badge-sm"><i class="fas fa-check"></i> <?=__('kiajánlva')?></span>
                   <span ng-if="request.elutasitva==1" class="badge badge-danger badge-sm"><i class="fas fa-ban"></i> <?=__('elutasítva')?></span>
@@ -38,6 +39,50 @@
         </div>
         <div class="wrapper" ng-if="request">
           <div class="requester">
+
+            <div class="" ng-if="request.offers">
+              <div class="row-header">
+                <h3><?=__('Bérkezett ajánlatok')?></h3>
+                <div class="desc"><?=__('A szolgáltatóknak kiküldött ajánlatkérésre megküldött ajánlatok jelennek meg itt.')?></div>
+              </div>
+              <div class="dpad">
+                <div class="incoming-offers">
+                  <div class="offer" ng-repeat="offer in request.offers">
+                    <div class="wrapper">
+                      <div class="name">
+                        <strong>{{offer.from_user.data.nev}}</strong> <span class="company" title="<?=__('Cég elnevezése')?>" ng-if="offer.from_user.data.company_name"> // {{offer.from_user.data.company_name}}</span>
+                        <div class="email">{{offer.from_user.email}}</div>
+                      </div>
+                      <div class="incoming-date">
+                        <div class="lab"><?=__('Beérkezett')?></div>
+                        <div class="val"><strong>{{offer.sended_at}}</strong></div>
+                      </div>
+                      <div class="price">
+                        <div class="lab"><?=__('Ajánlott ár')?></div>
+                        <div class="val"><strong>{{offer.price | cash}}</strong></div>
+                      </div>
+                      <div class="dates">
+                        <div class="lab"><?=__('Vállalt idők')?></div>
+                        <div class="val">
+                          <?=__('Kezdés')?>: <strong>{{offer.project_start_at}}</strong><br>
+                          <?=__('Időtartam')?>: <strong>{{offer.offer_project_idotartam}}</strong><br>
+                        </div>
+                      </div>
+                      <div class="abtns">
+                        <i class="fa fa-bars"  title="<?=__('Ajánlat részletei')?>"></i>
+                      </div>
+                      <div class="details" id="offerdet{{offer.ID}}">
+                        <div class="message">
+                          <h4><?=__('Ajánlat tartalma')?></h4>
+                          <div ng-bind-html="offer.message|unsafe" style="white-space: pre-line;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row-header">
               <h3><?=__('Ajánlatkérő')?></h3>
             </div>

@@ -91,7 +91,20 @@ class OfferRequests
 			*/
 
 			$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
+			$offers = $this->getOfferDatas( (int)$d[ID] );
+			$d['offers'] = $offers;
+			$unwatched_offers = 0;
 
+			if ($offers) {
+				foreach ( (array)$offers as $offer ) {
+					if ( empty($offer['admin_visited']) ) {
+						$unwatched_offers++;
+					}
+				}
+			}
+			unset($offers);
+
+			$d['unwatched_offers'] = $unwatched_offers;
 
 			if ( isset($arg['bindIDToList']) && $arg['bindIDToList'] == 1 ) {
 				$list[$d['ID']] = $d;
@@ -185,6 +198,7 @@ class OfferRequests
 		$this->db->insert(
 			"offers",
 			array(
+				'from_admin' => 0,
 				'from_user_id' => $user_id,
 				'offerout_id' => $request['ID'],
 				'message' => $offer['message'],
@@ -207,7 +221,7 @@ class OfferRequests
 			sprintf("ID = %d", (int)$request['ID'])
 		);
 
-		// TODO: E-mail értesítő az ajánlat kérőnek
+		// TODO: E-mail értesítő az értintettnek
 
 		return (int)$offer_id;
 
@@ -363,7 +377,12 @@ class OfferRequests
 		$q = "SELECT
 			r.hashkey,
 			r.services,
+			r.subservices,
+			r.subservices_items,
+			r.cash_total,
+			r.cash,
 			r.message,
+			r.service_description,
 			r.closed as request_closed,
 			ro.ID,
 			ro.offerout_at,
@@ -377,7 +396,7 @@ class OfferRequests
 		$q .= " and ro.user_id = :uid";
 		$qarg['uid'] = $uid;
 
-		$q .= " ORDER BY ro.user_offer_id ASC, ro.recepient_visited_at ASC, ro.offerout_at DESC";
+		$q .= " ORDER BY ro.user_offer_id DESC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, ro.offerout_at DESC";
 
 		$qry = $this->db->squery($q, $qarg);
 
@@ -389,7 +408,12 @@ class OfferRequests
 
 		foreach ( (array)$data as $d ) {
 			$d['services'] =  $this->findServicesItems((array)json_decode($d['services'], true));
+			$d['subservices'] =  $this->findServicesItems((array)json_decode($d['subservices'], true));
+			$d['subservices_items'] =  $this->findServicesItems((array)json_decode($d['subservices_items'], true));
+			$d['service_description'] =  (array)json_decode($d['service_description'], true);
+			$d['cash'] =  (array)json_decode($d['cash'], true);
 			$d['offerout_dist'] = \Helper::distanceDate($d['offerout_at']);
+			$d['offer'] = $this->getOfferData($d['user_offer_id']);
 			$re[] = $d;
 		}
 
@@ -583,10 +607,12 @@ class OfferRequests
 
 	private function offerDatarowPreparer( &$row )
 	{
+		$users = new Users( array('db' => $this->db ));
+
 		$row['ID'] = (int)$row['ID'];
 		$row['from_user_id'] = (int)$row['from_user_id'];
+		$row['from_user'] = $users->get( array('user' => (int)$row['from_user_id'], 'userby' => 'ID', 'alerts' => false) );
 		$row['sended_at_dist'] = \Helper::distanceDate($row['sended_at']);
-		$row['szolgaltatas'] = $this->getServiceItemData( $row['service_item_id'] );
 
 		return $row;
 	}
@@ -596,8 +622,7 @@ class OfferRequests
 		$list = array();
 		$qarg = array();
 		$q = "SELECT
-			o.*,
-			ro.item_id as service_item_id
+			o.*
 		FROM offers as o
 		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
 		WHERE 1=1 and o.ID = :id";
@@ -658,18 +683,19 @@ class OfferRequests
 		return $dat;
 	}
 
-	public function getOfferDatas( $offerout_id)
+	public function getOfferDatas( $request_id )
 	{
 		$list = array();
 		$qarg = array();
 		$q = "SELECT
 			o.*
-			ro.item_id as service_item_id
 		FROM offers as o
 		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
-		WHERE 1=1 and o.offerout_id = :oid";
+		WHERE
+		1=1 and
+		ro.request_id = :oid";
 
-		$qarg['oid'] = (int)$offerout_id;
+		$qarg['oid'] = (int)$request_id;
 
 		$data = $this->db->squery($q, $qarg);
 

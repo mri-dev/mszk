@@ -269,15 +269,24 @@ class ajax extends Controller
 					{
 						case 'acceptOffer':
 							$requests = new OfferRequests( array('db' => $this->db) );
-							$fid = ($relation != 'from') ? $touserid : $fromuserid ;
-							$toid = ($relation == 'from') ? $touserid : $fromuserid ;
 							try {
-								$hash = $requests->acceptOffer( $uid, $fid, $toid, (int)$request, (int)$offer, $project, $relation );
+								$hash = $requests->acceptOffer( (int)$request, (int)$offer, $user_id, $project );
 								$ret['project_hashkey'] = $hash;
-								$this->setSuccess(__('Az ajánlatot elfogadta. Projekt létrehozása sikeres.'), $ret);
+								$this->setSuccess(__('Az ajánlatot elfogadta.'), $ret);
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);
 							}
+						break;
+
+						case 'setWatched':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							$ret['data']= $offerid;
+							try {
+								$requests->setAdminVisitedOffer( $offerid );
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+							$this->setSuccess(__('Megtekintettnek lett jelölve az ajánlat.'), $ret);
 						break;
 						case 'sendOffer':
 							$requests = new OfferRequests( array('db' => $this->db) );
@@ -287,6 +296,18 @@ class ajax extends Controller
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);
 							}
+						break;
+						case 'sendAdminOffer':
+							$requests = new OfferRequests( array('db' => $this->db) );
+							$offer['project_start_at'] = date('Y-m-d', strtotime(substr($offer['project_start_at'], 0, strpos($offer['project_start_at'], '('))));
+							try {
+								$offerid = $requests->registerAdminOffer($uid, $request_id, $offer);
+								$ret['data']['offerid'] = $offerid;
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+
+							$this->setSuccess(__('Ajánlat kérés elfogadása sikeres.'), $ret);
 						break;
 						case 'List':
 							$requests = new OfferRequests( array('db' => $this->db) );

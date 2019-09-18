@@ -13,7 +13,8 @@
                 <div class="badges">
                   <span ng-if="request.unwatched_offers!=0" class="badge badge-danger badge-sm"><i class="far fa-eye-slash"></i> <?=__('{{request.unwatched_offers}} olvasatlan ajánlat')?></span>
                   <span ng-if="request.visited==1" class="badge badge-success badge-sm"><i class="far fa-eye"></i> <?=__('láttam')?></span>
-                  <span ng-if="request.offerout==1 && request.elutasitva==0" class="badge badge-success badge-sm"><i class="fas fa-check"></i> <?=__('kiajánlva')?></span>
+                  <span ng-if="request.offerout==1 && request.elutasitva==0" class="badge badge-success badge-sm"><i class="fas fa-check"></i> <?=__('szolgáltatónak kiajánlva')?></span>
+                  <span ng-if="request.offerout==1 && request.elutasitva==0 && request.admin_offer" class="badge badge-primary badge-sm"><i class="fas fa-check"></i> <?=__('ajánlatkérőnek kiajánlva')?></span>
                   <span ng-if="request.elutasitva==1" class="badge badge-danger badge-sm"><i class="fas fa-ban"></i> <?=__('elutasítva')?></span>
                 </div>
                 <div class="company" ng-if="request.company">{{request.company}}</div>
@@ -47,34 +48,50 @@
               </div>
               <div class="dpad">
                 <div class="incoming-offers">
-                  <div class="offer" ng-repeat="offer in request.offers">
+                  <div class="offer" ng-repeat="offer in request.offers" ng-class="{visited:(offer.admin_visited), adminofferouted:(offer.admin_offered_out!=0)}">
                     <div class="wrapper">
                       <div class="name">
                         <strong>{{offer.from_user.data.nev}}</strong> <span class="company" title="<?=__('Cég elnevezése')?>" ng-if="offer.from_user.data.company_name"> // {{offer.from_user.data.company_name}}</span>
                         <div class="email">{{offer.from_user.email}}</div>
+                        <div class="labs">
+                          <div class="adminofferouted" ng-if="offer.admin_offered_out!=0">> <?=__('Kiajánlva az ajánlatkérőnek!')?></div>
+                          <div class="requesteraccept not-response" ng-if="offer.admin_offered_out!=0 && request.admin_offer && request.admin_offer.accepted==0">> <?=__('Ajánlatkérő döntés: még nincs elfogadva!')?></div>
+                          <div class="requesteraccept resp-success" ng-if="offer.admin_offered_out!=0 && request.admin_offer && request.admin_offer.accepted==1">> <?=__('Ajánlatkérő döntés: ELFOGADVA')?> ({{request.admin_offer.accepted_at}})</div>
+                        </div>
                       </div>
                       <div class="incoming-date">
                         <div class="lab"><?=__('Beérkezett')?></div>
                         <div class="val"><strong>{{offer.sended_at}}</strong></div>
+                        <div class="val adminval" title="<?=__('Kiajánlás ideje az ajánlatkérőnek')?>" ng-if="offer.admin_offered_out!=0"><strong>{{request.admin_offer.sended_at}}</strong></div>
                       </div>
                       <div class="price">
                         <div class="lab"><?=__('Ajánlott ár')?></div>
                         <div class="val"><strong>{{offer.price | cash}}</strong></div>
+                        <div class="val adminval" title="<?=__('Kiajánlott szolgáltatási díj')?>" ng-if="offer.admin_offered_out!=0"><strong>{{request.admin_offer.price|cash}}</strong></div>
                       </div>
                       <div class="dates">
                         <div class="lab"><?=__('Vállalt idők')?></div>
                         <div class="val">
-                          <?=__('Kezdés')?>: <strong>{{offer.project_start_at}}</strong><br>
-                          <?=__('Időtartam')?>: <strong>{{offer.offer_project_idotartam}}</strong><br>
+                          <?=__('Kezdés')?>: <strong>{{offer.project_start_at}}</strong> <span class="adminval" title="<?=__('Kiajánlott érték')?>" ng-if="offer.admin_offered_out!=0">/ {{request.admin_offer.project_start_at}}</span> <br>
+                          <?=__('Időtartam')?>: <strong>{{offer.offer_project_idotartam}}</strong> <span class="adminval" title="<?=__('Kiajánlott érték')?>"  ng-if="offer.admin_offered_out!=0">/ {{request.admin_offer.offer_project_idotartam}}</span><br>
                         </div>
                       </div>
                       <div class="abtns">
-                        <i class="fa fa-bars"  title="<?=__('Ajánlat részletei')?>"></i>
+                        <i class="fa fa-bars" ng-click="toggleDetails('offerdet', offer.ID, $event)" title="<?=__('Ajánlat részletei')?>"></i>
                       </div>
                       <div class="details" id="offerdet{{offer.ID}}">
                         <div class="message">
-                          <h4><?=__('Ajánlat tartalma')?></h4>
+                          <h4><?=__('Beérkezett ajánlat tartalma')?></h4>
                           <div ng-bind-html="offer.message|unsafe" style="white-space: pre-line;"></div>
+                        </div>
+                        <div class="message adminval" ng-if="offer.admin_offered_out!=0">
+                          <br>
+                          <h4><?=__('Kiajánlott ajánlat tartalma')?></h4>
+                          <div ng-bind-html="request.admin_offer.message|unsafe" style="white-space: pre-line;"></div>
+                        </div>
+                        <div class="accept-service-offer">
+                          <button type="button" ng-if="!request.admin_offer_id" ng-click="previewOfferToUser(request, offer)" class="btn btn-primary btn-sm">Ajánlat tovább ajánlása az ajánlatkérőnek <i class="fas fa-external-link-alt"></i></button>
+                          <button type="button" ng-if="offer.admin_offered_out!=0 && request.admin_offer && request.admin_offer.accepted==1" ng-click="acceptAdminServiceOffer(request, offer)" class="btn btn-success btn-sm">Szolgáltatói ajánlat elfogadása <i class="fa fa-check"></i></button>
                         </div>
                       </div>
                     </div>

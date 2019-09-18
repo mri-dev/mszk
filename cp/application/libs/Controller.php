@@ -136,8 +136,9 @@ class Controller {
       if ($this->view->is_admin_logged) {
         $badges['offers']['admin']['progress'] = $this->db->squery("SELECT r.ID FROM requests as r WHERE r.offerout = 0 and r.elutasitva = 0")->rowCount();
         $badges['offers']['admin']['progressed'] = $this->db->squery("SELECT r.ID FROM requests as r WHERE r.offerout = 1 or r.elutasitva = 1")->rowCount();
+        $badges['offers']['admin']['positiveprocess'] = $this->db->squery("SELECT r.ID FROM requests as r LEFT OUTER JOIN offers as o ON o.ID = r.admin_offer_id WHERE r.offerout = 1 and o.accepted = 1 and o.project_id IS NULL")->rowCount();
       }
-      $badges['offers']['admin']['total'] = $badges['offers']['admin']['progress'] + $badges['offers']['admin']['progressed'];
+      $badges['offers']['admin']['total'] = $badges['offers']['admin']['progress'] + (int)$badges['offers']['admin']['positiveprocess'];
 
       $badges['offers']['all']['total'] = $badges['offers']['all']['out'] + $badges['offers']['all']['in'] + $badges['offers']['admin']['progress'];
       $badges['offers']['accepted']['total'] = $badges['offers']['accepted']['out'] + $badges['offers']['accepted']['in'];

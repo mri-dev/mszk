@@ -28,6 +28,7 @@ class OfferRequests
 		$q = "SELECT
 			r.*
 		FROM requests as r
+		LEFT OUTER JOIN offers as o ON o.ID = r.admin_offer_id
 		WHERE 1=1 ";
 
 		if ( isset($arg['ids']) && !empty($arg['ids']) ) {
@@ -48,6 +49,11 @@ class OfferRequests
 		if (isset($arg['user'])) {
 			$q .= " and r.user_id  = :uid";
 			$qarg['uid'] = (int)$arg['user'];
+		}
+
+		if (isset($arg['allpositive']) && $arg['allpositive'] == '1') {
+			$q .= " and o.accepted  = 1 and o.project_id IS NULL";
+			//$qarg['offerout'] = (int)$arg['offerout'];
 		}
 
 		$q .= " ORDER BY r.visited ASC, r.requested ASC";
@@ -103,6 +109,12 @@ class OfferRequests
 				}
 			}
 			unset($offers);
+
+			$admin_offer = false;
+			if (	$d['admin_offer_id'] != '' ) {
+				$admin_offer = $this->getOfferData($d['admin_offer_id']);
+			}
+			$d['admin_offer'] = $admin_offer;
 
 			$d['unwatched_offers'] = $unwatched_offers;
 
@@ -192,6 +204,69 @@ class OfferRequests
 		return $data;
 	}
 
+	public function setAdminVisitedOffer( $offerid = 0 )
+	{
+		$this->db->update(
+			"offers",
+			array(
+				'admin_visited' => NOW
+			),
+			sprintf("ID = %d and admin_visited IS NULL", $offerid)
+		);
+	}
+
+	public function registerAdminOffer($user_id, $request_id, $offer )
+	{
+		// Register offer
+		$this->db->insert(
+			"offers",
+			array(
+				'from_admin' => 1,
+				'original_id' => (int)$offer['ID'],
+				'from_user_id' => $user_id,
+				'offerout_id' => (int)$offer['offerout_id'],
+				'message' => $offer['message'],
+				'project_start_at' => $offer['project_start_at'],
+				'offer_project_idotartam' => $offer['project_idotartam'],
+				'price' => (float)$offer['price']
+			)
+		);
+
+		$offer_id = $this->db->lastInsertId();
+
+		// update request admin_offer_id
+		$this->db->update(
+			"requests",
+			array(
+				'admin_offer_id' => $offer_id
+			),
+			sprintf("ID = %d", (int)$request_id)
+		);
+
+		// update original offer accepting datas
+		$this->db->update(
+			"offers",
+			array(
+				'admin_offered_out' => $offer_id
+			),
+			sprintf("ID = %d", (int)$offer['ID'])
+		);
+
+		// update admin visit on all request offers
+		$this->db->update(
+			"offers",
+			array(
+				'admin_visited' => NOW
+			),
+			sprintf("offerout_id = %d and admin_visited IS NULL", $request_id)
+		);
+
+		// TODO: E-mail értesítő az értintettnek
+
+		return (int)$offer_id;
+
+	}
+
 	public function registerOffer( $user_id, $request, $offer )
 	{
 		// Register offer
@@ -227,7 +302,39 @@ class OfferRequests
 
 	}
 
-	public function acceptOffer( $user_id, $requester_id, $servicer_id, $request_id, $offer_id, $projectdata, $relation )
+	public function acceptOffer( $request_id, $offer_id, $user_id, $projectdata )
+	{
+		// jelszó ellenőrzés
+		$pass = \Hash::jelszo( trim($projectdata['password']) );
+		$uv = $this->db->squery("SELECT ID FROM felhasznalok WHERE ID = :id and jelszo = :pw", array('id' => $user_id, 'pw' => $pass));
+		if ( $uv->rowCount() == 0 ) {
+			throw new \Exception(__('A megadott jelszó hibás! Kérjük, hogy adja meg a fiók jelszavát az ajánlat elfogadásához.'));
+		}
+
+		// update offer
+		$this->db->update(
+			"offers",
+			array(
+				'accepted' => 1,
+				'accepted_at' => NOW
+			),
+			sprintf("ID = %d", (int)$offer_id)
+		);
+
+		// update request
+		$this->db->update(
+			"requests",
+			array(
+				'closed' => 1,
+				'user_requester_title' => addslashes($projectdata['project'])
+			),
+			sprintf("ID = %d", (int)$request_id)
+		);
+		// TODO: értesítés az adminnak az elfogadásról
+	}
+
+	// // TODO: Admin offer accepter
+	public function acceptOfferByAdmin( $user_id, $requester_id, $servicer_id, $request_id, $offer_id, $projectdata, $relation )
 	{
 		// jelszó ellenőrzés
 		$pass = \Hash::jelszo( trim($projectdata['password']) );
@@ -423,6 +530,57 @@ class OfferRequests
 	public function getOUTBOXOffers( $uid, $user_group, $arg = array())
 	{
 		$re = array();
+		$qarg = array();
+
+		$q = "SELECT
+			r.ID,
+			r.user_id,
+			r.hashkey,
+			r.user_requester_title,
+			r.admin_offer_id,
+			r.services,
+			r.subservices,
+			r.subservices_items,
+			r.cash_total,
+			r.cash,
+			r.visited,
+			r.visited_at as recepient_visited_at,
+			r.message,
+			r.service_description,
+			r.closed as request_closed,
+			r.requested as offerout_at
+		FROM requests as r
+		WHERE 1=1";
+		$q .= " and r.user_id = :uid";
+		$qarg['uid'] = $uid;
+
+		$q .= " ORDER BY r.closed ASC, r.visited DESC, r.admin_offer_id DESC, r.requested DESC";
+
+		$qry = $this->db->squery($q, $qarg);
+
+		if ($qry->rowCount() == 0) {
+			return $re;
+		}
+
+		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+
+		foreach ( (array)$data as $d ) {
+			$d['services'] =  $this->findServicesItems((array)json_decode($d['services'], true));
+			$d['subservices'] =  $this->findServicesItems((array)json_decode($d['subservices'], true));
+			$d['subservices_items'] =  $this->findServicesItems((array)json_decode($d['subservices_items'], true));
+			$d['service_description'] =  (array)json_decode($d['service_description'], true);
+			$d['cash'] =  (array)json_decode($d['cash'], true);
+			$d['offerout_dist'] = \Helper::distanceDate($d['offerout_at']);
+			//$d['offer'] = $this->getOfferData($d['user_offer_id']);*/
+
+			$admin_offer = false;
+			if (	$d['admin_offer_id'] != '' ) {
+				$admin_offer = $this->getOfferData($d['admin_offer_id']);
+			}
+			$d['admin_offer'] = $admin_offer;
+
+			$re[] = $d;
+		}
 
 		return $re;
 	}
@@ -693,7 +851,10 @@ class OfferRequests
 		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
 		WHERE
 		1=1 and
+		o.from_admin = 0 and
 		ro.request_id = :oid";
+
+		$q .= " ORDER BY o.accepted DESC, o.admin_offered_out DESC, o.admin_visited ASC, o.sended_at DESC";
 
 		$qarg['oid'] = (int)$request_id;
 
@@ -1216,6 +1377,7 @@ class OfferRequests
 				array(
 					'hashkey' => $hashkey,
 					'user_id' => $user_id,
+					'user_requester_title' => (empty($requester['requester_title'])) ? NULL : addslashes(trim($requester['requester_title'])),
 					'email' => addslashes(trim($requester['email'])),
 					'name' => addslashes(trim($requester['name'])),
 					'company' => addslashes(trim($requester['company'])),

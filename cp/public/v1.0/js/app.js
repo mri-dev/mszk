@@ -365,6 +365,10 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 		$scope.request = request;
 		$scope.showOfferSending(false);
 
+		if ($scope.relation == 'from') {
+			$scope.acceptofferdata.project = angular.copy(request.user_requester_title);
+		}
+
 		console.log(request);
 	}
 
@@ -382,11 +386,9 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 				data: $.param({
 					type: "RequestOffers",
 					mode: 'acceptOffer',
+					user_id: $scope.request.user_id,
 					request: $scope.request.ID,
-					offer: $scope.request.offer.ID,
-					fromuserid: $scope.request.user_from_id,
-					touserid: $scope.request.user_to_id,
-					relation: $scope.request.my_relation,
+					offer: $scope.request.admin_offer.ID,
 					project: $scope.acceptofferdata
 				})
 			}).success(function(r){
@@ -397,7 +399,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 					$scope.toast( r.msg, 'success', 5000);
 					$scope.loadLists(function( data ){
 						$scope.request.request_accepted = 1;
-						$scope.reloadRequestObject(data[$scope.relation], $scope.request.ID );
+						$scope.reloadRequestObject(data, $scope.request.ID );
 					});
 				} else {
 					$scope.acceptoffererror= r.msg;
@@ -534,7 +536,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 	}
 }]);
 
-a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window', function($scope, $http, $mdToast, $sce, $window)
+a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window', '$mdDialog', function($scope, $http, $mdToast, $sce, $window, $mdDialog)
 {
 	$scope.quicksearch = '';
 	$scope.requests = [];
@@ -601,6 +603,92 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
     };
   }
 
+	$scope.acceptAdminServiceOffer = function(request, offer) {
+		console.log(request);
+	}
+
+	$scope.previewOfferToUser = function( request, offer ) {
+		var confirm = $mdDialog.confirm({
+			controller: OfferToUseDialogController,
+			templateUrl: '/ajax/modal/offer_to_user',
+			parent: angular.element(document.body),
+			scope: $scope,
+			preserveScope:true,
+			locals: {
+				request: request,
+				offer: offer
+			}
+		});
+
+		$mdDialog.show(confirm)
+		.then(function() {
+      $scope.status = 'You decided to get rid of your debt.';
+    }, function() {
+      $scope.status = 'You decided to keep your debt.';
+    });
+
+		function OfferToUseDialogController( $scope, $mdDialog, request, offer)
+		{
+      $scope.saving = false;
+      $scope.request = request;
+      $scope.newoffer = angular.copy(offer);
+			$scope.newoffer.price = parseFloat($scope.newoffer.price);
+			$scope.newoffer.project_start_at = new Date($scope.newoffer.project_start_at);
+
+			$scope.closeDialog = function(){
+				$mdDialog.hide();
+			}
+
+      $scope.sendOfferToUserByServiceOffer = function() {
+        if (!$scope.saving) {
+					console.log($scope.request);
+					console.log($scope.newoffer);
+
+					/* */
+          $scope.saving = true;
+          $http({
+      			method: 'POST',
+      			url: '/ajax/post',
+      			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      			data: $.param({
+      				type: "RequestOffers",
+              mode: 'sendAdminOffer',
+							request_id: $scope.request.ID,
+							offer: $scope.newoffer
+      			})
+      		}).success(function(r){
+						console.log(r);
+      			$scope.saving = false;
+						if (r.success == 1) {
+							$scope.toast(r.msg, 'success', 10000);
+							$scope.closeDialog();
+						} else {
+							$scope.toast(r.msg, 'alert', 10000);
+						}
+	        });
+					/* */
+      	}
+			}
+		}
+	}
+
+	$scope.toggleDetails = function( prefix, id, ev) {
+		ev.preventDefault();
+		$('.offer .details').slideUp(100);
+		$('#'+prefix+id).slideToggle(200);
+
+		$http({
+			method: 'POST',
+			url: '/ajax/post',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			data: $.param({
+				type: "RequestOffers",
+				mode: 'setWatched',
+				offerid: id
+			})
+		}).success(function(r){ });
+	}
+
 	$scope.pickRequest = function( request ) {
 		$scope.readrequest = request.ID;
 		$scope.request = request;
@@ -658,6 +746,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 					mode: 'List',
 					filter: {
 						offerout: ($scope.loadconfig && $scope.loadconfig.offerout) ? $scope.loadconfig.offerout : 0,
+						allpositive: ($scope.loadconfig && $scope.loadconfig.allpositive) ? $scope.loadconfig.allpositive : 0,
 						loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0,
 						bindIDToList: 0
 					}

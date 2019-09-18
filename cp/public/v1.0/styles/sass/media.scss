@@ -1461,6 +1461,26 @@ footer {
 					}
 				}
 
+				&.incomingoffer{
+					border-left: 10px solid $color-blue-light;
+					color: $color-blue-light;
+					.head {
+						.name {
+							color: $color-blue-light;
+						}
+					}
+				}
+
+				&.acceptedoffer{
+					border-left: 10px solid $color-green;
+					color: $color-green;
+					.head {
+						.name {
+							color: $color-green;
+						}
+					}
+				}
+
 
 				&.opened{
 					background: #f5f5f5;
@@ -1495,6 +1515,10 @@ footer {
 			flex-wrap: wrap;
 			align-items: flex-start;
 
+			.adminval{
+				color: $color-blue-light;
+			}
+
 			.lab{
 				font-weight: 300;
 				font-size: 0.75rem;
@@ -1523,6 +1547,32 @@ footer {
 				.company{
 					color: $color-red-light;
 				}
+
+				.labs{
+					font-size: 0.7rem;
+					div {
+						font-weight: bold;
+					}
+
+					.adminofferouted{
+						color: $color-blue-light;
+					}
+					.requesteraccept{
+						&.not-response{
+							color: $color-red;
+						}
+						&.resp-success{
+							color: $color-green;
+						}
+					}
+				}
+			}
+
+			.abtns{
+				i {
+					cursor: pointer;
+					outline: none;
+				}
 			}
 
 			.details{
@@ -1531,6 +1581,11 @@ footer {
 				margin: 10px 0 0 0;
 				padding: 10px 0 0 0;
 				flex-basis: 100%;
+
+				.accept-service-offer{
+					padding: 10px 0 0 0;
+					text-align: right;
+				}
 
 				.message{
 					font-size: 0.9rem;
@@ -1543,6 +1598,17 @@ footer {
 						margin: 5px 0 10px 0;
 					}
 				}
+			}
+		}
+
+		&.visited{
+			& > .wrapper{
+				border-left: 5px solid #ffd382;
+			}
+		}
+		&.adminofferouted{
+			& > .wrapper{
+				border-left: 5px solid $color-blue-light;
 			}
 		}
 	}
@@ -2207,6 +2273,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 		}
 	}
 
+	.offer-accepter button{
+		text-transform: uppercase;
+		font-weight: bold;
+	}
+
 	.dpad{
 		background: #f1f9f5 !important;
 
@@ -2232,6 +2303,22 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 		.dpad {
 			color: #3c3c3c;
+			background: white !important;
+		}
+	}
+
+	&.unaccepted{
+		border: 5px solid darken($color-blue-light, 10%);
+		.row-header{
+			background: $color-blue-light !important;
+		}
+
+		.dpad{
+			background: #f0f8ff !important;
+		}
+
+
+		.offer-accepter .dpad{
 			background: white !important;
 		}
 	}

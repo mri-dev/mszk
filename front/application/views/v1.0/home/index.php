@@ -312,6 +312,11 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12">
+                        <input type="text" ng-model="requester.requester_title" maxlength="250" value="" class="form-control" placeholder="<?=__('Projekt / ajánlatkérés rövid elnevezése')?>">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
                         <textarea style="min-height: 300px;" ng-model="requester.message" placeholder="<?=__('Üzenet')?>"></textarea>
                       </div>
                     </div>

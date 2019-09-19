@@ -1500,6 +1500,8 @@ footer {
 	color: $color-red-light;
 }
 
+
+
 .incoming-offers{
 	.offer{
 		& > .wrapper{
@@ -1611,9 +1613,25 @@ footer {
 				border-left: 5px solid $color-blue-light;
 			}
 		}
+
+		&.projected{
+			& > .wrapper{
+				border-left: 5px solid $color-green;
+			}
+		}
 	}
 	.offer + .offer{
 		margin: 10px 0 0 0;
+	}
+}
+
+.actual-project-data{
+	background: $color-green;
+	color: white;
+	padding: 15px;
+	.name {
+		font-size: 1.3rem;
+		margin: 0 0 10px 0;
 	}
 }
 
@@ -2343,6 +2361,22 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 .ajaxdialog.saveproject{
 	min-width: 650px;
+}
+
+.ajaxdialog.projectcreatoroffer{
+	.userdetails{
+		h3{
+			font-size: 1.1rem;
+			margin: 15px 0 10px 0;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: $color-red-light;
+		}
+		table tr td {
+			padding: 5px;
+			font-size: 0.85rem;
+		}
+	}
 }
 
 .data-list{

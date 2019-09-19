@@ -139,6 +139,15 @@ class ajax extends Controller
 
 					switch ( $mode )
 					{
+						case 'adminOfferCreator':
+							try {
+								$p = $projects->createByOffer( $request_id, $offer );
+								$ret['data'] = $p;
+								$this->setSuccess(__('Projektek sikeresen létrejöttek!'), $ret);
+							} catch (\Exception $e) {
+								$this->escape($e->getMessage(), $ret);
+							}
+						break;
 						case 'get':
 							$listarg = array();
 							if (!$this->view->is_admin_logged) {

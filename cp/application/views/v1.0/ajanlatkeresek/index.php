@@ -30,7 +30,7 @@
         <tbody>
           <?php foreach ( (array)$this->requests as $request ): ?>
           <tr>
-            <td><?=$request['name']?></td>
+            <td><a href="/ajanlatkeresek/feldolgozatlan/<?=$request['hashkey']?>"><?=$request['name']?></a></td>
             <td><?=$request['email']?></td>
             <td>
               <?php foreach ((array)$request['services_list'] as $s): ?>

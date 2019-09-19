@@ -6,6 +6,7 @@ use MailManager\MailTemplates;
 use PortalManager\Users;
 use PortalManager\Documents;
 use PortalManager\Template;
+use PortalManager\OfferRequests;
 
 /**
 * class Projects
@@ -22,6 +23,94 @@ class Projects
 	{
 		$this->db = $arg[db];
 		return $this;
+	}
+
+	public function createByOffer( $request_id, $offer )
+	{
+		$requests = new OfferRequests( array('db' => $this->db) );
+		$order_hash = md5(uniqid());
+
+		// ajánlatkérés
+		$request = $requests->getList(array(
+			'ids' => array($request_id),
+			'bindIDToList' => 1
+		));
+		$request = $request[$request_id];
+
+		// létrehozás - megrendelő
+		$megrendelo_hashkey = md5(uniqid());
+		$this->db->insert(
+			self::DBPROJECTS,
+			array(
+				'primary_user_id' => $request['user_id'],
+				'hashkey' => $megrendelo_hashkey,
+				'order_hashkey' => $order_hash,
+				'admin_title' => ($offer['admin_title'] == '') ? NULL : addslashes($offer['admin_title']),
+				'request_id' => $request_id,
+				'offer_id' => $offer['ID'],
+				'requester_id' => $request['user_id'],
+				'servicer_id' => $offer['from_user_id'],
+			)
+		);
+		$megrendelo_project_id = $this->db->lastInsertId();
+
+		// létrehozás - megrendelő
+		$szolgaltato_hashkey = md5(uniqid());
+		$this->db->insert(
+			self::DBPROJECTS,
+			array(
+				'primary_user_id' => $offer['from_user_id'],
+				'hashkey' => $szolgaltato_hashkey,
+				'order_hashkey' => $order_hash,
+				'admin_title' => ($offer['admin_title'] == '') ? NULL : addslashes($offer['admin_title']),
+				'request_id' => $request_id,
+				'offer_id' => $offer['ID'],
+				'requester_id' => $request['user_id'],
+				'servicer_id' => $offer['from_user_id'],
+			)
+		);
+		$szolgaltato_project_id = $this->db->lastInsertId();
+
+		// project id-k mentése
+		if ($megrendelo_project_id) {
+			$this->db->update(
+				'requests',
+				array(
+					'project_id' => $megrendelo_project_id
+				),
+				sprintf("ID = %d", (int)$request_id)
+			);
+			$this->db->update(
+				'offers',
+				array(
+					'project_id' => $megrendelo_project_id
+				),
+				sprintf("ID = %d", (int)$request['admin_offer_id'])
+			);
+		}
+
+		if ($szolgaltato_project_id) {
+			$this->db->update(
+				'offers',
+				array(
+					'accepted' => 1,
+					'accepted_at' => NOW,
+					'project_id' => $szolgaltato_project_id
+				),
+				sprintf("ID = %d", (int)$offer['ID'])
+			);
+		}
+
+		// offerout project id
+		$this->db->update(
+			'requests_offerouts',
+			array(
+				'requester_accepted' => 1,
+				'project_id' => $szolgaltato_project_id
+			),
+			sprintf("ID = %d", (int)$offer['offerout_id'])
+		);
+
 	}
 
 	public function getProjectData( $key, $user_id = false  )

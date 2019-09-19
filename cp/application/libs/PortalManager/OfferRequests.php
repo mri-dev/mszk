@@ -56,7 +56,12 @@ class OfferRequests
 			//$qarg['offerout'] = (int)$arg['offerout'];
 		}
 
-		$q .= " ORDER BY r.visited ASC, r.requested ASC";
+		if (isset($arg['letrejott']) && $arg['letrejott'] == '1') {
+			$q .= " and r.project_id IS NOT NULL";
+			//$qarg['offerout'] = (int)$arg['offerout'];
+		}
+
+		$q .= " ORDER BY r.project_id ASC, r.visited ASC, r.requested ASC";
 
 		$data = $this->db->squery($q, $qarg);
 		if ($data->rowCount() == 0) {
@@ -115,6 +120,12 @@ class OfferRequests
 				$admin_offer = $this->getOfferData($d['admin_offer_id']);
 			}
 			$d['admin_offer'] = $admin_offer;
+
+			$project_data = false;
+			if ( $d['project_id'] != '' ) {
+				$project_data = $this->db->squery("SELECT p.* FROM projects as p WHERE p.ID = :project", array('project' => (int)$d['project_id']))->fetch(\PDO::FETCH_ASSOC);
+			}
+			$d['project_data'] = $project_data;
 
 			$d['unwatched_offers'] = $unwatched_offers;
 

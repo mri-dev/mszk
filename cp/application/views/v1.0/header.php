@@ -206,6 +206,9 @@
                 <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
                   <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'letrehozhato')?'on':''?>"><a href="/ajanlatkeresek/letrehozhato" title="<?=__('Létrehozható')?>"><span class="ni">8</span><i class="fas fa-plus"></i> <?=__('Létrehozható')?><? if($this->badges['offers']['admin']['positiveprocess']!=0): ?><span class="badge badge-danger"><?=$this->badges['offers']['admin']['positiveprocess']?></span><? endif; ?></a></li>
                 <?php endif; ?>
+                <?php if ($this->_USERDATA['data']['user_group'] == 'superadmin' || $this->_USERDATA['data']['user_group'] == 'admin'): ?>
+                  <li class="sub <?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'letrejott')?'on':''?>"><a href="/ajanlatkeresek/letrejott" title="<?=__('Létrejött')?>"><span class="ni">8</span><i class="fas fa-check-double"></i> <?=__('Létrejött')?><? if($this->badges['offers']['admin']['done']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['admin']['done']?></span><? endif; ?></a></li>
+                <?php endif; ?>
               <?php endif; ?>
             <?php endif; ?>
 

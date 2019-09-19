@@ -10,12 +10,15 @@
             <div class="wrapper">
               <div class="head">
                 <div class="name">{{request.name}}</div>
-                <div class="badges">
+                <div class="badges" ng-if="!request.project_id">
                   <span ng-if="request.unwatched_offers!=0" class="badge badge-danger badge-sm"><i class="far fa-eye-slash"></i> <?=__('{{request.unwatched_offers}} olvasatlan ajánlat')?></span>
                   <span ng-if="request.visited==1" class="badge badge-success badge-sm"><i class="far fa-eye"></i> <?=__('láttam')?></span>
                   <span ng-if="request.offerout==1 && request.elutasitva==0" class="badge badge-success badge-sm"><i class="fas fa-check"></i> <?=__('szolgáltatónak kiajánlva')?></span>
                   <span ng-if="request.offerout==1 && request.elutasitva==0 && request.admin_offer" class="badge badge-primary badge-sm"><i class="fas fa-check"></i> <?=__('ajánlatkérőnek kiajánlva')?></span>
                   <span ng-if="request.elutasitva==1" class="badge badge-danger badge-sm"><i class="fas fa-ban"></i> <?=__('elutasítva')?></span>
+                </div>
+                <div class="badges" ng-if="request.project_id">
+                  <span class="badge badge-success badge-sm"><i class="fas fa-check-double"></i> Projeketek létrejöttek</span>
                 </div>
                 <div class="company" ng-if="request.company">{{request.company}}</div>
                 <div class="contacts"><span class="email" title="<?=__('E-mail cím')?>">{{request.email}}</span><span class="phone" title="<?=__('Telefonszám')?>">{{request.phone}}</span></div>
@@ -41,6 +44,17 @@
         <div class="wrapper" ng-if="request">
           <div class="requester">
 
+            <div class="actual-project-data" ng-if="request.project_data">
+              <div class="name"><?=__('Projekt')?>: <strong>{{request.project_data.admin_title}}</strong></div>
+              <div class="datas">
+                <div class="">
+                  <?=__('Létrejött')?>: <strong>{{request.project_data.created_at}}</strong>
+                </div>
+                <br>
+                <a href="/projektek/projekt/{{request.project_data.order_hashkey}}" class="btn btn-sm btn-default"><?=__('Tovább a projekt adatlapjára >>')?></a>
+              </div>
+            </div>
+
             <div class="" ng-if="request.offers">
               <div class="row-header">
                 <h3><?=__('Bérkezett ajánlatok')?></h3>
@@ -48,7 +62,7 @@
               </div>
               <div class="dpad">
                 <div class="incoming-offers">
-                  <div class="offer" ng-repeat="offer in request.offers" ng-class="{visited:(offer.admin_visited), adminofferouted:(offer.admin_offered_out!=0)}">
+                  <div class="offer" ng-repeat="offer in request.offers" ng-class="{visited:(offer.admin_visited), adminofferouted:(offer.admin_offered_out!=0), projected:(offer.project_id)}">
                     <div class="wrapper">
                       <div class="name">
                         <strong>{{offer.from_user.data.nev}}</strong> <span class="company" title="<?=__('Cég elnevezése')?>" ng-if="offer.from_user.data.company_name"> // {{offer.from_user.data.company_name}}</span>
@@ -91,7 +105,7 @@
                         </div>
                         <div class="accept-service-offer">
                           <button type="button" ng-if="!request.admin_offer_id" ng-click="previewOfferToUser(request, offer)" class="btn btn-primary btn-sm">Ajánlat tovább ajánlása az ajánlatkérőnek <i class="fas fa-external-link-alt"></i></button>
-                          <button type="button" ng-if="offer.admin_offered_out!=0 && request.admin_offer && request.admin_offer.accepted==1" ng-click="acceptAdminServiceOffer(request, offer)" class="btn btn-success btn-sm">Szolgáltatói ajánlat elfogadása <i class="fa fa-check"></i></button>
+                          <button type="button" ng-if="offer.admin_offered_out!=0 && request.admin_offer && request.admin_offer.accepted==1 && request.project_id == ''" ng-click="acceptAdminServiceOffer(request, offer)" class="btn btn-success btn-sm">Szolgáltatói ajánlat elfogadása <i class="fa fa-check"></i></button>
                         </div>
                       </div>
                     </div>
@@ -168,7 +182,7 @@
                   <span class="badge badge-danger"><?=__('IGEN')?></span>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" ng-if="!request.project_id">
                 <div class="col">
                   <label for=""><?=__('Műveletek')?></label>
                 </div>

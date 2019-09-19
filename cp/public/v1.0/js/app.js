@@ -603,8 +603,74 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
     };
   }
 
-	$scope.acceptAdminServiceOffer = function(request, offer) {
+	$scope.acceptAdminServiceOffer = function(request, offer)
+	{
 		console.log(request);
+		console.log(offer);
+
+		var confirm = $mdDialog.confirm({
+			controller: ProjectCreatorOfferDialogController,
+			templateUrl: '/ajax/modal/offers_to_project',
+			parent: angular.element(document.body),
+			scope: $scope,
+			preserveScope:true,
+			locals: {
+				request: request,
+				offer: offer
+			}
+		});
+
+		$mdDialog.show(confirm)
+		.then(function() {
+			$scope.status = 'You decided to get rid of your debt.';
+		}, function() {
+			$scope.status = 'You decided to keep your debt.';
+		});
+
+		function ProjectCreatorOfferDialogController( $scope, $mdDialog, request, offer)
+		{
+			$scope.saving = false;
+			$scope.request = request;
+			$scope.newoffer = angular.copy(offer);
+			//$scope.newoffer.price = parseFloat($scope.newoffer.price);
+			//$scope.newoffer.project_start_at = new Date($scope.newoffer.project_start_at);
+
+			$scope.closeDialog = function(){
+				$mdDialog.hide();
+			}
+
+			$scope.adminCreatProjectByOffer = function() {
+				if (!$scope.saving) {
+					console.log($scope.request);
+					console.log($scope.newoffer);
+
+					/* */
+					$scope.saving = true;
+					$http({
+						method: 'POST',
+						url: '/ajax/post',
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+						data: $.param({
+							type: "Projects",
+							mode: 'adminOfferCreator',
+							request_id: $scope.request.ID,
+							offer: $scope.newoffer
+						})
+					}).success(function(r){
+						console.log(r);
+						$scope.saving = false;
+						if (r.success == 1) {
+							$scope.toast(r.msg, 'success', 10000);
+							$scope.closeDialog();
+							//$window.location.href = '/projektek/projekt/';
+						} else {
+							$scope.toast(r.msg, 'alert', 10000);
+						}
+					});
+					/* */
+				}
+			}
+		}
 	}
 
 	$scope.previewOfferToUser = function( request, offer ) {
@@ -747,6 +813,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 					filter: {
 						offerout: ($scope.loadconfig && $scope.loadconfig.offerout) ? $scope.loadconfig.offerout : 0,
 						allpositive: ($scope.loadconfig && $scope.loadconfig.allpositive) ? $scope.loadconfig.allpositive : 0,
+						letrejott: ($scope.loadconfig && $scope.loadconfig.letrejott) ? $scope.loadconfig.letrejott : 0,
 						loadpossibleservices: ($scope.loadconfig && $scope.loadconfig.loadpossibleservices) ? 1: 0,
 						bindIDToList: 0
 					}
@@ -755,6 +822,15 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 				console.log(r);
 				if (r.data && r.data.length != 0) {
 					$scope.requests = r.data;
+
+					console.log($scope.loadconfig);
+					if ($scope.loadconfig && typeof $scope.loadconfig.preselected !== 'undefined' && $scope.loadconfig.preselected != '') {
+						angular.forEach($scope.requests, function(e,i){
+							if ( e.hashkey == $scope.loadconfig.preselected ) {
+								$scope.pickRequest( e );
+							}
+						});
+					}
 				}
 				if (typeof callback !== 'undefined') {
 					callback(r.data);

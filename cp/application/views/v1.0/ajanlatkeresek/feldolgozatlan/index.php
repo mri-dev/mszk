@@ -2,6 +2,6 @@
   <?=__('Ezen az oldalon elvégezheti a kiajánlást a szolgáltatók felé. Ellenőrizze, hogy a beérkezett igények megfelelőek-e és hogy kinek szeretné kiajánlani a kérést.')?>
 </div>
 
-<div class="request-controller" ng-controller="RequestControl" ng-init="init({loadpossibleservices:0})">
+<div class="request-controller" ng-controller="RequestControl" ng-init="init({loadpossibleservices:0, preselected: '<?=$this->gets[2]?>'})">
   <?=$this->render('ajanlatkeresek/requestcontrol')?>
 </div>

@@ -150,7 +150,9 @@ class Projects
 
 			$d['title'] = $d[$d['my_relation'].'_title'];
 
-			if ($d['my_relation'] == 'admin') {
+			// Admin esetében teendők
+			if ($d['my_relation'] == 'admin')
+			{
 				$d['user_requester'] = $users->get( array('user' => $d['requester_id'], 'userby' => 'ID', 'alerts' => false) );
 				$d['user_servicer'] = $users->get( array('user' => $d['servicer_id'], 'userby' => 'ID', 'alerts' => false) );
 
@@ -161,17 +163,20 @@ class Projects
 				$title = '';
 				$title .= __('Project hash').': '.$d['hashkey']."<br>";
 				$title .= __('Ajánlatkérő')." (".$d['user_requester']['data']['nev'].")".': ';
+
 				if ($d['requester_title'] != '') {
 					$title .= $d['requester_title'];
 				} else {
 					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
 				}
 				$title .= '<br>'.__('Szolgáltató')." (".$d['user_servicer']['data']['nev'].")".': ';
+
 				if ($d['servicer_title'] != '') {
 					$title .= $d['servicer_title'];
 				} else {
 					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
 				}
+
 				$d['title'] = $title;
 			}
 
@@ -193,8 +198,12 @@ class Projects
 		}
 
 		$q = "SELECT
-			p.*
+			p.*,
+			r.requested as requested_at,
+			r.visited_at as request_admin_visited_at,
+			(SELECT ro.offerout_at FROM requests_offerouts as ro WHERE ro.request_id GROUP BY ro.request_id LIMIT 0,1) as admin_offerout_at
 		FROM projects as p
+		LEFT OUTER JOIN requests as r ON r.ID = p.request_id
 		WHERE 1=1 ";
 
 		if (isset($arg['getproject'])) {
@@ -243,6 +252,7 @@ class Projects
 		foreach ((array)$data as $d)
 		{
 			$d['closed'] = (int)$d['closed'];
+			$timeline = array();
 
 			if ($controll_user_admin) {
 				$d['my_relation'] = 'admin';
@@ -287,7 +297,20 @@ class Projects
 				}
 			}
 
-			//$d['requester_project'] = $this->getProjectData( $d['ID'], $uid, $d['my_relation'] );
+			// Timeline
+			if ($controll_user_admin)
+			{
+				$timeline[] = array('title' => __('Ajánlatkérő ajánlatkérésének ideje'), 'time' => $d['requested_at'] );
+				$timeline[] = array('title' => __('Admin megtekintette az ajánlatkérést'), 'time' => $d['request_admin_visited_at'] );
+				$timeline[] = array('title' => __('Az ajánlatkérés kiajánlva a szolgáltatók felé'), 'time' => $d['admin_offerout_at'] );
+				$timeline[] = array('title' => __('Szolgáltatói ajánlat beérkezésének ideje'), 'time' => $d['servicer_project_data']['offer_data']['sended_at'] );
+				$timeline[] = array('title' => __('Közvetítői ajánlatkiküldés az ajánlatkérő felé'), 'time' => $d['requester_project_data']['offer_data']['sended_at'] );
+				$timeline[] = array('title' => __('Ajánlatkérő (igénylő) elfogadta a közvetítői ajánlatot'), 'time' => $d['requester_project_data']['offer_data']['accepted_at'] );
+				$timeline[] = array('title' => __('Közvetítés létrejött: a projektek elindultak!'), 'time' => $d['created_at'] );
+
+
+				$d['timeline'] = $timeline;
+			}
 
 			$list[] = $d;
 		}

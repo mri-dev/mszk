@@ -2174,6 +2174,53 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 				flex-basis: 50%;
 			}
 
+			.requester {
+				table {
+					border: none !important;
+				}
+				table tr td:last-child{
+					border-right: none !important;
+				}
+			}
+			.servicer {
+				table {
+					border: none !important;
+				}
+				table tr td:first-child{
+					border-left: none !important;
+				}
+			}
+
+			.project-overall-data{
+				& > .timeline {
+					flex-basis: 50%;
+					.timeline{
+						font-size: 0.8rem;
+						padding: 10px;
+						.record{
+							.time {
+								color: $color-green;
+							}
+
+							.ev {
+								color: black;
+							}
+						}
+					}
+				}
+				& > .infos {
+					flex: 1;
+					border-right: 1px solid #d5d9dc;
+
+					table {
+						border: none !important;
+					}
+					table tr td:last-child{
+						border-right: none !important;
+					}
+				}
+			}
+
 			.cont {
 				.chead{
 					text-transform: uppercase;

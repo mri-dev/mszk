@@ -2,6 +2,41 @@
   <div class="d-flex">
     <div class="project">
       <div class="head"><?=__('Projekt adatok')?></div>
+      <div class="cont">
+        <div class="d-flex project-overall-data">
+          <div class="infos">
+            <div class="chead"><?=__('Általános információk')?></div>
+            <div class="dpad">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td><?=__('Projekt')?></td>
+                    <td><strong>{{project.admin_title}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td><?=__('Közvetítői projekt azonosító')?></td>
+                    <td><strong>{{project.order_hashkey}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td><?=__('Létrejött')?></td>
+                    <td><strong>{{project.created_dist}} ({{project.created_at}})</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="chead"><?=__('Idővonal')?></div>
+            <div class="dpad">
+              <div class="timeline">
+                <div class="record" ng-repeat="tl in project.timeline">
+                  <span class="time"><strong>{{tl.time}}</strong></span> &mdash; <span class="ev">{{tl.title}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="requester">
       <div class="head"><?=__('Ajánlatkérő')?></div>

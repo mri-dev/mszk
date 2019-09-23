@@ -20,9 +20,7 @@
             <th><?=__('Projekt elnevezés')?></th>
             <th width="220" class="center"><?=__('Állapot')?></th>
             <th width="220" class="center"><?=__('Díjfizetés')?></th>
-            <?php if (!$this->is_admin_logged): ?>
-              <th width="240" class="center"><?=__('Partner')?></th>
-            <?php else: ?>
+            <?php if ($this->is_admin_logged): ?>
               <th width="240" class="center"><?=__('Ajánlatkérő')?></th>
               <th width="240" class="center"><?=__('Szolgáltató')?></th>
             <?php endif; ?>
@@ -35,7 +33,7 @@
           <?php foreach ( (array)$this->projects as $p ): ?>
           <tr>
             <?php if (!$this->is_admin_logged): ?>
-              <td><a href="/projektek/projekt/<?=$p['hashkey']?>"><?=($p['title'] != '')?$p['title']:'<span class="nosetdata">'.__('Projekt elnevezése hiányzik! &nbsp;&nbsp; Szerkesztés').' <i class="fas fa-pencil-alt"></i></span>'?></a>
+              <td><a href="/projektek/projekt/<?=$p['hashkey']?>"><?=($p[$p['my_relation'].'_title'] != '')?$p[$p['my_relation'].'_title']:'#'.$p['order_hashkey'].'<br><span class="nosetdata">'.__('Projekt elnevezése hiányzik! &nbsp;&nbsp; Szerkesztés').' <i class="fas fa-pencil-alt"></i></span>'?></a>
               </td>
             <?php else: ?>
               <td>
@@ -52,11 +50,7 @@
               <div class="progress">
                 <div class="progress-bar <?=\Helper::progressBarColor($p['paying_percent'])?>"  role="progressbar" style="width: <?=$p['paying_percent']?>%;" aria-valuenow="<?=$p['paying_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['paying_percent']?>%</div>
             </td>
-            <?php if (!$this->is_admin_logged): ?>
-              <td>
-                <strong><?=$p['partner']['data']['nev']?></strong> <? if($p['partner']['data']['company_name'] != ''): ?><br>(<?=$p['partner']['data']['company_name']?>)<? endif; ?>
-              </td>
-            <?php else: ?>
+            <?php if ($this->is_admin_logged): ?>
               <td>
                 <strong><a href="/account/?t=edit&ID=<?=$p['user_requester']['data']['ID']?>&ret=/projektek/aktualis" target="_blank"><?=$p['user_requester']['data']['nev']?></a></strong> <? if($p['user_requester']['data']['company_name'] != ''): ?><br>(<?=$p['user_requester']['data']['company_name']?>)<? endif; ?>
               </td>

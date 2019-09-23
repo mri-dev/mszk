@@ -154,6 +154,10 @@ class Projects
 				$d['user_requester'] = $users->get( array('user' => $d['requester_id'], 'userby' => 'ID', 'alerts' => false) );
 				$d['user_servicer'] = $users->get( array('user' => $d['servicer_id'], 'userby' => 'ID', 'alerts' => false) );
 
+				if (!empty($d['offer_id'])) {
+					$d['offer_data'] =  $this->getOffer( $d['offer_id'] );
+				}
+
 				$title = '';
 				$title .= __('Project hash').': '.$d['hashkey']."<br>";
 				$title .= __('Ajánlatkérő')." (".$d['user_requester']['data']['nev'].")".': ';
@@ -181,6 +185,7 @@ class Projects
 		$qarg = array();
 
 		$uid = (int)$arg['uid'];
+
 		if ($uid != 0) {
 			$users = new Users( array('db' => $this->db ));
 			$controll_user =  $users->get( array('user' => $uid, 'userby' => 'ID', 'alerts' => false) );
@@ -193,7 +198,7 @@ class Projects
 		WHERE 1=1 ";
 
 		if (isset($arg['getproject'])) {
-			$q .= " and p.hashkey  = :getproject";
+			$q .= " and (p.hashkey = :getproject or p.order_hashkey = :getproject)";
 			$qarg['getproject'] =$arg['getproject'];
 		}
 
@@ -218,8 +223,12 @@ class Projects
 		}
 
 		if (isset($arg['uid']) && !$controll_user_admin) {
-			$q .= " and (p.requester_id = :uid or p.servicer_id = :uid)";
+			$q .= " and (p.requester_id = :uid or p.servicer_id = :uid) and p.primary_user_id = :uid";
 			$qarg['uid'] = (int)$arg['uid'];
+		}
+
+		if ( $controll_user_admin ) {
+			$q .= " GROUP BY p.order_hashkey ";
 		}
 
 		$q .= " ORDER BY p.created_at DESC";
@@ -234,10 +243,13 @@ class Projects
 		foreach ((array)$data as $d)
 		{
 			$d['closed'] = (int)$d['closed'];
+
 			if ($controll_user_admin) {
 				$d['my_relation'] = 'admin';
+				$d['title'] = $d['admin_title'];
 			} else {
 				$d['my_relation'] = ($uid == $d['requester_id']) ? 'requester': 'servicer';
+				$d['title'] = $d[$d['my_relation'].'_title'];
 			}
 
 			$d['title'] = $d[$d['my_relation'].'_title'];
@@ -252,24 +264,30 @@ class Projects
 			$d['paying_percent'] = $this->getProjectPaymentProgress( $d['ID'] );
 			$d['paying_percent_class'] = \Helper::progressBarColor($d['paying_percent']);
 			$d['messages'] = $this->getProjectMessagesInfo( $d['ID'], $uid, $d['my_relation'] );
-
 			if ($d['my_relation'] == 'admin') {
-				$title = '';
-				$title .= __('Project hash').': '.$d['hashkey']."<br>";
-				$title .= __('Ajánlatkérő')." (".$d['user_requester']['data']['nev'].")".': ';
-				if ($d['requester_title'] != '') {
-					$title .= $d['requester_title'];
+				if ($d['admin_title'] != '') {
+					$title = $d['admin_title'] . "<br>";
 				} else {
-					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
-				}
-				$title .= '<br>'.__('Szolgáltató')." (".$d['user_servicer']['data']['nev'].")".': ';
-				if ($d['servicer_title'] != '') {
-					$title .= $d['servicer_title'];
-				} else {
-					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
+					$title = 'Nincs elnevezve &mdash; #'.$d['order_hashkey'] . "<br>";
 				}
 				$d['title'] = $title;
+			} else {
+				if ($d['title'] == '') {
+					$title = 'Nincs elnevezve &mdash; #'.$d['order_hashkey'] ."<br>";
+					$d['title'] = $title;
+				}
 			}
+
+			$order_project_hashkeys = $this->getOrderProjectHashkeys( $d['order_hashkey'] );
+			$d['order_project_hashkeys'] = $order_project_hashkeys;
+
+			if ($order_project_hashkeys) {
+				foreach ((array)$order_project_hashkeys as $rel => $hash) {
+					$d[$rel.'_project_data'] = $this->getProjectData( $hash, $uid, $d['my_relation'] );
+				}
+			}
+
+			//$d['requester_project'] = $this->getProjectData( $d['ID'], $uid, $d['my_relation'] );
 
 			$list[] = $d;
 		}
@@ -279,6 +297,18 @@ class Projects
 		}
 
 		return $list;
+	}
+
+	public function getOrderProjectHashkeys( $hashkey = '' )
+	{
+		$arr = array();
+		$hashes = $this->db->squery("SELECT hashkey, IF(primary_user_id = requester_id, 'requester', 'servicer') as relations FROM projects WHERE order_hashkey = :hash", array('hash' => $hashkey))->fetchAll(\PDO::FETCH_ASSOC);
+
+		foreach ((array)$hashes as $h) {
+			$arr[$h['relations']] = $h['hashkey'];
+		}
+
+		return $arr;
 	}
 
 	public function addDocument( $project_id, $doc_id, $adder_user_id )
@@ -578,8 +608,7 @@ class Projects
 		$list = array();
 		$qarg = array();
 		$q = "SELECT
-			o.*,
-			ro.item_id as service_item_id
+			o.*
 		FROM offers as o
 		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
 		WHERE 1=1 and o.ID = :id";

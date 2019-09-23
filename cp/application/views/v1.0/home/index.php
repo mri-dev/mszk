@@ -306,13 +306,11 @@
                   <div class="holder">
                     <div class="data">
                       <div class="title">
-                        <a href="/projektek/projekt/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['title']?></strong></a>
+                        <a href="/projektek/projekt/<?=$d['order_hashkey']?>" target="_blank"><strong><?=$d['title']?></strong></a>
                       </div>
                       <div class="subtitle">
                         <?php if ($this->is_admin_logged): ?>
-                          <span><strong><?=$d['user_requester']['data']['nev']?></strong> <-> <strong><?=$d['user_servicer']['data']['nev']?></strong></span>
-                        <?php else: ?>
-                          <span><strong><?=$d['partner']['data']['nev']?></strong></span>
+                          <span><strong title="<?=__('Ajánlatkérő')?>"><?=$d['user_requester']['data']['nev']?></strong> <-> <strong title="<?=__('Szolgáltató')?>"><?=$d['user_servicer']['data']['nev']?></strong></span>
                         <?php endif; ?>
                         <span><?=__('Fizetve (nettó)')?>: <strong><span class="allprice"><?=\Helper::cashFormat($d['offer']['price'])?></span> /<span class="paidprice"><?=\Helper::cashFormat($d['paidamount'])?></span></strong></span>
                       </div>

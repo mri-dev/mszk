@@ -1238,15 +1238,19 @@ a.directive('focusMe', function($timeout) {
 a.filter('unsafe', function($sce){ return $sce.trustAsHtml; });
 a.filter('cash', function(){
 	return function(cash, text, aftertext){
-		cash = cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-		if (typeof text === 'undefined' || text == 1) {
-			if (typeof aftertext === 'undefined') {
-				cash += " Ft + ÁFA";
-			} else {
-				cash += " "+aftertext;
+		if (cash) {
+			cash = cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+			if (typeof text === 'undefined' || text == 1) {
+				if (typeof aftertext === 'undefined') {
+					cash += " Ft + ÁFA";
+				} else {
+					cash += " "+aftertext;
+				}
 			}
+			return cash;
+		} else {
+			return '';
 		}
-		return cash;
 	};
 });
 

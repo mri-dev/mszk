@@ -2143,6 +2143,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 				}
 			}
 		}
+
 		.servicer{
 			.head{
 				background: darken($color-cian, 10%);
@@ -2159,6 +2160,46 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 		.requester, .servicer{
 			flex-basis: calc(70% / 2);
+		}
+
+		&.admin-view{
+			& > .d-flex{
+				flex-wrap: wrap;
+			}
+			.project{
+				flex-basis: 100%;
+			}
+			.requester,
+			.servicer {
+				flex-basis: 50%;
+			}
+
+			.cont {
+				.chead{
+					text-transform: uppercase;
+			    font-size: 0.8rem;
+			    font-weight: bold;
+			    padding: 8px 10px;
+			    background: #edf1f5;
+			    color: black;
+					text-align: center;
+				}
+
+				.dpad.wpadding {
+					padding: 15px;
+				}
+
+				.infoline{
+					label{
+						margin: 20px 0 10px 0;
+						color: #adadad;
+					}
+					.pval{
+						color: black;
+						line-height: 1.3;
+					}
+				}
+			}
 		}
 	}
 }

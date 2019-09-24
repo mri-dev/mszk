@@ -183,7 +183,7 @@ class ajax extends Controller
 						break;
 						case 'addDocument':
 							try {
-								$projects->addDocument( $project, $doc, $this->view->_USERDATA['data']['ID'] );
+								$projects->addDocument( $hashkey, $doc, $this->view->_USERDATA['data']['ID'] );
 								$this->setSuccess(__('Dokumentum hozzáadásra került a projekthez.'), $ret);
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);

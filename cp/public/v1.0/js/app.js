@@ -135,7 +135,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 		});
 	}
 
-	$scope.loadMyDocs = function( callback ) {
+	$scope.loadMyDocs = function( hashkey, callback ) {
 		$http({
 			method: 'POST',
 			url: '/ajax/post',
@@ -144,7 +144,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 				type: "Documents",
 				mode: 'getList',
 				params: {
-					not_in_project: $scope.project.ID
+					not_in_project: hashkey
 				}
 			})
 		}).success(function(r){
@@ -155,9 +155,9 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 		});
 	}
 
-	$scope.projectDocsAdder = function()
+	$scope.projectDocsAdder = function( hashkey )
 	{
-		$scope.loadMyDocs(function(docs){
+		$scope.loadMyDocs(hashkey, function(docs){
 			var confirm = $mdDialog.confirm({
 				controller: ProjectDOCSAdderController,
 				templateUrl: '/ajax/modal/projectdocsadder',
@@ -167,7 +167,8 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 				locals: {
 	        config: $scope.loadconfig,
 					project: $scope.project,
-					docs: docs
+					docs: docs,
+					hashkey: hashkey
 				}
 			});
 
@@ -180,11 +181,12 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 		});
 
 
-		function ProjectDOCSAdderController( $scope, $mdDialog, config, project, docs) {
+		function ProjectDOCSAdderController( $scope, $mdDialog, config, project, docs, hashkey) {
       $scope.saving = false;
       $scope.loadconfig = config;
       $scope.project = project;
       $scope.docs = docs;
+      $scope.hashkey = hashkey;
 			$scope.closeDialog = function(){
 				$mdDialog.hide();
 			}
@@ -202,7 +204,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
       			data: $.param({
       				type: "Projects",
               mode: 'addDocument',
-							project: $scope.project.ID,
+							hashkey: $scope.hashkey,
 							doc: $scope.project.selected_doc_to_add
       			})
       		}).success(function(r){

@@ -131,7 +131,7 @@ class Projects
 			$where = 'p.ID = :id';
 			$arg['id'] = $key;
 		} else {
-			$where = 'p.hashkey = :hash';
+			$where = ' (p.hashkey = :hash or p.order_hashkey = :hash)';
 			$arg['hash'] = $key;
 		}
 
@@ -176,6 +176,9 @@ class Projects
 				} else {
 					$title .= '<u><em>'.__('a projektet nem nevezte el').'</em></u>';
 				}
+
+				$order_project_hashkeys = $this->getOrderProjectHashkeys( $d['order_hashkey'], 'ID' );
+				$d['order_project_hashkeys'] = $order_project_hashkeys;
 
 				$d['title'] = $title;
 			}
@@ -268,11 +271,8 @@ class Projects
 			$d['user_servicer'] = $users->get( array('user' => $d['servicer_id'], 'userby' => 'ID', 'alerts' => false) );
 			$d['partner'] = ($d['my_relation'] == 'requester') ? $d['user_servicer'] : $d['user_requester'];
 			$d['offer'] = $this->getOffer( $d['offer_id'] );
-			$d['paidamount'] = $this->getProjectPaidAmount( $d['ID'] );
 			$d['status_percent'] = $this->getProjectProgress( $d );
 			$d['status_percent_class'] = \Helper::progressBarColor($d['status_percent']);
-			$d['paying_percent'] = $this->getProjectPaymentProgress( $d['ID'] );
-			$d['paying_percent_class'] = \Helper::progressBarColor($d['paying_percent']);
 			$d['messages'] = $this->getProjectMessagesInfo( $d['ID'], $uid, $d['my_relation'] );
 			if ($d['my_relation'] == 'admin') {
 				if ($d['admin_title'] != '') {
@@ -296,6 +296,13 @@ class Projects
 					$d[$rel.'_project_data'] = $this->getProjectData( $hash, $uid, $d['my_relation'] );
 				}
 			}
+			$d['requester_paying_percent'] = $this->getProjectPaymentProgress( $d['requester_project_data']['ID'], 'requester' );
+			$d['requester_paying_percent_class'] = \Helper::progressBarColor($d['requester_paying_percent']);
+			$d['servicer_paying_percent'] = $this->getProjectPaymentProgress( $d['servicer_project_data']['ID'], 'servicer' );
+			$d['servicer_paying_percent_class'] = \Helper::progressBarColor($d['servicer_paying_percent']);
+
+			$d['requester_paidamount'] = $this->getProjectPaidAmount( $d['requester_project_data']['ID'], 'requester' );
+			$d['servicer_paidamount'] = $this->getProjectPaidAmount( $d['servicer_project_data']['ID'], 'servicer' );
 
 			// Timeline
 			if ($controll_user_admin)
@@ -322,20 +329,25 @@ class Projects
 		return $list;
 	}
 
-	public function getOrderProjectHashkeys( $hashkey = '' )
+	public function getOrderProjectHashkeys( $hashkey = '', $return_val = 'hashkey' )
 	{
 		$arr = array();
-		$hashes = $this->db->squery("SELECT hashkey, IF(primary_user_id = requester_id, 'requester', 'servicer') as relations FROM projects WHERE order_hashkey = :hash", array('hash' => $hashkey))->fetchAll(\PDO::FETCH_ASSOC);
+		$hashes = $this->db->squery("SELECT ID, hashkey, IF(primary_user_id = requester_id, 'requester', 'servicer') as relations FROM projects WHERE order_hashkey = :hash", array('hash' => $hashkey))->fetchAll(\PDO::FETCH_ASSOC);
 
 		foreach ((array)$hashes as $h) {
-			$arr[$h['relations']] = $h['hashkey'];
+			$arr[$h['relations']] = $h[$return_val];
 		}
 
 		return $arr;
 	}
 
-	public function addDocument( $project_id, $doc_id, $adder_user_id )
+	public function addDocument( $hashkey, $doc_id, $adder_user_id )
 	{
+		$project = $this->db->squery("SELECT ID, IF(primary_user_id = requester_id, 'requester', 'servicer') as relations FROM projects WHERE hashkey = :hash", array('hash' => $hashkey))->fetch(\PDO::FETCH_ASSOC);
+
+		$project_id = (int)$project['ID'];
+		$relation = $project['relations'];
+
 		$check = $this->db->squery("SELECT ID FROM ".\PortalManager\Documents::DBXREF_PROJECT." WHERE project_id = :pid and doc_id = :did", array('pid' => $project_id, 'did' => $doc_id));
 
 		if ($check->rowCount() == 0) {
@@ -353,18 +365,19 @@ class Projects
 
 			// get partner id from project
 			$partner_id = false;
-			$partner_relation = false;
-			$project = $this->db->squery("SELECT p.requester_id, p.servicer_id, p.requester_title, p.servicer_title FROM ".self::DBPROJECTS." as p WHERE p.ID = :pid", array('pid' => $project_id));
+			$partner_relation = 'admin';
+			$project = $this->db->squery("SELECT p.requester_id, p.primary_user_id, p.servicer_id, p.requester_title, p.servicer_title FROM ".self::DBPROJECTS." as p WHERE p.ID = :pid", array('pid' => $project_id));
 			$projectdata = $project->fetch(\PDO::FETCH_ASSOC);
+			$partner_id = $projectdata['primary_user_id'];
 
 			if ( $projectdata['requester_id'] == $adder_user_id )
 			{
-				$partner_id = $projectdata['servicer_id'];
+				$partner_id = $projectdata['primary_user_id'];
 				$partner_relation = 'servicer';
 			}
 			else if( $projectdata['servicer_id'] == $adder_user_id )
 			{
-				$partner_id = $projectdata['requester_id'];
+				$partner_id = $projectdata['primary_user_id'];
 				$partner_relation = 'requester';
 			}
 
@@ -373,7 +386,7 @@ class Projects
 				\PortalManager\Documents::DBXREF_PROJECT,
 				array(
 					'partner_id' => $partner_id,
-					'adder_relation' => ($partner_relation == 'servicer') ? 'requester' : 'servicer'
+					'adder_relation' => $partner_relation
 				),
 				sprintf("ID = %d", (int)$xrefid)
 			);
@@ -592,13 +605,24 @@ class Projects
 		return $ret;
 	}
 
-	public function getProjectPaidAmount( $project_id )
+	public function getProjectPaidAmount( $project_id, $relation )
 	{
-		$paid_amount = (float)$this->db->squery("SELECT
+		$qry = "SELECT
 			SUM(d.ertek)
 		FROM ".\PortalManager\Documents::DBXREF_PROJECT." as xp
 		LEFT OUTER JOIN ".\PortalManager\Documents::DBTABLE." as d ON d.ID = xp.doc_id
-		WHERE xp.project_id = :project and d.teljesites_at IS NOT NULL and 3 IN (SELECT folder_id FROM ".\PortalManager\Documents::DBXREF_FOLDER."  WHERE doc_id = xp.doc_id)",array('project' => $project_id))->fetchColumn();
+		WHERE
+			xp.project_id = :project and
+			d.teljesites_at IS NOT NULL and
+			3 IN (SELECT folder_id FROM ".\PortalManager\Documents::DBXREF_FOLDER."  WHERE doc_id = xp.doc_id)";
+
+		if ($relation == 'servicer') {
+			$qry .= " and xp.adder_relation = 'servicer'";
+		} else {
+			$qry .= " and xp.adder_relation = 'admin'";
+		}
+		$paid_amount = (float)$this->db->squery( $qry ,
+		array('project' => $project_id))->fetchColumn();
 
 		return $paid_amount;
 	}
@@ -609,9 +633,9 @@ class Projects
 		return ($p <= 100) ? $p : 100;
 	}
 
-	public function getProjectPaymentProgress( $project_id )
+	public function getProjectPaymentProgress( $project_id, $relation = false )
 	{
-		$paid_amount = $this->getProjectPaidAmount( $project_id );
+		$paid_amount = $this->getProjectPaidAmount( $project_id, $relation );
 
 		$project = $this->getProjectData( $project_id );
 		$offer_id = $project['offer_id'];

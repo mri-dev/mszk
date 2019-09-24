@@ -299,7 +299,7 @@ class Messanger
     }
 
     $sessiondata = $sessiondata->fetch(\PDO::FETCH_ASSOC);
-    $to = ($sessiondata['requester_id'] == $uid) ? (int)$sessiondata['servicer_id'] : (int)$sessiondata['requester_id'];
+    $to = ($sessiondata['partner_id'] == $uid) ? 0 : (int)$sessiondata['partner_id'];
 
     $this->db->insert(
       self::DBTABLE_MESSAGES,

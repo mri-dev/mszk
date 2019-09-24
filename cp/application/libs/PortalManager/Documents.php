@@ -521,14 +521,23 @@ class Documents
       $qarg['fuserid'] = (int)$arg['from_user'];
     }
 
-		if ( isset($arg['ids']) && !empty($arg['ids']) ) {
+		if ( isset($arg['ids']) && !empty($arg['ids']) )
+    {
 			$q .= " and FIND_IN_SET(d.ID, :idslist)";
 			$qarg['idslist'] = implode(",", (array)$arg['ids']);
 		}
 
-    if ( isset($arg['not_in_project']) && !empty($arg['not_in_project']) ) {
-			$q .= " and :not_in_project NOT IN (SELECT project_id FROM ".self::DBXREF_PROJECT." WHERE doc_id = d.ID)";
-			$qarg['not_in_project'] = $arg['not_in_project'];
+    if ( isset($arg['not_in_project']) && !empty($arg['not_in_project']) )
+    {
+      $q .= " and :not_in_project NOT IN (SELECT project_id FROM ".self::DBXREF_PROJECT." WHERE doc_id = d.ID)";
+
+      if ( is_numeric($arg['not_in_project']) ) {
+        $qarg['not_in_project'] = $arg['not_in_project'];
+      } else {
+        $hash = $arg['not_in_project'];
+        $projekt_id = $this->db->squery("SELECT ID FROM projects WHERE hashkey = :hash", array('hash' => $hash))->fetchColumn();
+        $qarg['not_in_project'] = $projekt_id;
+      }
 		}
 
     if ( isset($arg['in_project']) && !empty($arg['in_project']) ) {

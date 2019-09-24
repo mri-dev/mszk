@@ -45,7 +45,7 @@ class projektek extends Controller
 				\Helper::reload('/'.__CLASS__.'/aktualis');
 			}
 
-			$projectdata = $projects->getProjectData( $hashkey );
+			$projectdata = $projects->getProjectData( $hashkey, $uid );
 
 			$outputdocs = array();
 			$docs = new Documents(array('db' => $this->db));
@@ -54,9 +54,17 @@ class projektek extends Controller
 			$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
 			$folderinfo = $docs->getFolderData($folderhash);
 
-			$outputdocs['dijbekero'] = $docs->getList(array(
+			$outputdocs['requester']['dijbekero'] = $docs->getList(array(
 				'limit' => 9999,
-				'in_project' => $projectdata['ID'],
+				'in_project' => $projectdata['order_project_hashkeys']['requester'],
+				'order' => 'xp.added_at DESC',
+				'folder' => $folderinfo['ID'],
+				'expire_qry' => '<= now()',
+				'teljesites_qry' => 'IS NULL'
+			));
+			$outputdocs['servicer']['dijbekero'] = $docs->getList(array(
+				'limit' => 9999,
+				'in_project' => $projectdata['order_project_hashkeys']['servicer'],
 				'order' => 'xp.added_at DESC',
 				'folder' => $folderinfo['ID'],
 				'expire_qry' => '<= now()',
@@ -67,20 +75,36 @@ class projektek extends Controller
 			$folderhash = $docs->findFolderHashkey('szamla', $uid);
 			$folderinfo = $docs->getFolderData($folderhash);
 
-			$outputdocs['szamla'] = $docs->getList(array(
+			$outputdocs['requester']['szamla'] = $docs->getList(array(
 				'limit' => 9999,
-				'in_project' => $projectdata['ID'],
+				'in_project' => $projectdata['order_project_hashkeys']['requester'],
+				'order' => 'xp.added_at DESC',
+				'folder' => $folderinfo['ID']
+			));
+			$outputdocs['servicer']['szamla'] = $docs->getList(array(
+				'limit' => 9999,
+				'in_project' => $projectdata['order_project_hashkeys']['servicer'],
 				'order' => 'xp.added_at DESC',
 				'folder' => $folderinfo['ID']
 			));
 
 			// Dokumentumok
-			$outputdocs['all'] = $docs->getList(array(
+			$outputdocs['requester']['all'] = $docs->getList(array(
 				'limit' => 10,
-				'in_project' => $projectdata['ID'],
+				'in_project' => $projectdata['order_project_hashkeys']['requester'],
+				'order' => 'xp.added_at DESC'
+			));
+			$outputdocs['servicer']['all'] = $docs->getList(array(
+				'limit' => 10,
+				'in_project' => $projectdata['order_project_hashkeys']['servicer'],
 				'order' => 'xp.added_at DESC'
 			));
 
+			/*
+			echo '<pre>';
+			print_r($projectdata);
+			echo '</pre>';
+			*/
 
 			$this->out('doc', $outputdocs);
     }

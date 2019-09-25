@@ -138,7 +138,8 @@ class Messanger
     $this->admin = (isset($arg['admin'])) ? true : false;
 
     // Load sessions
-    $sess = $this->db->squery("SELECT
+    // TODO: OLD
+    $sq = "SELECT
       m.sessionid,
       m.requester_id,
       m.servicer_id,
@@ -147,7 +148,7 @@ class Messanger
       m.closed_at,
       p.requester_title,
       p.servicer_title,
-      IF(:uid = m.requester_id,'requester','servicer') as my_relation,
+      IF(:uid = m.requester_id, 'requester','servicer') as my_relation,
       IF(:uid = m.requester_id, p.requester_title, p.servicer_title) as project_title,
       IF(:uid = m.requester_id, m.notice_by_requester, m.notice_by_servicer) as notice,
       IF(:uid = m.requester_id, m.archived_by_requester, m.archived_by_servicer) as archived,
@@ -161,8 +162,41 @@ class Messanger
     FROM ".self::DBTABLE." as m
     LEFT OUTER JOIN ".\PortalManager\Projects::DBPROJECTS." as p ON p.ID = m.project_id
     LEFT OUTER JOIN felhasznalok as f ON f.id = IF(:uid = m.requester_id, m.servicer_id, m.requester_id)
-    WHERE 1=1 and (m.requester_id = :uid or m.servicer_id = :uid)
-    ORDER BY m.closed ASC, archived ASC", array('uid' => $uid));
+    WHERE 1=1 ";
+
+    $sq = "SELECT
+      m.sessionid,
+      m.partner_id,
+      m.project_id,
+      m.closed,
+      m.closed_at,
+      p.requester_title,
+      p.servicer_title,
+      IF(:uid = m.partner_id, 'user','admin') as relation,
+      IF(:uid = m.partner_id, IF(:uid = p.requester_id, p.requester_title, p.servicer_title), p.admin_title) as messanger_title,
+      IF(:uid = m.partner_id, m.notice_by_partner, m.notice_by_admin) as notice,
+      IF(:uid = m.partner_id, m.archived_by_partner, m.archived_by_admin) as archived,
+      (SELECT COUNT(ms.ID) FROM ".self::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = m.sessionid) as message_total,
+      IF(
+        :uid = m.partner_id,
+        (SELECT COUNT(msunre.ID) FROM ".self::DBTABLE_MESSAGES." as msunre WHERE msunre.sessionid = m.sessionid and (msunre.user_from_id != 0 and msunre.user_to_id = :uid) and msunre.user_readed_at IS NULL),
+        (SELECT COUNT(msunse.ID) FROM ".self::DBTABLE_MESSAGES." as msunse WHERE msunse.sessionid = m.sessionid and (msunse.user_from_id != :uid and msunse.user_to_id = 0) and msunse.admin_readed_at IS NULL)
+      ) as message_unreaded,
+      f.nev as partner_nev,
+      m.created_at,
+      p.requester_id as project_requester_id,
+      p.servicer_id as project_servicer_id
+    FROM ".self::DBTABLE." as m
+    LEFT OUTER JOIN ".\PortalManager\Projects::DBPROJECTS." as p ON p.ID = m.project_id
+    LEFT OUTER JOIN felhasznalok as f ON f.id = m.partner_id
+    WHERE 1=1 ";
+
+    if ( !$this->admin ) {
+      $sq .= " and m.partner_id = :uid";
+    }
+
+    $sq .= " ORDER BY m.closed ASC, archived ASC, p.order_hashkey ASC";
+    $sess = $this->db->squery($sq, array('uid' => $uid));
 
     if ( $sess->rowCount() == 0 ) {
       return $datas;
@@ -175,6 +209,9 @@ class Messanger
       if ( $s['message_unreaded'] != 0 ) {
         $datas['unreaded'] += (int)$s['message_unreaded'] ;
       }
+      if ( $s['relation'] == 'admin' ) {
+        $s['messanger_title'] .= ($s['partner_id'] == $s['project_requester_id']) ? '<br><span class="partner"><span class="state">Ajánlatkérő</span> '.$s['partner_nev'].'</span>': '<br><span class="partner"><span class="state">Szolgáltató</span> '.$s['partner_nev'].'</span>' ;
+      }
       $s['archived'] = (int)$s['archived'];
       $s['notice'] = nl2br($s['notice']);
       $datas['sessions'][$s['sessionid']] = $s;
@@ -184,7 +221,7 @@ class Messanger
     if (isset($arg['load_session']))
     {
       // Log visit
-      $my_relation = $datas['sessions'][$arg['load_session']]['my_relation'];
+      $my_relation = $datas['sessions'][$arg['load_session']]['relation'];
 
       if (!empty($my_relation)) {
         $this->db->update(
@@ -192,15 +229,15 @@ class Messanger
           array(
             $my_relation.'_readed_at' => NOW
           ),
-          sprintf("sessionid = '%s' and ".$my_relation."_readed_at IS NULL and user_from_id != %d and (user_from_id = %d or user_to_id = %d)", $arg['load_session'], (int)$uid, (int)$uid, (int)$uid)
+          sprintf("sessionid = '%s' and ".$my_relation."_readed_at IS NULL and user_from_relation != '%s'", $arg['load_session'], $my_relation)
         );
       }
 
       $qry = "SELECT
         m.*,
-        IF('".(int)$uid."' = ms.requester_id,'requester','servicer') as my_relation,
-        IF(m.user_from_id = ms.requester_id, 'requester', 'servicer') as user_from_relation,
-        IF('".(int)$uid."' != ms.requester_id, m.requester_readed_at, m.servicer_readed_at) as user_readed_at,
+        IF('".(int)$uid."' = ms.partner_id,'user','admin') as my_relation,
+        IF(m.user_from_id = ms.partner_id, 'user', 'admin') as user_from_relation,
+        IF('".(int)$uid."' != ms.partner_id, m.user_readed_at, m.admin_readed_at) as user_readed_at,
         IF(m.user_from_id = 0 and m.user_to_id = 0, 1, 0) as system_msg,
         f.nev as from_name
       FROM ".self::DBTABLE_MESSAGES." as m
@@ -230,6 +267,11 @@ class Messanger
         }
 
         $is_today = (date('Ymd') == date('Ymd', strtotime($d['send_at']))) ? true : false;
+        $from_name = $d['from_name'];
+
+        if ($d['user_from_relation'] == 'admin') {
+          $from_name = '<span class="kozvetito"><i class="fas fa-shield-alt"></i> '.$from_name.' (Közvetítő)</span>';
+        }
 
         $datas['messages']['msg'][] = array(
           'ID' => (int)$d['ID'],
@@ -244,7 +286,7 @@ class Messanger
           'unreaded' => $unreaded,
           'from_me' => ($d['user_from_id'] == $uid) ? true : false,
           'from' => array(
-            'name' => $d['from_name'],
+            'name' => $from_name,
             'ID' => $d['user_from_id']
           )
         );
@@ -258,9 +300,11 @@ class Messanger
 
   public function editMessangerComment( $session, $relation, $new_notice )
   {
-    if (!in_array($relation, array('servicer','requester'))) {
+    if (!in_array($relation, array('user','admin'))) {
       return false;
     }
+
+    $relation = ( $relation == 'user' ) ? 'partner' : $relation;
 
     $this->db->update(
       self::DBTABLE,
@@ -273,9 +317,11 @@ class Messanger
 
   public function archiveSession( $session, $relation, $archive )
   {
-    if (!in_array($relation, array('servicer','requester'))) {
+    if (!in_array($relation, array('user','admin'))) {
       return false;
     }
+
+    $relation = ( $relation == 'user' ) ? 'partner' : $relation;
 
     $this->db->update(
       self::DBTABLE,
@@ -298,6 +344,12 @@ class Messanger
       throw new \Exception(sprintf(__('Hibás üzenet session (%s)!'), $sessionid));
     }
 
+    if ($uid != 0) {
+      $users = new Users( array('db' => $this->db ));
+      $controll_user =  $users->get( array('user' => $uid, 'userby' => 'ID', 'alerts' => false) );
+      $controll_user_admin = ($controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_SUPERADMIN || $controll_user['data']['user_group'] == \PortalManager\Users::USERGROUP_ADMIN) ? true : false;
+    }
+
     $sessiondata = $sessiondata->fetch(\PDO::FETCH_ASSOC);
     $to = ($sessiondata['partner_id'] == $uid) ? 0 : (int)$sessiondata['partner_id'];
 
@@ -306,6 +358,7 @@ class Messanger
       array(
         'sessionid' => $sessionid,
         'message' => $msg,
+        'user_from_relation' => ($controll_user_admin) ? 'admin' : 'user',
         'user_from_id' => $uid,
         'user_to_id' => $to
       )

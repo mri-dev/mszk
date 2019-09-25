@@ -333,7 +333,7 @@
               <div class="d-flex flex-row justify-content-between align-items-center">
                 <div class="">
                   <a href="/uzenetek/session/{{project.requester_project_data.hashkey}}"><i class="fas fa-envelope-open-text"></i> <?=__('Tovább a projekt üzeneteire')?></a>
-                  <span class="unreaded-txt" ng-if="project.messages.unreaded && project.messages.unreaded!=0">{{project.messages.unreaded}} olvasatlan üzenet</span>
+                  <span class="unreaded-txt" ng-if="project.messages.requester.unreaded && project.messages.unreaded!=0">{{project.messages.requester.unreaded}} olvasatlan üzenet</span>
                 </div>
                 <div class="">
                   <button type="button" class="btn btn-primary btn-sm" ng-click="sendQuickMessage(project.requester_project_data.hashkey)"><?=__('Üzenet küldése')?> <i class="fas fa-paper-plane"></i></button>
@@ -625,7 +625,7 @@
               <div class="d-flex flex-row justify-content-between align-items-center">
                 <div class="">
                   <a href="/uzenetek/session/{{project.servicer_project_data.hashkey}}"><i class="fas fa-envelope-open-text"></i> <?=__('Tovább a projekt üzeneteire')?></a>
-                  <span class="unreaded-txt" ng-if="project.messages.unreaded && project.messages.unreaded!=0">{{project.messages.unreaded}} olvasatlan üzenet</span>
+                  <span class="unreaded-txt" ng-if="project.messages.servicer.unreaded && project.messages.servicer.unreaded!=0">{{project.messages.servicer.unreaded}} olvasatlan üzenet</span>
                 </div>
                 <div class="">
                   <button type="button" class="btn btn-primary btn-sm" ng-click="sendQuickMessage(project.servicer_project_data.hashkey)"><?=__('Üzenet küldése')?> <i class="fas fa-paper-plane"></i></button>

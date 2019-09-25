@@ -1061,7 +1061,7 @@ a.controller( "MessagesList", ['$scope', '$http', '$timeout', '$mdToast', '$mdDi
 			})
 		}).success(function(r){
 			var d = r.data;
-			console.log(d);
+			console.log(r);
 			$scope.result = d;
 			$scope.unreaded_messages = d.unreaded;
 
@@ -1131,6 +1131,7 @@ a.controller( "MessagesList", ['$scope', '$http', '$timeout', '$mdToast', '$mdDi
 							message: $scope.message
       			})
       		}).success(function(r){
+						console.log(r);
       			$scope.saving = false;
 						if (r.success == 1) {
 							$scope.toast(r.msg, 'success', 10000);

@@ -1661,6 +1661,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 							line-height: 1.1;
 							color: $color-red-light;
 							margin: 0 0 5px 0;
+							font-size: 1rem;
+
+							.partner{
+								display: block;
+								color: black;
+								font-size: 0.8rem;
+								margin: 5px 0 0 0;
+								.state{
+									background: $color-green;
+									color: white;
+									text-transform: uppercase;
+									padding: 3px;
+									font-size: 0.6rem;
+								}
+							}
 						}
 
 						.info{
@@ -1789,6 +1804,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 						.name {
 							font-weight: bold;
 							color: black;
+							.kozvetito {
+								color: $color-green;
+							}
 						}
 
 						.time {
@@ -2289,7 +2307,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 		}
 	}
 }
-
+.progress.status-percent{
+	max-width: 200px;
+	margin: 5px 0 0 0;
+}
 .action-buttons{
 	margin: 0 0 15px 0;
 }

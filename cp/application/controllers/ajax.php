@@ -68,6 +68,10 @@ class ajax extends Controller
 								$arg['load_session'] = $session;
 							}
 
+							if ( $this->view->is_admin_logged  ) {
+								$arg['admin'] = true;
+							}
+
 							$messages = $this->MESSANGER->loadMessages($uid, $arg);
 							$unreaded = $messages['unreaded'];
 
@@ -84,7 +88,7 @@ class ajax extends Controller
 							$uid = (int)$this->view->_USERDATA['data']['ID'];
 
 							try {
-								$this->MESSANGER->editMessangerComment($message['sessionid'], $message['my_relation'], $message['notice']);
+								$this->MESSANGER->editMessangerComment($message['sessionid'], $message['relation'], $message['notice']);
 								$this->setSuccess(__('Az üzenet megjegyzése sikeresen mentve lett!'), $ret);
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);
@@ -95,7 +99,7 @@ class ajax extends Controller
 							$uid = (int)$this->view->_USERDATA['data']['ID'];
 
 							try {
-								$this->MESSANGER->archiveSession($message['sessionid'], $message['my_relation'], ($message['archived'] == '0' || $message['archived'] == 'false')?0:1);
+								$this->MESSANGER->archiveSession($message['sessionid'], $message['relation'], ($message['archived'] == '0' || $message['archived'] == 'false')?0:1);
 								$this->setSuccess(__('Az üzenet archiv állapota módosítva lett!'), $ret);
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);

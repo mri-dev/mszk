@@ -273,7 +273,7 @@ class Projects
 			$d['offer'] = $this->getOffer( $d['offer_id'] );
 			$d['status_percent'] = $this->getProjectProgress( $d );
 			$d['status_percent_class'] = \Helper::progressBarColor($d['status_percent']);
-			$d['messages'] = $this->getProjectMessagesInfo( $d['ID'], $uid, $d['my_relation'] );
+			$d['messages'] = $this->getProjectMessagesInfo( $d['order_hashkey'], $uid, $d['my_relation'] );
 			if ($d['my_relation'] == 'admin') {
 				if ($d['admin_title'] != '') {
 					$title = $d['admin_title'] . "<br>";
@@ -478,8 +478,8 @@ class Projects
 						'message' => __('Az üzenetváltás lezárásra került a projekt inaktív állapot változása végett.'),
 						'user_from_id' => 0,
 						'user_to_id' => 0,
-						'requester_alerted' => 1,
-						'servicer_alerted' => 1
+						'admin_alerted' => 1,
+						'partner_alerted' => 1
 					)
 				);
 			}
@@ -505,8 +505,8 @@ class Projects
 						'message' => __('Az üzenetváltás megnyitásra került a projekt aktív állapot változása végett.'),
 						'user_from_id' => 0,
 						'user_to_id' => 0,
-						'requester_alerted' => 1,
-						'servicer_alerted' => 1
+						'admin_alerted' => 1,
+						'partner_alerted' => 1
 					)
 				);
 			}
@@ -521,7 +521,7 @@ class Projects
 			$this->db->update(
 				'projects',
 				$updates,
-				sprintf("hashkey = '%s'", $project['hashkey'])
+				sprintf("order_hashkey = '%s'", $project['order_hashkey'])
 			);
 
 			return true;
@@ -565,41 +565,50 @@ class Projects
 	}
 
 	// TODO: Megcsinálni
-	public function getProjectMessagesInfo( $project_id, $uid, $relation )
+	public function getProjectMessagesInfo( $order_hashkey, $uid, $relation )
 	{
 		$ret = array(
-			'unreaded' => 0,
-			'closed' => false
+			'servicer' => array(
+				'unreaded' => 0,
+				'closed' => false
+			),
+			'requester' => array(
+				'unreaded' => 0,
+				'closed' => false
+			)
 		);
 
-		$projectdata = $this->getProjectData( $project_id, $uid );
+		$row = array('servicer', 'requester');
 
-		$message = $this->db->squery("SELECT m.closed, m.closed_at FROM ".\MessageManager\Messanger::DBTABLE." as m WHERE m.sessionid = :session", array('session' => $projectdata['hashkey']))->fetch(\PDO::FETCH_ASSOC);
+		$sessions = $this->getOrderProjectHashkeys( $order_hashkey );
+		$projectdata = $this->getProjectData( $order_hashkey, $uid);
 
-		if ($message && $message['closed']) {
-			$ret['closed'] = $message['closed_at'];
-		}
-
-		switch ($relation)
+		foreach ( (array)$row as $r )
 		{
-			case 'admin':
-			break;
-			case 'requester':
-				$qry = "SELECT COUNT(ms.ID) FROM ".\MessageManager\Messanger::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = :session and (ms.user_from_id != 0 and ms.user_to_id) and ms.user_from_id != :uid and ms.requester_readed_at IS NULL";
-			break;
-			case 'servicer':
-				$qry = "SELECT COUNT(ms.ID) FROM ".\MessageManager\Messanger::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = :session and (ms.user_from_id != 0 and ms.user_to_id) and ms.user_from_id != :uid and ms.servicer_readed_at IS NULL";
-			break;
-		}
-
-		if ($qry) {
-			$data = $this->db->squery($qry, array('uid' => $uid, 'session' => $projectdata['hashkey']));
-
-			if ($data->rowCount() == 0) {
-				return $ret;
+			$session = $sessions[$r];
+			$message = $this->db->squery("SELECT m.closed, m.closed_at FROM ".\MessageManager\Messanger::DBTABLE." as m WHERE m.sessionid = :session", array('session' => $session))->fetch(\PDO::FETCH_ASSOC);
+			if ($message && $message['closed']) {
+				$ret[$r]['closed'] = $message['closed_at'];
 			}
-			$unreaded = $data->fetchColumn();
-			$ret['unreaded'] = $unreaded;
+			if ($relation == 'admin') {
+				$qry = "SELECT COUNT(ms.ID) FROM ".\MessageManager\Messanger::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = :session and (ms.user_to_id = 0 and ms.user_from_id != 0) and ms.admin_readed_at IS NULL";
+				$qry = $this->db->squery( $qry, array('session' => $session));
+				$num = 0;
+				if ($qry->rowCount() != 0) {
+					$num = (int)$qry->fetchColumn();
+				}
+				$ret[$r]['unreaded']= $num;
+			} else {
+				if ($relation == $r) {
+					$qry = "SELECT COUNT(ms.ID) FROM ".\MessageManager\Messanger::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = :session and (ms.user_from_id != 0 and ms.user_to_id = :uid) and ms.user_from_id != :uid and ms.user_readed_at IS NULL";
+					$qry = $this->db->squery( $qry, array('session' => $session, 'uid' => $uid));
+					$num = 0;
+					if ($qry->rowCount() != 0) {
+						$num = (int)$qry->fetchColumn();
+					}
+					$ret[$r]['unreaded']= $num;
+				}
+			}
 		}
 
 		return $ret;

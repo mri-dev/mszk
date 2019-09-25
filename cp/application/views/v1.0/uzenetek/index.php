@@ -9,7 +9,7 @@
                 <div class="project">
                   <span class="closed" ng-if="session.closed==1" title="<?=__('Lezárt üzenetváltás')?>"><i class="fas fa-lock"></i></span>
                   <span class="archived" ng-if="session.archived==1" title="<?=__('Archivált üzenetváltás')?>"><i class="fas fa-archive"></i></span>
-                  {{session.project_title}}
+                  <div class="" ng-bind-html="session.messanger_title"></div>
                 </div>
                 <div class="info">
                   <div>
@@ -59,7 +59,8 @@
             </div>
             <div class="new-msg" ng-if="current_session && sessions[current_session].closed==0">
               <div class="wrapper">
-                <label for="messanger_text"><i class="far fa-envelope"></i> <?=__('Üzenet küldése <strong>{{sessions[current_session].partner_nev}}</strong> részére:')?></label>
+                <label ng-if="sessions[current_session].relation=='admin'" for="messanger_text"><i class="far fa-envelope"></i> <?=__('Üzenet küldése <strong>{{sessions[current_session].partner_nev}}</strong> részére:')?></label>
+                <label ng-if="sessions[current_session].relation=='user'" for="messanger_text"><i class="far fa-envelope"></i> <?=__('Üzenet küldése <strong>Szolgáltatás Közvetítő</strong> részére:')?></label>
                 <textarea maxlength="{{newmsg_left_length}}" ng-model="messanger.text" id="messanger_text" class="form-control no-editor"></textarea>
                 <small>{{newmsg_left_length}} / {{newmsg_left_length-messanger.text.length}}</small>
                 <br>
@@ -84,7 +85,7 @@
                 </div>
                 <div class="author" ng-if="!msg.system_msg">
                   <span class="time">{{msg.send_at}}</span>
-                  <span class="name">{{msg.from.name}}<span class="readed" ng-if="msg.user_readed_at" title="<?=__('Látta')?>: {{msg.user_readed_at}}"> <i class="fas fa-check-double"></i></span></span>
+                  <span class="name"><span ng-bind-html="msg.from.name|unsafe"></span><span class="readed" ng-if="msg.user_readed_at" title="<?=__('Látta')?>: {{msg.user_readed_at}}"> <i class="fas fa-check-double"></i></span></span>
                 </div>
               </div>
             </div>

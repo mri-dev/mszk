@@ -159,6 +159,8 @@ class ajax extends Controller
 							}
 							$listarg['uid'] = $this->view->_USERDATA['data']['ID'];
 							$listarg['getproject'] = $hashkey;
+							$listarg['show_messages'] = true;
+							$listarg['show_request_data'] = true;
 
 							try {
 								$p = $projects->getList( $listarg );

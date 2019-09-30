@@ -38,6 +38,7 @@ class Database
 		if ( $this->db === null ) {
 			try{
 				$this->db = new \PDO('mysql:host=' . $this->db_host . ';dbname=' . $this->db_name, $this->db_user , $this->db_pw );
+				$this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 				//echo '-DBOPEN: '.date('Y-m-d H:i:s').'-<br>';
 				$this->query("set names utf8");
 			}catch(\PDOException $e){
@@ -69,7 +70,14 @@ class Database
 
 	public function query( $qry )
 	{
-		return $this->db->query( $qry );
+		try {
+				$q = $this->db->query( $qry );
+		} catch (\PDOException $e) {
+			error_log($e->getMessage().' | Query: '.$qry);
+			error_log('Trace: '.$e->getTraceAsString());
+		}
+
+		return $q;
 	}
 
 	public function lastInsertId()

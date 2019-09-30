@@ -44,40 +44,58 @@ class Messanger
       m.send_at,
       m.user_to_id as user_id,
       m.message,
-      IF(m.user_to_id = mg.requester_id, p.requester_title, p.servicer_title) as project_title,
-      IF(m.user_to_id = mg.requester_id, 'requester', 'servicer') as my_relation,
+      m.user_from_relation,
+      IF(
+        m.user_from_relation = 'user',
+        IF(m.user_from_id = p.requester_id, CONCAT(p.admin_title,' - Ajánlatkérő csatorna'), CONCAT(p.admin_title,' - Szolgáltató csatorna')),
+        IF(m.user_to_id = p.requester_id, p.requester_title, p.servicer_title)
+      ) as project_title,
       TIMESTAMPDIFF(MINUTE, m.send_at, now()) as minafter
     FROM ".self::DBTABLE_MESSAGES." as m
     LEFT OUTER JOIN ".self::DBTABLE." as mg ON mg.sessionid = m.sessionid
     LEFT OUTER JOIN ".\PortalManager\Projects::DBPROJECTS." as p ON p.hashkey = m.sessionid
-    WHERE 1=1 and
-    m.user_from_id != 0 and
-    m.user_to_id != 0 and
-    ((m.requester_readed_at IS NULL and m.requester_alerted = 0 and m.user_to_id = mg.requester_id) or (m.servicer_readed_at IS NULL and m.servicer_alerted = 0 and m.user_to_id = mg.servicer_id))
-    and TIMESTAMPDIFF(MINUTE, m.send_at, now()) > {$delay_in_min} ORDER BY m.send_at ASC");
+    WHERE 1=1
+    and
+    (
+      (m.admin_readed_at IS NULL and m.admin_alerted = 0 and m.user_from_relation = 'user') or
+      (m.user_readed_at IS NULL and m.user_alerted = 0 and m.user_to_id = mg.partner_id and m.user_from_relation = 'admin')
+    ) and
+    TIMESTAMPDIFF(MINUTE, m.send_at, now()) > {$delay_in_min} ORDER BY m.send_at ASC");
 
     //echo $qry; exit;
 
-    if ($gets->rowCount() != 0) {
+    if ($gets && $gets->rowCount() != 0) {
       $gets = $gets->fetchAll(\PDO::FETCH_ASSOC);
 
       foreach ((array)$gets as $d) {
+        /* */
         if (!isset($datas['data'][$d['user_id']]['userid'])) {
           $datas['data'][$d['user_id']]['user_id'] = $d['user_id'];
 
-          $user = $this->db->squery("SELECT nev, email FROM felhasznalok WHERE ID = :id", array('id' => $d['user_id']))->fetch(\PDO::FETCH_ASSOC);
-          $datas['data'][$d['user_id']]['user'] = $user;
-          $datas['data'][$d['user_id']]['user']['relation'] = $d['my_relation'];
+          if ($d['user_id'] == 0 ) {
+            // To Admin
+            $datas['data'][$d['user_id']]['user'] = array(
+              'nev' => 'Adminisztrátor',
+              'email' => $this->db->settings['alert_email']
+            );
+            $datas['data'][$d['user_id']]['user']['to_relation'] = 'admin';
+          } else {
+            // To user
+            $user = $this->db->squery("SELECT nev, email FROM felhasznalok WHERE ID = :id", array('id' => $d['user_id']))->fetch(\PDO::FETCH_ASSOC);
+            $datas['data'][$d['user_id']]['user'] = $user;
+            $datas['data'][$d['user_id']]['user']['to_relation'] = 'user';
+          }
         }
+        /* */
 
         if (!in_array($d['user_id'], $datas['user_ids'])) {
           $datas['user_ids'][] = $d['user_id'];
         }
 
-        $datas['data'][$d['user_id']][items][$d['sessionid']]['project']['title'] = $d['project_title'];
-        $datas['data'][$d['user_id']][items][$d['sessionid']]['project']['session'] = $d['sessionid'];
+        $datas['data'][$d['user_id']]['items'][$d['sessionid']]['project']['title'] = $d['project_title'];
+        $datas['data'][$d['user_id']]['items'][$d['sessionid']]['project']['session'] = $d['sessionid'];
 
-        $datas['data'][$d['user_id']][items][$d['sessionid']]['items'][] = $d;
+        $datas['data'][$d['user_id']]['items'][$d['sessionid']]['items'][] = $d;
         $datas['data'][$d['user_id']]['total_unreaded']++;
 
         $datas['total_items']++;

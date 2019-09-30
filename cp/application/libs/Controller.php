@@ -155,7 +155,10 @@ class Controller {
       if (!$this->view->is_admin_logged) {
         $q .= " and (p.requester_id = :uid or p.servicer_id = :uid)";
         $arg['uid'] = $uid;
+      } else {
+        $q .= " GROUP BY p.order_hashkey";
       }
+
       $badges['projects']['inprogress'] = $this->db->squery($q, $arg)->rowCount();
 
       // Lezárt

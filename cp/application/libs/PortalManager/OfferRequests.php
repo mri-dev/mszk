@@ -1281,7 +1281,7 @@ class OfferRequests
 		return $data;
 	}
 
-	private function findServicesItems( $ids = array() )
+	public function findServicesItems( $ids = array() )
 	{
 		$list = array();
 

@@ -8,6 +8,7 @@ use PortalManager\Documents;
 use PortalManager\Template;
 use PortalManager\OfferRequests;
 
+
 /**
 * class Projects
 * @package PortalManager
@@ -273,7 +274,15 @@ class Projects
 			$d['offer'] = $this->getOffer( $d['offer_id'] );
 			$d['status_percent'] = $this->getProjectProgress( $d );
 			$d['status_percent_class'] = \Helper::progressBarColor($d['status_percent']);
-			$d['messages'] = $this->getProjectMessagesInfo( $d['order_hashkey'], $uid, $d['my_relation'] );
+
+			if (isset($arg['show_messages'])) {
+				$d['messages'] = $this->getProjectMessagesInfo( $d['order_hashkey'], $uid, $d['my_relation'] );
+			}
+
+			if (isset($arg['show_request_data'])) {
+				$d['request_data'] = $this->getRequestData( $d['request_id'] );
+			}
+
 			if ($d['my_relation'] == 'admin') {
 				if ($d['admin_title'] != '') {
 					$title = $d['admin_title'] . "<br>";
@@ -327,6 +336,43 @@ class Projects
 		}
 
 		return $list;
+	}
+
+	public function getRequestData( $id )
+	{
+		$data = array();
+
+		$qry = "SELECT
+			r.*
+		FROM requests as r
+		WHERE 1=1 and r.ID = :id";
+
+		$qry = $this->db->squery( $qry, array('id' => (int)$id));
+
+		if ($qry->rowCount() == 0) {
+			return $data;
+		}
+
+		$d = $qry->fetch( \PDO::FETCH_ASSOC );
+
+		$d['cash'] = json_decode($d['cash'], true);
+		$d['cash_config'] = json_decode($d['cash_config'], true);
+		$d['services'] = $this->findServicesItems(json_decode($d['services'], true));
+		$d['subservices'] = $this->findServicesItems(json_decode($d['subservices'], true));
+		$d['subservices_items'] = $this->findServicesItems(json_decode($d['subservices_items'], true));
+		$d['service_description'] = json_decode($d['service_description'], true);
+
+		$data = $d;
+
+		return $data;
+	}
+
+	private function findServicesItems( $ids = array() )
+	{
+		$or = new OfferRequests(array('db' => $this->db));
+		$services = $or->findServicesItems( $ids );
+		unset($or);
+		return $services;
 	}
 
 	public function getOrderProjectHashkeys( $hashkey = '', $return_val = 'hashkey' )

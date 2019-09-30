@@ -37,6 +37,12 @@
                     <td><?=__('Befejezés')?></td>
                     <td><strong>{{project.project_end}}</strong><span class="nosetdata" ng-if="!project.project_end"><?=__('Még nincs meghatározva.')?></span></td>
                   </tr>
+                  <tr>
+                    <td><?=__('Ajánlatkérés referencia adatok')?></td>
+                    <td>
+                      <button type="button" class="btn btn-sm btn-outline-danger" onclick="$('#requested-offer').slideToggle(400);"><?=__('Mutat / Rejt')?></button>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -49,6 +55,56 @@
                   <span class="time"><strong>{{tl.time}}</strong></span> &mdash; <span class="ev">{{tl.title}}</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="requested-offer" style="display: none;" id="requested-offer" ng-if="project.request_data">
+      <div class="head"><?=__('Ajánlatkérő ajánlatkérése')?></div>
+      <div class="cont">
+        <div class="d-flex flex-wrap align-items-start">
+          <div class="infos">
+            <div class="dpad">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td><?=__('Ajánlatkérés azonosító')?></td>
+                    <td><strong>{{project.request_data.hashkey}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td><?=__('Név')?></td>
+                    <td><strong>{{project.request_data.name}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td><?=__('Telefon')?></td>
+                    <td><strong>{{project.request_data.phone}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td><?=__('E-mail cím')?></td>
+                    <td><strong>{{project.request_data.email}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td><?=__('Cég neve')?></td>
+                    <td><strong>{{project.request_data.company}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td><?=__('Költségkeret (összesen)')?></td>
+                    <td><strong>{{project.request_data.cash_total|cash}}</strong></td>
+                  </tr>
+                  <tr>
+                    <td><?=__('Ajánlatkérés ideje')?></td>
+                    <td><strong>{{project.request_data.requested}}</strong></td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="ajdata">
+            <div class="dpad wpadding infoline">
+              <label for=""><?=__('Ajánlatkérés szövege')?>:</label>
+              <div class="pval" ng-bind-html="project.request_data.message|unsafe"></div>
             </div>
           </div>
         </div>

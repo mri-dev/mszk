@@ -35,6 +35,10 @@ class cron extends Controller
 
 			$unreadeds = $messangers->collectAllUnreadedMessagesForEmailAlert();
 
+			/* * /
+			echo '<pre>';
+			print_r($unreadeds);
+			/* */
 			/* */
 			if ($unreadeds && count($unreadeds['user_ids']) > 0)
 			{
@@ -44,7 +48,7 @@ class cron extends Controller
 					if($send_loop > self::MSG_SEND_LIMIT) break;
 
 					$email = $user['user']['email'];
-					$relation = $user['user']['relation'];
+					$relation = $user['user']['to_relation'];
 
 					if (!empty($email))
 					{

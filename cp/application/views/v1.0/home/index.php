@@ -297,7 +297,7 @@
                   <div class="holder">
                     <div class="data"><?=__('Projekt')?></div>
                     <div class="progress-status"><?=__('Állapot')?></div>
-                    <div class="progress-status"><?=__('Díjfizetés')?></div>
+                    <div class="paying-status"><?=__('Díjfizetés')?></div>
                     <div class="add-at"><?=__('Létrejött')?></div>
                   </div>
                 </div>
@@ -310,9 +310,10 @@
                       </div>
                       <div class="subtitle">
                         <?php if ($this->is_admin_logged): ?>
-                          <span><strong title="<?=__('Ajánlatkérő')?>"><?=$d['user_requester']['data']['nev']?></strong> <-> <strong title="<?=__('Szolgáltató')?>"><?=$d['user_servicer']['data']['nev']?></strong></span>
+                          <span><strong class="txt-requester" title="<?=__('Ajánlatkérő')?>"><?=$d['user_requester']['data']['nev']?></strong> <-> <strong class="txt-servicer" title="<?=__('Szolgáltató')?>"><?=$d['user_servicer']['data']['nev']?></strong></span>
+                        <?php else: ?>
+                          <span><?=__('Státuszom')?>: <strong class="txt-<?=$d['my_relation']?>"><?=($d['my_relation'] == 'requester')?__('Ajánlatkérő'):__('Szolgáltató')?></strong> </span>
                         <?php endif; ?>
-                        <span><?=__('Fizetve (nettó)')?>: <strong><span class="allprice"><?=\Helper::cashFormat($d['offer']['price'])?></span> /<span class="paidprice"><?=\Helper::cashFormat($d['paidamount'])?></span></strong></span>
                       </div>
                     </div>
                     <div class="progress-status">
@@ -320,10 +321,27 @@
                         <div class="progress-bar <?=\Helper::progressBarColor($d['status_percent'])?>" role="progressbar" style="width: <?=$d['status_percent']?>%;" aria-valuenow="<?=$d['status_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$d['status_percent']?>%</div>
                       </div>
                     </div>
-                    <div class="progress-status">
-                      <div class="progress">
-                        <div class="progress-bar <?=\Helper::progressBarColor($d['paying_percent'])?>" role="progressbar" style="width: <?=$d['paying_percent']?>%;" aria-valuenow="<?=$d['paying_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$d['paying_percent']?>%</div>
+                    <div class="paying-status">
+                      <?php if ($this->is_admin_logged || $d['my_relation'] == 'requester' ): ?>
+                      <div class="d-flex align-items-center">
+                        <div class="ptext txt-requester"><?=__('Ajánlatkérő')?></div>
+                        <div class="pprogress">
+                          <div class="progress">
+                            <div class="progress-bar <?=\Helper::progressBarColor($d['requester_paying_percent'])?>" role="progressbar" style="width: <?=$d['requester_paying_percent']?>%;" title="<?=($d['requester_paidamount'] > 0)?__('Befizetve: ').\Helper::cashFormat($d['requester_paidamount']).' Ft':''?>" aria-valuenow="<?=$d['requester_paying_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$d['requester_paying_percent']?>%</div>
+                          </div>
+                        </div>
                       </div>
+                      <?php endif; ?>
+                      <?php if ($this->is_admin_logged || $d['my_relation'] == 'servicer' ): ?>
+                      <div class="d-flex align-items-center">
+                        <div class="ptext txt-servicer"><?=__('Szolgáltató')?></div>
+                        <div class="pprogress">
+                          <div class="progress">
+                            <div class="progress-bar <?=\Helper::progressBarColor($d['servicer_paying_percent'])?>" role="progressbar" style="width: <?=$d['servicer_paying_percent']?>%;" title="<?=($d['servicer_paidamount'] > 0)?__('Kifizetve: ').\Helper::cashFormat($d['servicer_paidamount']).' Ft':''?>" aria-valuenow="<?=$d['servicer_paying_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$d['servicer_paying_percent']?>%</div>
+                          </div>
+                        </div>
+                      </div>
+                      <?php endif; ?>
                     </div>
                     <div class="add-at center">
                       <?=date('Y/m/d', strtotime($d['created_at']))?>

@@ -74,8 +74,6 @@ class home extends Controller{
 				$messages = $messanger->loadMessages($uid, $arg);
 				$dashboard['messanger'] = $messages;
 
-
-
 				// Ajánlatkérések
 				$offerrequests = new OfferRequests(array('db' => $this->db));
 				$arg = array(

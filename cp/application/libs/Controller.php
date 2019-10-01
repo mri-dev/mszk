@@ -117,6 +117,7 @@ class Controller {
     public function getBadges()
     {
       $badges = array();
+      $messages_all = 0;
 
       $uid = $this->view->_USERDATA['data']['ID'];
 
@@ -138,6 +139,10 @@ class Controller {
         $badges['offers']['admin']['progressed'] = $this->db->squery("SELECT r.ID FROM requests as r WHERE r.offerout = 1 or r.elutasitva = 1")->rowCount();
         $badges['offers']['admin']['done'] = $this->db->squery("SELECT r.ID FROM requests as r LEFT OUTER JOIN offers as o ON o.ID = r.admin_offer_id WHERE r.offerout = 1 and o.project_id IS NOT NULL")->rowCount();
         $badges['offers']['admin']['positiveprocess'] = $this->db->squery("SELECT r.ID FROM requests as r LEFT OUTER JOIN offers as o ON o.ID = r.admin_offer_id WHERE r.offerout = 1 and o.accepted = 1 and o.project_id IS NULL")->rowCount();
+
+        $messages_all = $this->db->squery("SELECT m.ID FROM messanger_messages as m WHERE m.user_to_id = 0 and m.user_from_id != 0 and m.admin_readed_at IS NULL")->rowCount();
+      } else {
+        $messages_all = $this->db->squery("SELECT m.ID FROM messanger_messages as m WHERE m.user_from_relation = 'admin' and m.user_from_id != 0 and m.user_to_id = :myid and m.user_readed_at IS NULL", array('myid' => $uid))->rowCount();
       }
       $badges['offers']['admin']['total'] = $badges['offers']['admin']['progress'] + (int)$badges['offers']['admin']['positiveprocess'];
 
@@ -181,7 +186,7 @@ class Controller {
       /**
       * Üzenetek
       **/
-      $badges['messages']['all'] = 0;
+      $badges['messages']['all'] = $messages_all;
 
       return $badges;
     }

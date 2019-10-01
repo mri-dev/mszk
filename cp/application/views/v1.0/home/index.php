@@ -191,9 +191,6 @@
                       <div class="title">
                         <a href="/uzenetek/session/<?=$d['sessionid']?>" target="_blank"><strong><?=$d['project_title']?></strong></a>
                       </div>
-                      <div class="subtitle">
-                        <span><?=$d['partner_nev']?></span>
-                      </div>
                     </div>
                     <div class="unreaded-msg center">
                       <?=$d['message_total']?><? if((int)$d['message_unreaded'] != 0):?> / <strong style="color:red;"><?=sprintf(__('%d új'), (int)$d['message_unreaded'])?></strong><? endif; ?>

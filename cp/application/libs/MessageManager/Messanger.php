@@ -191,6 +191,7 @@ class Messanger
       p.requester_title,
       p.servicer_title,
       IF(:uid = m.partner_id, 'user','admin') as relation,
+      IF(:uid = p.requester_id, p.requester_title, p.servicer_title) as project_title,
       IF(:uid = m.partner_id, IF(:uid = p.requester_id, p.requester_title, p.servicer_title), p.admin_title) as messanger_title,
       IF(:uid = m.partner_id, m.notice_by_partner, m.notice_by_admin) as notice,
       IF(:uid = m.partner_id, m.archived_by_partner, m.archived_by_admin) as archived,

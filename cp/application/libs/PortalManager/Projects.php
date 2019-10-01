@@ -182,6 +182,11 @@ class Projects
 				$d['order_project_hashkeys'] = $order_project_hashkeys;
 
 				$d['title'] = $title;
+			} else {
+				$order_project_hashkeys = $this->getOrderProjectHashkeys( $d['order_hashkey'], 'hashkey' );
+				$d['order_project_hashkeys'] = $order_project_hashkeys;
+				$order_project_hashkeys = $this->getOrderProjectHashkeys( $d['order_hashkey'], 'ID' );
+				$d['order_project_ids'] = $order_project_hashkeys;
 			}
 
 			return $d;
@@ -412,19 +417,33 @@ class Projects
 			// get partner id from project
 			$partner_id = false;
 			$partner_relation = 'admin';
-			$project = $this->db->squery("SELECT p.requester_id, p.primary_user_id, p.servicer_id, p.requester_title, p.servicer_title FROM ".self::DBPROJECTS." as p WHERE p.ID = :pid", array('pid' => $project_id));
+			$project = $this->db->squery("SELECT
+				p.order_hashkey,
+				p.requester_id,
+				p.primary_user_id,
+				p.servicer_id,
+				p.requester_title,
+				p.servicer_title,
+				p.admin_title
+			FROM ".self::DBPROJECTS." as p
+			WHERE p.ID = :pid", array('pid' => $project_id));
 			$projectdata = $project->fetch(\PDO::FETCH_ASSOC);
 			$partner_id = $projectdata['primary_user_id'];
 
 			if ( $projectdata['requester_id'] == $adder_user_id )
 			{
 				$partner_id = $projectdata['primary_user_id'];
-				$partner_relation = 'servicer';
+				$partner_relation = 'requester';
 			}
 			else if( $projectdata['servicer_id'] == $adder_user_id )
 			{
 				$partner_id = $projectdata['primary_user_id'];
-				$partner_relation = 'requester';
+				$partner_relation = 'servicer';
+			}
+
+			// Ha felhasználó, akkor nincs partner id, mivel az admint kell értesíteni
+			if ( $partner_relation != 'admin' ) {
+				$partner_id = 0;
 			}
 
 			// update partner id on xref
@@ -437,38 +456,67 @@ class Projects
 				sprintf("ID = %d", (int)$xrefid)
 			);
 
-			// email alert other partner
-			$users = new Users(array('db' => $this->db));
-			$partner_user = $users->get( array('user' => $partner_id, 'userby' => 'ID') );
-
 			$docs = new Documents(array('db' => $this->db));
 			$arg = array();
 			$arg['uid'] = $partner_id;
 			$arg['getid'] = $doc_id;
 			$doc = $docs->getList( $arg );
 
-			if (true)
+			// email alert
+			if ($partner_relation == 'admin')
 			{
-				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
-				$mail->add( trim($partner_user['data']['email']) );
-				$arg = array(
-					'nev' => trim($partner_user['data']['nev']),
-					'project_nev' => (($projectdata[$partner_relation.'_title'] != '') ? $projectdata[$partner_relation.'_title'] : __('- nincs név -')),
-					'doc_hashkey' => $doc['hashkey'],
-					'doc_nev' => $doc['name'],
-					'doc_tipus' => $doc['folders'][0]['folder_name'],
-					'doc_ertek' => (($doc['ertek'] != '0') ? __('Érték / Összeg').': <strong>'.\Helper::cashFormat($doc['ertek']).' '.__('Ft + ÁFA').'</strong>' : '') ,
-					'doc_hatarido' => ((!empty($doc['expire_at'])) ? __('Határidő').': <strong>'.$doc['expire_at'].'</strong>' : '') ,
-					'doc_teljesitve' => ((!empty($doc['teljesites_at'])) ? __('Teljesítés idelye').': <strong>'.$doc['teljesites_at'].'</strong>' : '') ,
-					'settings' => $this->db->settings,
-					'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
-				);
-				$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('projects_documents_add_'.$partner_relation, $arg);
-				$mail->setSubject( __('Új dokumentuma érkezett!') );
-				$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
-				$re = $mail->sendMail();
-			}
+				// Ha felhasználót kell értesíteni
+				$users = new Users(array('db' => $this->db));
+				$partner_user = $users->get( array('user' => $partner_id, 'userby' => 'ID') );
 
+				if (true)
+				{
+					$partner_relation = ($partner_id == $projectdata['requester_id']) ? 'requester' : 'servicer';
+					$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+					$mail->add( trim($partner_user['data']['email']) );
+					$projekt_name = (($projectdata[$partner_relation.'_title'] != '') ? $projectdata[$partner_relation.'_title'] : __('- nincs név -'));
+					$arg = array(
+						'nev' => trim($partner_user['data']['nev']),
+						'project_nev' => $projekt_name,
+						'doc_hashkey' => $doc['hashkey'],
+						'doc_nev' => $doc['name'],
+						'doc_tipus' => $doc['folders'][0]['folder_name'],
+						'doc_ertek' => (($doc['ertek'] != '0') ? __('Érték / Összeg').': <strong>'.\Helper::cashFormat($doc['ertek']).' '.__('Ft + ÁFA').'</strong>' : '') ,
+						'doc_hatarido' => ((!empty($doc['expire_at'])) ? __('Határidő').': <strong>'.$doc['expire_at'].'</strong>' : '') ,
+						'doc_teljesitve' => ((!empty($doc['teljesites_at'])) ? __('Teljesítés idelye').': <strong>'.$doc['teljesites_at'].'</strong>' : '') ,
+						'settings' => $this->db->settings,
+						'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+					);
+					$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('projects_documents_add_'.$partner_relation, $arg);
+					$mail->setSubject( __('Új dokumentuma érkezett: ').$projekt_name );
+					$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
+					$re = $mail->sendMail();
+				}
+			} else {
+				if (true)
+				{
+					$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+					$mail->add( $this->db->settings['alert_email'] );
+					$arg = array(
+						'order_hashkey' => $projectdata['order_hashkey'],
+						'project_nev' => (($projectdata['admin_title'] != '') ? $projectdata['admin_title'] : __('- nincs név -')),
+						'doc_hashkey' => $doc['hashkey'],
+						'doc_nev' => $doc['name'],
+						'doc_tipus' => $doc['folders'][0]['folder_name'],
+						'doc_ertek' => (($doc['ertek'] != '0') ? __('Érték / Összeg').': <strong>'.\Helper::cashFormat($doc['ertek']).' '.__('Ft + ÁFA').'</strong>' : '') ,
+						'doc_hatarido' => ((!empty($doc['expire_at'])) ? __('Határidő').': <strong>'.$doc['expire_at'].'</strong>' : '') ,
+						'doc_teljesitve' => ((!empty($doc['teljesites_at'])) ? __('Teljesítés idelye').': <strong>'.$doc['teljesites_at'].'</strong>' : '') ,
+						'settings' => $this->db->settings,
+						'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+					);
+					$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get('projects_documents_add_admin', $arg);
+					$ufrom = ($partner_relation == 'requester') ? __('ajánlatkérőtől') : __('szolgáltatótól');
+					$mail->setSubject( __('Új dokumentuma érkezett a(z) '.$ufrom.': '.$projectdata['admin_title']) );
+					$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
+					$re = $mail->sendMail();
+					error_log(print_r($re, true));
+				}
+			}
 
 		} else{
 			throw new \Exception(__("A dokumentum korábban már be lett csatolva."));
@@ -737,7 +785,6 @@ class Projects
 		$row['message'] = nl2br($row['message']);
 		$row['accepted_at_dist'] = \Helper::distanceDate($row['accepted_at']);
 		$row['sended_at_dist'] = \Helper::distanceDate($row['sended_at']);
-		$row['szolgaltatas'] = $this->getServiceItemData( $row['service_item_id'] );
 
 		return $row;
 	}

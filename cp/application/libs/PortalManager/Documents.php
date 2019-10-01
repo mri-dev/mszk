@@ -484,7 +484,8 @@ class Documents
     LEFT OUTER JOIN felhasznalo_adatok as fa ON fa.fiok_id = d.user_id and fa.nev = 'company_name' ";
 
     if ( isset($arg['in_project']) && !empty($arg['in_project']) ) {
-      $q .= " LEFT OUTER JOIN ".self::DBXREF_PROJECT." as xp ON xp.doc_id = d.ID and xp.project_id = ".$arg['in_project'];
+      $q .= " LEFT OUTER JOIN ".self::DBXREF_PROJECT." as xp ON xp.doc_id = d.ID and xp.project_id = :projecthash";
+      $qarg['projecthash'] = $arg['in_project'];
     }
 
     $q .= " WHERE 1=1 ";

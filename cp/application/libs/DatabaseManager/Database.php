@@ -49,13 +49,16 @@ class Database
 
 	public function squery( $qry, array $params = array() )
 	{
-		$exc = $this->db->prepare( $qry );
-
-		foreach ( $params as $key => $value ) {
-			$exc->bindValue( ':'.$key, $value, $this->detectVarType($value) );
+		try {
+			$exc = $this->db->prepare( $qry );
+			foreach ( $params as $key => $value ) {
+				$exc->bindValue( ':'.$key, $value, $this->detectVarType($value) );
+			}
+			$exc->execute();
+		} catch (\PDOException $e) {
+			error_log($e->getMessage().' | Query: '.$qry);
+			error_log('Trace: '.$e->getTraceAsString());
 		}
-
-		$exc->execute();
 
 		return $exc;
 	}

@@ -194,8 +194,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
       $scope.addDocToroject = function( type ){
         if (!$scope.saving) {
           $scope.saving = true;
-
-						console.log($scope);
+					console.log($scope);
 
           $http({
       			method: 'POST',

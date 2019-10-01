@@ -47,64 +47,106 @@ class projektek extends Controller
 
 			$projectdata = $projects->getProjectData( $hashkey, $uid );
 
+			if ($this->view->is_admin_logged) {
+				parent::$pageTitle = $projectdata['admin_title']. ' | Projektek';
+			} else {
+				parent::$pageTitle = 'sd';
+			}
+
 			$outputdocs = array();
 			$docs = new Documents(array('db' => $this->db));
 
-			// Díjbekérők
-			$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
-			$folderinfo = $docs->getFolderData($folderhash);
+			//print_r($projectdata);
 
-			$outputdocs['requester']['dijbekero'] = $docs->getList(array(
-				'limit' => 9999,
-				'in_project' => $projectdata['order_project_hashkeys']['requester'],
-				'order' => 'xp.added_at DESC',
-				'folder' => $folderinfo['ID'],
-				'expire_qry' => '<= now()',
-				'teljesites_qry' => 'IS NULL'
-			));
-			$outputdocs['servicer']['dijbekero'] = $docs->getList(array(
-				'limit' => 9999,
-				'in_project' => $projectdata['order_project_hashkeys']['servicer'],
-				'order' => 'xp.added_at DESC',
-				'folder' => $folderinfo['ID'],
-				'expire_qry' => '<= now()',
-				'teljesites_qry' => 'IS NULL'
-			));
+			// Dokumentumok, ha admin nézi a projekteket
+			if ($projectdata['my_relation'] == 'admin')
+			{
+				// Díjbekérők
+				$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
+				$folderinfo = $docs->getFolderData($folderhash);
+				$outputdocs['requester']['dijbekero'] = $docs->getList(array(
+					'limit' => 9999,
+					'in_project' => $projectdata['order_project_hashkeys']['requester'],
+					'order' => 'xp.added_at DESC',
+					'folder' => $folderinfo['ID'],
+					'expire_qry' => '<= now()',
+					'teljesites_qry' => 'IS NULL'
+				));
+				$outputdocs['servicer']['dijbekero'] = $docs->getList(array(
+					'limit' => 9999,
+					'in_project' => $projectdata['order_project_hashkeys']['servicer'],
+					'order' => 'xp.added_at DESC',
+					'folder' => $folderinfo['ID'],
+					'expire_qry' => '<= now()',
+					'teljesites_qry' => 'IS NULL'
+				));
 
-			// Számlák
-			$folderhash = $docs->findFolderHashkey('szamla', $uid);
-			$folderinfo = $docs->getFolderData($folderhash);
+				// Számlák
+				$folderhash = $docs->findFolderHashkey('szamla', $uid);
+				$folderinfo = $docs->getFolderData($folderhash);
 
-			$outputdocs['requester']['szamla'] = $docs->getList(array(
-				'limit' => 9999,
-				'in_project' => $projectdata['order_project_hashkeys']['requester'],
-				'order' => 'xp.added_at DESC',
-				'folder' => $folderinfo['ID']
-			));
-			$outputdocs['servicer']['szamla'] = $docs->getList(array(
-				'limit' => 9999,
-				'in_project' => $projectdata['order_project_hashkeys']['servicer'],
-				'order' => 'xp.added_at DESC',
-				'folder' => $folderinfo['ID']
-			));
+				$outputdocs['requester']['szamla'] = $docs->getList(array(
+					'limit' => 9999,
+					'in_project' => $projectdata['order_project_hashkeys']['requester'],
+					'order' => 'xp.added_at DESC',
+					'folder' => $folderinfo['ID']
+				));
+				$outputdocs['servicer']['szamla'] = $docs->getList(array(
+					'limit' => 9999,
+					'in_project' => $projectdata['order_project_hashkeys']['servicer'],
+					'order' => 'xp.added_at DESC',
+					'folder' => $folderinfo['ID']
+				));
 
-			// Dokumentumok
-			$outputdocs['requester']['all'] = $docs->getList(array(
-				'limit' => 10,
-				'in_project' => $projectdata['order_project_hashkeys']['requester'],
-				'order' => 'xp.added_at DESC'
-			));
-			$outputdocs['servicer']['all'] = $docs->getList(array(
-				'limit' => 10,
-				'in_project' => $projectdata['order_project_hashkeys']['servicer'],
-				'order' => 'xp.added_at DESC'
-			));
+				// Dokumentumok
+				$outputdocs['requester']['all'] = $docs->getList(array(
+					'limit' => 10,
+					'in_project' => $projectdata['order_project_hashkeys']['requester'],
+					'order' => 'xp.added_at DESC'
+				));
+				$outputdocs['servicer']['all'] = $docs->getList(array(
+					'limit' => 10,
+					'in_project' => $projectdata['order_project_hashkeys']['servicer'],
+					'order' => 'xp.added_at DESC'
+				));
+			}
+			else
+			// Dokumentumok, ha user nézi a projektet
+			{
+				// Díjbekérők
+				$folderhash = $docs->findFolderHashkey('dijbekero', $uid);
+				$folderinfo = $docs->getFolderData($folderhash);
+				$outputdocs['dijbekero'] = $docs->getList(array(
+					'limit' => 9999,
+					'in_project' => $projectdata['order_project_ids'][$projectdata['my_relation']],
+					'order' => 'xp.added_at DESC',
+					'folder' => $folderinfo['ID'],
+					'expire_qry' => '<= now()',
+					'teljesites_qry' => 'IS NULL'
+				));
 
-			/*
+				// Számlák
+				$folderhash = $docs->findFolderHashkey('szamla', $uid);
+				$folderinfo = $docs->getFolderData($folderhash);
+				$outputdocs['szamla'] = $docs->getList(array(
+					'limit' => 9999,
+					'in_project' => $projectdata['order_project_ids'][$projectdata['my_relation']],
+					'order' => 'xp.added_at DESC',
+					'folder' => $folderinfo['ID']
+				));
+
+				$outputdocs['all'] = $docs->getList(array(
+					'limit' => 10,
+					'in_project' => $projectdata['order_project_ids'][$projectdata['my_relation']],
+					'order' => 'xp.added_at DESC'
+				));
+			}
+
+			/* * /
 			echo '<pre>';
-			print_r($projectdata);
+			print_r($outputdocs);
 			echo '</pre>';
-			*/
+			/* */
 
 			$this->out('doc', $outputdocs);
     }

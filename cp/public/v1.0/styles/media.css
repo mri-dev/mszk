@@ -93,7 +93,7 @@ input, textarea {
 /* line 75, sass/media.scss */
 .form-control:focus {
   border: 1px solid #a2c2ff !important;
-  box-shadow: 0 0 0 0.2rem rgba(9, 127, 189, 0) !important;
+  box-shadow: 0 0 0 0.2rem rgba(9, 127, 189, 0.28) !important;
 }
 
 /* line 79, sass/media.scss */
@@ -274,7 +274,7 @@ input, textarea {
   background: white;
   z-index: 60;
   width: 280px;
-  box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0);
+  box-shadow: 2px 0 7px -3px rgba(15, 45, 101, 0.72);
 }
 /* line 212, sass/media.scss */
 .slideMenu .headerlogo {
@@ -470,7 +470,7 @@ input, textarea {
   font-size: 1.1rem;
   padding: 0 25px;
   border-bottom: 0.5px solid white;
-  box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0);
+  box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.29);
 }
 /* line 394, sass/media.scss */
 #top .title-bar .page-title {
@@ -2276,11 +2276,11 @@ footer a, footer a:visited, footer a:hover {
 }
 /* line 2185, sass/media.scss */
 .project-controller .overview .project {
-  flex-basis: 30%;
+  flex-basis: 50%;
 }
 /* line 2189, sass/media.scss */
 .project-controller .overview .requester, .project-controller .overview .servicer {
-  flex-basis: calc(70% / 2);
+  flex-basis: 50%;
 }
 /* line 2194, sass/media.scss */
 .project-controller .overview.admin-view > .d-flex {
@@ -2613,20 +2613,17 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   color: #3296e7;
 }
-
-/* line 2518, sass/media.scss */
-.service-info .service-offered {
-  background: #58bdad;
-  padding: 10px;
-  color: white;
+/* line 2515, sass/media.scss */
+.service-info .message, .offer-info .message {
+  white-space: pre-line;
 }
 
-/* line 2524, sass/media.scss */
+/* line 2519, sass/media.scss */
 .ajaxdialog.saveproject {
   min-width: 650px;
 }
 
-/* line 2530, sass/media.scss */
+/* line 2525, sass/media.scss */
 .ajaxdialog.projectcreatoroffer .userdetails h3 {
   font-size: 1.1rem;
   margin: 15px 0 10px 0;
@@ -2634,42 +2631,42 @@ footer a, footer a:visited, footer a:hover {
   text-transform: uppercase;
   color: #ff7676;
 }
-/* line 2537, sass/media.scss */
+/* line 2532, sass/media.scss */
 .ajaxdialog.projectcreatoroffer .userdetails table tr td {
   padding: 5px;
   font-size: 0.85rem;
 }
 
-/* line 2544, sass/media.scss */
+/* line 2539, sass/media.scss */
 .txt-requester {
   color: #3d98e2;
 }
 
-/* line 2548, sass/media.scss */
+/* line 2543, sass/media.scss */
 .txt-servicer {
   color: #52b684;
 }
 
-/* line 2552, sass/media.scss */
+/* line 2547, sass/media.scss */
 .data-list {
   font-size: 0.85rem;
 }
-/* line 2555, sass/media.scss */
+/* line 2550, sass/media.scss */
 .data-list .list-item > .holder {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   align-items: center;
 }
-/* line 2560, sass/media.scss */
+/* line 2555, sass/media.scss */
 .data-list .list-item > .holder > div {
   padding: 10px 15px;
 }
-/* line 2564, sass/media.scss */
+/* line 2559, sass/media.scss */
 .data-list .list-item:nth-child(odd) {
   background: #f5f5f5;
 }
-/* line 2568, sass/media.scss */
+/* line 2563, sass/media.scss */
 .data-list .header {
   text-transform: uppercase;
   background: #efefef;
@@ -2678,56 +2675,56 @@ footer a, footer a:visited, footer a:hover {
   font-weight: bold;
   border-bottom: 2px solid #c9c9c9;
 }
-/* line 2576, sass/media.scss */
+/* line 2571, sass/media.scss */
 .data-list .header > .holder {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   align-items: center;
 }
-/* line 2581, sass/media.scss */
+/* line 2576, sass/media.scss */
 .data-list .header > .holder > div {
   padding: 10px 15px;
 }
-/* line 2588, sass/media.scss */
+/* line 2583, sass/media.scss */
 .data-list .list-item > .holder .data,
 .data-list .header > .holder .data {
   flex: 1;
 }
-/* line 2590, sass/media.scss */
+/* line 2585, sass/media.scss */
 .data-list .list-item > .holder .data .subtitle,
 .data-list .header > .holder .data .subtitle {
   font-size: 0.75rem;
 }
-/* line 2592, sass/media.scss */
+/* line 2587, sass/media.scss */
 .data-list .list-item > .holder .data .subtitle span + span,
 .data-list .header > .holder .data .subtitle span + span {
   margin: 0 0 0 10px;
 }
-/* line 2595, sass/media.scss */
+/* line 2590, sass/media.scss */
 .data-list .list-item > .holder .data .subtitle .infolder,
 .data-list .header > .holder .data .subtitle .infolder {
   color: #ff7676;
 }
-/* line 2598, sass/media.scss */
+/* line 2593, sass/media.scss */
 .data-list .list-item > .holder .data .subtitle .teljesitve,
 .data-list .header > .holder .data .subtitle .teljesitve {
   font-weight: bold;
   color: #52b684;
 }
-/* line 2605, sass/media.scss */
+/* line 2600, sass/media.scss */
 .data-list .list-item > .holder .add-at,
 .data-list .header > .holder .add-at {
   flex-basis: 180px;
   text-align: center;
 }
-/* line 2610, sass/media.scss */
+/* line 2605, sass/media.scss */
 .data-list .list-item > .holder .paying-status,
 .data-list .header > .holder .paying-status {
   flex-basis: 300px;
   text-align: center;
 }
-/* line 2614, sass/media.scss */
+/* line 2609, sass/media.scss */
 .data-list .list-item > .holder .paying-status .d-flex .ptext,
 .data-list .header > .holder .paying-status .d-flex .ptext {
   flex-basis: 100px;
@@ -2735,56 +2732,56 @@ footer a, footer a:visited, footer a:hover {
   font-size: 0.7rem;
   padding: 0 3px 0 0;
 }
-/* line 2620, sass/media.scss */
+/* line 2615, sass/media.scss */
 .data-list .list-item > .holder .paying-status .d-flex .pprogress,
 .data-list .header > .holder .paying-status .d-flex .pprogress {
   flex: 1;
 }
-/* line 2624, sass/media.scss */
+/* line 2619, sass/media.scss */
 .data-list .list-item > .holder .paying-status .d-flex + .d-flex,
 .data-list .header > .holder .paying-status .d-flex + .d-flex {
   margin: 4px 0 0 0;
 }
-/* line 2629, sass/media.scss */
+/* line 2624, sass/media.scss */
 .data-list .list-item > .holder .progress-status,
 .data-list .header > .holder .progress-status {
   flex-basis: 170px;
   text-align: center;
 }
-/* line 2634, sass/media.scss */
+/* line 2629, sass/media.scss */
 .data-list .list-item > .holder .unreaded-msg,
 .data-list .header > .holder .unreaded-msg {
   flex-basis: 120px;
   text-align: center;
 }
-/* line 2639, sass/media.scss */
+/* line 2634, sass/media.scss */
 .data-list .list-item > .holder .status,
 .data-list .header > .holder .status {
   flex-basis: 85px;
   text-align: center;
 }
-/* line 2644, sass/media.scss */
+/* line 2639, sass/media.scss */
 .data-list .list-item > .holder .cash,
 .data-list .header > .holder .cash {
   flex-basis: 125px;
   text-align: center;
 }
-/* line 2649, sass/media.scss */
+/* line 2644, sass/media.scss */
 .data-list .list-item > .holder .relation,
 .data-list .header > .holder .relation {
   flex-basis: 100px;
   text-align: center;
 }
 
-/* line 2656, sass/media.scss */
+/* line 2651, sass/media.scss */
 .requests-dashboard .req-services {
   position: relative;
 }
-/* line 2659, sass/media.scss */
+/* line 2654, sass/media.scss */
 .requests-dashboard .req-services strong {
   cursor: help;
 }
-/* line 2663, sass/media.scss */
+/* line 2658, sass/media.scss */
 .requests-dashboard .req-services .serv-tooltip {
   display: none;
   position: absolute;
@@ -2795,23 +2792,23 @@ footer a, footer a:visited, footer a:hover {
   z-index: 1;
   box-shadow: 0 5px 15px -10px #545454;
 }
-/* line 2672, sass/media.scss */
+/* line 2667, sass/media.scss */
 .requests-dashboard .req-services .serv-tooltip .serv {
   white-space: nowrap;
 }
-/* line 2678, sass/media.scss */
+/* line 2673, sass/media.scss */
 .requests-dashboard .req-services:hover .serv-tooltip {
   display: block;
 }
 
-/* line 2686, sass/media.scss */
+/* line 2681, sass/media.scss */
 md-dialog h4 {
   font-size: 1rem;
   marign: 0 0 5px 0;
   font-weight: bold;
 }
 
-/* line 2694, sass/media.scss */
+/* line 2689, sass/media.scss */
 body.user-group-user #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3d98e2+15,2a78dd+66 */
   background: #3d98e2;
@@ -2826,7 +2823,7 @@ body.user-group-user #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 2704, sass/media.scss */
+/* line 2699, sass/media.scss */
 body.user-group-superadmin #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8d6093+15,6b3d73+66 */
   background: #8d6093;
@@ -2841,7 +2838,7 @@ body.user-group-superadmin #top .control-bar {
   /* IE6-9 fallback on horizontal gradient */
 }
 
-/* line 2714, sass/media.scss */
+/* line 2709, sass/media.scss */
 body.user-group-szolgaltato #top .control-bar {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#76c1b8+15,53ab9f+66 */
   background: #76c1b8;

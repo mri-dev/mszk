@@ -96,7 +96,37 @@
                     <td><?=__('Ajánlatkérés ideje')?></td>
                     <td><strong>{{project.request_data.requested}}</strong></td>
                   </tr>
-
+                  <tr>
+                    <td colspan="2">
+                      <div class="selected-services-overview">
+                        <div class="service" ng-repeat="serv in project.request_data.services">
+                          <div class="header">
+                            {{serv.neve}}
+                          </div>
+                          <div class="subservices">
+                            <div class="subservice" ng-if="(subserv.szulo_id == serv.ID)" ng-repeat="subserv in project.request_data.subservices">
+                              <div class="header">
+                                 {{subserv.neve}}
+                                 <span class="sub-cash" title="<?=__('Szolgáltatás összesített költségkeret')?>"  ng-if="project.request_data.cash[subserv.ID]">{{project.request_data.cash[subserv.ID] | cash}}</span>
+                              </div>
+                              <div class="subservicesitems">
+                                <div class="subservice-item" ng-if="(subserv.szulo_id == serv.ID && subservitem.szulo_id == subserv.ID)" ng-repeat="subservitem in project.request_data.subservices_items">
+                                  <div class="header">
+                                     {{subservitem.neve}} <span class="cash" title="<?=__('Költségkeret')?>" ng-if="project.request_data.cash_config[subserv.ID][subservitem.ID]">{{project.request_data.cash_config[subserv.ID][subservitem.ID] | cash}}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="subservice-comment" ng-if="project.request_data.service_description[subserv.ID]">
+                                <div class="head" ng-if="relation=='to'"><?=__('Ajánlatkérő igénye:')?></div>
+                                <div class="head" ng-if="relation=='from'"><?=__('Igényeim:')?></div>
+                                <div class="comment" ng-bind-html="project.request_data.service_description[subserv.ID]|unsafe" style="white-space: pre-line;"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>

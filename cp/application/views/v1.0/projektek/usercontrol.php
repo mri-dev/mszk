@@ -36,11 +36,11 @@
               <td><?=__('Díjfizetés')?></td>
               <td>
                 <div class="progress">
-                  <div class="progress-bar" ng-class="project.paying_percent_class" role="progressbar" style="width: {{project.paying_percent}}%;" aria-valuenow="{{project.paying_percent}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project.paying_percent!=0">{{project.paying_percent}}%</span></div>
+                  <div class="progress-bar" ng-class="project[project.my_relation+'_paying_percent_class']" role="progressbar" style="width: {{project[project.my_relation+'_paying_percent']}}%;" aria-valuenow="{{project[project.my_relation+'_paying_percent']}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project[project.my_relation+'_paying_percent']!=0">{{project[project.my_relation+'_paying_percent']}}%</span></div>
                 </div>
                 <div class="paid-info">
-                  <span class="allprice">{{project.offer.price}}</span> / <span class="paidprice">{{project.paidamount}}</span>
-                  <span class="allpaid" ng-if="project.offer.price!=0&&project.paidamount>=project.offer.price"><?=__('Pénzügyileg teljesítve')?> <i class="fas fa-check"></i></span>
+                  <span class="allprice">{{project.offer.price}}</span> / <span class="paidprice">{{project[project.my_relation+'_paidamount']}}</span>
+                  <span class="allpaid" ng-if="project.offer.price!=0&&project[project.my_relation+'_paidamount']>=project.offer.price"><?=__('Pénzügyileg teljesítve')?> <i class="fas fa-check"></i></span>
                 </div>
               </td>
             </tr>
@@ -60,10 +60,10 @@
         </table>
       </div>
     </div>
-    <div class="requester">
+    <div class="requester" ng-if="project.my_relation=='requester'">
       <div class="head">
-        <?=__('Igénylő adatai')?>
-        <div class="own-data" ng-if="project.my_relation=='requester'"><?=__('Az Ön adatai')?></div>
+        <?=__('Az Ön adatai')?>
+        <div class="own-data"><?=__('Ajánlatkérő')?></div>
       </div>
       <div class="cont">
         <table class="table table-bordered">
@@ -120,10 +120,10 @@
         </table>
       </div>
     </div>
-    <div class="servicer">
+    <div class="servicer" ng-if="project.my_relation=='servicer'">
       <div class="head">
-        <?=__('Szolgáltató adatai')?>
-        <div class="own-data" ng-if="project.my_relation=='servicer'"><?=__('Az Ön adatai')?></div>
+        <?=__('Az Ön adatai')?>
+        <div class="own-data"><?=__('Szoltáltató')?></div>
       </div>
       <div class="cont">
         <table class="table table-bordered">
@@ -164,13 +164,13 @@
     <h2><?=__('Üzenetküldés')?></h2>
     <div class="messenger-quick-msg">
       <div class="wrapper">
-        <label for="messanger_text"><i class="far fa-envelope"></i> <?=__('Gyors üzenet küldése <strong>{{partner.data.nev}}</strong> részére:')?></label>
+        <label for="messanger_text"><i class="far fa-envelope"></i> <?=__('Gyors üzenet küldése <strong>Szolgáltatás Közvetítő</strong> részére:')?></label>
         <textarea ng-model="messanger.text" id="messanger_text" class="form-control no-editor"></textarea>
         <br>
         <div class="d-flex flex-row justify-content-between align-items-center">
           <div class="">
             <a href="/uzenetek/session/{{project.hashkey}}"><i class="fas fa-envelope-open-text"></i> <?=__('Tovább a projekt üzeneteire')?></a>
-            <span class="unreaded-txt" ng-if="project.messages.unreaded && project.messages.unreaded!=0">{{project.messages.unreaded}} olvasatlan üzenet</span>
+            <span class="unreaded-txt" ng-if="project.messages[project.my_relation].unreaded && project.messages[project.my_relation].unreaded!=0">{{project.messages[project.my_relation].unreaded}} <?=__('olvasatlan üzenet')?></span>
           </div>
           <div class="">
             <button type="button" class="btn btn-primary btn-sm" ng-click="sendQuickMessage(project.hashkey)"><?=__('Üzenet küldése')?> <i class="fas fa-paper-plane"></i></button>
@@ -180,11 +180,11 @@
     </div>
   </div>
 </div>
-<div class="row" ng-if="project.my_relation!='admin'&&project.messages.closed">
+<div class="row" ng-if="project.my_relation!='admin'&&project.messages[project.my_relation].closed">
   <div class="col-md-12">
     <h2><?=__('Üzenetküldés')?></h2>
     <div class="alert alert-warning">
-      <?=__('A gyors üzenetküldés nem elérhető a lezárt üzenetváltás esetében. Az üzenetváltást {{project.messages.closed}} időponttal lezárták!')?>
+      <?=__('A gyors üzenetküldés nem elérhető a lezárt üzenetváltás esetében. Az üzenetváltást {{project.messages[project.my_relation].closed}} időponttal lezárták!')?>
     </div>
   </div>
 </div>
@@ -194,7 +194,7 @@
     <div class="action-buttons">
       <div class="d-flex">
         <div class="adddocs">
-          <button type="button" class="btn btn-sm btn-primary" ng-click="projectDocsAdder()"><i class="fas fa-file-medical"></i> <?=__('Dokumentum hozzáadása')?></button>
+          <button type="button" class="btn btn-sm btn-primary" ng-click="projectDocsAdder(project.hashkey)"><i class="fas fa-file-medical"></i> <?=__('Dokumentum hozzáadása')?></button>
         </div>
       </div>
     </div>
@@ -389,15 +389,8 @@
     </div>
   </div>
   <div class="col-md-7">
-    <h2><?=__('Szolgáltatás')?></h2>
-    <div class="service-info">
-      <div class="service-offered">
-        {{project.offer.szolgaltatas.fullneve}}
-      </div>
-    </div>
     <h2><?=__('Ajánlat referencia')?></h2>
     <div class="offer-info">
-
       <h4><?=__('Ajánlat adatok')?></h4>
       <table class="table">
         <tbody>
@@ -422,6 +415,59 @@
 
       <h4><?=__('Ajánlat tartalma')?></h4>
       <div class="message" ng-bind-html="project.offer.message|unsafe"></div>
+    </div>
+    <div ng-if="project.my_relation=='requester'" class="offer-info">
+     <h2><?=__('Ajánlatkérés referencia adatok')?></h2>
+     <h4><?=__('Szolgáltatások')?></h4>
+     <div class="selected-services-overview">
+       <div class="service" ng-repeat="serv in project.request_data.services">
+         <div class="header">
+           {{serv.neve}}
+         </div>
+         <div class="subservices">
+           <div class="subservice" ng-if="(subserv.szulo_id == serv.ID)" ng-repeat="subserv in project.request_data.subservices">
+             <div class="header">
+                {{subserv.neve}}
+                <span class="sub-cash" title="<?=__('Szolgáltatás összesített költségkeret')?>"  ng-if="project.request_data.cash[subserv.ID]">{{project.request_data.cash[subserv.ID] | cash}}</span>
+             </div>
+             <div class="subservicesitems">
+               <div class="subservice-item" ng-if="(subserv.szulo_id == serv.ID && subservitem.szulo_id == subserv.ID)" ng-repeat="subservitem in project.request_data.subservices_items">
+                 <div class="header">
+                    {{subservitem.neve}} <span class="cash" title="<?=__('Költségkeret')?>" ng-if="project.request_data.cash_config[subserv.ID][subservitem.ID]">{{project.request_data.cash_config[subserv.ID][subservitem.ID] | cash}}</span>
+                 </div>
+               </div>
+             </div>
+             <div class="subservice-comment" ng-if="project.request_data.service_description[subserv.ID]">
+               <div class="head" ng-if="relation=='to'"><?=__('Ajánlatkérő igénye:')?></div>
+               <div class="head" ng-if="relation=='from'"><?=__('Igényeim:')?></div>
+               <div class="comment" ng-bind-html="project.request_data.service_description[subserv.ID]|unsafe" style="white-space: pre-line;"></div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+     <table class="table">
+       <tbody>
+         <tr>
+           <td><?=__('Elnevezés')?></td>
+           <td><strong>{{project.request_data.user_requester_title}}</strong></td>
+         </tr>
+           <tr>
+             <td><?=__('Hashkey')?></td>
+             <td><strong>{{project.request_data.hashkey}}</strong></td>
+           </tr>
+         <tr>
+           <td><?=__('Ajánlatkérés elküldve')?></td>
+           <td><strong>{{project.request_data.requested}}</strong></td>
+         </tr>
+         <tr>
+           <td><?=__('Összesített költségkeret')?></td>
+           <td><strong>{{project.request_data.cash_total|cash}}</strong></td>
+         </tr>
+       </tbody>
+     </table>
+     <h4><?=__('Ajánlatkérés szövege')?></h4>
+     <div class="message" ng-bind-html="project.request_data.message|unsafe"></div>
     </div>
   </div>
 </div>

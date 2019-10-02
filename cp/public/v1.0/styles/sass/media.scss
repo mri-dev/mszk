@@ -56,6 +56,12 @@ md-toast{
 		}
 	}
 }
+.progress{
+	background-color: #a9afb6 !important;
+}
+.progress-bar {
+	padding: 0px 10px !important;
+}
 input, textarea{
   -webkit-transition: all 0.30s ease-in-out;
   -moz-transition: all 0.30s ease-in-out;
@@ -613,7 +619,7 @@ i.info {
 	background: white;
 	border-radius: 3px;
 	margin-bottom: 25px;
-  border: 0.5px solid #d8e2ec;
+  border: 2px solid #d8e2ec;
 	overflow: hidden;
 
 	.data-header{
@@ -2537,11 +2543,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 .txt-requester{
-	color: $color-blue-light;
+	color: $color-blue-light !important;
 }
 
 .txt-servicer{
-	color: $color-green;
+	color: $color-green !important;
 }
 
 .data-list{
@@ -2630,9 +2636,20 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 		flex-basis: 120px;
 		text-align: center;
 	}
+
+	.list-item > .holder .data{
+		strong, strong a, a {
+			color: black;
+		}
+	}
 	.list-item > .holder .status,
 	.header > .holder .status{
 		flex-basis: 85px;
+		text-align: center;
+	}
+	.list-item > .holder .ostat,
+	.header > .holder .ostat{
+		flex-basis: 130px;
 		text-align: center;
 	}
 	.list-item > .holder .cash,

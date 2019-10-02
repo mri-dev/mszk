@@ -105,7 +105,7 @@
                         </div>
                         <div class="accept-service-offer">
                           <button type="button" ng-if="!request.admin_offer_id" ng-click="previewOfferToUser(request, offer)" class="btn btn-primary btn-sm">Ajánlat tovább ajánlása az ajánlatkérőnek <i class="fas fa-external-link-alt"></i></button>
-                          <button type="button" ng-if="offer.admin_offered_out!=0 && request.admin_offer && request.admin_offer.accepted==1 && request.project_id == ''" ng-click="acceptAdminServiceOffer(request, offer)" class="btn btn-success btn-sm">Szolgáltatói ajánlat elfogadása <i class="fa fa-check"></i></button>
+                          <button type="button" ng-if="offer.admin_offered_out!=0 && request.admin_offer && request.admin_offer.accepted==1 && !request.project_id" ng-click="acceptAdminServiceOffer(request, offer)" class="btn btn-success btn-sm">Szolgáltatói ajánlat elfogadása <i class="fa fa-check"></i></button>
                         </div>
                       </div>
                     </div>

@@ -14,10 +14,19 @@
       <div class="col ct-info color-green">
         <div class="d-flex">
           <div class="ico">
+            <div class="ico-wrapper"><i class="fas fa-file-export"></i></div>
+          </div>
+          <div class="title"><?=__('Ajánlatkéréseim')?><div class="line"></div></div>
+          <div class="count"><?=(int)$this->badges['offers']['outbox']?></div>
+        </div>
+      </div>
+      <div class="col ct-info color-green">
+        <div class="d-flex">
+          <div class="ico">
             <div class="ico-wrapper"><i class="fas fa-file-import"></i></div>
           </div>
-          <div class="title"><?=__('Ajánlat kérések')?><div class="line"></div></div>
-          <div class="count"><?=$this->badges['offers']['all']['total']?></div>
+          <div class="title"><?=__('Bejövő ajánlatkérések')?><div class="line"></div></div>
+          <div class="count"><?=(int)$this->badges['offers']['inbox']?></div>
         </div>
       </div>
       <div class="col ct-info color-blue-light">
@@ -40,6 +49,7 @@
       </div>
     </div>
   </div>
+
   <div class="row">
     <div class="col-md-4">
       <div class="wblock color-red">
@@ -102,181 +112,117 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-8">
-      <div class="wblock color-green">
-        <div class="data-container">
-          <?php $doc = $this->dashboard['requests']; ?>
-          <?php if ( $doc && count($doc['data']) != 0): ?>
-            <div class="data-list requests-dashboard">
-              <div class="wrapper">
-                <div class="header">
-                  <div class="holder">
-                    <div class="status"><?=__('Irány')?></div>
-                    <div class="data"><?=__('Szolgáltatások')?></div>
-                    <div class="cash"><?=__('Keretösszeg (nettó)')?></div>
-                    <div class="add-at"><?=__('Időpont')?></div>
-                  </div>
-                </div>
-                <?php foreach ((array)$doc['data'] as $hash => $d): ?>
-                <div class="list-item">
-                  <div class="holder">
-                    <div class="status">
-                      <?=($d['my_relation'] == 'to')?__('Beérkező'):__('Kimenő')?>
+      <?php if (!$this->is_admin_logged): ?>
+        <div class="wblock color-blue">
+          <div class="data-container">
+            <?php $doc = $this->dashboard['messanger']; ?>
+            <?php if (count($doc['sessions']) == 0): ?>
+              <div class="no-data-view">
+                <div class="ico"><i class="far fa-check-circle"></i></div>
+                <div class="text"><?=__('Nincs folyamatban lévő beszélgetés.')?></div>
+              </div>
+            <?php else: ?>
+              <div class="data-list">
+                <div class="wrapper">
+                  <div class="header">
+                    <div class="holder">
+                      <div class="data"><?=__('Projekt / Partner')?></div>
+                      <div class="unreaded-msg"><?=__('Üzenetek')?></div>
                     </div>
-                    <div class="data">
-                      <div class="req-services">
-                        <strong><?=sprintf(__('%d igényelt szolgáltatás'), count($d['services']))?></strong>
-                        <?php if (count($d['services']) != 0): ?>
-                          <div class="serv-tooltip">
-                            <?php foreach ((array)$d['services'] as $config => $serv): ?>
-                            <div class="serv"><?=$serv?></div>
-                            <?php endforeach; ?>
-                          </div>
-                        <?php endif; ?>
+                  </div>
+                  <?php foreach ((array)$doc['sessions'] as $d): ?>
+                  <div class="list-item">
+                    <div class="holder">
+                      <div class="data">
+                        <div class="title">
+                          <a href="/uzenetek/session/<?=$d['sessionid']?>" target="_blank"><strong><?=$d['project_title']?></strong></a>
+                        </div>
+                      </div>
+                      <div class="unreaded-msg center">
+                        <?=$d['message_total']?><? if((int)$d['message_unreaded'] != 0):?> / <strong style="color:red;"><?=sprintf(__('%d új'), (int)$d['message_unreaded'])?></strong><? endif; ?>
                       </div>
                     </div>
-                    <div class="cash"><?=Helper::cashFormat($d['total_cash'])?></div>
-                    <div class="add-at"><?=date('Y/m/d H:i', strtotime($d['offerout_at']))?></div>
                   </div>
+                  <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
               </div>
-            </div>
-          <?php else: ?>
-            <div class="no-data-view">
-              <div class="ico"><i class="far fa-circle"></i></div>
-              <div class="text"><?=__('Nincsenek ajánlatkérései.')?></div>
-            </div>
-          <?php endif; ?>
-        </div>
-        <div class="data-footer">
-          <div class="d-flex align-items-center">
-            <div class="title">
-              <h3><?=__('Ajánlat kérések')?></h3>
-              <a href="/ajanlatkeresek/osszes"><?=__('Tovább az összes ajánlatkéréshez')?></a>
-            </div>
-            <div class="count">
-              <div class="count-wrapper"><div class="num"><?=(int)count($doc['data'])?></div></div>
+            <?php endif; ?>
+          </div>
+          <div class="data-footer">
+            <div class="d-flex align-items-center">
+              <div class="title">
+                <h3><?=__('Beszélgetések')?></h3>
+                <a href="/uzenetek"><?=__('Tovább az összes üzenethez')?></a>
+              </div>
+              <div class="count">
+                <div class="count-wrapper"><div class="num"><?=(int)$doc['unreaded']?></div></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4">
-    <?php if (!$this->is_admin_logged): ?>
-      <div class="wblock color-blue">
-        <div class="data-container">
-          <?php $doc = $this->dashboard['messanger']; ?>
-          <?php if (count($doc['sessions']) == 0): ?>
+      <?php endif; ?>
+      <?php if ($this->is_admin_logged): ?>
+        <div class="wblock color-blue">
+          <div class="data-container">
+            <?php $doc = $this->dashboard['szamla']['all']; ?>
+            <?php if ((int)$doc['total_num'] == 0): ?>
             <div class="no-data-view">
               <div class="ico"><i class="far fa-check-circle"></i></div>
-              <div class="text"><?=__('Nincs folyamatban lévő beszélgetés.')?></div>
+              <div class="text"><?=__('Jelenleg nincs számla.')?></div>
             </div>
-          <?php else: ?>
-            <div class="data-list">
-              <div class="wrapper">
-                <div class="header">
-                  <div class="holder">
-                    <div class="data"><?=__('Projekt / Partner')?></div>
-                    <div class="unreaded-msg"><?=__('Üzenetek')?></div>
-                  </div>
-                </div>
-                <?php foreach ((array)$doc['sessions'] as $d): ?>
-                <div class="list-item">
-                  <div class="holder">
-                    <div class="data">
-                      <div class="title">
-                        <a href="/uzenetek/session/<?=$d['sessionid']?>" target="_blank"><strong><?=$d['project_title']?></strong></a>
-                      </div>
-                    </div>
-                    <div class="unreaded-msg center">
-                      <?=$d['message_total']?><? if((int)$d['message_unreaded'] != 0):?> / <strong style="color:red;"><?=sprintf(__('%d új'), (int)$d['message_unreaded'])?></strong><? endif; ?>
+            <?php else: ?>
+              <div class="data-list">
+                <div class="wrapper">
+                  <div class="header">
+                    <div class="holder">
+                      <div class="data"><?=__('Adatok')?></div>
+                      <div class="relation"><?=__('Hozzáadta')?></div>
+                      <div class="add-at"><?=__('Határidő')?></div>
                     </div>
                   </div>
-                </div>
-                <?php endforeach; ?>
-              </div>
-            </div>
-          <?php endif; ?>
-        </div>
-        <div class="data-footer">
-          <div class="d-flex align-items-center">
-            <div class="title">
-              <h3><?=__('Beszélgetések')?></h3>
-              <a href="/uzenetek"><?=__('Tovább az összes üzenethez')?></a>
-            </div>
-            <div class="count">
-              <div class="count-wrapper"><div class="num"><?=(int)$doc['unreaded']?></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <?php endif; ?>
-    <?php if ($this->is_admin_logged): ?>
-      <div class="wblock color-blue">
-        <div class="data-container">
-          <?php $doc = $this->dashboard['szamla']['all']; ?>
-          <?php if ((int)$doc['total_num'] == 0): ?>
-          <div class="no-data-view">
-            <div class="ico"><i class="far fa-check-circle"></i></div>
-            <div class="text"><?=__('Jelenleg nincs számla.')?></div>
-          </div>
-          <?php else: ?>
-            <div class="data-list">
-              <div class="wrapper">
-                <div class="header">
-                  <div class="holder">
-                    <div class="data"><?=__('Adatok')?></div>
-                    <div class="relation"><?=__('Hozzáadta')?></div>
-                    <div class="add-at"><?=__('Határidő')?></div>
-                  </div>
-                </div>
-                <?php foreach ((array)$doc['data'] as $d): ?>
-                <div class="list-item">
-                  <div class="holder">
-                    <div class="data">
-                      <div class="title">
-                        <a href="/doc/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['name']?></strong></a>
+                  <?php foreach ((array)$doc['data'] as $d): ?>
+                  <div class="list-item">
+                    <div class="holder">
+                      <div class="data">
+                        <div class="title">
+                          <a href="/doc/<?=$d['hashkey']?>" target="_blank"><strong><?=$d['name']?></strong></a>
+                        </div>
+                        <div class="subtitle">
+                          <?php if ($d['ertek'] != 0): ?>
+                          <span class="doc-ertek"><strong><?=\Helper::cashFormat($d['ertek'])?></strong> <?=__('Ft + ÁFA')?></span>
+                          <?php endif; ?>
+                        </div>
                       </div>
-                      <div class="subtitle">
-                        <?php if ($d['ertek'] != 0): ?>
-                        <span class="doc-ertek"><strong><?=\Helper::cashFormat($d['ertek'])?></strong> <?=__('Ft + ÁFA')?></span>
+                      <div class="relation">
+                        <?php if ($this->is_admin_logged): ?>
+                          <strong><a href="/account/?t=edit&ID=<?=$d['user_id']?>&ret=/"><?=$d['user_nev']?></a></strong>
+                        <?php else: ?>
+                          <?=($d['is_me'])?__('Én'):__('Partner')?>
                         <?php endif; ?>
                       </div>
-                    </div>
-                    <div class="relation">
-                      <?php if ($this->is_admin_logged): ?>
-                        <strong><a href="/account/?t=edit&ID=<?=$d['user_id']?>&ret=/"><?=$d['user_nev']?></a></strong>
-                      <?php else: ?>
-                        <?=($d['is_me'])?__('Én'):__('Partner')?>
-                      <?php endif; ?>
-                    </div>
-                    <div class="add-at">
-                      <?=($d['expire_at'] != '') ? date('Y/m/d', strtotime($d['expire_at'])) : '<em>N/A</em>'?>
+                      <div class="add-at">
+                        <?=($d['expire_at'] != '') ? date('Y/m/d', strtotime($d['expire_at'])) : '<em>N/A</em>'?>
+                      </div>
                     </div>
                   </div>
+                  <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
               </div>
-            </div>
-          <?php endif; ?>
-        </div>
-        <div class="data-footer">
-          <div class="d-flex align-items-center">
-            <div class="title">
-              <h3><?=__('Számlák')?></h3>
-              <a href="/dokumentumok/szamla"><?=__('Tovább az összes számlára')?></a>
-            </div>
-            <div class="count">
-              <div class="count-wrapper"><div class="num"><?=(int)$doc['total_num']?></div></div>
+            <?php endif; ?>
+          </div>
+          <div class="data-footer">
+            <div class="d-flex align-items-center">
+              <div class="title">
+                <h3><?=__('Számlák')?></h3>
+                <a href="/dokumentumok/szamla"><?=__('Tovább az összes számlára')?></a>
+              </div>
+              <div class="count">
+                <div class="count-wrapper"><div class="num"><?=(int)$doc['total_num']?></div></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    <?php endif; ?>
+      <?php endif; ?>
     </div>
     <div class="col-md-8">
       <div class="wblock color-blue">
@@ -362,9 +308,129 @@
           </div>
         </div>
       </div>
+
+      <div class="wblock color-green">
+        <div class="data-container">
+          <?php $doc = $this->dashboard['requests_out']; ?>
+          <?php if ( $doc && count($doc) != 0): ?>
+            <div class="data-list requests-dashboard">
+              <div class="wrapper">
+                <div class="header">
+                  <div class="holder">
+                    <div class="data"><?=__('Tárgy')?></div>
+                    <div class="ostat"><?=__('Státusz')?></div>
+                    <div class="cash"><?=__('Keretösszeg (nettó)')?></div>
+                    <div class="add-at"><?=__('Időpont')?></div>
+                  </div>
+                </div>
+                <?php foreach ((array)$doc as $hash => $d): ?>
+                <div class="list-item">
+                  <div class="holder">
+                    <div class="data">
+                      <div class="req-services">
+                        <div class="title">
+                          <strong><a href="/ajanlatkeresek/kimeno/<?=$d['hashkey']?>"><?=$d['user_requester_title']?></a></strong>
+                        </div>
+                        <?=sprintf(__('%d igényelt szolgáltatás'), count($d['services']))?>
+                        <?php if (count($d['services']) != 0): ?>
+                          <div class="serv-tooltip">
+                            <?php foreach ((array)$d['services'] as $serv): ?>
+                            <div class="serv"><?=$serv['neve']?></div>
+                            <?php endforeach; ?>
+                          </div>
+                        <?php endif; ?>
+                      </div>
+                    </div>
+                    <div class="ostat"><strong title="<?=$d['status']['title']?>" style="color:<?=$d['status']['color']?>;"><?=$d['status']['text']?></strong></div>
+                    <div class="cash"><?=Helper::cashFormat($d['cash_total'])?></div>
+                    <div class="add-at"><?=date('Y/m/d H:i', strtotime($d['offerout_at']))?></div>
+                  </div>
+                </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php else: ?>
+            <div class="no-data-view">
+              <div class="ico"><i class="far fa-circle"></i></div>
+              <div class="text"><?=__('Nincsenek ajánlatkérései.')?></div>
+            </div>
+          <?php endif; ?>
+        </div>
+        <div class="data-footer">
+          <div class="d-flex align-items-center">
+            <div class="title">
+              <h3><?=__('Ajánlatkéréseim')?></h3>
+              <a href="/ajanlatkeresek/kimeno"><?=__('Tovább az összes ajánlatkérémhez')?></a>
+            </div>
+            <div class="count">
+              <div class="count-wrapper"><div class="num"><?=(int)count($doc['data'])?></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wblock color-green">
+        <div class="data-container">
+          <?php $doc = $this->dashboard['requests_in']; ?>
+          <?php if ( $doc && count($doc) != 0): ?>
+            <div class="data-list requests-dashboard">
+              <div class="wrapper">
+                <div class="header">
+                  <div class="holder">
+                    <div class="data"><?=__('Tárgy')?></div>
+                    <div class="ostat"><?=__('Státusz')?></div>
+                    <div class="cash"><?=__('Keretösszeg (nettó)')?></div>
+                    <div class="add-at"><?=__('Időpont')?></div>
+                  </div>
+                </div>
+                <?php foreach ((array)$doc as $hash => $d): ?>
+                <div class="list-item">
+                  <div class="holder">
+                    <div class="data">
+                      <div class="req-services">
+                        <div class="title">
+                          <strong><a href="/ajanlatkeresek/bejovo/<?=$d['hashkey']?>"><?=sprintf(__('%d igényelt szolgáltatás'), count($d['services']))?></a></strong>
+                        </div>
+                        <?php if (count($d['services']) != 0): ?>
+                          <div class="serv-tooltip">
+                            <?php foreach ((array)$d['services'] as $serv): ?>
+                            <div class="serv"><?=$serv['neve']?></div>
+                            <?php endforeach; ?>
+                          </div>
+                        <?php endif; ?>
+                      </div>
+                    </div>
+                    <div class="ostat"><strong title="<?=$d['status']['title']?>" style="color:<?=$d['status']['color']?>;"><?=$d['status']['text']?></strong></div>
+                    <div class="cash"><?=Helper::cashFormat($d['cash_total'])?></div>
+                    <div class="add-at"><?=date('Y/m/d H:i', strtotime($d['offerout_at']))?></div>
+                  </div>
+                </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php else: ?>
+            <div class="no-data-view">
+              <div class="ico"><i class="far fa-circle"></i></div>
+              <div class="text"><?=__('Nincsenek bejövő ajánlatkérései.')?></div>
+            </div>
+          <?php endif; ?>
+        </div>
+        <div class="data-footer">
+          <div class="d-flex align-items-center">
+            <div class="title">
+              <h3><?=__('Bejövő ajánlatkérések')?></h3>
+              <a href="/ajanlatkeresek/bejovo"><?=__('Tovább az összes bejövő ajánlatkéréshez')?></a>
+            </div>
+            <div class="count">
+              <div class="count-wrapper"><div class="num"><?=(int)count($doc['data'])?></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 <? endif;?>
 </div>
 
-<pre><?php //print_r($this->dashboard['requests']); ?></pre>
+<pre><?php //print_r($this->dashboard['requests_in']); ?></pre>

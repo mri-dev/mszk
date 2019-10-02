@@ -516,6 +516,11 @@ class OfferRequests
 
 		$q .= " ORDER BY ro.user_offer_id DESC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, ro.offerout_at DESC";
 
+		if (isset($arg['limit'])) {
+			$limit = (!empty($arg['limit'])) ? (int)$arg['limit'] : 10;
+			$q .= " LIMIT 0,".$limit;
+		}
+		
 		$qry = $this->db->squery($q, $qarg);
 
 		if ($qry->rowCount() == 0) {
@@ -532,6 +537,7 @@ class OfferRequests
 			$d['cash'] =  (array)json_decode($d['cash'], true);
 			$d['offerout_dist'] = \Helper::distanceDate($d['offerout_at']);
 			$d['offer'] = $this->getOfferData($d['user_offer_id']);
+			$d['status'] = $this->getOfferStatus($d, 'to');
 			$re[] = $d;
 		}
 
@@ -558,6 +564,9 @@ class OfferRequests
 			r.visited_at as recepient_visited_at,
 			r.message,
 			r.service_description,
+			r.offerout,
+			r.elutasitva,
+			r.project_id,
 			r.closed as request_closed,
 			r.requested as offerout_at
 		FROM requests as r
@@ -565,7 +574,12 @@ class OfferRequests
 		$q .= " and r.user_id = :uid";
 		$qarg['uid'] = $uid;
 
-		$q .= " ORDER BY r.closed ASC, r.visited DESC, r.admin_offer_id DESC, r.requested DESC";
+		$q .= " ORDER BY r.elutasitva ASC, r.closed ASC, r.visited ASC, r.admin_offer_id DESC, r.requested DESC";
+
+		if (isset($arg['limit'])) {
+			$limit = (!empty($arg['limit'])) ? (int)$arg['limit'] : 10;
+			$q .= " LIMIT 0,".$limit;
+		}
 
 		$qry = $this->db->squery($q, $qarg);
 
@@ -589,11 +603,139 @@ class OfferRequests
 				$admin_offer = $this->getOfferData($d['admin_offer_id']);
 			}
 			$d['admin_offer'] = $admin_offer;
+			$d['status'] = $this->getOfferStatus($d, 'from');
 
 			$re[] = $d;
 		}
 
 		return $re;
+	}
+
+	public function getOfferStatus( $data, $by )
+	{
+		$status = array();
+
+		switch ($by)
+		{
+			case 'from':
+				$status = array(
+					'text' => __('Feldolgozatlan'),
+					'title' => __('A kérést még nem dolgoztuk fel.'),
+					'color' => 'orange'
+				);
+
+				// Olvasott - Admin által olvasva
+				if ($data['visited'] == 1)
+				{
+					$status = array(
+						'text' => __('Olvasott'),
+						'title' => sprintf(__('A közvetítő adminisztrátorai elolvasták a kérést: %s'), $data['recepient_visited_at']),
+						'color' => '#efc23a'
+					);
+				}
+
+				// Feldolgozva - Admin által kiajáltva
+				if ($data['offerout'] == 1)
+				{
+					$status = array(
+						'text' => __('Feldolgozott'),
+						'title' => __('A kérése feldolgozás alatt áll, ajánlat készítés folyamatban.'),
+						'color' => '#9cce8e'
+					);
+				}
+
+				// Lezárva - user által elutasítva
+				if (!empty($data['admin_offer_id']) && $data['project_id'] == 0)
+				{
+					$status = array(
+						'text' => __('Elfogadásra vár'),
+						'title' => __('A közvetítő elküldte ajánlatát. Az ajánlat elfogadásra várakozik!'),
+						'color' => '#007bff'
+					);
+				}
+
+				// Elutasítva - Admin által elutasítva
+				if ($data['elutasitva'] == 1)
+				{
+					$status = array(
+						'text' => __('Elutasítva'),
+						'title' => __('A kérése elutasításra került az adminisztrátorok által.'),
+						'color' => '#c20707'
+					);
+				}
+
+				// Ajánlat elfogadva - user által elfogadva
+				if (!empty($data['admin_offer_id']) && $data['request_closed'] == 1 && empty($data['project_id']) && $data['admin_offer'] && $data['admin_offer']['accepted'] == 1)
+				{
+					$status = array(
+						'text' => __('Ajánlat elfogadva'),
+						'title' => __('Ajánlat elfogadva. Projekt létrehozására várakozik.'),
+						'color' => '#21a9f1'
+					);
+				}
+
+				// Projekt létrejött
+				if (!empty($data['admin_offer_id']) && $data['request_closed'] == 1 && !empty($data['project_id']) && $data['admin_offer'] && $data['admin_offer']['accepted'] == 1)
+				{
+					$status = array(
+						'text' => __('Projekt létrejött'),
+						'title' => __('A projekt sikeresen létrejött!'),
+						'color' => '#28a745'
+					);
+				}
+			break;
+			case 'to':
+				$status = array(
+					'text' => __('Feldolgozatlan'),
+					'title' => __('Új beérkezett ajánlatkérés.'),
+					'color' => 'orange'
+				);
+
+				// Olvasott - Admin által olvasva
+				if ( !empty($data['recepient_visited_at']) )
+				{
+					$status = array(
+						'text' => __('Megtekintett'),
+						'title' => sprintf(__('Az ajánlatkérést megtekintette: %s'), $data['recepient_visited_at']),
+						'color' => '#efc23a'
+					);
+				}
+
+				// Elutasítva
+				if ($data['recepient_declined'] == 1)
+				{
+					$status = array(
+						'text' => __('Elutasítva'),
+						'title' => __('Az ajánlatkérést elutasította.'),
+						'color' => '#c20707'
+					);
+				}
+
+				// Feldolgozva - Ajnálat elküldve
+				if ( !empty($data['user_offer_id']) )
+				{
+					$status = array(
+						'text' => __('Ajánlat elküldve'),
+						'title' => __('A kérést elfogadta és elküldte a személyes ajánlatát.'),
+						'color' => '#007bff'
+					);
+				}
+
+				// Projekt létrejött
+				if (!empty($data['user_offer_id']) && !empty($data['offer']) && $data['offer']['accepted'] == 1)
+				{
+					$status = array(
+						'text' => __('Ajánlat elfogadva'),
+						'title' => __('A projekt sikeresen létrejött!'),
+						'color' => '#28a745'
+					);
+				}
+			break;
+
+			default: break;
+		}
+
+		return $status;
 	}
 
 	// TODO: Törölni majd, ha kész az új

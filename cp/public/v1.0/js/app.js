@@ -472,9 +472,17 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 			})
 		}).success(function(r){
 			console.log(r);
-
 			if (r.data && r.data.length != 0) {
 				$scope.requests = r.data;
+
+				if ($scope.loadconfig && typeof $scope.loadconfig.preselected !== 'undefined' && $scope.loadconfig.preselected != '') {
+					angular.forEach($scope.requests, function(e,i){
+						if ( e.hashkey == $scope.loadconfig.preselected ) {
+							$scope.pickRequest( e );
+						}
+					});
+				}
+
 			}
 			if (typeof callback !== 'undefined') {
 				callback(r.data);

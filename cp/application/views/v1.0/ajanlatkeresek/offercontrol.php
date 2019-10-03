@@ -1,4 +1,4 @@
-<div class="wblock">
+<div class="wblock fullheight">
   <div class="data-container">
     <div class="d-flex">
       <div class="request-list">
@@ -37,27 +37,35 @@
               <div class="hashkey" title="<?=__('Ajánlatkérés hashkey')?>"><i class="fas fa-database"></i> {{r.hashkey}}</div>
             </div>
           </div>
-          <div class="no-requests" ng-if="!requests">
-            <div class="wrapper" ng-if="relation=='to'">
-              <i class="far fa-folder-open"></i><?=__('Nincs beérkező ajánlatkérése.')?>
+          <div class="no-requests" ng-if="isObjectEmpty(requests) && !loading">
+            <div class="wrapper">
+              <i class="far fa-folder-open"></i>
+              <i class="fas fa-ellipsis-v"></i>
+              <?=__('Nincs elérhető ajánlatkérés')?>
+
             </div>
-            <div class="wrapper" ng-if="relation=='from'">
-                <i class="far fa-folder-open"></i><?=__('Nincs kimenő ajánlatkérése.')?>
-              </div>
           </div>
         </div>
       </div>
       <div class="request-data">
-        <div class="" ng-if="!request">
-          <div class="wrapper">
-            <div class="iteractive-infos">
-              <div class="" ng-if="requests[relation].length==0">
-                <?=__('Nincs megjeleníthető ajánlat kérés.')?>
-              </div>
-              <div class="" ng-if="requests[relation].length!=0 && !request">
-                <?=__('A bal oldali kérsek közül válassza ki a kezelendő ajánlat kérést.')?>
-              </div>
+      {{Object.keys(requests).length}}
+        <div class="iteractive-infos">
+          <div class="loading-msg" ng-if="loading">
+            <div class="spinner">
+              <i class="fas fa-spinner fa-spin"></i>
             </div>
+            <h3><?=__('Adatok betöltése folyamatban...')?> </h3>
+          </div>
+          <div class="" ng-if="!loading && isObjectEmpty(requests)">
+            <h3><?=__('Az adatok betöltésre kerültek')?></h3>
+            <?=__('Jelenleg nincs megjelenítetendő adat.')?>
+          </div>
+          <div class="" ng-if="!loading && !isObjectEmpty(requests) && !request">
+            <div class="icon">
+              <i class="fas fa-long-arrow-alt-left"></i>
+            </div>
+            <h3><?=__('Az adatok betöltésre kerültek')?></h3>
+            <?=__('A bal oldali kérsek közül válassza ki a kezelendő ajánlatatot.')?>
           </div>
         </div>
         <div class="wrapper" ng-if="request">

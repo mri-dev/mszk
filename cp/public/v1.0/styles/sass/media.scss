@@ -408,9 +408,13 @@ input, textarea{
 .ct{
   padding-top: $top-control-height+$top-title-height;
 	padding-bottom: 40px;
+	&.fullheight {		
+		height: 100%;
+	}
 }
 body:not(.login) .innerContent{
 	background: #edf1f5;
+	height: 100%;
 }
 .innerContent{
   padding: 25px;
@@ -615,6 +619,9 @@ i.info {
 		}
 	}
 }
+.d-flex{
+	height: 100%;
+}
 .wblock{
 	background: white;
 	border-radius: 3px;
@@ -653,6 +660,7 @@ i.info {
 	}
 
 	.data-container{
+		height: 100%;
 		.dc-padding{
 			padding: 15px;
 		}
@@ -722,6 +730,9 @@ i.info {
 			}
 		}
 		.data-footer{
+			.title h3 {
+				color: $color-green;
+			}
 			.count {
 				.count-wrapper{
 					background: $color-green-light;
@@ -738,6 +749,9 @@ i.info {
 			}
 		}
 		.data-footer{
+			.title h3 {
+				color: $color-red;
+			}
 			.count {
 				.count-wrapper{
 					background: $color-red-light;
@@ -754,12 +768,18 @@ i.info {
 			}
 		}
 		.data-footer{
+			.title h3 {
+				color: $color-blue;
+			}
 			.count {
 				.count-wrapper{
 					background: $color-blue-light;
 				}
 			}
 		}
+	}
+	&.fullheight{
+		height: 100%;
 	}
 }
 .wblock.overview-services{
@@ -1236,6 +1256,19 @@ footer {
 	}
 }
 
+.loading-msg {
+	.spinner{
+		margin: 10px 0 20px 0;
+		i{
+			font-size: 3rem;
+			color: $color-blue-light !important;
+		}
+	}
+	h3{
+		color: $color-red-light !important;
+	}
+}
+
 .request-controller{
 	.no-requests{
 		& > .wrapper{
@@ -1254,6 +1287,7 @@ footer {
 		background: #ffffff;
 		border-right: 0.5px solid #d8e2ec;
     padding-right: 0.5px;
+		overflow: auto;
 		& > .head{
 			padding: 10px;
 			background: #e8e8e8;
@@ -1305,14 +1339,35 @@ footer {
 		font-size: 0.9rem;
 		flex: 1;
 		background: #f5f6f6;
+		position: relative;
+		overflow: auto;
+		min-height: 250px;
 		box-shadow: inset 5px 0 20px -10px #c0c0c0;
 
 		.iteractive-infos{
-			text-align: center;
-			font-size: 1.2rem;
-			padding: 3rem;
-			font-weight: bold;
-			color: black;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			-webkit-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+
+			.icon {
+				i{
+					font-size: 3rem;
+					color: $color-blue-light;
+				}
+			}
+			& > div {
+				text-align: center;
+				font-size: 1.2rem;
+				padding: 3rem;
+				color: #585858;
+				h3 {
+					font-weight: bold;
+					text-transform: uppercase;
+					color:#222222;
+				}
+			}
 		}
 		.row-header{
 			background: #eaeaea;
@@ -1361,7 +1416,7 @@ footer {
 	}
 
 	&.user-controller{
-		margin: -25px;
+		height: 100%;
 		.request-list{
 			flex-basis: 380px;
 			& > .head{

@@ -126,30 +126,27 @@ class Controller {
       **/
 
       // All
-      $badges['offers']['all']['out'] = $this->db->squery("SELECT o.ID FROM requests_offerouts as o LEFT OUTER JOIN requests as r ON r.ID = o.request_id WHERE r.offerout = 1 and r.elutasitva = 0 and r.user_id = :uid GROUP BY o.request_id", array(
-        'uid' => $uid
-      ))->rowCount();
 
       // Admin - Requests
-      $badges['offers']['admin']['progress'] = 0;
-      $badges['offers']['admin']['progressed'] = 0;
 
-      if ($this->view->is_admin_logged) {
-        $badges['offers']['admin']['progress'] = $this->db->squery("SELECT r.ID FROM requests as r WHERE r.offerout = 0 and r.elutasitva = 0")->rowCount();
-        $badges['offers']['admin']['progressed'] = $this->db->squery("SELECT r.ID FROM requests as r WHERE r.offerout = 1 or r.elutasitva = 1")->rowCount();
-        $badges['offers']['admin']['done'] = $this->db->squery("SELECT r.ID FROM requests as r LEFT OUTER JOIN offers as o ON o.ID = r.admin_offer_id WHERE r.offerout = 1 and o.project_id IS NOT NULL")->rowCount();
-        $badges['offers']['admin']['positiveprocess'] = $this->db->squery("SELECT r.ID FROM requests as r LEFT OUTER JOIN offers as o ON o.ID = r.admin_offer_id WHERE r.offerout = 1 and o.accepted = 1 and o.project_id IS NULL")->rowCount();
 
+      if ($this->view->is_admin_logged)
+      {
+        $badges['offers']['admin']['progress'] = (int)$this->db->squery("SELECT r.ID FROM requests as r WHERE r.offerout = 0 and r.elutasitva = 0")->rowCount();
+        $badges['offers']['admin']['progressed'] = (int)$this->db->squery("SELECT r.ID FROM requests as r WHERE r.offerout = 1 or r.elutasitva = 1")->rowCount();
+        $badges['offers']['admin']['done'] = (int)$this->db->squery("SELECT r.ID FROM requests as r LEFT OUTER JOIN offers as o ON o.ID = r.admin_offer_id WHERE r.offerout = 1 and o.project_id IS NOT NULL")->rowCount();
+        $badges['offers']['admin']['positiveprocess'] = (int)$this->db->squery("SELECT r.ID FROM requests as r LEFT OUTER JOIN offers as o ON o.ID = r.admin_offer_id WHERE r.offerout = 1 and o.accepted = 1 and o.project_id IS NULL")->rowCount();
         $messages_all = $this->db->squery("SELECT m.ID FROM messanger_messages as m WHERE m.user_to_id = 0 and m.user_from_id != 0 and m.admin_readed_at IS NULL")->rowCount();
-      } else {
+        $badges['offers']['admin']['total'] = $badges['offers']['admin']['progress'] + (int)$badges['offers']['admin']['positiveprocess'];
+      }
+        else
+      {
+        $badges['offers']['outbox']= (int)$this->db->squery("SELECT r.ID FROM requests as r WHERE r.user_id = :uid", array('uid' => $uid))->rowCount();
+        $badges['offers']['inbox']= (int)$this->db->squery("SELECT r.ID FROM requests_offerouts as r WHERE r.user_id = :uid", array('uid' => $uid))->rowCount();
+
         $messages_all = $this->db->squery("SELECT m.ID FROM messanger_messages as m WHERE m.user_from_relation = 'admin' and m.user_from_id != 0 and m.user_to_id = :myid and m.user_readed_at IS NULL", array('myid' => $uid))->rowCount();
       }
-      $badges['offers']['admin']['total'] = $badges['offers']['admin']['progress'] + (int)$badges['offers']['admin']['positiveprocess'];
 
-      $badges['offers']['all']['total'] = $badges['offers']['all']['out'] + $badges['offers']['all']['in'] + $badges['offers']['admin']['progress'];
-      $badges['offers']['accepted']['total'] = $badges['offers']['accepted']['out'] + $badges['offers']['accepted']['in'];
-      $badges['offers']['inprogress']['total'] = $badges['offers']['inprogress']['out'] + $badges['offers']['inprogress']['in'];
-      $badges['offers']['progressed']['total'] = $badges['offers']['progressed']['out'] + $badges['offers']['progressed']['in'];
 
       /**
       * Projektek

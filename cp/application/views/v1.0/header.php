@@ -190,8 +190,8 @@
             <!-- End of MODULS-->
 
             <?php if ( !$this->is_admin_logged ): ?>
-              <li class="<?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'bejovo')?'on':''?>"><a href="/ajanlatkeresek/bejovo" title="<?=__('Bejövő ajánlatkérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Bejövő ajánlatkérések')?> <? if($this->badges['offers']['in']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['in']?></span><? endif; ?></a></li>
-              <li class="<?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'kimeno')?'on':''?>"><a href="/ajanlatkeresek/kimeno" title="<?=__('Kimenő ajánlatkérések')?>"><span class="ni">8</span><i class="fas fa-file-export"></i> <?=__('Kimenő ajánlatkérések')?> <? if($this->badges['offers']['out']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['out']?></span><? endif; ?></a></li>
+              <li class="<?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'bejovo')?'on':''?>"><a href="/ajanlatkeresek/bejovo" title="<?=__('Bejövő ajánlatkérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Bejövő ajánlatkérések')?> <? if($this->badges['offers']['inbox']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['inbox']?></span><? endif; ?></a></li>
+              <li class="<?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'kimeno')?'on':''?>"><a href="/ajanlatkeresek/kimeno" title="<?=__('Kimenő ajánlatkérések')?>"><span class="ni">8</span><i class="fas fa-file-export"></i> <?=__('Kimenő ajánlatkérések')?> <? if($this->badges['offers']['outbox']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['outbox']?></span><? endif; ?></a></li>
             <?php endif; ?>
 
             <?php if ( $this->is_admin_logged ): ?>
@@ -257,5 +257,5 @@
       </div>
   </div>
   <? endif; ?>
-  <div class="ct">
+  <div class="ct<?=($this->gets[0]=='ajanlatkeresek' && in_array($this->gets[1],array('bejovo', 'kimeno')))?' fullheight':''?>">
   	<div class="innerContent">

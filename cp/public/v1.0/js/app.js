@@ -298,6 +298,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', '$cookies', function($scope, $http, $mdToast, $sce, $filter, $cookies)
 {
 	$scope.quicksearch = '';
+	$scope.loading = true;
 	$scope.relation = 'to';
 	$scope.loadconfig = {};
 	$scope.offer = {};
@@ -331,9 +332,12 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 		$scope.loadEverything();
 	}
 
-	$scope.loadEverything = function() {
+	$scope.loadEverything = function()
+	{
+		$scope.loading = true;
 		$scope.loadLists(function( data )
 		{
+			$scope.loading = false;
 			/*
 			var storerelation = $cookies.get('relation');
 			if (typeof storerelation !== 'undefined') {
@@ -341,6 +345,10 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 			}
 			*/
 		});
+	}
+
+	$scope.isObjectEmpty = function( object ){
+	   return Object.keys(object).length === 0;
 	}
 
 	$scope.showOfferSending = function( f ) {
@@ -547,6 +555,7 @@ a.controller("OfferControl", ['$scope', '$http', '$mdToast', '$sce', '$filter', 
 
 a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window', '$mdDialog', function($scope, $http, $mdToast, $sce, $window, $mdDialog)
 {
+	$scope.loading = false;
 	$scope.quicksearch = '';
 	$scope.requests = [];
 	$scope.servicerAccounts = [];
@@ -562,9 +571,14 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 	$scope.servicesrequestprogress = false;
 
 	$scope.loadEverything = function() {
+		$scope.loading = true;
 		$scope.loadLists(function( data ){
-
+				$scope.loading = false;
 		});
+	}
+
+	$scope.isObjectEmpty = function( object ){
+	   return Object.keys(object).length === 0;
 	}
 
 	$scope.saac = {

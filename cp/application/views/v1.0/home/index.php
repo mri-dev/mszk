@@ -11,6 +11,7 @@
           <div class="count"><?=$this->badges['projects']['all']?></div>
         </div>
       </div>
+      <?php if (!$this->is_admin_logged): ?>
       <div class="col ct-info color-green">
         <div class="d-flex">
           <div class="ico">
@@ -29,6 +30,17 @@
           <div class="count"><?=(int)$this->badges['offers']['inbox']?></div>
         </div>
       </div>
+      <?php else: ?>
+        <div class="col ct-info color-green">
+          <div class="d-flex">
+            <div class="ico">
+              <div class="ico-wrapper"><i class="fas fa-file-import"></i></div>
+            </div>
+            <div class="title"><?=__('Bejövő ajánlatkérések')?><div class="line"></div></div>
+            <div class="count"><?=(int)$this->notoffered_requests?></div>
+          </div>
+        </div>
+      <?php endif; ?>
       <div class="col ct-info color-blue-light">
         <div class="d-flex">
           <div class="ico">
@@ -225,6 +237,61 @@
       <?php endif; ?>
     </div>
     <div class="col-md-8">
+      <?php if ($this->is_admin_logged): ?>
+      <div class="wblock color-green">
+        <div class="data-container">
+          <?php if (empty($this->requests)): ?>
+          <div class="no-data-view">
+            <div class="ico"><i class="far fa-check-circle"></i></div>
+            <div class="text"><?=__('Minden rendben! Nincs feldolgozatlan ajánlat kérés!')?></div>
+          </div>
+          <?php else: ?>
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th><?=__('Név')?></th>
+                  <th><?=__('E-mail')?></th>
+                  <th><?=__('Szolgáltatások')?></th>
+                  <th class="center"><?=__('Teljes költségvetés')?></th>
+                  <th class="center"><?=__('Igényelte')?></th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ( (array)$this->requests as $request ): ?>
+                <tr>
+                  <td><a href="/ajanlatkeresek/feldolgozatlan/<?=$request['hashkey']?>"><?=$request['name']?></a></td>
+                  <td><?=$request['email']?></td>
+                  <td>
+                    <?php foreach ((array)$request['services_list'] as $s): ?>
+                    <div class="">&mdash; <?=$s['fullneve']?></div>
+                    <?php endforeach; ?>
+                  </td>
+                  <td class="center"><?=\Helper::cashFormat($request['cash_total'])?> <?=__('Ft + ÁFA')?></td>
+                  <td class="center"><?=$request['requested_at']?></td>
+                </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+          <?php endif; ?>
+        </div>
+        <div class="data-footer">
+          <div class="d-flex align-items-center">
+            <div class="title">
+              <h3><?=__('Feldolgozatlan ajánlatkérések')?></h3>
+              <?php if ($this->is_admin_logged): ?>
+                <a href="/ajanlatkeresek/feldolgozatlan"><?=__('Tovább az igények feldolgozásához')?></a>
+              <?php endif; ?>
+            </div>
+            <div class="count">
+              <div class="count-wrapper"><div class="num"><?=$this->notoffered_requests?></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
+
       <div class="wblock color-blue">
         <div class="data-container">
           <?php $doc = $this->dashboard['projects']; ?>
@@ -309,6 +376,7 @@
         </div>
       </div>
 
+      <?php if (!$this->is_admin_logged): ?>
       <div class="wblock color-green">
         <div class="data-container">
           <?php $doc = $this->dashboard['requests_out']; ?>
@@ -363,12 +431,13 @@
               <a href="/ajanlatkeresek/kimeno"><?=__('Tovább az összes ajánlatkérémhez')?></a>
             </div>
             <div class="count">
-              <div class="count-wrapper"><div class="num"><?=(int)count($doc['data'])?></div></div>
+              <div class="count-wrapper"><div class="num"><?=(int)$this->badges['offers']['outbox']?></div></div>
             </div>
           </div>
         </div>
       </div>
-
+      <?php endif; ?>
+      <?php if (!$this->is_admin_logged): ?>
       <div class="wblock color-green">
         <div class="data-container">
           <?php $doc = $this->dashboard['requests_in']; ?>
@@ -422,11 +491,12 @@
               <a href="/ajanlatkeresek/bejovo"><?=__('Tovább az összes bejövő ajánlatkéréshez')?></a>
             </div>
             <div class="count">
-              <div class="count-wrapper"><div class="num"><?=(int)count($doc['data'])?></div></div>
+              <div class="count-wrapper"><div class="num"><?=(int)$this->badges['offers']['inbox']?></div></div>
             </div>
           </div>
         </div>
       </div>
+      <?php endif; ?>
 
     </div>
   </div>

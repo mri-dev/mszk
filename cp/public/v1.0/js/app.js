@@ -569,6 +569,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 		$scope.loadEverything();
 	}
 	$scope.servicesrequestprogress = false;
+	$scope.servicesrequestsendedsuccess = false;
 
 	$scope.loadEverything = function() {
 		$scope.loading = true;
@@ -915,6 +916,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 	$scope.sendServicesRequest = function()
 	{
 		$scope.servicesrequestprogress = true;
+		$scope.servicesrequestsendedsuccess = false;
 
 		$http({
 			method: 'POST',
@@ -929,7 +931,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 		}).success(function(r){
 			console.log(r);
 			if (r.success == 1) {
-				//$window.location.reload();
+				$scope.servicesrequestsendedsuccess = r.msg;
 			}
 			$scope.servicesrequestprogress = false;
 		});

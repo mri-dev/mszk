@@ -11,6 +11,10 @@ class uzenetek extends Controller{
 				'title' => parent::$pageTitle
 			));*/
 
+			if ( !$this->view->_USERDATA ) {
+				\Helper::reload('/belepes/?return='.$_SERVER['REQUEST_URI']);
+			}
+
 			$this->addPagePagination(array(
 				'link' => '/'.__CLASS__,
 				'title' => parent::$pageTitle

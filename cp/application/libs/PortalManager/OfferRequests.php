@@ -4,7 +4,9 @@ namespace PortalManager;
 use PortalManager\Users;
 use PortalManager\Template;
 use MailManager\Mailer;
+use MailManager\MailTemplates;
 use PortalManager\Categories;
+use AlertsManager\Alerts;
 
 /**
 * class OfferRequests
@@ -13,11 +15,14 @@ use PortalManager\Categories;
 */
 class OfferRequests
 {
-	private $db = null;
+	public $db = null;
 
 	function __construct( $arg = array() )
 	{
 		$this->db = $arg[db];
+
+		$this->ALERTS = new Alerts(array('controller'=> $this));
+
 		return $this;
 	}
 
@@ -238,7 +243,7 @@ class OfferRequests
 				'offerout_id' => (int)$offer['offerout_id'],
 				'message' => $offer['message'],
 				'project_start_at' => $offer['project_start_at'],
-				'offer_project_idotartam' => $offer['project_idotartam'],
+				'offer_project_idotartam' => $offer['offer_project_idotartam'],
 				'price' => (float)$offer['price']
 			)
 		);
@@ -273,6 +278,38 @@ class OfferRequests
 		);
 
 		// TODO: E-mail értesítő az értintettnek
+		if (true)
+		{
+			// request data
+			$request_data = $this->db->squery("SELECT r.hashkey, r.user_id, r.user_requester_title, r.name, r.email, r.company, r.phone, r.message, r.cash_total FROM requests as r WHERE r.ID = :id", array('id' => $request_id))->fetch(\PDO::FETCH_ASSOC);
+
+			// to user data
+			$original_offer = $this->db->squery("SELECT o.from_user_id FROM offers as o WHERE o.ID = :oid", array('oid' => $offer['ID']))->fetch(\PDO::FETCH_ASSOC);
+
+			// to user data
+			$to_user_data = $this->db->squery("SELECT u.email FROM felhasznalok as u WHERE u.ID = :id", array('id' => $request_data['user_id']))->fetch(\PDO::FETCH_ASSOC);
+
+			$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+			$mail->add( $to_user_data['email'] );
+			$arg = array(
+				'nev' => $request_data['name'],
+				'request_title' => $request_data['user_requester_title'],
+				'request_hashkey' => $request_data['hashkey'],
+				'requester_price' => \Helper::cashFormat((float)$request_data['cash_total']).__('Ft + ÁFA'),
+				'requester_message' => nl2br($request_data['message']),
+				'offer_id' => $offer_id,
+				'offer_project_start' => $offer['project_start_at'],
+				'offer_project_idotartam' => $offer['offer_project_idotartam'],
+				'offer_message' => nl2br($offer['message']),
+				'offer_price' => \Helper::cashFormat((float)$offer['price']).__('Ft + ÁFA'),
+				'settings' => $this->db->settings,
+				'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+			);
+			$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get( 'offers_reply_servicer_offer_to_requester', $arg);
+			$mail->setSubject( __('Új ajánlata érkezett: ').$request_data['user_requester_title'] );
+			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
+			$re = $mail->sendMail();
+		}
 
 		return (int)$offer_id;
 
@@ -294,6 +331,9 @@ class OfferRequests
 			)
 		);
 
+		// request data
+		$request_data = $this->db->squery("SELECT r.name, r.email, r.company, r.phone, r.message, r.cash_total FROM requests as r WHERE r.hashkey = :hash", array('hash' => $request['hashkey']))->fetch(\PDO::FETCH_ASSOC);
+
 		$offer_id = $this->db->lastInsertId();
 
 		// Offerout update offer id
@@ -307,10 +347,35 @@ class OfferRequests
 			sprintf("ID = %d", (int)$request['ID'])
 		);
 
-		// TODO: E-mail értesítő az értintettnek
+		// E-mail értesítő az adminisztrátornak
+		if (true)
+		{
+			$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+			$mail->add( $this->db->settings['alert_email'] );
+			$arg = array(
+				'servicer_user_id' => $user_id,
+				'request_hashkey' => $request['hashkey'],
+				'requester_name' => $request_data['name'],
+				'requester_company' => $request_data['company'],
+				'requester_email' => $request_data['email'],
+				'requester_phone' => $request_data['phone'],
+				'requester_price' => \Helper::cashFormat((float)$request_data['cash_total']).__('Ft + ÁFA'),
+				'requester_message' => nl2br($request_data['message']),
+				'offer_id' => $offer_id,
+				'offer_project_start' => $offer['project_start_at'],
+				'offer_project_idotartam' => $offer['project_idotartam'],
+				'offer_message' => nl2br($offer['message']),
+				'offer_price' => \Helper::cashFormat((float)$offer['price']).__('Ft + ÁFA'),
+				'settings' => $this->db->settings,
+				'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+			);
+			$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get( 'offers_reply_servicer_offer', $arg);
+			$mail->setSubject( __('Szolgáltatói ajánlat érkezett: '.$request_data['name'].' ('.$request['hashkey'].') '.__('részére').'.'));
+			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
+			$re = $mail->sendMail();
+		}
 
 		return (int)$offer_id;
-
 	}
 
 	public function acceptOffer( $request_id, $offer_id, $user_id, $projectdata )
@@ -514,13 +579,13 @@ class OfferRequests
 		$q .= " and ro.user_id = :uid";
 		$qarg['uid'] = $uid;
 
-		$q .= " ORDER BY ro.user_offer_id DESC, ro.recepient_declined ASC, ro.recepient_visited_at ASC, ro.offerout_at DESC";
+		$q .= " ORDER BY ro.recepient_declined ASC, ro.user_offer_id ASC, ro.recepient_visited_at ASC, ro.offerout_at DESC";
 
 		if (isset($arg['limit'])) {
 			$limit = (!empty($arg['limit'])) ? (int)$arg['limit'] : 10;
 			$q .= " LIMIT 0,".$limit;
 		}
-		
+
 		$qry = $this->db->squery($q, $qarg);
 
 		if ($qry->rowCount() == 0) {
@@ -1213,12 +1278,15 @@ class OfferRequests
 			throw new \Exception(__("Az ajánlatkérés azonosítója nem lett megadva!"));
 		}
 
-		$ch = $this->db->squery("SELECT s.ID FROM requests as s WHERE hashkey = :hash", array('hash' => $request_hashkey ));
+		$ch = $this->db->squery("SELECT s.ID, s.user_id, s.user_requester_title FROM requests as s WHERE s.hashkey = :hash", array('hash' => $request_hashkey ));
 		if ( $ch->rowCount() == 0 )
 		{
 			throw new \Exception(__("Hibás ajánlatkérés azonosító! Nem létezik ilyen igénylés!"));
 		}
-		$request_id = (int)$ch->fetchColumn();
+		$request_data = $ch->fetch(\PDO::FETCH_ASSOC);
+		$request_id = $request_data['ID'];
+		$requester_user_id = $request_data['user_id'];
+		$user_requester_title = $request_data['user_requester_title'];
 
 		// prepare users
 		if ($tousers)
@@ -1250,12 +1318,18 @@ class OfferRequests
 						'request_id' => $request_id
 					)
 				);
-
 				$offerout_id = $this->db->lastInsertId();
 				$outgo_emails[$u]['email'] = $user_email;
 				$outgo_emails[$u]['ID'] = $u;
 				$outgo_emails[$u]['stack'][] = array(
 					'ID' => $offerout_id
+				);
+
+				// Értesítés a szolgáltatóknak
+				$this->ALERTS->add(
+					$u,
+					'offers_admin_offerout_to_servicer',
+					$offerout_id
 				);
 			}
 
@@ -1286,6 +1360,14 @@ class OfferRequests
 						);
 					}
 				}
+
+				// Értesítés az ajánlatkérőnek
+				$this->ALERTS->add(
+					$requester_user_id,
+					'offers_admin_offerout_to_requester',
+					$request_id,
+					array('hashkey' => $request_hashkey, 'name' => $user_requester_title)
+				);
 			}
 		}
 

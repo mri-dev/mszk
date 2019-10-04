@@ -11,7 +11,7 @@ class ajanlatkeresek extends Controller {
 				'title' => parent::$pageTitle
 			));
 			if ( !$this->view->_USERDATA ) {
-        \Helper::reload('/');
+        \Helper::reload('/belepes/?return='.$_SERVER['REQUEST_URI']);
       }
 
 			$uid = $this->view->_USERDATA['data']['ID'];

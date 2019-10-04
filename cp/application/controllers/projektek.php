@@ -14,7 +14,7 @@ class projektek extends Controller
 			));
 
 			if ( !$this->view->_USERDATA ) {
-        \Helper::reload('/');
+        \Helper::reload('/belepes/?return='.$_SERVER['REQUEST_URI']);
       }
 
       if ($this->gets[1] == '') {

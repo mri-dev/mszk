@@ -1,14 +1,13 @@
 <?
   class Lang{
-	private static $lang_root = 'lang';
+	private static $lang_root = '/lang';
 	private static $language_content 	= false;
 
 
 	public static function content($string){
-		$langfile = self::$lang_root .'/'. self::getLang() . '.txt';
+		$langfile = $_SERVER['DOCUMENT_ROOT'].self::$lang_root .'/'. self::getLang() . '.txt';
 
 		if(file_exists($langfile)){
-
 			if(!self::$language_content){
 				$ctx 	= @file_get_contents($langfile);
 				self::$language_content = $ctx;

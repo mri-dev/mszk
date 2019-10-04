@@ -230,6 +230,7 @@ class ajax extends Controller
 							$requests = new OfferRequests( array('db' => $this->db) );
 							try {
 								$ret['t'] = $requests->sendServiceRequest( $request, $servicesus );
+								$this->setSuccess(__('Sikeresen kiajánlotta a szolgáltatók felé az ajánlatkérést.'), $ret);
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);
 							}
@@ -322,7 +323,7 @@ class ajax extends Controller
 								$this->escape($e->getMessage(), $ret);
 							}
 
-							$this->setSuccess(__('Ajánlat kérés elfogadása sikeres.'), $ret);
+							$this->setSuccess(__('Sikeresen elküldte az ajánlatkérőnek a szolgáltatói ajánlatot.'), $ret);
 						break;
 						case 'List':
 							$requests = new OfferRequests( array('db' => $this->db) );

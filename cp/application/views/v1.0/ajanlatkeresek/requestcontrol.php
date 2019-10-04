@@ -327,10 +327,15 @@
                     </div>
                   </div>
                   <div class="text-right" ng-if="request.elutasitva==0 && request.offerout == 0">
-                    <button type="button" ng-if="!servicesrequestprogress" class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
+                    <button type="button" ng-if="!servicesrequestprogress && !servicesrequestsendedsuccess" class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
                     <div class="" ng-if="servicesrequestprogress">
                       <div class="alert alert-primary text-left">
                         <?=__('Ajánlatkérés kiajánlása folyamatban van...')?> <i class="fas fa-spinner fa-spin"></i>
+                      </div>
+                    </div>
+                    <div class="" ng-if="servicesrequestsendedsuccess">
+                      <div class="alert alert-success text-left" ng-bind-html="servicesrequestsendedsuccess|unsafe">
+
                       </div>
                     </div>
                   </div>

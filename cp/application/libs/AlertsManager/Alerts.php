@@ -291,6 +291,22 @@ class Alerts
 				);
 			break;
 
+			case 'offers_admin_offerout_to_servicer':
+				$button = array(
+					'text' => __('Ajánlatkérés megtekintése'),
+					'url' => '/ajanlatkeresek/bejovo/'.$this->getVars('hashkey'),
+					'msg' => null
+				);
+			break;
+
+			case 'offers_admin_offerout_to_requester':
+				$button = array(
+					'text' => __('Ajánlatkérés megtekintése').': <strong>'.$this->getVars('name').'</strong>',
+					'url' => '/ajanlatkeresek/kimeno/'.$this->getVars('hashkey'),
+					'msg' => null
+				);
+			break;
+
 			//ugyfelkapu/hirdetesek?hlad=9&requestsShow=1
 		}
 

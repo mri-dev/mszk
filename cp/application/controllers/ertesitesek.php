@@ -15,6 +15,7 @@ class ertesitesek extends Controller{
 			}
 
       $arg = array();
+			$arg['userid'] = $this->view->_USERDATA['data']['ID'];
       $alerts = $this->ALERTS->getTree( $arg );
       $this->out( 'alerts', $alerts );
 

@@ -14,6 +14,7 @@
     </div>
     <div class="bg col-md-12">
       <form action="" method="post">
+        <input type="hidden" name="return" value="<?=$_GET['return']?>">
         <div class="input-group">
 	        <span class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user-tie"></i></span></span>
 				  <input type="text" class="form-control" name="email" value="<?=(isset($_GET['email'])) ? $_GET['email']:''?>" placeholder="<?=__('E-mail cím')?>">

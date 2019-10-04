@@ -15,7 +15,7 @@ class dokumentumok extends Controller{
 
 			// Ha nincs belépve, akkor átirányít a bejelentkezésre
 			if ( !$this->Users->user && $this->gets[0] != 'belepes' && $this->gets[0] != 'regisztracio'  && $this->gets[0] != 'delete') {
-				Helper::reload('/belepes');
+				\Helper::reload('/belepes/?return='.$_SERVER['REQUEST_URI']);
 			}
 
 			if (isset($_GET['resetproject']))

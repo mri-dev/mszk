@@ -18,7 +18,7 @@
                 </div>
               </div>
             </div>
-            <div class="no-requests" ng-if="!sessions">
+            <div class="no-data" ng-if="!sessions">
               <div class="wrapper">
                 <i class="far fa-folder-open"></i><?=__('Nincs elérhető üzenetváltás.')?>
               </div>

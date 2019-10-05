@@ -286,7 +286,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <?=__('Ajánlat tartalma')?>:<br>
-                    <div style="white-space: pre-line; color:black; line-height: 1.4; margin: 10px 0 10px 0;" ng-bind-html="request.admin_offer.message|unsafe"></div>
+                    <div style="white-space: pre-line; font-weight: bold; color:black; line-height: 1.4; margin: 10px 0 10px 0;" ng-bind-html="request.admin_offer.message|unsafe"></div>
                   </div>
                 </div>
                 <div class="row" ng-if="request.admin_offer.accepted==1">

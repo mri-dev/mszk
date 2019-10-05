@@ -408,13 +408,17 @@ input, textarea{
 .ct{
   padding-top: $top-control-height+$top-title-height;
 	padding-bottom: 40px;
-	&.fullheight {		
+	&.fullheight {
 		height: 100%;
 	}
 }
 body:not(.login) .innerContent{
 	background: #edf1f5;
 	height: 100%;
+}
+md-dialog-actions{
+	border-top: 1px solid #d4d4d4;
+  background: #eeeeee;
 }
 .innerContent{
   padding: 25px;
@@ -2367,7 +2371,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 					.pval{
 						color: black;
 						line-height: 1.3;
-						white-space: pre-line;
 
 						.progress{
 							margin: 4px 0;
@@ -2572,9 +2575,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 		font-size: 1.1rem;
 		font-weight: bold;
 		color: #3296e7;
-	}
-	.message{
-		white-space: pre-line;
 	}
 }
 .ajaxdialog.saveproject{

@@ -277,7 +277,7 @@ class OfferRequests
 			sprintf("offerout_id = %d and admin_visited IS NULL", $request_id)
 		);
 
-		// TODO: E-mail értesítő az értintettnek
+		// E-mail értesítő az értintettnek
 		if (true)
 		{
 			// request data
@@ -406,7 +406,37 @@ class OfferRequests
 			),
 			sprintf("ID = %d", (int)$request_id)
 		);
+
 		// TODO: értesítés az adminnak az elfogadásról
+		if (true)
+		{
+			// request data
+			$request_data = $this->db->squery("SELECT r.hashkey, r.name, r.email, r.company, r.phone, r.message, r.cash_total FROM requests as r WHERE r.ID = :id", array('id' => $request_id))->fetch(\PDO::FETCH_ASSOC);
+
+			$offer = $this->db->squery("SELECT o.message, o.project_start_at, o.offer_project_idotartam, o.price FROM offers as o WHERE o.ID = :oid", array('oid' => $offer_id))->fetch(\PDO::FETCH_ASSOC);
+
+
+			$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+			$mail->add( $this->db->settings['alert_email'] );
+			$arg = array(
+				'request_hashkey' => $request_data['hashkey'],
+				'requester_name' => $request_data['name'],
+				'requester_company' => $request_data['company'],
+				'requester_email' => $request_data['email'],
+				'requester_phone' => $request_data['phone'],
+				'offer_id' => $offer_id,
+				'offer_project_start' => $offer['project_start_at'],
+				'offer_project_idotartam' => $offer['offer_project_idotartam'],
+				'offer_message' => nl2br($offer['message']),
+				'offer_price' => \Helper::cashFormat((float)$offer['price']).__('Ft + ÁFA'),
+				'settings' => $this->db->settings,
+				'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+			);
+			$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get( 'offer_requester_accept_adminoffer', $arg);
+			$mail->setSubject( __('Új elfogadott megrendelői ajánlat: '.$request_data['name'].' ('.$request_data['hashkey'].')'));
+			$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
+			$re = $mail->sendMail();
+		}
 	}
 
 	// // TODO: Admin offer accepter

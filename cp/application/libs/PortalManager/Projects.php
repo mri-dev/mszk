@@ -46,16 +46,41 @@ class Projects
 				'primary_user_id' => $request['user_id'],
 				'hashkey' => $megrendelo_hashkey,
 				'order_hashkey' => $order_hash,
-				'admin_title' => ($offer['admin_title'] == '') ? NULL : addslashes($offer['admin_title']),
+				'admin_title' => ($offer['admin_title'] == '') ? 'Új #'.$request_id.' névtelen projekt - megrendelő' : addslashes($offer['admin_title']),
 				'request_id' => $request_id,
-				'offer_id' => $offer['ID'],
+				'requester_title' => addslashes($request['user_requester_title']),
+				'servicer_title' => addslashes(__('Új Névtelen projekt')),
+				'offer_id' => $offer['admin_offered_out'],
 				'requester_id' => $request['user_id'],
 				'servicer_id' => $offer['from_user_id'],
 			)
 		);
 		$megrendelo_project_id = $this->db->lastInsertId();
 
-		// létrehozás - megrendelő
+		// Messanger session létrehozása
+		if ($megrendelo_project_id) {
+			$this->db->insert(
+				'messanger',
+				array(
+					'sessionid' => $megrendelo_hashkey,
+					'project_id' => $megrendelo_project_id,
+					'partner_id' => $request['user_id'],
+				)
+			);
+			$this->db->insert(
+				\MessageManager\Messanger::DBTABLE_MESSAGES,
+				array(
+					'sessionid' => $megrendelo_hashkey,
+					'message' => __('Üdvözöljük! Köszönjük, hogy igénybe veszi szolgáltatásainkat. Bármilyen kérdése merül fel, keressen minket bizalommal!'),
+					'user_from_id' => 0,
+					'user_to_id' => 0,
+					'admin_alerted' => 1,
+					'user_alerted' => 1
+				)
+			);
+		}
+
+		// létrehozás - szolgáltató
 		$szolgaltato_hashkey = md5(uniqid());
 		$this->db->insert(
 			self::DBPROJECTS,
@@ -63,14 +88,40 @@ class Projects
 				'primary_user_id' => $offer['from_user_id'],
 				'hashkey' => $szolgaltato_hashkey,
 				'order_hashkey' => $order_hash,
-				'admin_title' => ($offer['admin_title'] == '') ? NULL : addslashes($offer['admin_title']),
+				'admin_title' => ($offer['admin_title'] == '') ? 'Új #'.$request_id.' névtelen projekt - szlgáltató' : addslashes($offer['admin_title']),
 				'request_id' => $request_id,
+				'requester_title' => addslashes($request['user_requester_title']),
+				'servicer_title' => addslashes(__('Új Névtelen projekt')),
 				'offer_id' => $offer['ID'],
 				'requester_id' => $request['user_id'],
 				'servicer_id' => $offer['from_user_id'],
 			)
 		);
 		$szolgaltato_project_id = $this->db->lastInsertId();
+
+		// Messanger session létrehozása
+		if ($szolgaltato_project_id) {
+			$this->db->insert(
+				'messanger',
+				array(
+					'sessionid' => $szolgaltato_hashkey,
+					'project_id' => $szolgaltato_project_id,
+					'partner_id' => $offer['from_user_id'],
+				)
+			);
+
+			$this->db->insert(
+				\MessageManager\Messanger::DBTABLE_MESSAGES,
+				array(
+					'sessionid' => $szolgaltato_hashkey,
+					'message' => __('Üdvözöljük! Köszönjük, hogy igénybe veszi szolgáltatásainkat. Bármilyen kérdése merül fel, keressen minket bizalommal!'),
+					'user_from_id' => 0,
+					'user_to_id' => 0,
+					'admin_alerted' => 1,
+					'user_alerted' => 1
+				)
+			);
+		}
 
 		// project id-k mentése
 		if ($megrendelo_project_id) {
@@ -112,6 +163,68 @@ class Projects
 			sprintf("ID = %d", (int)$offer['offerout_id'])
 		);
 
+		// E-mail értesítések
+		// E-mail a megrendelőnek - projects_created_by_admin
+		if ( $megrendelo_project_id ) {
+			if (true)
+			{
+				// offer data
+				$original_offer = $this->db->squery("SELECT o.* FROM offers as o WHERE o.ID = :oid", array('oid' => $offer['admin_offered_out']))->fetch(\PDO::FETCH_ASSOC);
+				// to user data
+				$to_user_data = $this->db->squery("SELECT u.email, u.nev FROM felhasznalok as u WHERE u.ID = :id", array('id' => $request['user_id']))->fetch(\PDO::FETCH_ASSOC);
+
+				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+				$mail->add( $to_user_data['email'] );
+				$arg = array(
+					'user_status' => __('Megrendelő'),
+					'nev' => $to_user_data['nev'],
+					'projekt_hashkey' => $megrendelo_hashkey,
+					'projekt_title' => $request['user_requester_title'],
+					'projekt_price' => \Helper::cashFormat((float)$original_offer['price']).__('Ft + ÁFA'),
+					'offer_accepted_at' => $original_offer['accepted_at'],
+					'offer_projekt_start' => $original_offer['project_start_at'],
+					'offer_projekt_idotartam' => $original_offer['offer_project_idotartam'],
+					'offer_message' => nl2br($original_offer['message']),
+					'settings' => $this->db->settings,
+					'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+				);
+				$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get( 'projects_created_by_admin', $arg);
+				$mail->setSubject( __('Egy új megállapodás / projekt jött létre!') );
+				$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
+				$re = $mail->sendMail();
+			}
+		}
+
+		// E-mail a szolgáltatónak - projects_created_by_admin
+		if ($szolgaltato_project_id) {
+			if (true)
+			{
+				// offer data
+				$original_offer = $this->db->squery("SELECT o.* FROM offers as o WHERE o.ID = :oid", array('oid' => $offer['ID']))->fetch(\PDO::FETCH_ASSOC);
+				// to user data
+				$to_user_data = $this->db->squery("SELECT u.email, u.nev FROM felhasznalok as u WHERE u.ID = :id", array('id' => $offer['from_user_id']))->fetch(\PDO::FETCH_ASSOC);
+
+				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
+				$mail->add( $to_user_data['email'] );
+				$arg = array(
+					'user_status' => __('Szolgáltató'),
+					'nev' => $to_user_data['nev'],
+					'projekt_hashkey' => $szolgaltato_hashkey,
+					'projekt_title' => __('Új Névtelen projekt'),
+					'projekt_price' => \Helper::cashFormat((float)$original_offer['price']).__('Ft + ÁFA'),
+					'offer_accepted_at' => $original_offer['accepted_at'],
+					'offer_projekt_start' => $original_offer['project_start_at'],
+					'offer_projekt_idotartam' => $original_offer['offer_project_idotartam'],
+					'offer_message' => nl2br($original_offer['message']),
+					'settings' => $this->db->settings,
+					'infoMsg' => 'Ezt az üzenetet a rendszer küldte. Kérjük, hogy ne válaszoljon rá!'
+				);
+				$arg['mailtemplate'] = (new MailTemplates(array('db'=>$this->db)))->get( 'projects_created_by_admin', $arg);
+				$mail->setSubject( __('Egy új megállapodás / projekt jött létre!') );
+				$mail->setMsg( (new Template( VIEW . 'templates/mail/' ))->get( 'clearmail', $arg ) );
+				$re = $mail->sendMail();
+			}
+		}
 	}
 
 	public function getProjectData( $key, $user_id = false  )
@@ -317,6 +430,9 @@ class Projects
 
 			$d['requester_paidamount'] = $this->getProjectPaidAmount( $d['requester_project_data']['ID'], 'requester' );
 			$d['servicer_paidamount'] = $this->getProjectPaidAmount( $d['servicer_project_data']['ID'], 'servicer' );
+
+			$d['project_start'] = (empty($d['project_start']) || $d['project_start'] == '1970-01-01') ? false : $d['project_start'];
+			$d['project_end'] = (empty($d['project_end']) || $d['project_end'] == '1970-01-01') ? false : $d['project_end'];
 
 			// Timeline
 			if ($controll_user_admin)
@@ -573,7 +689,7 @@ class Projects
 						'user_from_id' => 0,
 						'user_to_id' => 0,
 						'admin_alerted' => 1,
-						'partner_alerted' => 1
+						'user_alerted' => 1
 					)
 				);
 			}
@@ -600,7 +716,7 @@ class Projects
 						'user_from_id' => 0,
 						'user_to_id' => 0,
 						'admin_alerted' => 1,
-						'partner_alerted' => 1
+						'user_alerted' => 1
 					)
 				);
 			}

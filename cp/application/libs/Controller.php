@@ -167,8 +167,10 @@ class Controller {
       $q = "SELECT p.ID FROM projects as p WHERE p.closed = 1";
       $arg = array();
       if (!$this->view->is_admin_logged) {
-        $q .= " and (p.requester_id = :uid or p.servicer_id = :uid)";
+        $q .= " and p.primary_user_id = :uid";
         $arg['uid'] = $uid;
+      } else {
+        $q .= " GROUP BY p.order_hashkey";
       }
       $badges['projects']['closed'] = $this->db->squery($q, $arg)->rowCount();
 

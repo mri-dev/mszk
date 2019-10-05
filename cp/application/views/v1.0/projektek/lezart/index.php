@@ -18,11 +18,10 @@
           <thead>
             <tr>
               <th><?=__('Projekt elnevezés')?></th>
-              <th width="220" class="center"><?=__('Állapot')?></th>
-              <th width="220" class="center"><?=__('Díjfizetés')?></th>
               <?php if (!$this->is_admin_logged): ?>
-                <th width="240" class="center"><?=__('Partner')?></th>
-              <?php else: ?>
+                <th width="220" class="center"><?=__('Díjfizetés')?></th>
+              <?php endif; ?>
+              <?php if ($this->is_admin_logged): ?>
                 <th width="240" class="center"><?=__('Ajánlatkérő')?></th>
                 <th width="240" class="center"><?=__('Szolgáltató')?></th>
               <?php endif; ?>
@@ -34,34 +33,40 @@
           <tbody>
             <?php foreach ( (array)$this->projects as $p ): ?>
             <tr>
-              <?php if (!$this->is_admin_logged): ?>
-                <td><a href="/projektek/projekt/<?=$p['hashkey']?>"><?=($p['title'] != '')?$p['title']:'<span class="nosetdata">'.__('Projekt elnevezése hiányzik! &nbsp;&nbsp; Szerkesztés').' <i class="fas fa-pencil-alt"></i></span>'?></a>
+              <?php if ($this->is_admin_logged): ?>
+                <td>
+                  <a href="/projektek/projekt/<?=$p['order_hashkey']?>"><?=($p[$p['my_relation'].'_title'] != '')?'<strong>'.$p[$p['my_relation'].'_title'].'</strong>':'#'.$p['order_hashkey'].'<br><span class="nosetdata">'.__('Projekt elnevezése hiányzik! &nbsp;&nbsp; Szerkesztés').' <i class="fas fa-pencil-alt"></i></span>'?></a>
+                  <div class="progress status-percent">
+                    <div class="progress-bar <?=\Helper::progressBarColor($p['status_percent'])?>" role="progressbar" style="width: <?=$p['status_percent']?>%;" aria-valuenow="<?=$p['status_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['status_percent']?>%</div>
+                  </div>
                 </td>
               <?php else: ?>
                 <td>
-                  <div class=""><?=__('Ajánlatkérő')?>: <a href="/projektek/projekt/<?=$p['hashkey']?>"><?=($p['requester_title'] != '')?$p['requester_title']:'<span class="nosetdata">'.__('Projekt elnevezése hiányzik!').' <i class="fas fa-pencil-alt"></i></span>'?></a></div>
-                  <div class=""><?=__('Szolgáltató')?>: <a href="/projektek/projekt/<?=$p['hashkey']?>"><?=($p['servicer_title'] != '')?$p['servicer_title']:'<span class="nosetdata">'.__('Projekt elnevezése hiányzik!').' <i class="fas fa-pencil-alt"></i></span>'?></a></div>
-                </td>
-              <?php endif; ?>
-              <td>
-                <div class="progress">
+                <a href="/projektek/projekt/<?=$p['hashkey']?>"><?=($p[$p['my_relation'].'_title'] != '')?'<strong>'.$p[$p['my_relation'].'_title'].'</strong>':'#'.$p['order_hashkey'].'<br><span class="nosetdata">'.__('Projekt elnevezése hiányzik! &nbsp;&nbsp; Szerkesztés').' <i class="fas fa-pencil-alt"></i></span>'?></a>
+                <div class="progress status-percent">
                   <div class="progress-bar <?=\Helper::progressBarColor($p['status_percent'])?>" role="progressbar" style="width: <?=$p['status_percent']?>%;" aria-valuenow="<?=$p['status_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['status_percent']?>%</div>
                 </div>
-              </td>
+                </td>
+              <?php endif; ?>
+              <?php if (!$this->is_admin_logged): ?>
               <td>
                 <div class="progress">
-                  <div class="progress-bar <?=\Helper::progressBarColor($p['paying_percent'])?>"  role="progressbar" style="width: <?=$p['paying_percent']?>%;" aria-valuenow="<?=$p['paying_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['paying_percent']?>%</div>
+                  <div class="progress-bar <?=\Helper::progressBarColor($p[$p['my_relation'].'_paying_percent'])?>"  role="progressbar" style="width: <?=$p[$p['my_relation'].'_paying_percent']?>%;" aria-valuenow="<?=$p[$p['my_relation'].'_paying_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p[$p['my_relation'].'_paying_percent']?>%</div>
+                </div>
               </td>
-              <?php if (!$this->is_admin_logged): ?>
-                <td>
-                  <strong><?=$p['partner']['data']['nev']?></strong> <? if($p['partner']['data']['company_name'] != ''): ?><br>(<?=$p['partner']['data']['company_name']?>)<? endif; ?>
-                </td>
-              <?php else: ?>
+              <?php endif; ?>
+              <?php if ($this->is_admin_logged): ?>
                 <td>
                   <strong><a href="/account/?t=edit&ID=<?=$p['user_requester']['data']['ID']?>&ret=/projektek/aktualis" target="_blank"><?=$p['user_requester']['data']['nev']?></a></strong> <? if($p['user_requester']['data']['company_name'] != ''): ?><br>(<?=$p['user_requester']['data']['company_name']?>)<? endif; ?>
+                  <div class="progress" title="<?=__('Díjfizetés állapota')?>">
+                    <div class="progress-bar <?=\Helper::progressBarColor($p['requester_paying_percent'])?>"  role="progressbar" style="width: <?=$p['requester_paying_percent']?>%;" aria-valuenow="<?=$p['requester_paying_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['requester_paying_percent']?>%</div>
+                  </div>
                 </td>
                 <td>
                   <strong><a href="/account/?t=edit&ID=<?=$p['user_servicer']['data']['ID']?>&ret=/projektek/aktualis" target="_blank"><?=$p['user_servicer']['data']['nev']?></a></strong> <? if($p['user_servicer']['data']['company_name'] != ''): ?><br>(<?=$p['user_servicer']['data']['company_name']?>)<? endif; ?>
+                  <div class="progress" title="<?=__('Díjfizetés állapota')?>">
+                    <div class="progress-bar <?=\Helper::progressBarColor($p['servicer_paying_percent'])?>"  role="progressbar" style="width: <?=$p['servicer_paying_percent']?>%;" aria-valuenow="<?=$p['servicer_paying_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['servicer_paying_percent']?>%</div>
+                  </div>
                 </td>
               <?php endif; ?>
               <td class="center" ><?=($p['project_start'] != '')?$p['project_start']:'<span class="nosetdata">'.__('Még nincs meghatározva.').'</span>'?></td>

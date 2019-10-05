@@ -416,7 +416,7 @@
       <h4><?=__('Ajánlat tartalma')?></h4>
       <div class="message" ng-bind-html="project.offer.message|unsafe"></div>
     </div>
-    <div ng-if="project.my_relation=='requester'" class="offer-info">
+    <div  class="offer-info">
      <h2><?=__('Ajánlatkérés referencia adatok')?></h2>
      <h4><?=__('Szolgáltatások')?></h4>
      <div class="selected-services-overview">

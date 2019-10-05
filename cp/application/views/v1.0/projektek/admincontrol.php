@@ -13,6 +13,10 @@
                     <td><?=__('Projekt')?></td>
                     <td><strong>{{project.admin_title}}</strong></td>
                   </tr>
+                    <tr>
+                      <td><?=__('Projekt státusz')?></td>
+                      <td><strong>{{(project.closed == 1)?'Lezárva':'Aktív'}}</strong></td>
+                    </tr>
                   <tr>
                     <td><?=__('Közvetítői projekt azonosító')?></td>
                     <td><strong>{{project.order_hashkey}}</strong></td>
@@ -197,25 +201,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-        <div class="chead"><?=__('Ajánlat részletei')?></div>
-        <div class="dpad wpadding infoline">
-          <label for=""><?=__('Közvetítői ajánlat kiküldve')?>:</label>
-          <div class="pval">{{project.requester_project_data.offer_data.sended_at_dist}} ({{project.requester_project_data.offer_data.sended_at}})</div>
-
-          <label for=""><?=__('Ajánlat elfogadva - Ajánlatkérő által')?>:</label>
-          <div class="pval">{{project.requester_project_data.offer_data.accepted_at_dist}} ({{project.requester_project_data.offer_data.accepted_at}})</div>
-
-          <label for=""><?=__('Szolgáltatás díja - Ajánlatkérő fizet')?>:</label>
-          <div class="pval">
-            {{project.requester_project_data.offer_data.price|cash}} <span ng-if="project.requester_paidamount!=0" class="paidamount">/ <strong><i class="fas fa-check"></i> {{project.requester_paidamount|cash}} <?=__('teljesítve!')?></strong></span>
-            <div class="progress">
-              <div class="progress-bar" title="<?=__('Díjfizetési állapot')?>" ng-class="project.requester_paying_percent_class" role="progressbar" style="width: {{project.requester_paying_percent}}%;" aria-valuenow="{{project.requester_paying_percent}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project.requester_paying_percent!=0">{{project.requester_paying_percent}}%</span></div>
-            </div>
-          </div>
-
-          <label for=""><?=__('Ajánlat részletei')?>:</label>
-          <div class="pval" ng-bind-html="project.requester_project_data.offer_data.message|unsafe"></div>
         </div>
         <div class="chead"><?=__('Dokumentumok')?><div class="own-data edit" ng-click="projectDocsAdder(project.requester_project_data.hashkey)"><?=__('új hozzáadása')?> <i class="fas fa-plus"></i></div></div>
         <div class="dpad">
@@ -428,6 +413,31 @@
             </div>
           </div>
         </div>
+        <div class="chead"><?=__('Ajánlat részletei')?></div>
+        <div class="dpad wpadding infoline">
+          <label for=""><?=__('Közvetítői ajánlat kiküldve')?>:</label>
+          <div class="pval">{{project.requester_project_data.offer_data.sended_at_dist}} ({{project.requester_project_data.offer_data.sended_at}})</div>
+
+          <label for=""><?=__('Ajánlat elfogadva - Ajánlatkérő által')?>:</label>
+          <div class="pval">{{project.requester_project_data.offer_data.accepted_at_dist}} ({{project.requester_project_data.offer_data.accepted_at}})</div>
+
+          <label for=""><?=__('Szolgáltatás díja - Ajánlatkérő fizet')?>:</label>
+          <div class="pval">
+            {{project.requester_project_data.offer_data.price|cash}} <span ng-if="project.requester_paidamount!=0" class="paidamount">/ <strong><i class="fas fa-check"></i> {{project.requester_paidamount|cash}} <?=__('teljesítve!')?></strong></span>
+            <div class="progress">
+              <div class="progress-bar" title="<?=__('Díjfizetési állapot')?>" ng-class="project.requester_paying_percent_class" role="progressbar" style="width: {{project.requester_paying_percent}}%;" aria-valuenow="{{project.requester_paying_percent}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project.requester_paying_percent!=0">{{project.requester_paying_percent}}%</span></div>
+            </div>
+          </div>
+
+          <label for=""><?=__('Projekt vállalt kezdete')?>:</label>
+          <div class="pval">{{project.requester_project_data.offer_data.project_start_at}}</div>
+
+          <label for=""><?=__('Projekt vállalt időtartama')?>:</label>
+          <div class="pval">{{project.requester_project_data.offer_data.offer_project_idotartam}}</div>
+
+          <label for=""><?=__('Ajánlat részletei')?>:</label>
+          <div class="pval" ng-bind-html="project.requester_project_data.offer_data.message|unsafe"></div>
+        </div>
       </div>
     </div>
     <div class="servicer">
@@ -487,26 +497,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <div class="chead"><?=__('Ajánlat részletei')?></div>
-        <div class="dpad wpadding infoline">
-          <label for=""><?=__('Ajánlat beérkezett')?>:</label>
-          <div class="pval">{{project.servicer_project_data.offer_data.sended_at_dist}} ({{project.servicer_project_data.offer_data.sended_at}})</div>
-
-          <label for=""><?=__('Ajánlat elfogadva - Közvetítő által')?>:</label>
-          <div class="pval">{{project.servicer_project_data.offer_data.accepted_at_dist}} ({{project.servicer_project_data.offer_data.accepted_at}})</div>
-
-          <label for=""><?=__('Szolgáltatás díja - Közvetítő fizet')?>:</label>
-          <div class="pval">
-            {{project.servicer_project_data.offer_data.price|cash}}  <span ng-if="project.servicer_paidamount!=0" class="paidamount">/ <strong><i class="fas fa-check"></i> {{project.servicer_paidamount|cash}} <?=__('teljesítve!')?></strong></span>
-            <div class="progress">
-              <div class="progress-bar" title="<?=__('Díjfizetési állapot')?>" ng-class="project.servicer_paying_percent_class" role="progressbar" style="width: {{project.servicer_paying_percent}}%;" aria-valuenow="{{project.servicer_paying_percent}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project.servicer_paying_percent!=0">{{project.servicer_paying_percent}}%</span></div>
-            </div>
-          </div>
-
-          <label for=""><?=__('Ajánlat részletei')?>:</label>
-          <div class="pval" ng-bind-html="project.servicer_project_data.offer_data.message|unsafe"></div>
         </div>
         <div class="chead"><?=__('Dokumentumok')?><div class="own-data edit" ng-click="projectDocsAdder(project.servicer_project_data.hashkey)"><?=__('új hozzáadása')?> <i class="fas fa-plus"></i></div></div>
         <div class="dpad">
@@ -719,6 +709,33 @@
               </div>
             </div>
           </div>
+        </div>
+
+
+        <div class="chead"><?=__('Ajánlat részletei')?></div>
+        <div class="dpad wpadding infoline">
+          <label for=""><?=__('Ajánlat beérkezett')?>:</label>
+          <div class="pval">{{project.servicer_project_data.offer_data.sended_at_dist}} ({{project.servicer_project_data.offer_data.sended_at}})</div>
+
+          <label for=""><?=__('Ajánlat elfogadva - Közvetítő által')?>:</label>
+          <div class="pval">{{project.servicer_project_data.offer_data.accepted_at_dist}} ({{project.servicer_project_data.offer_data.accepted_at}})</div>
+
+          <label for=""><?=__('Szolgáltatás díja - Közvetítő fizet')?>:</label>
+          <div class="pval">
+            {{project.servicer_project_data.offer_data.price|cash}}  <span ng-if="project.servicer_paidamount!=0" class="paidamount">/ <strong><i class="fas fa-check"></i> {{project.servicer_paidamount|cash}} <?=__('teljesítve!')?></strong></span>
+            <div class="progress">
+              <div class="progress-bar" title="<?=__('Díjfizetési állapot')?>" ng-class="project.servicer_paying_percent_class" role="progressbar" style="width: {{project.servicer_paying_percent}}%;" aria-valuenow="{{project.servicer_paying_percent}}" aria-valuemin="0" aria-valuemax="100"><span ng-if="project.servicer_paying_percent!=0">{{project.servicer_paying_percent}}%</span></div>
+            </div>
+          </div>
+
+          <label for=""><?=__('Projekt vállalt kezdete')?>:</label>
+          <div class="pval">{{project.servicer_project_data.offer_data.project_start_at}}</div>
+
+          <label for=""><?=__('Projekt vállalt időtartama')?>:</label>
+          <div class="pval">{{project.servicer_project_data.offer_data.offer_project_idotartam}}</div>
+
+          <label for=""><?=__('Ajánlat részletei')?>:</label>
+          <div class="pval" ng-bind-html="project.servicer_project_data.offer_data.message|unsafe"></div>
         </div>
       </div>
     </div>

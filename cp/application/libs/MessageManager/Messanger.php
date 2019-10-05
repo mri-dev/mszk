@@ -198,8 +198,8 @@ class Messanger
       (SELECT COUNT(ms.ID) FROM ".self::DBTABLE_MESSAGES." as ms WHERE ms.sessionid = m.sessionid) as message_total,
       IF(
         :uid = m.partner_id,
-        (SELECT COUNT(msunre.ID) FROM ".self::DBTABLE_MESSAGES." as msunre WHERE msunre.sessionid = m.sessionid and (msunre.user_from_id != 0 and msunre.user_to_id = :uid) and msunre.user_readed_at IS NULL),
-        (SELECT COUNT(msunse.ID) FROM ".self::DBTABLE_MESSAGES." as msunse WHERE msunse.sessionid = m.sessionid and (msunse.user_from_id != :uid and msunse.user_to_id = 0) and msunse.admin_readed_at IS NULL)
+        (SELECT COUNT(msunre.ID) FROM ".self::DBTABLE_MESSAGES." as msunre WHERE msunre.sessionid = m.sessionid and (msunre.user_from_id != 0 and msunre.user_to_id != 0) and (msunre.user_from_id != 0 and msunre.user_to_id = :uid) and msunre.user_readed_at IS NULL),
+        (SELECT COUNT(msunse.ID) FROM ".self::DBTABLE_MESSAGES." as msunse WHERE msunse.sessionid = m.sessionid and (msunse.user_from_id != 0 and msunse.user_to_id != 0) and (msunse.user_from_id != :uid and msunse.user_to_id = 0) and msunse.admin_readed_at IS NULL)
       ) as message_unreaded,
       f.nev as partner_nev,
       m.created_at,

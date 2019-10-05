@@ -62,7 +62,11 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 				}
 			});
 			$scope.$watch('project.project_start', function(newValues, oldValues, scope){
-				$scope.project.project_start_Date = new Date(newValues);
+				if (newValues) {
+					$scope.project.project_start_Date = new Date(newValues);
+				} else {
+					$scope.project.project_start_Date = '';
+				}
 			});
 			$scope.$watch('project.project_end_Date', function(newValues, oldValues, scope){
 				if (typeof newValues !== 'undefined') {
@@ -70,7 +74,11 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 				}
 			});
 			$scope.$watch('project.project_end', function(newValues, oldValues, scope){
-				$scope.project.project_end_Date = new Date(newValues);
+				if (newValues) {
+					$scope.project.project_end_Date = new Date(newValues);
+				} else {
+					$scope.project.project_end_Date = '';
+				}
 			});
 		});
 	}

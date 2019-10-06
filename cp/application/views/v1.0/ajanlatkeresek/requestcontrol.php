@@ -207,7 +207,7 @@
 
             <div class="message" ng-if="request.message">
               <div class="row-header">
-                  <h3><?=__('Megjegyzés')?></h3>
+                  <h3><?=__('Megjegyzés az adminisztrátornak')?></h3>
               </div>
               <div class="dpad">
                 <div class="row">
@@ -221,8 +221,32 @@
             <div class="dpad">
               <div class="selected-services-overview">
                 <div class="service" ng-repeat="serv in request.services">
-                  <div class="header">
-                    {{serv.neve}}
+                  <div class="header">{{serv.neve}}</div>
+                  <div class="service-describe">
+                    <div class="data">
+                      <div class="line">
+                        <div class="d-flex">
+                          <div class="h"><?=__('Kezdő időpont')?>:</div>
+                          <div class="v"><strong>{{request.overall_service_details[serv.ID].date_start|date:'yyyy. MM. dd.'}}</strong><em ng-if="!request.overall_service_details[serv.ID].date_start"><?=__('nem lett meghatározva')?></em></div>
+                        </div>
+                      </div>
+                      <div class="line">
+                        <div class="d-flex">
+                          <div class="h"><?=__('Időtartam')?>:</div>
+                          <div class="v"><strong>{{request.overall_service_details[serv.ID].date_duration}}</strong><em ng-if="!request.overall_service_details[serv.ID].date_duration"><?=__('nem lett meghatározva')?></em></div>
+                        </div>
+                      </div>
+                      <div class="line">
+                        <div class="d-flex">
+                          <div class="h"><?=__('Teljes költségkeret')?>:</div>
+                          <div class="v"><strong>{{request.overall_service_details[serv.ID].cash_total|cash}}</strong><em ng-if="!request.overall_service_details[serv.ID].cash_total"><?=__('nem lett meghatározva')?></em></div>
+                        </div>
+                      </div>
+                      <div class="line mdesc">
+                        <div class="h"><?=__('Igények részletezése')?>:</div>
+                        <div class="v"><strong>{{request.overall_service_details[serv.ID].description}}</strong><em ng-if="!request.overall_service_details[serv.ID].description"><?=__('nem lett meghatározva')?></em></div>
+                      </div>
+                    </div>
                   </div>
                   <div class="subservices">
                     <div class="subservice" ng-if="(subserv.szulo_id == serv.ID)" ng-repeat="subserv in request.subservices">

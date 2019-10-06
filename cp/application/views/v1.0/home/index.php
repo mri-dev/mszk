@@ -263,9 +263,27 @@
                   <td><a href="/ajanlatkeresek/feldolgozatlan/<?=$request['hashkey']?>"><?=$request['name']?></a></td>
                   <td><?=$request['email']?></td>
                   <td>
-                    <?php foreach ((array)$request['services_list'] as $s): ?>
-                    <div class="">&mdash; <?=$s['fullneve']?></div>
-                    <?php endforeach; ?>
+                    <div class="request-services-tree">
+                      <?php foreach ((array)$request['services_list'] as $serv): ?>
+                      <div class="service">
+                        <?=$serv['neve']?>
+                        <?php if ($serv['child'] && !empty($serv['child'])): ?>
+                          <?php foreach ($serv['child'] as $subserv): ?>
+                          <div class="subservice">
+                            &mdash; <?=$subserv['neve']?>
+                            <?php if ($subserv['child'] && !empty($subserv['child'])): ?>
+                              <?php foreach ($subserv['child'] as $subservitem): ?>
+                              <div class="subserviceitem">
+                                &mdash;&mdash; <?=$subservitem['neve']?>
+                              </div>
+                              <?php endforeach; ?>
+                            <?php endif; ?>
+                          </div>
+                          <?php endforeach; ?>
+                        <?php endif; ?>
+                      </div>
+                      <?php endforeach; ?>
+                    </div>
                   </td>
                   <td class="center"><?=\Helper::cashFormat($request['cash_total'])?> <?=__('Ft + ÁFA')?></td>
                   <td class="center"><?=$request['requested_at']?></td>

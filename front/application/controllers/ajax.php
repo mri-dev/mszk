@@ -33,6 +33,7 @@ class ajax extends Controller{
 						break;
 						case 'send':
 							$request = new OfferRequests(array('db' => $this->db));
+							/**/
 							try {
 								$back = $request->sendRequest( $_POST['requester'], $_POST['config'] );
 								$ret = array_merge( $ret, $back );
@@ -40,6 +41,7 @@ class ajax extends Controller{
 							} catch (\Exception $e) {
 								$this->escape( $e->getMessage(), $ret);
 							}
+							/* */
 						break;
 					}
 

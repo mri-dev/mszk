@@ -83,18 +83,24 @@ class OfferRequests
 			{
 				$d['cash'] = json_decode($d['cash'], true);
 				$d['cash_config'] = json_decode($d['cash_config'], true);
-				$d['services'] = $this->findServicesItems(json_decode($d['services'], true));
-				$d['subservices'] = $this->findServicesItems(json_decode($d['subservices'], true));
+				$d['services'] = $this->findServicesItems((array)json_decode($d['services'], true));
+				$d['subservices'] = $this->findServicesItems((array)json_decode($d['subservices'], true));
 				$d['service_description'] = json_decode($d['service_description'], true);
+				$d['overall_service_details'] = json_decode($d['overall_service_details'], true);
+				$d['services_cash_total'] = json_decode($d['services_cash_total'], true);
 				$d['user'] = $users->get( array('user' => $d['user_id'], 'userby' => 'ID') );
 			}
 
-			$d['subservices_items'] = $this->findServicesItems(json_decode($d['subservices_items'], true));
+			$d['subservices_items'] = $this->findServicesItems((array)json_decode($d['subservices_items'], true));
 			$d['requested_at'] = \Helper::distanceDate($d['requested']);
 
 			if (isset($arg['servicetree']))
 			{
-				$d['services_list'] = $this->getServicesList( $d['subservices_items'] );
+				$d['services_list'] = $this->getServicesList(
+					(array)json_decode($d['services'], true),
+					(array)json_decode($d['subservices'], true),
+					(array)json_decode($d['subservices_items'], true)
+				);
 			}
 
 			// Lehetséges szolgáltatók betöltése
@@ -144,15 +150,36 @@ class OfferRequests
 		return $list;
 	}
 
-	public function getServicesList( $items )
+	public function getServicesList( $services_arr_id = array(), $subservices_arr_id = array(), $subservices_items_arr_id = array() )
 	{
 		$back = array();
 
-		if (empty($items))
+		if (empty($services_arr_id))
 		{
 			return $back;
 		}
 
+		if ($services_arr_id && ! empty($services_arr_id)) {
+			foreach ( (array)$services_arr_id as $serv_id )
+			{
+				$arr_serv = $this->getCatData( $serv_id );
+				if ($subservices_arr_id && !empty($subservices_arr_id)) {
+					foreach ((array)$subservices_arr_id as $subserv_id ) {
+						$arr_subserv = $this->getCatData( $subserv_id );
+						if ($subservices_items_arr_id && !empty($subservices_items_arr_id)) {
+							foreach ((array)$subservices_items_arr_id as $subservitem_id ) {
+								$arr_subservitem = $this->getCatData( $subservitem_id );
+								$arr_subserv['child'][$subservitem_id] = $arr_subservitem;
+							}
+						}
+						$arr_serv['child'][$subserv_id] = $arr_subserv;
+					}
+				}
+				$back[$serv_id] = $arr_serv;
+			}
+		}
+
+		/*
 		foreach ((array)$items as $i )
 		{
 			$parent = $i['szulo_id'];
@@ -192,6 +219,7 @@ class OfferRequests
 
 			$back[] = $dat;
 		}
+		*/
 
 
 		return $back;
@@ -594,6 +622,8 @@ class OfferRequests
 			r.subservices_items,
 			r.cash_total,
 			r.cash,
+			r.overall_service_details,
+			r.services_cash_total,
 			r.message,
 			r.service_description,
 			r.closed as request_closed,
@@ -629,6 +659,8 @@ class OfferRequests
 			$d['subservices'] =  $this->findServicesItems((array)json_decode($d['subservices'], true));
 			$d['subservices_items'] =  $this->findServicesItems((array)json_decode($d['subservices_items'], true));
 			$d['service_description'] =  (array)json_decode($d['service_description'], true);
+			$d['overall_service_details'] = (array)json_decode($d['overall_service_details'], true);
+			$d['services_cash_total'] = (array)json_decode($d['services_cash_total'], true);
 			$d['cash'] =  (array)json_decode($d['cash'], true);
 			$d['offerout_dist'] = \Helper::distanceDate($d['offerout_at']);
 			$d['offer'] = $this->getOfferData($d['user_offer_id']);
@@ -662,6 +694,8 @@ class OfferRequests
 			r.offerout,
 			r.elutasitva,
 			r.project_id,
+			r.overall_service_details,
+			r.services_cash_total,
 			r.closed as request_closed,
 			r.requested as offerout_at
 		FROM requests as r
@@ -690,6 +724,8 @@ class OfferRequests
 			$d['subservices_items'] =  $this->findServicesItems((array)json_decode($d['subservices_items'], true));
 			$d['service_description'] =  (array)json_decode($d['service_description'], true);
 			$d['cash'] =  (array)json_decode($d['cash'], true);
+			$d['overall_service_details'] = (array)json_decode($d['overall_service_details'], true);
+			$d['services_cash_total'] = (array)json_decode($d['services_cash_total'], true);
 			$d['offerout_dist'] = \Helper::distanceDate($d['offerout_at']);
 			//$d['offer'] = $this->getOfferData($d['user_offer_id']);*/
 
@@ -1539,6 +1575,10 @@ class OfferRequests
 	{
 		$list = array();
 
+		if (empty($ids)) {
+			return $list;
+		}
+
 		$handler = new Categories(array('db' => $this->db));
 		$arg = array();
 		$arg['group_id'] = 1;
@@ -1582,6 +1622,7 @@ class OfferRequests
     }
 
 		// Adat előkészítés
+
 		// subservice leírások
 		$service_desc = array();
 		foreach ((array)$config['service_desc'] as $id => $desc)
@@ -1590,13 +1631,26 @@ class OfferRequests
 			$service_desc[$id] = $desc;
 		}
 
+		$overall_service_details = array();
+		foreach ((array)$config['overall_service_details'] as $id => $v)
+		{
+			if (empty($v)) continue;
+			$overall_service_details[$id] = $v;
+		}
+
 		$selected_cashall = array();
-		$total_cash = 0;
 		foreach ((array)$config['selected_cashall'] as $id => $v)
 		{
 			if (empty($v)) continue;
-			$total_cash += (float)$v;
 			$selected_cashall[$id] = $v;
+		}
+
+		$services_cash_total = array();
+		$total_cash = 0;
+		foreach ((array)$overall_service_details as $id => $v)
+		{
+			$total_cash += (float)$v['cash_total'];
+			$services_cash_total[$id] = (float)$v['cash_total'];
 		}
 
 		$selected_cashrow = array();
@@ -1651,10 +1705,12 @@ class OfferRequests
 					'services' => json_encode($config['selected_services'], \JSON_UNESCAPED_UNICODE),
 					'subservices' => json_encode($config['selected_subservices'], \JSON_UNESCAPED_UNICODE),
 					'subservices_items' => json_encode($config['selected_subservices_items'], \JSON_UNESCAPED_UNICODE),
+					'services_cash_total' => json_encode($services_cash_total, \JSON_UNESCAPED_UNICODE),
 					'cash_config' => json_encode($selected_cashrow, \JSON_UNESCAPED_UNICODE),
 					'cash' => json_encode($selected_cashall, \JSON_UNESCAPED_UNICODE),
 					'cash_total' => $total_cash,
-					'service_description' => json_encode($service_desc, \JSON_UNESCAPED_UNICODE)
+					'service_description' => json_encode($service_desc, \JSON_UNESCAPED_UNICODE),
+					'overall_service_details' => json_encode($overall_service_details, \JSON_UNESCAPED_UNICODE),
 				)
 		);
 		$request_id = $this->db->lastInsertId();
@@ -1671,7 +1727,7 @@ class OfferRequests
 			$ret['user_id'] = $user_id;
 
 			// E-mail - Igénylő értesítő
-			if (true)
+			if ( false )
 			{
 				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
 				$mail->add( trim($requester['email']) );
@@ -1698,7 +1754,7 @@ class OfferRequests
 			}
 
 	    // E-mail - Admin értesítő
-			if (true)
+			if (false)
 			{
 				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
 				$mail->add( $this->db->settings['alert_email'] );

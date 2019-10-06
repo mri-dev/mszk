@@ -954,6 +954,22 @@ footer {
 	}
 }
 
+.request-services-tree{
+	.service{
+		font-weight: bold;
+	}
+	.subservice{
+		font-weight: normal;
+		font-size: 0.9rem;
+	}
+
+	.subserviceitem{
+		font-weight: normal;
+		font-style: italic;
+		font-size: 0.8rem;
+	}
+}
+
 .selected-services-info{
 	font-size: 1.05rem;
 	color: $color-red-light;
@@ -963,12 +979,59 @@ footer {
 
 .selected-services-overview{
 	margin: 10px 0 25px 0;
+
+	.service-describe{
+		background: white;
+		& > .head{
+			background: $color-blue-light;
+			color: white;
+			font-weight: bold;
+			padding: 5px 15px;
+		}
+		& > .data{
+			padding: 10px 12px;
+			.line + .line {
+				margin: 10px 0 0 0;
+			}
+
+			.line {
+				.h{
+					color: #aaaaaa;
+				}
+				.d-flex{
+					align-items: center;
+					& > div {
+						padding: 5px;
+					}
+					.h {
+						flex-basis: 180px;
+					}
+					.v{
+						flex: 1;
+					}
+				}
+				&.mdesc{
+					.h, .v{
+						padding: 5px;
+					}
+
+					.v{
+						white-space: pre-wrap;
+					}
+				}
+			}
+		}
+	}
+
 	& > .service + .service{
 		margin: 15px 0 0 0;
 	}
-	& > .service {
-		border-left: 10px solid $color-blue;
+	& > .service{
+		background: white;
+    box-shadow: 0 5px 10px -7px #707070;
+    border: 1px solid white;
 		& > .header{
+			font-size: 1.25rem;
 			font-weight: bold;
 			text-transform: uppercase;
 			background: $color-blue;
@@ -983,9 +1046,10 @@ footer {
 			& > .subservice {
 				& > .header{
 					font-weight: bold;
-			    background: #454545;
-			    color: #e2dfdf;
+			    background: #eeeeee;
+			    color: $color-blue-light;
 			    padding: 10px;
+			    font-size: 1rem;
 
 					.sub-cash{
 						float: right;
@@ -1000,13 +1064,12 @@ footer {
 
 				& > .subservicesitems{
 					& > .subservice-item{
-						margin: 2px 0;
+						margin: 5px;
 				    background: #e6e6e6;
 				    color: #3a4556;
 				    font-weight: bold;
 				    padding: 8px 10px;
-				    border-left: 10px solid #454545;
-				    margin-left: 2px;
+				    border-left: 10px solid $color-blue-light;
 
 						.cash{
 							float: right;

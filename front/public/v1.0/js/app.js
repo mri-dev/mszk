@@ -4,15 +4,19 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
 {
   $scope.formready = false;
   $scope.selected_services = [];
+  $scope.overall_service_details = [];
   $scope.selected_subservices = [];
   $scope.selected_subservices_items = [];
   $scope.service_desc = [];
   $scope.service_cashall = [];
+  $scope.service_cashtotals = [];
   $scope.service_cashrow = [];
+  $scope.cashdifference = [];
   $scope.step = 1;
   $scope.walkedstep = 1;
   $scope.max_step = 4;
   $scope.resources = {};
+  $scope.resources_services_items = {};
   $scope.savingsession = false;
   $scope.savedconfig = false;
   $scope.savedconfigtime = false;
@@ -43,9 +47,38 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
     'Küldés'
   ];
 
+
   $scope.init = function()
   {
+  }
 
+  $scope.refreshOverallCash = function( servid, cash ) {
+    $scope.overall_service_details[servid].cash_total = cash;
+  }
+
+  $scope.overallCashNotSame = function( servid )
+  {
+    var s = false;
+    var tc = ($scope.overall_service_details[servid]) ? $scope.overall_service_details[servid].cash_total : false;
+    var cc = $scope.service_cashtotals[servid];
+    if (typeof cc === 'undefined') {
+      return s;
+    } else {
+      if (cc != tc) {
+        if (typeof $scope.cashdifference[servid] === 'undefined') {
+          $scope.cashdifference[servid] = {};
+        }
+        $scope.cashdifference[servid] = {
+          'tc': parseInt(tc),
+          'cc': parseInt(cc),
+          'diff': tc - cc
+        };
+        s = true;
+      } else {
+        s = false;
+      }
+    }
+    return s;
   }
 
   $scope.pickServiceSub = function( id ) {
@@ -109,6 +142,7 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
       session.service_cashall = $scope.service_cashall;
       session.service_cashrow = $scope.service_cashrow;
       session.walkedstep = $scope.walkedstep;
+      session.overall_service_details = $scope.overall_service_details;
       session.step = 4;
 
       var date = new Date();
@@ -149,6 +183,22 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
     });
 
     $scope.service_cashall[subservid] = totalcash;
+    $scope.checkServiceCashAll();
+  }
+
+  $scope.checkServiceCashAll = function() {
+    $scope.service_cashtotals = [];
+    angular.forEach($scope.service_cashall, function(e,subservid){
+      if (e) {
+        var servid = $scope.resources_services_items[subservid].serviceid;
+        if (typeof $scope.service_cashtotals[servid] === 'undefined') {
+          $scope.service_cashtotals[servid] = 0;
+        } else {
+          $scope.service_cashtotals[servid] = 0;
+        }
+        $scope.service_cashtotals[servid] += $scope.service_cashall[subservid];
+      }
+    });
   }
 
   $scope.prepareAjanlatkeres = function()
@@ -163,7 +213,15 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
           $scope.walkedstep = $scope.savedconfig.walkedstep;
           $scope.service_cashall = $scope.savedconfig.service_cashall;
           $scope.service_cashrow = $scope.savedconfig.service_cashrow;
+          $scope.overall_service_details = $scope.savedconfig.overall_service_details;
           $scope.step = $scope.savedconfig.step;
+
+          // Date convert
+          angular.forEach($scope.overall_service_details, function(e,i){
+            if (e) {
+              e.date_start = new Date(e.date_start);
+            }
+          });
         }
       });
     });
@@ -191,7 +249,8 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
             selected_subservices_items : $scope.savedconfig.selected_subservices_items,
             selected_cashall : $scope.savedconfig.service_cashall,
             selected_cashrow : $scope.savedconfig.service_cashrow,
-            service_desc: $scope.savedconfig.service_desc
+            service_desc: $scope.savedconfig.service_desc,
+            overall_service_details: $scope.savedconfig.overall_service_details
           }
         })
       }).success(function(r){
@@ -226,6 +285,17 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
       console.log(r);
       if (r.success == 1) {
         $scope.resources = r.data;
+        if (r.data.szolgaltatasok) {
+          angular.forEach(r.data.szolgaltatasok, function(s,si){
+            if (s.child && s.child.length!=0) {
+              angular.forEach(s.child, function(sv,svi){
+                $scope.resources_services_items[sv.ID] = {
+                  'serviceid': s.ID
+                }
+              });
+            }
+          });
+        }
       }
       if (typeof callback !== 'undefined') {
         callback();
@@ -309,6 +379,24 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
 
 
 app.filter('unsafe', function($sce){ return $sce.trustAsHtml; });
+app.filter('cash', function(){
+	return function(cash, text, aftertext){
+		if (cash) {
+			cash = cash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+			if (typeof text === 'undefined' || text == 1) {
+				if (typeof aftertext === 'undefined') {
+					cash += " Ft + ÁFA";
+				} else {
+					cash += " "+aftertext;
+				}
+			}
+			return cash;
+		} else {
+			return '';
+		}
+	};
+});
+
 
 $(function(){
   $.each($('.autocorrect-height-by-width'), function(i,e){

@@ -352,10 +352,11 @@ body.singlepage .page-reader .header h1 {
 }
 /* line 345, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service {
-  flex-basis: calc(100% / 5);
+  flex-basis: calc(100% / 3);
   padding: 15px;
+  outline: none;
 }
-/* line 348, sass/media.scss */
+/* line 349, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper {
   background: white;
   border-radius: 10px;
@@ -367,8 +368,9 @@ body.singlepage .page-reader .header h1 {
   -webkit-transform-origin: center;
   transform-origin: center;
   padding: 0 0 5px 0;
+  cursor: pointer;
 }
-/* line 360, sass/media.scss */
+/* line 362, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .title {
   padding: 10px;
   text-transform: uppercase;
@@ -379,7 +381,7 @@ body.singlepage .page-reader .header h1 {
   height: 60px;
   position: relative;
 }
-/* line 370, sass/media.scss */
+/* line 372, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .title:after {
   position: absolute;
   right: 5px;
@@ -389,14 +391,14 @@ body.singlepage .page-reader .header h1 {
   content: "\f0c8";
   color: #dbdbdb;
 }
-/* line 381, sass/media.scss */
+/* line 383, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .image {
-  height: 140px;
+  height: 16rem;
   background: #f3f3f3;
   overflow: hidden;
   position: relative;
 }
-/* line 386, sass/media.scss */
+/* line 388, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .image img {
   width: auto;
   max-width: initial;
@@ -408,7 +410,7 @@ body.singlepage .page-reader .header h1 {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-/* line 399, sass/media.scss */
+/* line 401, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service > .wrapper .desc {
   font-size: 0.8rem;
   font-weight: 300;
@@ -417,84 +419,138 @@ body.singlepage .page-reader .header h1 {
   height: 110px;
   overflow: hidden;
 }
-/* line 407, sass/media.scss */
-.ajanlat-requester .step-containers .services > .service > .wrapper .more-info {
-  display: none;
-  background: #2c62c7;
-  color: white;
-  padding: 5px 15px;
-  font-size: 0.8rem;
-}
-/* line 414, sass/media.scss */
-.ajanlat-requester .step-containers .services > .service > .wrapper .sel-item {
-  display: none;
-  font-size: 0.8rem;
-}
-/* line 417, sass/media.scss */
-.ajanlat-requester .step-containers .services > .service > .wrapper .sel-item label {
-  padding: 5px 15px;
-  margin: 0;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-}
-/* line 428, sass/media.scss */
+/* line 412, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service:hover > .wrapper {
   box-shadow: 0 0 20px -10px #717171;
   transform: scale(1.05);
 }
-/* line 433, sass/media.scss */
-.ajanlat-requester .step-containers .services > .service:hover .sel-item,
-.ajanlat-requester .step-containers .services > .service:hover .more-info {
-  display: block;
-}
-/* line 439, sass/media.scss */
+/* line 419, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service.picked > .wrapper {
   box-shadow: 0 0 20px -5px #2c62c7;
 }
-/* line 441, sass/media.scss */
+/* line 421, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service.picked > .wrapper .title {
   color: #0aa3f5;
 }
-/* line 446, sass/media.scss */
+/* line 426, sass/media.scss */
 .ajanlat-requester .step-containers .services > .service.picked .title:after {
   content: "\f14a";
   color: #ff7979;
 }
-/* line 458, sass/media.scss */
+/* line 438, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service > .head {
   text-transform: uppercase;
-  color: #0aa3f5;
+  background: #2c62c7;
+  color: white;
   font-size: 1.5rem;
   font-weight: bold;
-  padding: 10px 0;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+/* line 447, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .cashdifference-msg {
+  border: 2px solid #f8f2cc;
+  padding: 10px;
+  margin: 10px 0 0 0;
+  border-radius: 5px;
+  background: #ffffee;
+  color: #63611c;
+  text-align: right;
+  font-size: 0.92rem;
+}
+/* line 457, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .cashdifference-msg .title {
+  font-weight: bold;
+  color: black;
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+}
+/* line 464, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .cashdifference-msg .ctext {
+  margin: 0 0 8px 0;
 }
 /* line 467, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .cashdifference-msg .ctext .cdiff.diff_positiv {
+  color: #599a65;
+}
+/* line 470, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .cashdifference-msg .ctext .cdiff.diff_negativ {
+  color: #ff7979;
+}
+/* line 475, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .cashdifference-msg button {
+  background: #66c0b7;
+}
+/* line 482, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe > .head,
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services > .head {
+  text-align: center;
+  margin: 20px 0 15px 0;
+}
+/* line 485, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe > .head h3,
+.ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services > .head h3 {
+  font-weight: bold;
+  color: black;
+  font-size: 1.2rem;
+}
+/* line 494, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line label {
+  display: block;
+  margin: 0 0 10px 0;
+  color: #698b9e;
+  font-size: 0.8rem;
+}
+/* line 501, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line textarea {
+  min-height: 220px;
+}
+/* line 506, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line.more-detail .d-flex {
+  margin: -5px;
+}
+/* line 508, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line.more-detail .d-flex .w {
+  padding: 5px;
+}
+/* line 512, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line.more-detail .d-flex .cashoverall,
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line.more-detail .d-flex .startdate {
+  flex-basis: 190px;
+}
+/* line 516, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line.more-detail .d-flex .rundate {
+  flex: 1;
+}
+/* line 521, sass/media.scss */
+.ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line + .line {
+  margin: 10px 0 0 0;
+}
+/* line 527, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper {
-  border: 0.5px solid #d5d5d5;
-  padding: 15px;
-  border-radius: 10px;
+  border: 0.5px dashed #8f8f8f;
+  padding: 8px;
+  border-radius: 5px;
   -webkit-transition: all .5s;
   transition: all .5s;
 }
-/* line 474, sass/media.scss */
+/* line 534, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title {
-  text-transform: uppercase;
   font-size: 1.1rem;
   font-weight: bold;
-  color: #6a6a6a;
+  color: #0aa3f5;
   position: relative;
   outline: none;
   cursor: pointer;
 }
-/* line 483, sass/media.scss */
+/* line 542, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .subserv-item-text {
   font-weight: 300;
-  color: #8c8c8c;
+  color: #6b6b6b;
   text-transform: none;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
 }
-/* line 490, sass/media.scss */
+/* line 549, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .adder {
   position: absolute;
   right: 13px;
@@ -502,7 +558,7 @@ body.singlepage .page-reader .header h1 {
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-/* line 496, sass/media.scss */
+/* line 555, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper > .title .adder:before {
   font-weight: 400;
   font-family: "Font Awesome 5 Free";
@@ -510,59 +566,59 @@ body.singlepage .page-reader .header h1 {
   font-size: 1.4rem;
   color: #bababa;
 }
-/* line 506, sass/media.scss */
+/* line 565, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment {
   padding: 5px;
 }
-/* line 508, sass/media.scss */
+/* line 567, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment .head {
   margin: 10px 0 5px 0;
   font-weight: bold;
   color: black;
 }
-/* line 513, sass/media.scss */
+/* line 572, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-comment textarea {
   border-radius: 10px;
   padding: 15px;
   min-height: 55px;
   border: 0.5px solid #d5d5d5;
 }
-/* line 521, sass/media.scss */
+/* line 580, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-cash {
   margin: 10px 0 0 0;
   font-size: 0.85em;
 }
-/* line 525, sass/media.scss */
+/* line 584, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-cash .head {
   margin: 10px 0 5px 0;
   font-weight: bold;
   color: black;
 }
-/* line 529, sass/media.scss */
+/* line 588, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-cash .head strong {
   color: #66c0b7;
 }
-/* line 533, sass/media.scss */
+/* line 592, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-cash .input-group-text {
   font-size: 0.8rem;
 }
-/* line 537, sass/media.scss */
+/* line 596, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-cash .input-group-prepend {
   flex-basis: 35%;
 }
-/* line 541, sass/media.scss */
+/* line 600, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-cash .input-group-text {
   width: 100%;
 }
-/* line 545, sass/media.scss */
+/* line 604, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service > .wrapper .service-cash .cashrow + .cashrow {
   margin: 5px 0 0 0;
 }
-/* line 551, sass/media.scss */
+/* line 610, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item {
   padding: 5px;
 }
-/* line 553, sass/media.scss */
+/* line 612, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item > .wrapper {
   border: 0.5px solid #cbcbcb;
   background: #f5f5f5;
@@ -575,17 +631,17 @@ body.singlepage .page-reader .header h1 {
   outline: none;
   position: relative;
 }
-/* line 565, sass/media.scss */
+/* line 624, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item > .wrapper:hover {
   background: #2c62c7;
   color: white;
 }
-/* line 572, sass/media.scss */
+/* line 631, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item.selected > .wrapper {
   background: #2c62c7;
   color: white;
 }
-/* line 576, sass/media.scss */
+/* line 635, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service .subserv-items .subserv-item.selected > .wrapper:after {
   pointer-events: none;
   position: absolute;
@@ -598,80 +654,80 @@ body.singlepage .page-reader .header h1 {
   font-size: 1rem;
   color: #66c0b7;
 }
-/* line 593, sass/media.scss */
+/* line 652, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service.selected > .wrapper > .title > .adder:before {
   content: "\f14a";
   color: #ff7979;
 }
-/* line 597, sass/media.scss */
+/* line 656, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service.selected > .wrapper {
   border: 3px solid #66c0b7;
 }
-/* line 602, sass/media.scss */
+/* line 661, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .sub-services .sub-service + .sub-service {
   margin: 10px 0 0 0;
 }
-/* line 607, sass/media.scss */
+/* line 666, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service + .service {
   margin: 15px 0 0 0;
 }
-/* line 613, sass/media.scss */
+/* line 672, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn {
   margin: 30px 0 20px 0;
 }
-/* line 615, sass/media.scss */
+/* line 674, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn button[class*=btn-default] {
   border-radius: 25px;
 }
-/* line 618, sass/media.scss */
+/* line 677, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn button[class*=btn-warning] {
   border-radius: 25px;
   color: white;
 }
-/* line 622, sass/media.scss */
+/* line 681, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn button[class*=btn-cian] {
   border-radius: 25px;
   background: #66c0b7;
   color: white;
 }
-/* line 627, sass/media.scss */
+/* line 686, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn button[class*=btn-primary] {
   text-transform: uppercase;
   border-radius: 25px;
 }
-/* line 632, sass/media.scss */
+/* line 691, sass/media.scss */
 .ajanlat-requester .step-containers .next-btn .saved-config-date {
   font-size: 0.8rem;
   margin: 5px 0 0 0;
 }
-/* line 638, sass/media.scss */
+/* line 697, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form {
   background: #f5f4f4;
-  border-radius: 5px;
+  border-radius: 10px;
   border: 0.5px solid #dbdbdb;
 }
-/* line 642, sass/media.scss */
+/* line 701, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form .redalert {
   color: #ff7979;
   font-size: 0.75rem;
   margin: 5px 0;
 }
-/* line 647, sass/media.scss */
+/* line 706, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper {
   padding: 25px;
 }
-/* line 650, sass/media.scss */
+/* line 709, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper .row + .row {
   margin-top: 15px;
 }
-/* line 654, sass/media.scss */
+/* line 713, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text], .ajanlat-requester .step-containers .requester-form > .wrapper input[type=email], .ajanlat-requester .step-containers .requester-form > .wrapper textarea {
   font-weight: bold;
   color: black;
   border-radius: 20px;
   border: 0.5px solid #d2d2d2;
 }
-/* line 659, sass/media.scss */
+/* line 718, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]::placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper input[type=email]::placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #acacac;
@@ -679,41 +735,50 @@ body.singlepage .page-reader .header h1 {
   opacity: 1;
   /* Firefox */
 }
-/* line 665, sass/media.scss */
+/* line 724, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]:-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper input[type=email]:-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea:-ms-input-placeholder {
   /* Internet Explorer 10-11 */
   color: #acacac;
   font-weight: 300;
 }
-/* line 670, sass/media.scss */
+/* line 729, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper input[type=text]::-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper input[type=email]::-ms-input-placeholder, .ajanlat-requester .step-containers .requester-form > .wrapper textarea::-ms-input-placeholder {
   /* Microsoft Edge */
   color: #acacac;
   font-weight: 300;
 }
-/* line 676, sass/media.scss */
+/* line 735, sass/media.scss */
 .ajanlat-requester .step-containers .requester-form > .wrapper textarea {
   width: 100%;
   padding: 10px;
+  outline: none;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+/* line 741, sass/media.scss */
+.ajanlat-requester .step-containers .requester-form > .wrapper textarea:focus {
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-/* line 685, sass/media.scss */
+/* line 753, sass/media.scss */
 .block-list {
   background: #f5f4f4;
   border-radius: 10px;
   border: 0.5px solid #dbdbdb;
   overflow: hidden;
 }
-/* line 690, sass/media.scss */
+/* line 758, sass/media.scss */
 .block-list > .header {
   text-align: center;
-  font-size: 1.5vw;
+  font-size: 1.3vw;
   color: #444444;
   text-transform: uppercase;
   padding: 15px;
   background: white;
 }
-/* line 700, sass/media.scss */
+/* line 768, sass/media.scss */
 .block-list > .wrapper > .item > .head {
   background: #2c62c7;
   border-bottom: 0.5px solid #4e7ed8;
@@ -723,12 +788,59 @@ body.singlepage .page-reader .header h1 {
   font-weight: bold;
   font-size: 1.2rem;
 }
-/* line 710, sass/media.scss */
+/* line 778, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe {
+  background: white;
+}
+/* line 780, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .head {
+  background: #0aa3f5;
+  color: white;
+  font-weight: bold;
+  padding: 5px 15px;
+}
+/* line 786, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data {
+  padding: 10px 12px;
+}
+/* line 788, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data .line + .line {
+  margin: 10px 0 0 0;
+}
+/* line 793, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data .line .h {
+  color: #aaaaaa;
+}
+/* line 796, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data .line .d-flex {
+  align-items: center;
+}
+/* line 798, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data .line .d-flex > div {
+  padding: 5px;
+}
+/* line 801, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data .line .d-flex .h {
+  flex-basis: 180px;
+}
+/* line 804, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data .line .d-flex .v {
+  flex: 1;
+}
+/* line 809, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data .line.mdesc .h, .block-list > .wrapper > .item > .service-describe > .data .line.mdesc .v {
+  padding: 5px;
+}
+/* line 813, sass/media.scss */
+.block-list > .wrapper > .item > .service-describe > .data .line.mdesc .v {
+  white-space: pre-wrap;
+}
+/* line 821, sass/media.scss */
 .block-list > .wrapper > .item .subitem {
   border-bottom: 0.5px solid #c9c9c9;
   outline: none;
 }
-/* line 713, sass/media.scss */
+/* line 824, sass/media.scss */
 .block-list > .wrapper > .item .subitem > .head {
   color: #555555;
   text-transform: uppercase;
@@ -737,21 +849,21 @@ body.singlepage .page-reader .header h1 {
   padding: 20px;
   outline: none;
 }
-/* line 721, sass/media.scss */
+/* line 832, sass/media.scss */
 .block-list > .wrapper > .item .subitem > .head i {
   color: #ff7979;
   margin-right: 5px;
 }
-/* line 728, sass/media.scss */
+/* line 839, sass/media.scss */
 .block-list > .wrapper > .item .subitem .service-comment,
 .block-list > .wrapper > .item .subitem .service-cash {
   padding: 15px 25px;
   font-size: 0.8rem;
   line-height: 1.3;
-  background: #ebebeb;
+  background: #ffffff;
   margin: 2px 0 0 0;
 }
-/* line 736, sass/media.scss */
+/* line 847, sass/media.scss */
 .block-list > .wrapper > .item .subitem .paramitem {
   padding: 10px 45px;
   line-height: 1.2;
@@ -759,22 +871,22 @@ body.singlepage .page-reader .header h1 {
   outline: none;
   background: white;
 }
-/* line 743, sass/media.scss */
+/* line 854, sass/media.scss */
 .block-list > .wrapper > .item .subitem .paramitem i {
   color: #66c0b7;
   font-size: 0.8rem;
   margin: 0 5px 0 0;
 }
-/* line 749, sass/media.scss */
+/* line 860, sass/media.scss */
 .block-list > .wrapper > .item .subitem .paramitem.unselected {
   color: #8c8c8c;
   cursor: pointer;
 }
-/* line 752, sass/media.scss */
+/* line 863, sass/media.scss */
 .block-list > .wrapper > .item .subitem .paramitem.unselected i {
   color: #8c8c8c;
 }
-/* line 757, sass/media.scss */
+/* line 868, sass/media.scss */
 .block-list > .wrapper > .item .subitem .paramitem .cashrow-conf {
   background: #757575;
   color: white;
@@ -783,50 +895,50 @@ body.singlepage .page-reader .header h1 {
   font-size: 0.7rem;
   padding: 3px 5px;
 }
-/* line 768, sass/media.scss */
+/* line 879, sass/media.scss */
 .block-list > .wrapper > .item .subitem.unselected > .head {
   color: #acacac;
   cursor: pointer;
   outline: none;
 }
-/* line 772, sass/media.scss */
+/* line 883, sass/media.scss */
 .block-list > .wrapper > .item .subitem.unselected > .head i {
   color: #acacac;
 }
-/* line 780, sass/media.scss */
+/* line 891, sass/media.scss */
 .block-list > .footer {
   padding: 15px;
   background: white;
 }
 
-/* line 786, sass/media.scss */
+/* line 897, sass/media.scss */
 footer {
   background: #2c62c7;
   color: white;
 }
-/* line 790, sass/media.scss */
+/* line 901, sass/media.scss */
 footer .footer-inner {
   padding: 25px 0;
 }
-/* line 793, sass/media.scss */
+/* line 904, sass/media.scss */
 footer .footer-inner .logo {
   text-align: center;
   margin: 0 0 20px 0;
 }
-/* line 796, sass/media.scss */
+/* line 907, sass/media.scss */
 footer .footer-inner .logo img {
   max-height: 80px;
   height: 80px;
   width: auto;
   max-width: initial;
 }
-/* line 805, sass/media.scss */
+/* line 916, sass/media.scss */
 footer .footer-inner .navigator ul, footer .footer-inner .navigator li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/* line 811, sass/media.scss */
+/* line 922, sass/media.scss */
 footer .footer-inner .navigator ul {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -835,49 +947,49 @@ footer .footer-inner .navigator ul {
   align-items: center;
   justify-content: center;
 }
-/* line 819, sass/media.scss */
+/* line 930, sass/media.scss */
 footer .footer-inner .navigator ul li a {
   padding: 10px;
   display: block;
   text-align: center;
 }
-/* line 829, sass/media.scss */
+/* line 940, sass/media.scss */
 footer a, footer a:link, footer a:visited {
   color: #ffffff;
   text-decoration: none;
 }
-/* line 834, sass/media.scss */
+/* line 945, sass/media.scss */
 footer a:hover {
   color: #66c0b7;
 }
-/* line 838, sass/media.scss */
+/* line 949, sass/media.scss */
 footer .copyright {
   background: #1f4da3;
   color: #a2d9f7;
   text-align: center;
   padding: 20px 0;
 }
-/* line 844, sass/media.scss */
+/* line 955, sass/media.scss */
 footer .copyright a, footer .copyright a:link, footer .copyright a:visited {
   color: #a2d9f7;
 }
-/* line 848, sass/media.scss */
+/* line 959, sass/media.scss */
 footer .copyright .poweredby {
   margin-left: 25px;
 }
 
-/* line 854, sass/media.scss */
+/* line 965, sass/media.scss */
 .selected-services {
   border: 0.5px solid #d7d7d7;
   padding: 0.5px;
   overflow: hidden;
   border-radius: 8px;
 }
-/* line 860, sass/media.scss */
+/* line 971, sass/media.scss */
 .selected-services .service:first-child {
   border-top: none;
 }
-/* line 863, sass/media.scss */
+/* line 974, sass/media.scss */
 .selected-services .service > .head {
   background: #2c62c7;
   padding: 8px 15px;
@@ -887,24 +999,24 @@ footer .copyright .poweredby {
   color: white;
   font-size: 1.2rem;
 }
-/* line 872, sass/media.scss */
+/* line 983, sass/media.scss */
 .selected-services .service .subservice {
   border-bottom: 0.5px dashed #eaeaea;
   padding: 10px 15px;
 }
-/* line 875, sass/media.scss */
+/* line 986, sass/media.scss */
 .selected-services .service .subservice > .head {
   color: #ff7979;
   padding: 5px 0;
   font-size: 1.1rem;
   font-weight: bold;
 }
-/* line 882, sass/media.scss */
+/* line 993, sass/media.scss */
 .selected-services .service .subservice .subserviceitem {
   font-size: 0.9rem;
   margin: 4px 0;
 }
-/* line 886, sass/media.scss */
+/* line 997, sass/media.scss */
 .selected-services .service .subservice .subserviceitem .cash {
   background: #757575;
   color: white;
@@ -913,7 +1025,7 @@ footer .copyright .poweredby {
   font-size: 0.7rem;
   padding: 2px 5px;
 }
-/* line 899, sass/media.scss */
+/* line 1010, sass/media.scss */
 .selected-services .comment,
 .selected-services .cashall {
   font-size: 0.8rem;
@@ -921,7 +1033,7 @@ footer .copyright .poweredby {
   line-height: 1.3;
   margin: 15px 0 10px 0;
 }
-/* line 904, sass/media.scss */
+/* line 1015, sass/media.scss */
 .selected-services .comment .comment-header, .selected-services .comment .cashall-header,
 .selected-services .cashall .comment-header,
 .selected-services .cashall .cashall-header {
@@ -929,7 +1041,7 @@ footer .copyright .poweredby {
   margin: 0 0 4px 0;
   font-weight: bold;
 }
-/* line 910, sass/media.scss */
+/* line 1021, sass/media.scss */
 .selected-services .serv-footer {
   padding: 25px;
   font-size: 1.1rem;

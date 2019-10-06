@@ -133,8 +133,32 @@
             <div class="dpad">
               <div class="selected-services-overview">
                 <div class="service" ng-repeat="serv in request.services">
-                  <div class="header">
-                    {{serv.neve}}
+                  <div class="header">{{serv.neve}}</div>
+                  <div class="service-describe">
+                    <div class="data">
+                      <div class="line">
+                        <div class="d-flex">
+                          <div class="h"><?=__('Kezdő időpont')?>:</div>
+                          <div class="v"><strong>{{request.overall_service_details[serv.ID].date_start|date:'yyyy. MM. dd.'}}</strong><em ng-if="!request.overall_service_details[serv.ID].date_start"><?=__('nem lett meghatározva')?></em></div>
+                        </div>
+                      </div>
+                      <div class="line">
+                        <div class="d-flex">
+                          <div class="h"><?=__('Időtartam')?>:</div>
+                          <div class="v"><strong>{{request.overall_service_details[serv.ID].date_duration}}</strong><em ng-if="!request.overall_service_details[serv.ID].date_duration"><?=__('nem lett meghatározva')?></em></div>
+                        </div>
+                      </div>
+                      <div class="line">
+                        <div class="d-flex">
+                          <div class="h"><?=__('Teljes költségkeret')?>:</div>
+                          <div class="v"><strong>{{request.overall_service_details[serv.ID].cash_total|cash}}</strong><em ng-if="!request.overall_service_details[serv.ID].cash_total"><?=__('nem lett meghatározva')?></em></div>
+                        </div>
+                      </div>
+                      <div class="line mdesc">
+                        <div class="h"><?=__('Igények részletezése')?>:</div>
+                        <div class="v"><strong>{{request.overall_service_details[serv.ID].description}}</strong><em ng-if="!request.overall_service_details[serv.ID].description"><?=__('nem lett meghatározva')?></em></div>
+                      </div>
+                    </div>
                   </div>
                   <div class="subservices">
                     <div class="subservice" ng-if="(subserv.szulo_id == serv.ID)" ng-repeat="subserv in request.subservices">
@@ -150,8 +174,7 @@
                         </div>
                       </div>
                       <div class="subservice-comment" ng-if="request.service_description[subserv.ID]">
-                        <div class="head" ng-if="relation=='to'"><?=__('Ajánlatkérő igénye:')?></div>
-                        <div class="head" ng-if="relation=='from'"><?=__('Igényeim:')?></div>
+                        <div class="head"><?=__('Ajánlatkérő igénye:')?></div>
                         <div class="comment" ng-bind-html="request.service_description[subserv.ID]|unsafe" style="white-space: pre-line;"></div>
                       </div>
                     </div>
@@ -168,15 +191,6 @@
                 {{request.cash_total|cash}}
               </div>
             </div>
-
-            <div class="row-header">
-                <h3><?=__('Részletes leírás')?></h3>
-            </div>
-            <div class="dpad">
-              <div ng-bind-html="request.message|unsafe" style="white-space: pre-line;"></div>
-            </div>
-
-
             <div class="" ng-if="!request.user_offer_id && relation=='to'">
               <div class="row-header">
                   <h3><?=__('Műveletek')?></h3>

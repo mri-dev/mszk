@@ -24,9 +24,10 @@
         </div>
       </div>
       <div class="step-containers">
+        <!-- Step 1 - Kategória -->
         <div class="step-layout step1" ng-show="(step == 1)">
           <div class="services">
-            <div class="service" ng-class="{'picked': isPickedService(service.ID)}" ng-repeat="service in resources.szolgaltatasok">
+            <div class="service" ng-click="pickService(service.ID)" ng-class="{'picked': isPickedService(service.ID)}" ng-repeat="service in resources.szolgaltatasok">
               <div class="wrapper">
                 <div class="title">
                   {{service.neve}}
@@ -35,8 +36,6 @@
                   <img class="" ng-src="<?=str_replace('/src/','', SOURCE)?>{{service.kep}}" alt="">
                 </div>
                 <div class="desc" ng-bind-html="service.leiras|unsafe"></div>
-                <div class="more-info"><i class="fas fa-info-circle"></i> <?=__('Bővebb információ')?></div>
-                <div class="sel-item"><input id="service_s{{service.ID}}" type="checkbox" name="" class="ccb" value="" ng-click="pickService(service.ID)"> <label for="service_s{{service.ID}}"><?=__('Kiválasztom')?></label></div>
               </div>
             </div>
           </div>
@@ -56,16 +55,59 @@
             </div>
           </div>
         </div>
+        <!-- Step 2 - Testreszabás -->
         <div class="step-layout step2" ng-show="(step == 2)">
           <div class="services-configurator">
             <div class="row">
               <div class="col-md-7">
                 <div class="services-group">
                   <div class="service" ng-repeat="service in resources.szolgaltatasok" ng-hide="selected_services.indexOf(service.ID)===-1">
-                    <div class="head">
-                      {{service.neve}}
+                    <div class="head">{{service.neve}}</div>
+                    <div class="service-describe">
+                      <div class="head"><h3><?=__('Adja meg az Ön igényeit')?></h3></div>
+                      <div class="line">
+                        <label for=""><?=__('Igények részletes leírása')?></label>
+                        <textarea class="form-control editor" ng-model="overall_service_details[service.ID].description" placeholder="<?=__('Milyen igényei vannak a(z) {{service.neve}} szolgáltatással kapcsolatban?')?>"></textarea>
+                      </div>
+                      <div class="line more-detail">
+                        <div class="d-flex">
+                          <div class="startdate">
+                            <div class="w">
+                              <label for=""><?=__('Kezdő időpont meghatározása')?></label>
+                              <input type="date" class="form-control" ng-model="overall_service_details[service.ID].date_start">
+                            </div>
+                          </div>
+                          <div class="rundate">
+                            <div class="w">
+                              <label for=""><?=__('Időtartam meghatározása')?></label>
+                              <input type="text" class="form-control" ng-model="overall_service_details[service.ID].date_duration">
+                            </div>
+                          </div>
+                          <div class="cashoverall">
+                            <div class="w">
+                              <label for=""><?=__('Teljes nettó költségkeret')?></label>
+                              <div class="input-group">
+                                <input type="number" step="1" class="form-control" ng-model="overall_service_details[service.ID].cash_total">
+                                <div class="input-group-append"><span class="input-group-text"><?=__('+ ÁFA')?></span></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cashdifference-msg" ng-if="overallCashNotSame(service.ID) && cashdifference[service.ID].cc  != 0">
+                      <div class="title"><?php echo __('A költségvetés kalkuláció nem egyezik a teljes költségkerettel:'); ?></div>
+                      <div class="calculation">
+                        <div class="ctext">
+                          <?=__('A számolt költségvetés <strong>{{cashdifference[service.ID].cc|cash}}</strong>.')?>
+                          <div class="cdiff diff_positiv" ng-if="(cashdifference[service.ID].diff*-1) >= 0"><?=__('Eltérés:')?> <strong>+{{(cashdifference[service.ID].diff*-1)|cash}}</strong>.</div>
+                          <div class="cdiff diff_negativ" ng-if="(cashdifference[service.ID].diff*-1) < 0"><?=__('Eltérés:')?> <strong>{{(cashdifference[service.ID].diff*-1)|cash}}</strong>.</div>
+                        </div>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="refreshOverallCash(service.ID,cashdifference[service.ID].cc)"><?=__('Teljes költségkeret frissítése:')?> {{cashdifference[service.ID].cc|cash}}<?=__('-ra')?> ></button>
+                      </div>
                     </div>
                     <div class="sub-services">
+                      <div class="head center"><h3><?=__('További konfigurációs lehetőségek')?></h3></div>
                       <div class="sub-service" ng-class="{'selected': isPickedSubService(subserv.ID)}" ng-repeat="subserv in service.child">
                         <div class="wrapper">
                           <div class="title" ng-click="pickServiceSub(subserv.ID)">
@@ -83,8 +125,8 @@
                             </div>
                           </div>
                           <div class="service-comment" ng-show="isPickedSubService(subserv.ID)">
-                            <div class="head"><?=__('Az Ön igényei')?>:</div>
-                            <textarea class="form-control" ng-model="service_desc[subserv.ID]" placeholder="<?=__('Milyen igényei vannak a(z) {{subserv.neve}} szolgáltatással kapcsolatban?')?>"></textarea>
+                            <div class="head"><strong>{{subserv.neve}}</strong> <?=__('szolgáltatással kapcsolatos igényei')?>:</div>
+                            <textarea class="form-control" ng-model="service_desc[subserv.ID]" placeholder="<?=__('Részletezze személyes igényeit a szolgáltatással kapcsolatban...')?>"></textarea>
                           </div>
                           <div class="service-cash" ng-show="isPickedSubService(subserv.ID)">
                             <div class="head"><?=__('Tételes keretösszegek')?>:</div>
@@ -98,7 +140,7 @@
                             <div class="head"><?=__('Teljes keretösszeg a(z) <strong>{{subserv.neve}}</strong> projektekre')?>:</div>
                             <div class="input-group">
                               <div class="input-group-prepend"><span class="input-group-text"><?=__('Nettó')?></span></div>
-                              <input type="number" step="1" ng-model="service_cashall[subserv.ID]" class="form-control">
+                              <input type="number" step="1" ng-change="checkServiceCashAll()" ng-model="service_cashall[subserv.ID]" class="form-control">
                               <div class="input-group-append"><span class="input-group-text"><?=__('+ ÁFA')?></span></div>
                             </div>
                           </div>
@@ -132,7 +174,7 @@
               </div>
             </div>
             <div class="next-btn">
-              <div class="" ng-show="selected_subservices_items.length > 0" >
+              <div class="" >
                 <div class="row justify-content-between align-items-center">
                   <div class="col text-left">
                       <button type="button" ng-click="prevStep()" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> <?=__('vissza: Szolgáltatások')?> </button>
@@ -142,16 +184,10 @@
                   </div>
                 </div>
               </div>
-              <div class="info-next">
-                <div ng-hide="selected_subservices_items.length > 0" class="text-right">
-                  <div class="text-error">
-                    <?=__('Válassza ki, hogy milyen alszolgáltatásokkal kapcsolatban kér ajánlatot!')?>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
+        <!-- Step 3 - Összegzés -->
         <div class="step-layout step3" ng-show="(step == 3)">
           <div class="services-overview">
             <div class="row">
@@ -162,20 +198,46 @@
                       <div class="head">
                         {{service.neve}}
                       </div>
+                      <div class="service-describe">
+                        <div class="head"><?=__('A szolgáltatással kapcsolatos igények')?></div>
+                        <div class="data">
+                          <div class="line">
+                            <div class="d-flex">
+                              <div class="h"><?=__('Kezdő időpont')?>:</div>
+                              <div class="v"><strong>{{overall_service_details[service.ID].date_start|date:'yyyy. MM. dd.'}}</strong><em ng-if="!overall_service_details[service.ID].date_start"><?=__('nem lett meghatározva')?></em></div>
+                            </div>
+                          </div>
+                          <div class="line">
+                            <div class="d-flex">
+                              <div class="h"><?=__('Időtartam')?>:</div>
+                              <div class="v"><strong>{{overall_service_details[service.ID].date_duration}}</strong><em ng-if="!overall_service_details[service.ID].date_duration"><?=__('nem lett meghatározva')?></em></div>
+                            </div>
+                          </div>
+                          <div class="line">
+                            <div class="d-flex">
+                              <div class="h"><?=__('Teljes költségkeret')?>:</div>
+                              <div class="v"><strong>{{overall_service_details[service.ID].cash_total|cash}}</strong><em ng-if="!overall_service_details[service.ID].cash_total"><?=__('nem lett meghatározva')?></em></div>
+                            </div>
+                          </div>
+                          <div class="line mdesc">
+                            <div class="h"><?=__('Igények részletezése')?>:</div>
+                            <div class="v"><strong>{{overall_service_details[service.ID].description}}</strong><em ng-if="!overall_service_details[service.ID].description"><?=__('nem lett meghatározva')?></em></div>
+                          </div>
+                        </div>
+                      </div>
                       <div class="subitem" ng-repeat="subserv in service.child" ng-show="isPickedSubService(subserv.ID)">
                         <div class="head">
                           <i class="fas fa-check"></i> {{subserv.neve}}
                         </div>
                         <div class="paramitem" ng-repeat="subservitem in subserv.child" ng-show="isPickedSubServiceItem(subservitem.ID)">
-                          <i class="fas fa-check-double"></i> {{subservitem.neve}} <span class="cashrow-conf" ng-show="service_cashrow[subserv.ID][subservitem.ID]">{{service_cashrow[subserv.ID][subservitem.ID]}} <?=__('+ ÁFA')?></span>
+                          <i class="fas fa-check-double"></i> {{subservitem.neve}} <span class="cashrow-conf" ng-show="service_cashrow[subserv.ID][subservitem.ID]">{{service_cashrow[subserv.ID][subservitem.ID]|cash}}</span>
                         </div>
-                        <div class="service-comment">
+                        <div class="service-comment" ng-if="ervice_desc[subserv.ID]">
                           <strong><i class="far fa-comment-dots"></i> <?=__('Megjegyzés / Igények')?>:</strong>
                           <div class="" ng-bind-html="service_desc[subserv.ID]|unsafe"></div>
                         </div>
                         <div class="service-cash" ng-show="service_cashall[subserv.ID]">
-                          <strong><i class="fas fa-money-check-alt"></i> <?=__('Költségvetés')?>:</strong>
-                          <div ><?=__('A(z) {{subserv.neve}} teljes keretösszege')?>: <strong>{{service_cashall[subserv.ID]}} <?=__('+ ÁFA')?></strong></div>
+                          <strong><i class="fas fa-money-check-alt"></i> <?=__('Tétel keretösszege')?>:</strong> <strong>{{service_cashall[subserv.ID]|cash}}</strong>
                         </div>
                       </div>
                     </div>
@@ -231,6 +293,7 @@
             </div>
           </div>
         </div>
+        <!-- Step 4 - Küldés -->
         <div class="step-layout step4" ng-show="(step == 4)">
           <div class="wrapper">
             <div class="row">
@@ -241,20 +304,46 @@
                       <div class="head">
                         {{service.neve}}
                       </div>
+                      <div class="service-describe">
+                        <div class="head"><?=__('A szolgáltatással kapcsolatos igények')?></div>
+                        <div class="data">
+                          <div class="line">
+                            <div class="d-flex">
+                              <div class="h"><?=__('Kezdő időpont')?>:</div>
+                              <div class="v"><strong>{{overall_service_details[service.ID].date_start|date:'yyyy. MM. dd.'}}</strong><em ng-if="!overall_service_details[service.ID].date_start"><?=__('nem lett meghatározva')?></em></div>
+                            </div>
+                          </div>
+                          <div class="line">
+                            <div class="d-flex">
+                              <div class="h"><?=__('Időtartam')?>:</div>
+                              <div class="v"><strong>{{overall_service_details[service.ID].date_duration}}</strong><em ng-if="!overall_service_details[service.ID].date_duration"><?=__('nem lett meghatározva')?></em></div>
+                            </div>
+                          </div>
+                          <div class="line">
+                            <div class="d-flex">
+                              <div class="h"><?=__('Teljes költségkeret')?>:</div>
+                              <div class="v"><strong>{{overall_service_details[service.ID].cash_total|cash}}</strong><em ng-if="!overall_service_details[service.ID].cash_total"><?=__('nem lett meghatározva')?></em></div>
+                            </div>
+                          </div>
+                          <div class="line mdesc">
+                            <div class="h"><?=__('Igények részletezése')?>:</div>
+                            <div class="v"><strong>{{overall_service_details[service.ID].description}}</strong><em ng-if="!overall_service_details[service.ID].description"><?=__('nem lett meghatározva')?></em></div>
+                          </div>
+                        </div>
+                      </div>
                       <div class="subitem" ng-repeat="subserv in service.child" ng-show="isPickedSubService(subserv.ID)">
                         <div class="head">
                           <i class="fas fa-check"></i> {{subserv.neve}}
                         </div>
                         <div class="paramitem" ng-repeat="subservitem in subserv.child" ng-show="isPickedSubServiceItem(subservitem.ID)">
-                          <i class="fas fa-check-double"></i> {{subservitem.neve}} <span class="cashrow-conf" ng-show="service_cashrow[subserv.ID][subservitem.ID]">{{service_cashrow[subserv.ID][subservitem.ID]}} <?=__('+ ÁFA')?></span>
+                          <i class="fas fa-check-double"></i> {{subservitem.neve}} <span class="cashrow-conf" ng-show="service_cashrow[subserv.ID][subservitem.ID]">{{service_cashrow[subserv.ID][subservitem.ID]|cash}}</span>
                         </div>
-                        <div class="service-comment">
+                        <div class="service-comment" ng-if="ervice_desc[subserv.ID]">
                           <strong><i class="far fa-comment-dots"></i> <?=__('Megjegyzés / Igények')?>:</strong>
                           <div class="" ng-bind-html="service_desc[subserv.ID]|unsafe"></div>
                         </div>
                         <div class="service-cash" ng-show="service_cashall[subserv.ID]">
-                          <strong><i class="fas fa-money-check-alt"></i> <?=__('Költségvetés')?>:</strong>
-                          <div ><?=__('A(z) {{subserv.neve}} teljes keretösszege')?>: <strong>{{service_cashall[subserv.ID]}} <?=__('+ ÁFA')?></strong></div>
+                          <strong><i class="fas fa-money-check-alt"></i> <?=__('Tétel keretösszege')?>:</strong> <strong>{{service_cashall[subserv.ID]|cash}}</strong>
                         </div>
                       </div>
                     </div>
@@ -350,7 +439,8 @@
                         <div class="redalert" ng-show="!requester.name || !requester.phone || !requester.email">
                           <?=__('Az ajánlatkérés küldéséhez kérjük a a kötelező (*) adatok megadását!')?>
                         </div>
-                        <div ng-hide="!requester.name || !requester.phone || !requester.email">
+                        <!--<div ng-hide="!requester.name || !requester.phone || !requester.email">-->
+                        <div>
                           <button ng-show="!sendingofferrequest" type="submit" class="btn btn-danger btn-lg" ng-click="sendAjanlatkeres()"><?=__('Ajánlatkérés elküldése')?> <i class="far fa-arrow-alt-circle-right"></i></button>
                         </div>
                       </div>

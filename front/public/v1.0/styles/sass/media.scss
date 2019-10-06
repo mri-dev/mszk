@@ -343,8 +343,9 @@ body.singlepage{
       margin: -15px;
 
       & > .service {
-        flex-basis: calc(100% / 5);
+        flex-basis: calc(100% / 3);
         padding: 15px;
+        outline: none;
         & > .wrapper{
           background: white;
           border-radius: 10px;
@@ -356,6 +357,7 @@ body.singlepage{
           -webkit-transform-origin: center;
           transform-origin: center;
           padding: 0 0 5px 0;
+          cursor: pointer;
 
           .title{
             padding: 10px;
@@ -379,7 +381,7 @@ body.singlepage{
           }
 
           .image{
-            height: 140px;
+            height: 16rem;
             background: #f3f3f3;
             overflow: hidden;
             position: relative;
@@ -404,34 +406,12 @@ body.singlepage{
             height: 110px;
             overflow: hidden;
           }
-          .more-info{
-            display: none;
-            background: $color-blue;
-            color: white;
-            padding: 5px 15px;
-            font-size: 0.8rem;
-          }
-          .sel-item{
-            display: none;
-            font-size: 0.8rem;
-            label {
-              padding: 5px 15px;
-              margin: 0;
-              cursor: pointer;
-              display: block;
-              width: 100%;
-            }
-          }
         }
 
         &:hover{
           & > .wrapper{
             box-shadow: 0 0 20px -10px #717171;
             transform: scale(1.05);
-          }
-          .sel-item,
-          .more-info{
-            display: block;
           }
         }
 
@@ -457,34 +437,113 @@ body.singlepage{
         .service {
           & > .head{
             text-transform: uppercase;
-            color: $color-blue-light;
+            background:$color-blue;
+            color: white;
             font-size: 1.5rem;
             font-weight: bold;
-            padding: 10px 0;
+            padding: 10px 15px;
+            border-radius: 5px;
+          }
+          .cashdifference-msg{
+            border: 2px solid #f8f2cc;
+            padding: 10px;
+            margin: 10px 0 0 0;
+            border-radius: 5px;
+            background: #ffffee;
+            color: #63611c;
+            text-align: right;
+            font-size: 0.92rem;
+
+            .title{
+              font-weight: bold;
+              color: black;
+              margin: 0 0 5px 0;
+              font-size: 1rem;
+            }
+
+            .ctext{
+              margin: 0 0 8px 0;
+
+              .cdiff.diff_positiv{
+                color: #599a65;
+              }
+              .cdiff.diff_negativ{
+                color: $color-red;
+              }
+            }
+
+            button {
+              background: $color-cian;
+            }
+          }
+          .service-describe,
+          .sub-services
+          {
+            & > .head{
+              text-align: center;
+              margin: 20px 0 15px 0;
+              h3 {
+                font-weight: bold;
+                color: black;
+                font-size: 1.2rem;
+              }
+            }
+          }
+          .service-describe{
+            .line {
+              label {
+                display: block;
+                margin: 0 0 10px 0;
+                color: #698b9e;
+                font-size: 0.8rem;
+              }
+
+              textarea{
+                min-height: 220px;
+              }
+            }
+            .line.more-detail{
+              .d-flex{
+                margin: -5px;
+                .w{
+                  padding: 5px;
+                }
+                .cashoverall,
+                .startdate{
+                  flex-basis: 190px;
+                }
+
+                .rundate{
+                  flex: 1;
+                }
+              }
+            }
+            .line + .line {
+              margin: 10px 0 0 0;
+            }
           }
           .sub-services{
             .sub-service{
               & > .wrapper{
-                border: 0.5px solid #d5d5d5;
-                padding: 15px;
-                border-radius: 10px;
+                border: 0.5px dashed #8f8f8f;
+                padding: 8px;
+                border-radius: 5px;
                 -webkit-transition: all .5s;
                 transition: all .5s;
 
                 & > .title{
-                  text-transform: uppercase;
                   font-size: 1.1rem;
                   font-weight: bold;
-                  color: #6a6a6a;
+                  color: $color-blue-light;
                   position: relative;
                   outline: none;
                   cursor: pointer;
 
                   .subserv-item-text{
                     font-weight: 300;
-                    color: #8c8c8c;
+                    color: #6b6b6b;
                     text-transform: none;
-                    font-size: 0.9rem;
+                    font-size: 0.7rem;
                   }
 
                   .adder{
@@ -637,7 +696,7 @@ body.singlepage{
 
     .requester-form{
       background: #f5f4f4;
-      border-radius: 5px;
+      border-radius: 10px;
       border: 0.5px solid #dbdbdb;
       .redalert{
         color: $color-red;
@@ -676,6 +735,15 @@ body.singlepage{
         textarea{
           width: 100%;
           padding: 10px;
+          outline: none;
+          transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+          &:focus{
+            background-color: #fff;
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+          }
         }
       }
     }
@@ -689,7 +757,7 @@ body.singlepage{
   overflow: hidden;
   & > .header{
     text-align: center;
-    font-size: 1.5vw;
+    font-size: 1.3vw;
     color: #444444;
     text-transform: uppercase;
     padding: 15px;
@@ -705,6 +773,49 @@ body.singlepage{
         padding: 10px;
         font-weight: bold;
         font-size: 1.2rem;
+      }
+
+      & > .service-describe{
+        background: white;
+        & > .head{
+          background: $color-blue-light;
+          color: white;
+          font-weight: bold;
+          padding: 5px 15px;
+        }
+        & > .data{
+          padding: 10px 12px;
+          .line + .line {
+            margin: 10px 0 0 0;
+          }
+
+          .line {
+            .h{
+              color: #aaaaaa;
+            }
+            .d-flex{
+              align-items: center;
+              & > div {
+                padding: 5px;
+              }
+              .h {
+                flex-basis: 180px;
+              }
+              .v{
+                flex: 1;
+              }
+            }
+            &.mdesc{
+              .h, .v{
+                padding: 5px;
+              }
+
+              .v{
+                white-space: pre-wrap;
+              }
+            }
+          }
+        }
       }
 
       .subitem{
@@ -729,7 +840,7 @@ body.singlepage{
           padding: 15px 25px;
           font-size: 0.8rem;
           line-height: 1.3;
-          background: #ebebeb;
+          background: #ffffff;
           margin: 2px 0 0 0;
         }
 

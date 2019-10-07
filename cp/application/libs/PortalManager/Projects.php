@@ -476,12 +476,14 @@ class Projects
 
 		$d = $qry->fetch( \PDO::FETCH_ASSOC );
 
-		$d['cash'] = json_decode($d['cash'], true);
-		$d['cash_config'] = json_decode($d['cash_config'], true);
+		$d['cash'] = (array)json_decode($d['cash'], true);
+		$d['cash_config'] = (array)json_decode($d['cash_config'], true);
+		$d['services_cash_total'] = (array)json_decode($d['cash_config'], true);
+		$d['overall_service_details'] = (array)json_decode($d['overall_service_details'], true);
 		$d['services'] = $this->findServicesItems(json_decode($d['services'], true));
 		$d['subservices'] = $this->findServicesItems(json_decode($d['subservices'], true));
 		$d['subservices_items'] = $this->findServicesItems(json_decode($d['subservices_items'], true));
-		$d['service_description'] = json_decode($d['service_description'], true);
+		$d['service_description'] = (array)json_decode($d['service_description'], true);
 
 		$data = $d;
 

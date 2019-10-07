@@ -33,6 +33,7 @@
             <td><a href="/ajanlatkeresek/feldolgozatlan/<?=$request['hashkey']?>"><?=$request['name']?></a></td>
             <td><?=$request['email']?></td>
             <td>
+              <pre><?php //print_r($request['services_list']); ?></pre>
               <div class="request-services-tree">
                 <?php foreach ((array)$request['services_list'] as $serv): ?>
                 <div class="service">

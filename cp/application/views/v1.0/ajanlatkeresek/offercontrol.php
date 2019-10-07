@@ -17,11 +17,13 @@
           <?php endif; ?>
         </div>
         <div class="req-list">
-          <div class="requestgroup" ng-click="pickRequest(r)" ng-class="{offered: (r.user_offer_id), opened: (r.ID == readrequest), visited: (r.recepient_visited_at), 'declined': (r.recepient_declined==1), incomingoffer:(relation=='from' && r.admin_offer && r.admin_offer.accepted=='0'), acceptedoffer:(relation=='from' && r.admin_offer && r.admin_offer.accepted=='1')}" ng-repeat="r in requests">
+          <div class="requestgroup" ng-click="pickRequest(r)" ng-class="{offered: (r.user_offer_id), opened: (r.ID == readrequest), visited: (r.recepient_visited_at), 'declined': (r.recepient_declined==1 || (r.request_closed==1 && !r.user_offer_id)), incomingoffer:(relation=='from' && r.admin_offer && r.admin_offer.accepted=='0'), acceptedoffer:(relation=='from' && r.admin_offer && r.admin_offer.accepted=='1')}" ng-repeat="r in requests">
             <div class="head" ng-if="relation=='to'">
               <div class="" ng-if="r.recepient_declined==0">
-                <div class="name" ng-if="!r.user_offer_id"><strong><?=__('Új feldolgozatlan ajánlatkérés {{r.services.length}} db szolgáltatásra!')?></strong></div>
+                <div class="name" ng-if="!r.user_offer_id && r.request_closed==0"><strong><?=__('Új feldolgozatlan ajánlatkérés {{r.services.length}} db szolgáltatásra!')?></strong></div>
                 <div class="name" ng-if="r.user_offer_id"><strong><?=__('Ajánlat elküldve: {{r.services.length}} db szolgáltatásra!')?></strong></div>
+                <div class="name" ng-if="r.request_closed==1 && !r.user_offer_id"><strong><?=__('Ajánlat lezárva: {{r.services.length}} db szolgáltatásra!')?></strong></div>
+
               </div>
               <div class="name" ng-if="r.recepient_declined==1"><strong><?=__('Ajánlatkérés elutasítva: {{r.services.length}} db szolgáltatásra!')?></strong></div>
               <div class="reqdate" title="<?=__('Ajánlatkérés ideje')?>"><i class="far fa-clock"></i> {{r.offerout_at}}</div>
@@ -155,7 +157,7 @@
                         </div>
                       </div>
                       <div class="line mdesc">
-                        <div class="h"><?=__('Igények részletezése')?>:</div>
+                        <div class="h"><?=__('Megjegyzés / Részletek')?>:</div>
                         <div class="v"><strong>{{request.overall_service_details[serv.ID].description}}</strong><em ng-if="!request.overall_service_details[serv.ID].description"><?=__('nem lett meghatározva')?></em></div>
                       </div>
                     </div>
@@ -207,7 +209,7 @@
                       <button type="button" ng-if="request.recepient_declined==0 && !request.user_offer_id" class="btn btn-sm btn-danger" ng-click="runRequestAction(request.ID, 'decline')"><?=__('NEM ÉRDEKEL - Tárgytalan')?> <i class="fas fa-times"></i></button>
                     </div>
                     <div class="red-txt" ng-if="request.request_closed==1">
-                      <strong><?=__('Ezt az ajánlatkérőt lezárta az igénylő! Nem lehet rá ajánlatot küldeni!')?></strong>
+                      <strong><?=__('Ezt az ajánlatot lezárta az igénylő. Ajánlat beküldése nem lehetséges!')?></strong>
                     </div>
                   </div>
                 </div>

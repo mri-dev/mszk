@@ -124,6 +124,86 @@
                 </div>
               </div>
             </div>
+            <div class="row-header" ng-if="request.offerout == 0">
+              <h3><?=__('Igénylés elküldése a szolgáltatók felé')?></h3>
+              <div class="desc">
+                <?=__('Itt adhatja hozzá a lehetséges szolgáltatókat, akiknek ki szeretné küldeni az ajánlást!')?>
+              </div>
+            </div>
+            <div class="row-header" ng-if="request.offerout == 1">
+              <h3><?=__('Szolgáltatók listája')?></h3>
+              <div class="desc">
+                <?=__('Az alábbi listában láthatja, hogy mely szolgáltató(k)nak lett kiajánlva a kérés!')?>
+              </div>
+            </div>
+            <div class="dpad">
+              <div class="services-hints">
+                <div class="no-hints" ng-if="servicerAccounts.length==0">
+                  <div class="alert alert-danger">
+                    <?=__('Jelenleg nincs szolgáltató rögzítve a rendszerben!')?>
+                  </div>
+                </div>
+                <div class="service-user-list" ng-if="servicerAccounts.length!=0">
+                  <div class="service-group">
+                    <div class="listfilters" ng-if="request.elutasitva==0 && request.offerout == 0">
+                      <md-autocomplete
+                        id="custom-template"
+                        ng-disabled="saac.isDisabled"
+                        md-no-cache="saac.noCache"
+                        md-selected-item="saac.selectedItem"
+                        md-search-text-change="saac.searchTextChange(saac.searchText)"
+                        md-search-text="saac.searchText"
+                        md-selected-item-change="saac.selectedItemChange(request, user.ID)"
+                        md-items="user in saac.querySearch(saac.searchText)"
+                        md-item-text="user.nev"
+                        md-min-length="2"
+                        input-aria-label="<?=__('Szolgáltató')?>"
+                        placeholder="<?=__('Szolgáltatók keresése: írjon be legalább 2 karaktert a kereséshez!')?>"
+                        md-menu-class="autocomplete-custom-template"
+                        md-menu-container-class="custom-container">
+                        <md-item-template>
+                          <div class="item-wrapper">
+                            <div class="name">
+                              <strong>{{user.nev}}</strong>
+                              <span class="company" ng-if="user.total_data.data.company_name">// {{user.total_data.data.company_name}}</span>
+                              <span class="email">({{user.email}})</span>
+                            </div>
+                          </div>
+                        </md-item-template>
+                    </md-autocomplete>
+                    </div>
+                    <div class="servicers">
+                      <div class="user" ng-repeat="user in servicerAccounts" ng-if="request.passed_user_offer_id && request.passed_user_offer_id.indexOf(user.ID) !== -1">
+                        <div class="wrapper">
+                          <label for="servu{{service.item.ID}}_us{{user.ID}}"> <strong><span class="company" ng-if="user.total_data.data.company_name">{{user.total_data.data.company_name}}</span>{{user.nev}} (#{{user.ID}})</strong> {{user.email}}
+                            <div class="infos" ng-hide="request.offerout == 1">
+                              <span title="{{user.utoljara_belepett}}"><?=__('Belépett:')?> <strong>{{user.utoljara_belepett_dist}}</strong></span>
+                              <span title="{{user.regisztralt}}"><?=__('Regisztrált:')?> <strong>{{user.regisztralt_dist}}</strong></span>
+                            </div>
+                            <div class="infos" ng-show="request.offerout == 1">
+                              <span title="{{request.offerouts.users[user.ID].offerout_at}}"><?=__('Ajánlás kiküldve:')?> <strong>{{request.offerouts.users[user.ID].offerout_at_dist}}</strong></span>
+                            </div>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-right" ng-if="request.elutasitva==0 && request.offerout == 0">
+                    <button type="button" ng-if="!servicesrequestprogress && !servicesrequestsendedsuccess" class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
+                    <div class="" ng-if="servicesrequestprogress">
+                      <div class="alert alert-primary text-left">
+                        <?=__('Ajánlatkérés kiajánlása folyamatban van...')?> <i class="fas fa-spinner fa-spin"></i>
+                      </div>
+                    </div>
+                    <div class="" ng-if="servicesrequestsendedsuccess">
+                      <div class="alert alert-success text-left" ng-bind-html="servicesrequestsendedsuccess|unsafe">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div class="row-header">
               <h3><?=__('Ajánlatkérő')?></h3>
@@ -207,7 +287,7 @@
 
             <div class="message" ng-if="request.message">
               <div class="row-header">
-                  <h3><?=__('Megjegyzés az adminisztrátornak')?></h3>
+                  <h3><?=__('Ajánlatkérés szövege')?></h3>
               </div>
               <div class="dpad">
                 <div class="row">
@@ -243,7 +323,7 @@
                         </div>
                       </div>
                       <div class="line mdesc">
-                        <div class="h"><?=__('Igények részletezése')?>:</div>
+                        <div class="h"><?=__('Megjegyzés / Részletek')?>:</div>
                         <div class="v"><strong>{{request.overall_service_details[serv.ID].description}}</strong><em ng-if="!request.overall_service_details[serv.ID].description"><?=__('nem lett meghatározva')?></em></div>
                       </div>
                     </div>
@@ -286,86 +366,6 @@
               </div>
             </div>
 
-            <div class="row-header" ng-if="request.offerout == 0">
-              <h3><?=__('Igénylés elküldése a szolgáltatók felé')?></h3>
-              <div class="desc">
-                <?=__('Itt adhatja hozzá a lehetséges szolgáltatókat, akiknek ki szeretné küldeni az ajánlást!')?>
-              </div>
-            </div>
-            <div class="row-header" ng-if="request.offerout == 1">
-              <h3><?=__('Szolgáltatók listája')?></h3>
-              <div class="desc">
-                <?=__('Az alábbi listában láthatja, hogy mely szolgáltató(k)nak lett kiajánlva a kérés!')?>
-              </div>
-            </div>
-            <div class="dpad">
-              <div class="services-hints">
-                <div class="no-hints" ng-if="servicerAccounts.length==0">
-                  <div class="alert alert-danger">
-                    <?=__('Jelenleg nincs szolgáltató rögzítve a rendszerben!')?>
-                  </div>
-                </div>
-                <div class="service-user-list" ng-if="servicerAccounts.length!=0">
-                  <div class="service-group">
-                    <div class="listfilters" ng-if="request.elutasitva==0 && request.offerout == 0">
-                      <md-autocomplete
-                        id="custom-template"
-                        ng-disabled="saac.isDisabled"
-                        md-no-cache="saac.noCache"
-                        md-selected-item="saac.selectedItem"
-                        md-search-text-change="saac.searchTextChange(saac.searchText)"
-                        md-search-text="saac.searchText"
-                        md-selected-item-change="saac.selectedItemChange(request, user.ID)"
-                        md-items="user in saac.querySearch(saac.searchText)"
-                        md-item-text="user.nev"
-                        md-min-length="0"
-                        input-aria-label="<?=__('Szolgáltató')?>"
-                        placeholder="<?=__('Szolgáltatók keresése')?>"
-                        md-menu-class="autocomplete-custom-template"
-                        md-menu-container-class="custom-container">
-                        <md-item-template>
-                          <div class="item-wrapper">
-                            <div class="name">
-                              <strong>{{user.nev}}</strong>
-                              <span class="company" ng-if="user.total_data.data.company_name">// {{user.total_data.data.company_name}}</span>
-                              <span class="email">({{user.email}})</span>
-                            </div>
-                          </div>
-                        </md-item-template>
-                    </md-autocomplete>
-                    </div>
-                    <div class="servicers">
-                      <div class="user" ng-repeat="user in servicerAccounts" ng-if="request.passed_user_offer_id && request.passed_user_offer_id.indexOf(user.ID) !== -1">
-                        <div class="wrapper">
-                          <label for="servu{{service.item.ID}}_us{{user.ID}}"> <strong><span class="company" ng-if="user.total_data.data.company_name">{{user.total_data.data.company_name}}</span>{{user.nev}} (#{{user.ID}})</strong> {{user.email}}
-                            <div class="infos" ng-hide="request.offerout == 1">
-                              <span title="{{user.utoljara_belepett}}"><?=__('Belépett:')?> <strong>{{user.utoljara_belepett_dist}}</strong></span>
-                              <span title="{{user.regisztralt}}"><?=__('Regisztrált:')?> <strong>{{user.regisztralt_dist}}</strong></span>
-                            </div>
-                            <div class="infos" ng-show="request.offerout == 1">
-                              <span title="{{request.offerouts.users[user.ID].offerout_at}}"><?=__('Ajánlás kiküldve:')?> <strong>{{request.offerouts.users[user.ID].offerout_at_dist}}</strong></span>
-                            </div>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-right" ng-if="request.elutasitva==0 && request.offerout == 0">
-                    <button type="button" ng-if="!servicesrequestprogress && !servicesrequestsendedsuccess" class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
-                    <div class="" ng-if="servicesrequestprogress">
-                      <div class="alert alert-primary text-left">
-                        <?=__('Ajánlatkérés kiajánlása folyamatban van...')?> <i class="fas fa-spinner fa-spin"></i>
-                      </div>
-                    </div>
-                    <div class="" ng-if="servicesrequestsendedsuccess">
-                      <div class="alert alert-success text-left" ng-bind-html="servicesrequestsendedsuccess|unsafe">
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

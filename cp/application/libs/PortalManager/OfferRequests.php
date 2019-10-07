@@ -85,13 +85,12 @@ class OfferRequests
 				$d['cash_config'] = json_decode($d['cash_config'], true);
 				$d['services'] = $this->findServicesItems((array)json_decode($d['services'], true));
 				$d['subservices'] = $this->findServicesItems((array)json_decode($d['subservices'], true));
+				$d['subservices_items'] = $this->findServicesItems((array)json_decode($d['subservices_items'], true));
 				$d['service_description'] = json_decode($d['service_description'], true);
 				$d['overall_service_details'] = json_decode($d['overall_service_details'], true);
 				$d['services_cash_total'] = json_decode($d['services_cash_total'], true);
 				$d['user'] = $users->get( array('user' => $d['user_id'], 'userby' => 'ID') );
 			}
-
-			$d['subservices_items'] = $this->findServicesItems((array)json_decode($d['subservices_items'], true));
 			$d['requested_at'] = \Helper::distanceDate($d['requested']);
 
 			if (isset($arg['servicetree']))
@@ -639,7 +638,7 @@ class OfferRequests
 		$q .= " and ro.user_id = :uid";
 		$qarg['uid'] = $uid;
 
-		$q .= " ORDER BY ro.recepient_declined ASC, ro.user_offer_id ASC, ro.recepient_visited_at ASC, ro.offerout_at DESC";
+		$q .= " ORDER BY ro.recepient_declined ASC, r.closed ASC, ro.user_offer_id DESC,ro.offerout_at DESC";
 
 		if (isset($arg['limit'])) {
 			$limit = (!empty($arg['limit'])) ? (int)$arg['limit'] : 10;
@@ -1554,16 +1553,19 @@ class OfferRequests
 		$data = array();
 
 		$data['cash']['total'] = $temp['cash_total'];
-		$data['cash']['subservices_overall'] = json_decode($temp['cash'], true);
-		$data['cash']['subservicesitems'] = json_decode($temp['cash_config'], true);
+		$data['cash']['subservices_overall'] = (array)json_decode($temp['cash'], true);
+		$data['cash']['subservicesitems'] = (array)json_decode($temp['cash_config'], true);
 
-		$data['services']['ids'] = json_decode($temp['services'], true);
+		$data['services']['ids'] = (array)json_decode($temp['services'], true);
 		$data['services']['items'] = $this->findServicesItems( $data['services']['ids'] );
-		$data['subservices']['ids'] = json_decode($temp['subservices'], true);
+		$data['subservices']['ids'] = (array)json_decode($temp['subservices'], true);
 		$data['subservices']['items'] = $this->findServicesItems( $data['subservices']['ids'] );
-		$data['subservicesitems']['ids'] = json_decode($temp['subservices_items'], true);
+		$data['subservicesitems']['ids'] = (array)json_decode($temp['subservices_items'], true);
 		$data['subservicesitems']['items'] = $this->findServicesItems( $data['subservicesitems']['ids'] );
-		$data['subservices_descriptions'] = json_decode($temp['service_description'], true);
+		$data['subservices_descriptions'] = (array)json_decode($temp['service_description'], true);
+
+		$data['overall_service_details'] = (array)json_decode($temp['overall_service_details'], true);
+		$data['services_cash_total'] = (array)json_decode($temp['services_cash_total'], true);
 
 		$data['rawdb'] = $temp;
 		unset($temp);
@@ -1727,7 +1729,7 @@ class OfferRequests
 			$ret['user_id'] = $user_id;
 
 			// E-mail - Igénylő értesítő
-			if ( false )
+			if ( true )
 			{
 				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
 				$mail->add( trim($requester['email']) );
@@ -1754,7 +1756,7 @@ class OfferRequests
 			}
 
 	    // E-mail - Admin értesítő
-			if (false)
+			if (true)
 			{
 				$mail = new Mailer( $this->db->settings['page_title'], SMTP_USER, $this->db->settings['mail_sender_mode'] );
 				$mail->add( $this->db->settings['alert_email'] );

@@ -42,11 +42,49 @@
   </tbody>
 </table>
 <br>
+
+<div><h3>Az ajánlatkérésének szövege</h3></div>
+<div class="">
+  <?php if ( $configuration['rawdb']['message'] != ''): ?>
+    <?php echo nl2br($configuration['rawdb']['message']); ?>
+  <?php else: ?>
+    <em><?=__('nem lett megadva')?></em>
+  <?php endif; ?>
+</div>
+
+<br>
+
 <div><h3>Leadott konfigurációs paraméterek</h3></div>
 <div class="selected-services">
   <?php foreach ((array)$configuration['services']['items'] as $service): ?>
   <div class="service">
     <div class="head"><?php echo $service['neve']; ?></div>
+    <div class="service-describe">
+      <div class="data">
+        <div class="line">
+          <div class="d-flex">
+            <div class="h"><?=__('Kezdő időpont')?>:</div>
+            <div class="v"><strong><?=($configuration['overall_service_details'][$service['ID']]['date_start'] != '')?date('Y. m. d.', strtotime($configuration['overall_service_details'][$service['ID']]['date_start'])):''?></strong><? if($configuration['overall_service_details'][$service['ID']]['date_start'] == ''): ?><em><?=__('nem lett meghatározva')?></em><? endif; ?></div>
+          </div>
+        </div>
+        <div class="line">
+          <div class="d-flex">
+            <div class="h"><?=__('Időtartam')?>:</div>
+            <div class="v"><strong><?=$configuration['overall_service_details'][$service['ID']]['date_duration']?></strong><? if($configuration['overall_service_details'][$service['ID']]['date_start'] == ''): ?><em><?=__('nem lett meghatározva')?></em><? endif; ?></div>
+          </div>
+        </div>
+        <div class="line">
+          <div class="d-flex">
+            <div class="h"><?=__('Teljes költségkeret')?>:</div>
+            <div class="v"><strong><?=\Helper::cashFormat($configuration['overall_service_details'][$service['ID']]['cash_total'])?><?=($configuration['overall_service_details'][$service['ID']]['cash_total'] != '')?' '.__('Ft + ÁFA'):''?></strong><? if($configuration['overall_service_details'][$service['ID']]['cash_total'] == ''): ?><em><?=__('nem lett meghatározva')?></em><? endif; ?></div>
+          </div>
+        </div>
+        <div class="line mdesc">
+          <div class="h"><?=__('Megjegyzés / Részletek')?>:</div>
+          <div class="v"><strong><?=$configuration['overall_service_details'][$service['ID']]['description']?></strong><? if($configuration['overall_service_details'][$service['ID']]['description'] == ''): ?><em><?=__('nem lett meghatározva')?></em><? endif; ?></div>
+        </div>
+      </div>
+    </div>
     <?php foreach ((array)$configuration['subservices']['items'] as $subservice): if($subservice['szulo_id'] != $service['ID']) continue; ?>
     <div class="subservice">
       <div class="head"><?php echo $subservice['neve']; ?></div>
@@ -61,7 +99,7 @@
       <?php if (!empty($configuration['cash']['subservices_overall'][$subservice['ID']])): ?>
         <div class="cashall">
           <div class="cashall-header">Költségkeret:</div>
-          <?php echo number_format($configuration['cash']['subservices_overall'][$subservice['ID']], 0, '.', ' '); ?> Ft
+          <?php echo number_format($configuration['cash']['subservices_overall'][$subservice['ID']], 0, '.', ' '); ?> <?=__('Ft + ÁFA')?>
         </div>
       <?php endif; ?>
       <?php if (!empty($configuration['subservices_descriptions'][$subservice['ID']])): ?>
@@ -75,7 +113,7 @@
   </div>
   <?php endforeach; ?>
   <div class=serv-footer>
-    Teljes költségvetés összege: <strong><?php echo number_format($configuration['cash']['total'], 0, '.', ' '); ?> Ft</strong>
+    Teljes költségvetés összege: <strong><?php echo number_format($configuration['cash']['total'], 0, '.', ' '); ?> <?=__('Ft + ÁFA')?></strong>
   </div>
 </div>
 
@@ -109,9 +147,10 @@
 /* line 875, sass/media.scss */
 .selected-services .service .subservice > .head {
   color: #ff7979;
-  padding: 5px 0;
+  padding: 5px;
   font-size: 1.1rem;
   font-weight: bold;
+  background: #eeeeee;
 }
 /* line 882, sass/media.scss */
 .selected-services .service .subservice .subserviceitem {
@@ -149,6 +188,43 @@
   font-size: 1.1rem;
   background: #f1f1f1;
   border-top: 0.5px solid #d7d7d7;
+}
+
+/* line 991, sass/media.scss */
+.selected-services .service-describe > .data {
+  padding: 10px 12px;
+}
+/* line 993, sass/media.scss */
+.selected-services .service-describe > .data .line + .line {
+  margin: 10px 0 0 0;
+}
+/* line 998, sass/media.scss */
+.selected-services .service-describe > .data .line .h {
+  color: #aaaaaa;
+}
+/* line 1001, sass/media.scss */
+.selected-services .service-describe > .data .line .d-flex {
+  align-items: center;
+}
+/* line 1003, sass/media.scss */
+.selected-services .service-describe > .data .line .d-flex > div {
+  padding: 5px;
+}
+/* line 1006, sass/media.scss */
+.selected-services .service-describe > .data .line .d-flex .h {
+  flex-basis: 180px;
+}
+/* line 1009, sass/media.scss */
+.selected-services .service-describe > .data .line .d-flex .v {
+  flex: 1;
+}
+/* line 1014, sass/media.scss */
+.selected-services .service-describe > .data .line.mdesc .h, .selected-services .service-describe > .data .line.mdesc .v {
+  padding: 5px;
+}
+/* line 1018, sass/media.scss */
+.selected-services .service-describe > .data .line.mdesc .v {
+  white-space: pre-wrap;
 }
 </style>
 

@@ -28,6 +28,9 @@ class ajanlatkeresek extends Controller {
 
 			$offerrequests = new OfferRequests(array('db' => $this->db));
 
+			$test = $offerrequests->collectOfferData('4035189ba4f484830fe4472de316f1a5');
+			//print_r($test);
+
 			if ($notoffered_requests != 0)
 			{
 				$arg = array('offerout' => 0, 'elutasitva' => 0, 'servicetree' => true, 'shortlist' => true);

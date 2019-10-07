@@ -503,7 +503,7 @@ body.singlepage .page-reader .header h1 {
 }
 /* line 501, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line textarea {
-  min-height: 220px;
+  min-height: 120px;
 }
 /* line 506, sass/media.scss */
 .ajanlat-requester .step-containers .services-configurator .services-group .service .service-describe .line.more-detail .d-flex {

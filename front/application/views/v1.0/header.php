@@ -30,7 +30,6 @@
         <div class="navigator">
           <ul>
             <li><a href="/" class="<?=(!isset($_GET['tag']) || $_GET['ajanlatkeres'] == '1')?'active':''?>"><?=__('Vállalkozásoknak')?></a></li>
-            <li><a href="/cegeknek" class="<?=($_GET['tag'] == 'page/cegeknek')?'active':''?>"><?=__('Cégeknek')?></a></li>
           </ul>
         </div>
       </div>

@@ -595,7 +595,6 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 		isDisabled: false,
 		noCache: true,
 		querySearch: function(query){
-
 			var results = query ? $scope.servicerAccounts.filter(createFilterFor(query)) : $scope.servicerAccounts.filter(checkPickedUsers());
 			return results;
 		},
@@ -608,7 +607,6 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 			if (user && request.passed_user_offer_id.indexOf(user) === -1) {
 				request.passed_user_offer_id.push(user);
 			}
-
 			this.selectedItem = null;
 		}
 	};

@@ -1,9 +1,10 @@
 <?php
-
-class ertesitesek extends Controller{
+class ertesitesek extends Controller
+{
 		function __construct(){
 			parent::__construct();
 			parent::$pageTitle = __('Értesítésési központ');
+
 			$this->addPagePagination(array(
 				'link' => '/',
 				'title' => parent::$pageTitle

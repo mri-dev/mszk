@@ -64,10 +64,10 @@
                   <div class="service" ng-repeat="service in resources.szolgaltatasok" ng-hide="selected_services.indexOf(service.ID)===-1">
                     <div class="head">{{service.neve}}</div>
                     <div class="service-describe">
-                      <div class="head"><h3><?=__('Adja meg az Ön igényeit')?></h3></div>
+                      <div class="head"><h3><?=__('Részletek megadása')?></h3></div>
                       <div class="line">
-                        <label for=""><?=__('Igények részletes leírása')?></label>
-                        <textarea class="form-control editor" ng-model="overall_service_details[service.ID].description" placeholder="<?=__('Milyen igényei vannak a(z) {{service.neve}} szolgáltatással kapcsolatban?')?>"></textarea>
+                        <label for=""><?=__('Megjegyzés')?></label>
+                        <textarea class="form-control editor" ng-model="overall_service_details[service.ID].description" placeholder="<?=__('Itt adhatja meg a(z) {{service.neve}} szolgáltatással kapcsolatos információit.')?>"></textarea>
                       </div>
                       <div class="line more-detail">
                         <div class="d-flex">
@@ -406,7 +406,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12">
-                        <textarea style="min-height: 300px;" ng-model="requester.message" placeholder="<?=__('Üzenet')?>"></textarea>
+                        <textarea style="min-height: 400px;" ng-model="requester.message" placeholder="<?=__('Az ajánlatkérésének üzenete')?>"></textarea>
                       </div>
                     </div>
                     <div class="row">

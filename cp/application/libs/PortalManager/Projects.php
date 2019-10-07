@@ -431,8 +431,8 @@ class Projects
 			$d['requester_paidamount'] = $this->getProjectPaidAmount( $d['requester_project_data']['ID'], 'requester' );
 			$d['servicer_paidamount'] = $this->getProjectPaidAmount( $d['servicer_project_data']['ID'], 'servicer' );
 
-			$d['project_start'] = (empty($d['project_start']) || $d['project_start'] == '1970-01-01') ? false : $d['project_start'];
-			$d['project_end'] = (empty($d['project_end']) || $d['project_end'] == '1970-01-01') ? false : $d['project_end'];
+			$d['project_start'] = (empty($d['project_start']) || $d['project_start'] == '1970-01-01' || $d['project_start'] == '0000-00-00') ? null : $d['project_start'];
+			$d['project_end'] = (empty($d['project_end']) || $d['project_end'] == '1970-01-01' || $d['project_end'] == '0000-00-00') ? null : $d['project_end'];
 
 			// Timeline
 			if ($controll_user_admin)

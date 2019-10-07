@@ -163,7 +163,7 @@
           <div class="data-footer">
             <div class="d-flex align-items-center">
               <div class="title">
-                <h3><?=__('Beszélgetések')?></h3>
+                <h3><?=__('Olvasatlan üzenetek')?></h3>
                 <a href="/uzenetek"><?=__('Tovább az összes üzenethez')?></a>
               </div>
               <div class="count">

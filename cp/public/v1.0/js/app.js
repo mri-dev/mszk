@@ -56,8 +56,9 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 		$scope.loadLists(function( data )
 		{
 			// Watches
+			
 			$scope.$watch('project.project_start_Date', function(newValues, oldValues, scope){
-				if (typeof newValues !== 'undefined') {
+				if (typeof newValues !== 'undefined' && newValues) {
 					$scope.project.project_start = $filter('date')(newValues, "yyyy-MM-dd");
 				}
 			});
@@ -69,17 +70,19 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 				}
 			});
 			$scope.$watch('project.project_end_Date', function(newValues, oldValues, scope){
-				if (typeof newValues !== 'undefined') {
+				if (typeof newValues !== 'undefined' && newValues) {
 					$scope.project.project_end = $filter('date')(newValues, "yyyy-MM-dd");
 				}
 			});
 			$scope.$watch('project.project_end', function(newValues, oldValues, scope){
+				console.log(newValues);
 				if (newValues) {
 					$scope.project.project_end_Date = new Date(newValues);
 				} else {
 					$scope.project.project_end_Date = '';
 				}
 			});
+
 		});
 	}
 

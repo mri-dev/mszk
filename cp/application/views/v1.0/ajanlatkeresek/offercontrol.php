@@ -44,7 +44,6 @@
               <i class="far fa-folder-open"></i>
               <i class="fas fa-ellipsis-v"></i>
               <?=__('Nincs elérhető ajánlatkérés')?>
-
             </div>
           </div>
         </div>
@@ -370,7 +369,7 @@
                     <?=__('Ajánlott szolgáltatás díj')?>
                   </div>
                   <div class="col-md-9">
-                    <strong>{{request.offer.price}} <?=__('Ft + ÁFA')?></strong>
+                    <strong>{{request.offer.price|cash}}</strong>
                   </div>
                 </div>
                 <div class="row">

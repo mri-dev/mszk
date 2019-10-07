@@ -17,4 +17,4 @@
 <?=$this->addJS('bootstrap4/bootstrap.min', false, true)?>
 <?=$this->addJS('fancybox/jquery.fancybox')?>
 <?=$this->addJS('tinymce/tinymce.min')?>
-<?=$this->addJS('app', false, false, true)?>
+<?=$this->addJS('app', false, false, false)?>

@@ -6,7 +6,7 @@
 <?=$this->addStyle('master.min', false, true)?>
 <?=$this->addStyle('bootstrap4/bootstrap.min', false, true)?>
 <link rel="stylesheet" type="text/css" href="<?=DOMAIN?>public/base/base.css" />
-<?=$this->addStyle('media', false, false, true)?>
+<?=$this->addStyle('media', false, false, false)?>
 <!-- JS's -->
 <?php $this->switchJSAsync('defer'); ?>
 <?=$this->addJS('jquery/jquery-n-ui.pack.min', false, true)?>
@@ -14,4 +14,4 @@
 <!-- Angular Material Library -->
 <?=$this->addJS('angularjs/angular.material.pack.min', false, true)?>
 <?=$this->addJS('bootstrap4/bootstrap.min', false, true)?>
-<?=$this->addJS('app', false, false, true)?>
+<?=$this->addJS('app', false, false, false)?>

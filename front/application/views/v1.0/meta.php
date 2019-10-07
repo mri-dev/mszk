@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href="<?=DOMAIN?>public/base/base.css" />
 <?=$this->addStyle('media', false, false, true)?>
 <!-- JS's -->
+<?php $this->switchJSAsync('defer'); ?>
 <?=$this->addJS('jquery/jquery-n-ui.pack.min', false, true)?>
 <?=$this->addJS('angularjs/angular.pack.1.5.5.min', false, true)?>
 <!-- Angular Material Library -->

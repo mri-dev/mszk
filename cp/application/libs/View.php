@@ -108,13 +108,22 @@ class View {
 			return '<meta name="'.$name.'" content="'.$content.'" />'."\n\r";
 		}
 
+		public function switchJSAsync( $key )
+		{
+			if ($key === false) {
+				$this->jsassync = false;
+			} else {
+				$this->jsassync = $key;
+			}
+		}
+
 		function addJS($file, $type = false, $source = true, $ts = false){
 			if($source){
 				$wt = (!$type) ? ADMROOT.JS.$file.'.js'.( ((defined('DEVMODE') && DEVMODE === true) || $ts)?'?t='.uniqid():'' ) : $file ;
-				return '<script type="text/javascript" src="'.$wt.'"></script>'."\n\r";
+				return '<script '.(($this->jsassync && $this->jsassync !== false)?$this->jsassync:'').' type="text/javascript" src="'.$wt.'"></script>'."\n\r";
 			}else{
 				$wt = (!$type) ? SJS.$file.'.js'.( ((defined('DEVMODE') && DEVMODE === true) || $ts)?'?t='.uniqid():'' ) : $file ;
-				return '<script type="text/javascript" src="'.$wt.'"></script>'."\n\r";
+				return '<script '.(($this->jsassync && $this->jsassync !== false)?$this->jsassync:'').' type="text/javascript" src="'.$wt.'"></script>'."\n\r";
 			}
 		}
 

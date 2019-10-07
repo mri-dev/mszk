@@ -9,7 +9,7 @@
    	<? $this->render('meta'); ?>
     <?php if ($this->_USER): ?>
       <script type="text/javascript">
-      	$(function(){
+        $(function(){
   			var slideMenu 	= $('#content .slideMenu');
   			var closeNum 	= slideMenu.width() - 75;
   			var isSlideOut 	= getMenuState();

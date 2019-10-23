@@ -631,7 +631,8 @@ class OfferRequests
 			ro.user_offer_id,
 			ro.recepient_visited_at,
 			ro.recepient_declined,
-			ro.recepient_accepted
+			ro.recepient_accepted,
+			ro.kozvetito_comment
 		FROM requests_offerouts as ro
 		LEFT OUTER JOIN requests as r ON r.ID = ro.request_id
 		WHERE 1=1";
@@ -1165,7 +1166,8 @@ class OfferRequests
 			ro.ID,
 			ro.user_id,
 			ro.offerout_at,
-			ro.requester_accepted
+			ro.requester_accepted,
+			ro.kozvetito_comment
 		FROM requests_offerouts as ro
 		WHERE 1=1 and ro.request_id = :rid";
 
@@ -1329,7 +1331,7 @@ class OfferRequests
 		return $list;
 	}
 
-	public function sendServiceRequest( $request_hashkey = false, $tousers )
+	public function sendServiceRequest( $request_hashkey = false, $tousers, $kozvetito_comment = false )
 	{
 		$to_servicers = array();
 		$request_id = 0;
@@ -1373,12 +1375,14 @@ class OfferRequests
 		if ( $to_servicers )
 		{
 			$outgo_emails = array();
+			$kozvetito_comment = (empty($kozvetito_comment)) ? NULL : addslashes($kozvetito_comment);
 			foreach ( (array)$to_servicers as $u )
 			{
 				$user_email = $this->db->squery("SELECT email FROM felhasznalok WHERE ID = :id", array('id' => $u))->fetchColumn();
 				$this->db->insert(
 					"requests_offerouts",
 					array(
+						'kozvetito_comment' => $kozvetito_comment,
 						'user_id' => (int)$u,
 						'request_id' => $request_id
 					)

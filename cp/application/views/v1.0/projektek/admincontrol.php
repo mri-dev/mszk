@@ -760,6 +760,13 @@
 
           <label for=""><?=__('Ajánlat részletei')?>:</label>
           <div class="pval" ng-bind-html="project.servicer_project_data.offer_data.message|unsafe"></div>
+
+          <div class="" ng-if="project.offer.kozvetito_comment">
+            <label for=""><?=__('Közvetítő megjegyzése')?>:</label>
+            <div class="pval" ng-bind-html="project.offer.kozvetito_comment|unsafe"style="white-space: pre-line;"></div>
+          </div>
+
+
         </div>
       </div>
     </div>

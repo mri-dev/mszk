@@ -45,6 +45,10 @@ class ajanlatkeresek extends Controller {
 
 		public function bejovo()
 		{
+			if ( $this->view->_USERDATA['data']['user_group'] == 'user' ) {
+        \Helper::reload('/ajanlatkeresek/kimeno');
+      }
+
 			parent::$pageTitle = __('Bejövő ajánlatkérések');
 			$this->addPagePagination(array(
 				'link' => '/'.__CLASS__.'/'.__FUNCTION__,

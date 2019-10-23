@@ -21,15 +21,17 @@
           <div class="count"><?=(int)$this->badges['offers']['outbox']?></div>
         </div>
       </div>
-      <div class="col ct-info color-green">
-        <div class="d-flex">
-          <div class="ico">
-            <div class="ico-wrapper"><i class="fas fa-file-import"></i></div>
+      <?php if ($this->_USERDATA['data']['user_group'] == 'szolgaltato'): ?>
+        <div class="col ct-info color-green">
+          <div class="d-flex">
+            <div class="ico">
+              <div class="ico-wrapper"><i class="fas fa-file-import"></i></div>
+            </div>
+            <div class="title"><?=__('Bejövő ajánlatkérések')?><div class="line"></div></div>
+            <div class="count"><?=(int)$this->badges['offers']['inbox']?></div>
           </div>
-          <div class="title"><?=__('Bejövő ajánlatkérések')?><div class="line"></div></div>
-          <div class="count"><?=(int)$this->badges['offers']['inbox']?></div>
         </div>
-      </div>
+      <?php endif; ?>
       <?php else: ?>
         <div class="col ct-info color-green">
           <div class="d-flex">
@@ -334,7 +336,12 @@
                   <div class="holder">
                     <div class="data">
                       <div class="title">
-                        <a href="/projektek/projekt/<?=$d['order_hashkey']?>" target="_blank"><strong><?=$d['title']?></strong></a>
+                        <a href="/projektek/projekt/<?=$d['order_hashkey']?>" target="_blank">
+                          <strong><?=$d['admin_title']?></strong>
+                          <?php if ($d['title'] != '' && !$this->is_admin_logged): ?>
+                          <div class="user-title"><?=$d['title']?></div>
+                          <?php endif; ?>
+                        </a>
                       </div>
                       <div class="subtitle">
                         <?php if ($this->is_admin_logged): ?>
@@ -455,7 +462,7 @@
         </div>
       </div>
       <?php endif; ?>
-      <?php if (!$this->is_admin_logged): ?>
+      <?php if (!$this->is_admin_logged && $this->_USERDATA['data']['user_group'] == 'szolgaltato'): ?>
       <div class="wblock color-green">
         <div class="data-container">
           <?php $doc = $this->dashboard['requests_in']; ?>

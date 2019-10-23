@@ -50,7 +50,11 @@ class projektek extends Controller
 			if ($this->view->is_admin_logged) {
 				parent::$pageTitle = $projectdata['admin_title']. ' | Projektek';
 			} else {
-				parent::$pageTitle = $projectdata[$projectdata['my_relation'].'_title']. ' | Projektek';
+				if ($projectdata[$projectdata['my_relation'].'_title'] != '') {
+					parent::$pageTitle = $projectdata['admin_title'].' ('.$projectdata[$projectdata['my_relation'].'_title'].') | Projektek';
+				} else {
+					parent::$pageTitle = $projectdata['admin_title']. ' | Projektek';
+				}
 			}
 
 			$outputdocs = array();

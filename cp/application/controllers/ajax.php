@@ -229,7 +229,7 @@ class ajax extends Controller
 						case 'sendServiceRequest':
 							$requests = new OfferRequests( array('db' => $this->db) );
 							try {
-								$ret['t'] = $requests->sendServiceRequest( $request, $servicesus );
+								$ret['t'] = $requests->sendServiceRequest( $request, $servicesus, $kozvetito_comment );
 								$this->setSuccess(__('Sikeresen kiajánlotta a szolgáltatók felé az ajánlatkérést.'), $ret);
 							} catch (\Exception $e) {
 								$this->escape($e->getMessage(), $ret);

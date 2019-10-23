@@ -56,7 +56,7 @@ a.controller("ProjectControl", ['$scope', '$http', '$mdToast', '$mdDialog', '$sc
 		$scope.loadLists(function( data )
 		{
 			// Watches
-			
+
 			$scope.$watch('project.project_start_Date', function(newValues, oldValues, scope){
 				if (typeof newValues !== 'undefined' && newValues) {
 					$scope.project.project_start = $filter('date')(newValues, "yyyy-MM-dd");
@@ -934,6 +934,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 			data: $.param({
 				type: "Requests",
 				mode: 'sendServiceRequest',
+				kozvetito_comment: $scope.request.kozvetito_comment,
 				servicesus: $scope.request.passed_user_offer_id,
 				request: $scope.request.hashkey,
 			})

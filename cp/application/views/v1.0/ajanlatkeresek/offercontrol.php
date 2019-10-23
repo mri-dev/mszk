@@ -127,7 +127,12 @@
                 </div>
               </div>
             </div>
-
+            <div class="row-header">
+              <h3><?=__('Ajánlatkérés szövege')?></h3>
+            </div>
+            <div class="dpad">
+              <div class="" ng-bind-html="request.message|unsafe"></div>
+            </div>
             <div class="row-header">
               <h3><?=__('Igényelt szolgáltatások')?></h3>
             </div>
@@ -192,6 +197,14 @@
                 {{request.cash_total|cash}}
               </div>
             </div>
+
+            <div ng-if="relation=='to' && request.kozvetito_comment">
+              <div class="row-header"><h3><?=__('Közvetítői megjegyzés')?></h3></div>
+              <div class="dpad">
+                <div class="comment" ng-bind-html="request.kozvetito_comment|unsafe" style="white-space: pre-line;"></div>
+              </div>
+            </div>
+
             <div class="" ng-if="!request.user_offer_id && relation=='to'">
               <div class="row-header">
                   <h3><?=__('Műveletek')?></h3>

@@ -9,8 +9,12 @@
         <table class="table table-bordered">
           <tbody>
             <tr ng-if="project.my_relation!='admin'">
-              <td><?=__('Elnevezés')?></td>
-              <td><strong>{{project.title}}</strong></td>
+              <td><?=__('Projekt')?></td>
+              <td><strong>{{project.admin_title}}</strong></td>
+            </tr>
+            <tr ng-if="project.my_relation!='admin'">
+              <td><?=__('Projekt saját elnevezése / azonosítója')?></td>
+              <td><em>{{project.title}}</em></td>
             </tr>
             <tr>
               <td><?=__('Státusz')?></td>
@@ -492,6 +496,13 @@
      </table>
      <h4><?=__('Ajánlatkérés szövege')?></h4>
      <div class="message" ng-bind-html="project.request_data.message|unsafe"></div>
+
+     <div class="" ng-if="project.offer.kozvetito_comment && project.my_relation=='servicer'">
+       <br>
+       <h4><?=__('Közvetítő megjegyzése')?></h4>
+       <div class="message" ng-bind-html="project.offer.kozvetito_comment|unsafe" style="white-space: pre-line;"></div>
+     </div>
+
     </div>
   </div>
 </div>

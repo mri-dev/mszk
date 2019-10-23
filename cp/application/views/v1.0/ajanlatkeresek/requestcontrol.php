@@ -105,6 +105,11 @@
                         <i class="fa fa-bars" ng-click="toggleDetails('offerdet', offer.ID, $event)" title="<?=__('Ajánlat részletei')?>"></i>
                       </div>
                       <div class="details" id="offerdet{{offer.ID}}">
+                        <div class="message" ng-if="request.offerouts.data[offer.ID].kozvetito_comment">
+                          <h4><?=__('Közvetítői megjegyzés')?></h4>
+                          <div ng-bind-html="request.offerouts.data[offer.ID].kozvetito_comment|unsafe" style="white-space: pre-line;"></div>
+                          <br>
+                        </div>
                         <div class="message">
                           <h4><?=__('Beérkezett ajánlat tartalma')?></h4>
                           <div ng-bind-html="offer.message|unsafe" style="white-space: pre-line;"></div>
@@ -189,16 +194,18 @@
                     </div>
                   </div>
                   <div class="text-right" ng-if="request.elutasitva==0 && request.offerout == 0">
-                    <button type="button" ng-if="!servicesrequestprogress && !servicesrequestsendedsuccess" class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
+                    <div class="alert alert-warning" style="text-align:left;" ng-if="!request.passed_user_offer_id"><?=__('Az ajánlat kiajánlásához legalább 1 szolgáltatót meg kell jelölnie!')?></div>
+                    <div class="kozv-comment" ng-if="!servicesrequestprogress && !servicesrequestsendedsuccess && request.passed_user_offer_id">
+                      <textarea class="form-control" ng-model="request.kozvetito_comment" placeholder="<?=__('Közvetítői megjegyzés a szolgáltatónak...')?>"></textarea>
+                      <button type="button"  class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
+                    </div>
                     <div class="" ng-if="servicesrequestprogress">
                       <div class="alert alert-primary text-left">
                         <?=__('Ajánlatkérés kiajánlása folyamatban van...')?> <i class="fas fa-spinner fa-spin"></i>
                       </div>
                     </div>
                     <div class="" ng-if="servicesrequestsendedsuccess">
-                      <div class="alert alert-success text-left" ng-bind-html="servicesrequestsendedsuccess|unsafe">
-
-                      </div>
+                      <div class="alert alert-success text-left" ng-bind-html="servicesrequestsendedsuccess|unsafe"></div>
                     </div>
                   </div>
                 </div>

@@ -42,7 +42,12 @@
               </td>
             <?php else: ?>
               <td>
-              <a href="/projektek/projekt/<?=$p['hashkey']?>"><?=($p[$p['my_relation'].'_title'] != '')?'<strong>'.$p[$p['my_relation'].'_title'].'</strong>':'#'.$p['order_hashkey'].'<br><span class="nosetdata">'.__('Projekt elnevezése hiányzik! &nbsp;&nbsp; Szerkesztés').' <i class="fas fa-pencil-alt"></i></span>'?></a>
+              <a href="/projektek/projekt/<?=$p['hashkey']?>">
+                <strong><?php echo $p['admin_title']; ?></strong>
+                <?php if ($p[$p['my_relation'].'_title'] != ''): ?>
+                <div class="user-title"><?php echo $p[$p['my_relation'].'_title']; ?></div>
+                <?php endif; ?>
+              </a>
               <div class="progress status-percent">
                 <div class="progress-bar <?=\Helper::progressBarColor($p['status_percent'])?>" role="progressbar" style="width: <?=$p['status_percent']?>%;" aria-valuenow="<?=$p['status_percent']?>" aria-valuemin="0" aria-valuemax="100"><?=$p['status_percent']?>%</div>
               </div>

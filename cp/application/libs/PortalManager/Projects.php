@@ -876,7 +876,8 @@ class Projects
 		$list = array();
 		$qarg = array();
 		$q = "SELECT
-			o.*
+			o.*,
+			ro.kozvetito_comment
 		FROM offers as o
 		LEFT OUTER JOIN requests_offerouts as ro ON ro.ID = o.offerout_id
 		WHERE 1=1 and o.ID = :id";

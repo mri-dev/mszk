@@ -710,7 +710,7 @@ body.singlepage{
           margin-top: 15px;
         }
 
-        input[type=text], input[type=email], textarea{
+        input[type=text], input[type=email], input[type=file], textarea{
           font-weight: bold;
           color: black;
           border-radius: 20px;
@@ -730,6 +730,31 @@ body.singlepage{
             color: #acacac;
             font-weight: 300;
           }
+        }
+        input[type=file]{
+          font-size: 0.7rem;
+          padding: 5px;
+          background: white;
+          width: 100%;
+          cursor: pointer;
+          outline: none;
+        }
+        label.file-label{
+          font-weight: bold;
+          color: #818181;
+          font-size: 0.8rem;
+        }
+        input[type=file]::-webkit-file-upload-button {
+          background: $color-blue-light;
+          color: white;
+          border-radius: 15px;
+          border: none;
+          font-weight: 400;
+          padding: 0 10px;
+          line-height: 30px;
+          font-size: 0.7rem;
+          cursor: pointer;
+          outline: none;
         }
 
         textarea{

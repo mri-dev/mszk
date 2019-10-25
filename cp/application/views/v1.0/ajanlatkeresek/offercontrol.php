@@ -133,6 +133,25 @@
             <div class="dpad">
               <div class="" ng-bind-html="request.message|unsafe"></div>
             </div>
+
+            <div ng-if="request.attachments.length">
+              <div class="attachments">
+                <div class="row-header" ng-if="relation=='from'">
+                    <h3><i class="fas fa-paperclip"></i> <?=__('Csatolmányaim')?></h3>
+                </div>
+                <div class="row-header" ng-if="relation=='to'">
+                    <h3><i class="fas fa-paperclip"></i> <?=__('Csatolmányok')?></h3>
+                </div>
+                <div class="dpad">
+                  <div class="attachment-list">
+                    <div class="file" ng-repeat="a in request.attachments">
+                      <a href="{{a.filepath}}" target="_blank"><i class="fas fa-external-link-alt"></i> <strong>{{a.filename}}</strong> ({{a.extension}}) - {{a.sizetext}}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row-header">
               <h3><?=__('Igényelt szolgáltatások')?></h3>
             </div>

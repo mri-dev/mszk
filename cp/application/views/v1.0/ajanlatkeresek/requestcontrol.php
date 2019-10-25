@@ -9,7 +9,7 @@
           <div class="request" ng-class="{'active': (readrequest == request.ID)}" ng-repeat="request in requests|filter:quickFilterSearch" ng-click="pickRequest(request)">
             <div class="wrapper">
               <div class="head">
-                <div class="name">{{request.name}}</div>
+                <div class="name">{{request.name}} <span class="attachment" ng-if="request.attachments.length"><i class="fas fa-paperclip"></i> {{request.attachments.length}}</span></div>
                 <div class="badges" ng-if="!request.project_id">
                   <span ng-if="request.unwatched_offers!=0" class="badge badge-danger badge-sm"><i class="far fa-eye-slash"></i> <?=__('{{request.unwatched_offers}} olvasatlan ajánlat')?></span>
                   <span ng-if="request.visited==1" class="badge badge-success badge-sm"><i class="far fa-eye"></i> <?=__('láttam')?></span>
@@ -189,6 +189,11 @@
                               <span title="{{request.offerouts.users[user.ID].offerout_at}}"><?=__('Ajánlás kiküldve:')?> <strong>{{request.offerouts.users[user.ID].offerout_at_dist}}</strong></span>
                             </div>
                           </label>
+                          <div class="attachment-list" style="font-size: 0.8rem;">
+                            <div class="file" ng-repeat="a in request.offerouts.users[user.ID].attachments">
+                              <a href="{{a.filepath}}" target="_blank"><i class="fas fa-external-link-alt"></i> <strong>{{a.filename}}</strong> ({{a.extension}}) - {{a.sizetext}}</a>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -197,6 +202,10 @@
                     <div class="alert alert-warning" style="text-align:left;" ng-if="!request.passed_user_offer_id"><?=__('Az ajánlat kiajánlásához legalább 1 szolgáltatót meg kell jelölnie!')?></div>
                     <div class="kozv-comment" ng-if="!servicesrequestprogress && !servicesrequestsendedsuccess && request.passed_user_offer_id">
                       <textarea class="form-control" ng-model="request.kozvetito_comment" placeholder="<?=__('Közvetítői megjegyzés a szolgáltatónak...')?>"></textarea>
+                      <div class="csatolmany">
+                        <label for="csatolmany"><i class="fas fa-paperclip"></i> Csatolmány az ajánlathoz</label>
+                        <input type='file' name='file[]' id="csatolmany" multiple="multiple" onchange="angular.element(this).scope().prepareOfferoutFiles(angular.element(this))">
+                      </div>
                       <button type="button"  class="btn btn-danger" ng-click="sendServicesRequest()"><?=__('Kiajánlás elindítása')?> <i class="far fa-arrow-alt-circle-right"></i></button>
                     </div>
                     <div class="" ng-if="servicesrequestprogress">
@@ -302,6 +311,22 @@
                 </div>
               </div>
             </div>
+
+            <div ng-if="request.attachments.length">
+              <div class="attachments">
+                <div class="row-header">
+                    <h3><i class="fas fa-paperclip"></i> <?=__('Ajánlatkérő csatolmányai')?></h3>
+                </div>
+                <div class="dpad">
+                  <div class="attachment-list">
+                    <div class="file" ng-repeat="a in request.attachments">
+                      <a href="{{a.filepath}}" target="_blank"><i class="fas fa-external-link-alt"></i> <strong>{{a.filename}}</strong> ({{a.extension}}) - {{a.sizetext}}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row-header">
                 <h3><?=__('Szolgáltatás igények')?></h3>
             </div>

@@ -11,6 +11,80 @@ class ajax extends Controller
 			parent::__construct();
 		}
 
+		public function files()
+		{
+			extract($_POST);
+			$ret = array(
+				'success' => 0,
+				'msg' => false,
+				'passed' => $_POST,
+				'data' => false
+			);
+
+			switch ( $this->view->gets[2] )
+			{
+				case 'attachment':
+					$ret['FILES'] = $_FILES;
+					$files = $_FILES['file'];
+					switch ($this->view->gets[3])
+					{
+						// Szolgáltató ajánlat csatolmányok
+						case 'offerouts':
+							$prefix = (empty($prefix)) ? '' : $prefix.'_';
+							$user_id = (int)$this->view->_USERDATA['data']['ID'];
+							$offerout_ids = (empty($offerout_ids)) ? false : explode(",", $offerout_ids);
+
+							if ($files && count($files['name']) > 0 )
+							{
+								$fi = -1;
+								foreach ((array)$files['name'] as $fname) {
+									$fi++;
+									$original_filename = $files['name'][$fi];
+									$location = '/home/webprohu/mszk.web-pro.hu/cp/src/attachments/';
+									$filename = $prefix.uniqid().'_'.\Helper::makeSafeUrl($files['name'][$fi]);
+									$ret['uploaded'][] = array(
+										'tmp' => $files['tmp_name'][$fi],
+										'to' => $location.$filename
+									);
+
+									if( move_uploaded_file($files['tmp_name'][$fi], $location.$filename) )
+									{
+										// success upload
+										$this->db->insert(
+											'attachments',
+											array(
+												'user_id' => (int)$user_id,
+												'agroup' => 'offerouts',
+												'filename' => addslashes($original_filename),
+												'filesize' => (float)$files['size'][$fi],
+												'filepath' => '/src/attachments/'.$filename
+											)
+										);
+										$attachment_id = $this->db->lastInsertId();
+
+										if ($offerout_ids && count($offerout_ids) > 0) {
+											foreach ((array)$offerout_ids as $ouid) {
+												$this->db->insert(
+													'offerouts_xref_attachment',
+													array(
+														'offerout_id' => (int)$ouid,
+														'attachment_id' => (int)$attachment_id
+													)
+												);
+											}
+										}
+
+									}
+								}
+							}
+						break;
+					}
+				break;
+			}
+
+			echo json_encode($ret);
+		}
+
 		function post(){
 			extract($_POST);
 

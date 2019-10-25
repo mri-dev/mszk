@@ -9,6 +9,72 @@ class ajax extends Controller{
 			parent::__construct();
 		}
 
+		public function files()
+		{
+			extract($_POST);
+			$ret = array(
+				'success' => 0,
+				'msg' => false,
+				'passed' => $_POST,
+				'data' => false
+			);
+
+			switch ( $this->view->gets[2] )
+			{
+				case 'attachment':
+					$ret['FILES'] = $_FILES;
+					$files = $_FILES['file'];
+					switch ($this->view->gets[3])
+					{
+						// Ajánlatkérés csatolmányok
+						case 'offers':
+							$prefix = (empty($prefix)) ? '' : $prefix.'_';
+							if ($files && count($files['name']) > 0 ) {
+								$fi = -1;
+								foreach ((array)$files['name'] as $fname) {
+									$fi++;
+									$original_filename = $files['name'][$fi];
+									$location = '/home/webprohu/mszk.web-pro.hu/cp/src/attachments/';
+									$filename = $prefix.uniqid().'_'.\Helper::makeSafeUrl($files['name'][$fi]);
+									$ret['uploaded'][] = array(
+										'tmp' => $files['tmp_name'][$fi],
+										'to' => $location.$filename
+									);
+
+									if( move_uploaded_file($files['tmp_name'][$fi], $location.$filename) )
+									{
+										// success upload
+										$this->db->insert(
+											'attachments',
+											array(
+												'user_id' => (int)$user_id,
+												'agroup' => 'offers',
+												'filename' => addslashes($original_filename),
+												'filesize' => (float)$files['size'][$fi],
+												'filepath' => '/src/attachments/'.$filename
+											)
+										);
+										$attachment_id = $this->db->lastInsertId();
+										if (!empty($request_id)) {
+											$this->db->insert(
+												'requests_xref_attachment',
+												array(
+													'request_id' => (int)$request_id,
+													'attachment_id' => (int)$attachment_id
+												)
+											);
+										}
+									}
+								}
+							}
+						break;
+					}
+				break;
+			}
+
+			echo json_encode($ret);
+		}
+
 		function post()
 		{
 			extract($_POST);

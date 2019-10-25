@@ -568,6 +568,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 {
 	$scope.loading = false;
 	$scope.quicksearch = '';
+	$scope.uploadfiles = [];
 	$scope.requests = [];
 	$scope.servicerAccounts = [];
 	$scope.request = false;
@@ -927,6 +928,7 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 		$scope.servicesrequestprogress = true;
 		$scope.servicesrequestsendedsuccess = false;
 
+		/* */
 		$http({
 			method: 'POST',
 			url: '/ajax/post',
@@ -940,11 +942,37 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 			})
 		}).success(function(r){
 			console.log(r);
-			if (r.success == 1) {
-				$scope.servicesrequestsendedsuccess = r.msg;
+			if (r.success == 1)
+			{
+				var fd = new FormData();
+				angular.forEach( $scope.uploadfiles, function( file ) {
+					fd.append( 'file[]', file );
+				});
+
+				fd.append('prefix', 'ou_'+r.t.request_hashkey);
+				fd.append('offerout_ids', r.t.offerout_ids);
+
+				var succmsg = r.msg;
+
+				// upload files
+				$http({
+					method: 'POST',
+					url: '/ajax/files/attachment/offerouts',
+					headers: { 'Content-Type': undefined },
+					data: fd
+				}).success(function(r){
+					console.log(r);
+					$scope.servicesrequestsendedsuccess = succmsg;
+				});
 			}
 			$scope.servicesrequestprogress = false;
 		});
+		/* */
+	}
+
+	$scope.prepareOfferoutFiles = function( input ) {
+		var files = input[0].files;
+		$scope.uploadfiles = files;
 	}
 
 	$scope.quickFilterSearch = function( row )
@@ -973,6 +1001,20 @@ a.controller("RequestControl", ['$scope', '$http', '$mdToast', '$sce', '$window'
 			);
 		}
 	}
+}]);
+
+a.directive('ngFile', ['$parse', function ($parse) {
+ return {
+  restrict: 'A',
+  link: function(scope, element, attrs) {
+   element.bind('change', function(){
+		 console.log(element[0].files);
+    $parse(attrs.ngFile).assign(scope,element[0].files)
+		console.log(scope);
+    scope.$apply();
+   });
+  }
+ };
 }]);
 
 a.controller( "MessagesList", ['$scope', '$http', '$timeout', '$mdToast', '$mdDialog', function($scope, $http, $timeout, $mdToast, $mdDialog)

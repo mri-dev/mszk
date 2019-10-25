@@ -99,6 +99,17 @@ input, textarea{
 		color: black;
 		margin: 0 0 10px 0;
 	}
+
+	.csatolmany{
+		text-align: left;
+		margin: 0 0 8px 0;
+		label {
+			font-size: 0.8rem;
+			font-weight: bold;
+			display: block;
+			margin: 0 0 5px 0;
+		}
+	}
 }
 
 #login {
@@ -1389,6 +1400,12 @@ footer {
 						font-size: 1rem;
 						font-weight: bold;
 						color: $color-blue-light;
+						.attachment{
+							font-size: 0.7rem;
+					    color: black;
+					    font-weight: normal;
+					    margin: 0 0 0 5px;
+						}
 					}
 					.company {
 						color: $color-red-light;

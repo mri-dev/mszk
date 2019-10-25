@@ -235,6 +235,8 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
       $scope.sendingofferrequest = true;
       $scope.requestmessageclass = 'requestmessage alert-warning'
       $scope.requestmessage = 'Ajánlatkérés küldése folyamatban <i class="fas fa-spinner fa-spin"></i>';
+
+      /* */
       $http({
         method: 'POST',
         url: '/ajax/post',
@@ -254,13 +256,34 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
           }
         })
       }).success(function(r){
-        //console.log(r);
-        $scope.requestreturn = r;
-        if (r.success == 1) {
-          $scope.requestmessageclass = 'requestmessage alert-success'
-          $scope.requestmessage = r.msg;
-          $scope.clearSession();
+        if (r.success == 1)
+        {
+          var fd = new FormData();
+          angular.forEach( $scope.uploadfiles, function( file ) {
+            fd.append( 'file[]', file );
+          });
+
+          fd.append('prefix', r.request_hashkey);
+          fd.append('request_id', r.request_id);
+          fd.append('user_id', r.user_id);
+
+          var succmsg = r.msg;
+
+          // upload files
+          $http({
+            method: 'POST',
+            url: '/ajax/files/attachment/offers',
+            headers: { 'Content-Type': undefined },
+            data: fd
+          }).success(function(r){
+            console.log(r);
+            $scope.requestmessageclass = 'requestmessage alert-success'
+            $scope.requestmessage = succmsg;
+            $scope.requestreturn = r;
+            $scope.clearSession();
+          });
         } else {
+          $scope.requestreturn = r;
           $scope.requestmessageclass = 'requestmessage alert-danger'
           $scope.requestmessage = r.msg;
         }
@@ -268,6 +291,7 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
           callback();
         }
       });
+      /* */
     }
   }
 
@@ -377,6 +401,17 @@ app.controller('App', ['$scope', '$sce', '$http', '$mdToast', '$mdDialog', '$loc
 
 }]);
 
+app.directive('ngFile', ['$parse', function ($parse) {
+ return {
+  restrict: 'A',
+  link: function(scope, element, attrs) {
+   element.bind('change', function(){
+    $parse(attrs.ngFile).assign(scope,element[0].files)
+    scope.$apply();
+   });
+  }
+ };
+}]);
 
 app.filter('unsafe', function($sce){ return $sce.trustAsHtml; });
 app.filter('cash', function(){

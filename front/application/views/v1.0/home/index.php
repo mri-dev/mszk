@@ -411,6 +411,13 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12">
+                        <label for="file" class="file-label"><i class="fas fa-paperclip"></i> <?=__('Csatolmányok hozzáadása')?></label>
+                        <input type='file' name='file[]' id='file' multiple="multiple" ng-file='uploadfiles'>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
                         <div class="">
                           <input type="checkbox" id="check1" ng-model="requester.aszf" required class="ccb"><label for="check1"><?=sprintf(__('Elolvastam és elfogadom az <a target="_blank" href="%s">Általános Szerződési Feltételeket</a>.'),'/aszf')?></label>
                         </div>

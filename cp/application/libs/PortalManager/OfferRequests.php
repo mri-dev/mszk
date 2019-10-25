@@ -110,7 +110,7 @@ class OfferRequests
 				$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
 			}
 			*/
-
+			$d['attachments'] = $this->getAttachments( (int)$d[ID], 'offers' );
 			$d['offerouts'] = $this->getRequestOfferouts( (int)$d[ID] );
 			$offers = $this->getOfferDatas( (int)$d[ID] );
 			$d['offers'] = $offers;
@@ -147,6 +147,56 @@ class OfferRequests
 		}
 
 		return $list;
+	}
+
+	public function getAttachments( $id, $group, $user_id = false )
+	{
+		$back = array();
+		$qryarg = array();
+
+		switch ( $group )
+		{
+			case 'offers':
+				$qry = "SELECT
+					a.ID,
+					a.filename,
+					a.filesize,
+					a.filepath,
+					a.uploaded_at
+				FROM attachments as a
+				WHERE 1=1 and a.agroup = :group and a.ID IN (SELECT ax.attachment_id FROM requests_xref_attachment as ax WHERE ax.request_id = :rid)";
+				$qryarg['group'] = $group;
+				$qryarg['rid'] = (int)$id;
+			break;
+			case 'offerouts':
+				$qry = "SELECT
+					a.ID,
+					a.filename,
+					a.filesize,
+					a.filepath,
+					a.uploaded_at
+				FROM attachments as a
+				WHERE 1=1 and a.agroup = :group and a.ID IN (SELECT ax.attachment_id FROM offerouts_xref_attachment as ax WHERE ax.offerout_id = :rid)";
+				$qryarg['group'] = $group;
+				$qryarg['rid'] = (int)$id;
+			break;
+		}
+
+		$qry = $this->db->squery($qry, $qryarg);
+		if ($qry->rowCount() == 0) {
+			return $back;
+		}
+
+		$data = $qry->fetchAll(\PDO::FETCH_ASSOC);
+
+		foreach ((array)$data as $d) {
+			$d['filesize'] = (float)$d['filesize'];
+			$d['sizetext'] = \Helper::formatSizeUnits($d['filesize']);
+			$d['extension'] = pathinfo($d['filename'], \PATHINFO_EXTENSION);
+			$back[] = $d;
+		}
+
+		return $back;
 	}
 
 	public function getServicesList( $services_arr_id = array(), $subservices_arr_id = array(), $subservices_items_arr_id = array() )
@@ -665,6 +715,7 @@ class OfferRequests
 			$d['offerout_dist'] = \Helper::distanceDate($d['offerout_at']);
 			$d['offer'] = $this->getOfferData($d['user_offer_id']);
 			$d['status'] = $this->getOfferStatus($d, 'to');
+			$d['attachments'] = $this->getAttachments($d['ID'], 'offerouts');
 			$re[] = $d;
 		}
 
@@ -727,6 +778,7 @@ class OfferRequests
 			$d['overall_service_details'] = (array)json_decode($d['overall_service_details'], true);
 			$d['services_cash_total'] = (array)json_decode($d['services_cash_total'], true);
 			$d['offerout_dist'] = \Helper::distanceDate($d['offerout_at']);
+			$d['attachments'] = $this->getAttachments($d['ID'], 'offers');
 			//$d['offer'] = $this->getOfferData($d['user_offer_id']);*/
 
 			$admin_offer = false;
@@ -1187,6 +1239,7 @@ class OfferRequests
 		{
 			$uid = (int)$d['user_id'];
 			$d['offerout_at_dist'] = \Helper::distanceDate($d['offerout_at']);
+			$d['attachments'] = $this->getAttachments( (int)$d[ID], 'offerouts' );
 			if (!in_array($uid, (array)$list['user_ids'])) {
 				$list['user_ids'][] = $uid;
 				$list['users'][$d['user_id']] = $d;
@@ -1335,6 +1388,7 @@ class OfferRequests
 	{
 		$to_servicers = array();
 		$request_id = 0;
+		$r = array();
 
 		/**
 		* Ellenőrzés
@@ -1344,6 +1398,8 @@ class OfferRequests
 		{
 			throw new \Exception(__("Az ajánlatkérés azonosítója nem lett megadva!"));
 		}
+
+		$r['request_hashkey'] = $request_hashkey;
 
 		$ch = $this->db->squery("SELECT s.ID, s.user_id, s.user_requester_title FROM requests as s WHERE s.hashkey = :hash", array('hash' => $request_hashkey ));
 		if ( $ch->rowCount() == 0 )
@@ -1388,6 +1444,8 @@ class OfferRequests
 					)
 				);
 				$offerout_id = $this->db->lastInsertId();
+				$r['offerout_ids'][] = $offerout_id;
+
 				$outgo_emails[$u]['email'] = $user_email;
 				$outgo_emails[$u]['ID'] = $u;
 				$outgo_emails[$u]['stack'][] = array(
@@ -1405,7 +1463,6 @@ class OfferRequests
 			/**
 			* Kiajánló e-mailek várólistára helyezése
 			**/
-			$r = array();
 			if ($outgo_emails)
 			{
 				foreach ( (array)$outgo_emails as $uid => $out )

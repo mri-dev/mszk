@@ -2699,6 +2699,137 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	color: $color-green !important;
 }
 
+.con{
+  background: #ffffff;
+  border: 1px solid #dadada;
+  color: #434343;
+  margin-bottom: 5px;
+  padding: 15px;
+}
+.con.con-row-list{
+  padding: 0;
+}
+.con.con-extra {
+  background: #f9f9f9;
+  border: 2px solid #eae8e8;
+  border-top: 5px solid #c9e0e8 !important;
+  color: #505050;
+}
+
+.con h2, .con h3 {
+	color:#474343;
+	text-transform: uppercase;
+	font-size:22px;
+	margin: 0 0 10px 0;
+}
+.con h2 .filteralert,
+.con h3 .filteralert{
+  color: green;
+  font-size: 0.8em;
+  text-transform: none;
+}
+.con h3{
+	font-size:18px;
+}
+.con.con-extra h3 {
+  color: #5397af;
+}
+.con-del {
+	border-top:3px solid #D45B5B;
+}
+.con-del h2 {
+	color: #D45B5B;
+}
+.con-edit {
+	border-top:3px solid #98BC72;
+}
+.con-edit h2 {
+	color: #98BC72;
+}
+.con .nodata{
+	color:#999999;
+	padding:15px 0;
+	font-size:12px;
+	font-weight:300;
+}
+.con .modszer, .con .markarow{
+	border-bottom:1px solid #eeeeee;
+	padding: 10px;
+	margin:5px;
+}
+
+.con .modszer .item{
+	margin-right:3px;
+	float:left;
+}
+.con .modszer .item.r{
+	float:right;
+}
+.con .mkat{
+	color:black;
+	font-size:16px;
+	border-bottom:2px solid #cccccc;
+	margin-top:10px;
+}
+i.del, i.edit{
+	margin:0 5px;
+}
+i.del{
+	color:#bbbbbb;
+}
+.con .modszer .item i{
+	display:none;
+}
+.con .modszer:hover .item i{
+	display:inline-block;
+}
+
+.tooltip-view {
+	color: #FF8202;
+	font-size:12px;
+	position: relative;
+}
+.tooltip-view > .tip-msg {
+	line-height: 1.35 !important;
+	z-index: 10000000;
+	display: none;
+	position: absolute;
+	left:20px;
+	top:0;
+	background: rgba(255,130,2,0.8);
+	padding: 5px 8px;
+	color: white;
+	min-width:300px;
+	min-height:45px;
+	transform:translateY(-50%);
+	text-shadow:none;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	font-weight: normal;
+	text-align: justify;
+	text-transform: none;
+}
+.tooltip-view > .tip-msg:before{
+	content:"";
+	width: 7px;
+	height: 14px;
+	position: absolute;
+	left:-14px;
+	top: 50%;
+	background: transparent;
+	border-style:solid;
+	border-color:  transparent rgba(255,130,2,0.8) transparent transparent;
+	border-width: 14px 7px;
+	margin-top:-7px;
+}
+.tooltip-view > i {
+	cursor: help;
+}
+.tooltip-view > i:hover + .tip-msg {
+	display: block;
+}
+
 .data-list{
 	font-size: 0.85rem;
 	.list-item{

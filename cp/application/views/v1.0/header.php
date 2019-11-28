@@ -192,7 +192,7 @@
             <?php if ( !$this->is_admin_logged ): ?>
               <?php if ($this->_USERDATA['data']['user_group'] == 'szolgaltato'): ?>
                 <li class="<?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'bejovo')?'on':''?>"><a href="/ajanlatkeresek/bejovo" title="<?=__('Bejövő ajánlatkérések')?>"><span class="ni">8</span><i class="fas fa-file-import"></i> <?=__('Bejövő ajánlatkérések')?> <? if($this->badges['offers']['inbox']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['inbox']?></span><? endif; ?></a></li>
-              <?php endif; ?>              
+              <?php endif; ?>
               <li class="<?=($this->gets[0] == 'ajanlatkeresek' && $this->gets[1] == 'kimeno')?'on':''?>"><a href="/ajanlatkeresek/kimeno" title="<?=__('Kimenő ajánlatkérések')?>"><span class="ni">8</span><i class="fas fa-file-export"></i> <?=__('Kimenő ajánlatkérések')?> <? if($this->badges['offers']['outbox']!=0): ?><span class="badge badge-primary"><?=$this->badges['offers']['outbox']?></span><? endif; ?></a></li>
             <?php endif; ?>
 
@@ -247,6 +247,9 @@
               <?php endif; ?>
               <?php if (true): ?>
                 <li class="<?=($this->gets[0] == 'adminconsole' && $this->gets[1] == 'felhasznalok')?'on':''?>"><a href="/adminconsole/felhasznalok" title="<?=__('Felhasználók')?>"><span class="ni">8</span><i class="fas fa-users"></i> <?=__('Felhasználók')?></a></li>
+              <?php endif; ?>
+              <?php if (true): ?>
+                <li class="<?=($this->gets[0] == 'oldalak')?'on':''?>"><a href="/oldalak" title="<?=__('Oldalak')?>"><span class="ni">8</span><i class="fas fa-file-alt"></i> <?=__('Oldalak')?></a></li>
               <?php endif; ?>
               <?php if (true): ?>
                 <li class="<?=($this->gets[0] == 'adminconsole' && $this->gets[1] == 'lists')?'on':''?>"><a href="/adminconsole/lists" title="<?=__('Listák')?>"><span class="ni">8</span><i class="fas fa-stream"></i> <?=__('Listák')?></a></li>
